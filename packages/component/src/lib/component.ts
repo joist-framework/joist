@@ -43,8 +43,8 @@ export type ElementInstance<T> = {
 
 export type ComponentDef<T> = ClassProviderToken<T> & { tag?: string };
 
-export const createComponent = <S, C>(componentDef: ComponentDef<C>) => {
-  return document.createElement(componentDef.tag as string) as ElementInstance<S>;
+export const createComponent = <T>(componentDef: ComponentDef<any>) => {
+  return document.createElement(componentDef.tag as string) as ElementInstance<T>;
 };
 
 export const Component = <T = any>(config: ComponentConfig<T>) => (
