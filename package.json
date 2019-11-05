@@ -9,7 +9,6 @@
   "scripts": {
     "postinstall": "lerna exec npm install",
     "test": "lerna run test --stream",
-    "test:coverage": "lerna run test:coverage --stream",
     "build": "lerna run build --stream",
     "publish": "lerna publish --force-publish=*"
   },
