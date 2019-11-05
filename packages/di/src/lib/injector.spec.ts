@@ -1,5 +1,7 @@
-import { Injector, ProviderToken, Inject } from '../public_api';
-import { RootService } from '../lib/service';
+import { RootService } from './service';
+import { Injector } from './injector';
+import { Inject } from './inject';
+import { ProviderToken } from './provider';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
