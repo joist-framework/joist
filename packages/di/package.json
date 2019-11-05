@@ -1,0 +1,42 @@
+{
+  "name": "@ts-kit/di",
+  "version": "1.0.0",
+  "main": "out-node/public_api.js",
+  "browser": "out-browser/public_api.js",
+  "files": [
+    "out-browser/**/*",
+    "out-node/**/*"
+  ],
+  "description": "Dependency Injection in ~800 bytes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/ts-kit.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "DI",
+    "Dependency Injection"
+  ],
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/ts-kit/issues"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "test": "ts-node node_modules/jasmine/bin/jasmine src/test/*.spec.ts",
+    "test:coverage": "nyc -r text -e .ts -x 'src/test/*.spec.ts' npm run test",
+    "build:browser": "tsc --outDir out-browser --module esnext",
+    "build:node": "tsc --outDir out-node --module commonjs",
+    "build": "npm run build:browser && npm run build:node"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.4.1",
+    "@types/node": "^12.12.3",
+    "jasmine": "^3.5.0",
+    "nyc": "^14.1.1",
+    "ts-node": "^8.4.1",
+    "typescript": "~3.5.0"
+  },
+  "gitHead": "73b82f825b951aeea21256bb563426b6fb1a917c"
+}

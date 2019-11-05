@@ -1,0 +1,38 @@
+{
+  "name": "lit-kit",
+  "version": "0.0.0",
+  "description": "A set of packages to help you be more productive",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/ts-kit.git"
+  },
+  "scripts": {
+    "postinstall": "lerna exec npm install",
+    "test": "lerna run test --stream",
+    "test:coverage": "lerna run test:coverage --stream",
+    "build": "lerna run build --stream",
+    "publish": "lerna publish --force-publish=*"
+  },
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/lit-kit/issues"
+  },
+  "devDependencies": {
+    "husky": "^3.0.3",
+    "lerna": "^3.16.4",
+    "lint-staged": "^9.2.1",
+    "prettier": "^1.16.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,css,md,html}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}

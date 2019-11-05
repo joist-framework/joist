@@ -1,0 +1,52 @@
+{
+  "name": "@lit-kit/component",
+  "version": "1.0.0",
+  "main": "out-browser/public_api.js",
+  "sideEffects": false,
+  "files": [
+    "out-browser/**/*"
+  ],
+  "description": "Framework arouhd Lit-Html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/ts-kit.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "DI",
+    "Dependency Injection"
+  ],
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/ts-kit/issues"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "test": "karma start",
+    "build": "tsc --outDir out-browser --module es2015"
+  },
+  "peerDependencies": {
+    "@ts-kit/di": "^3.0.0",
+    "lit-html": "^1.1.2"
+  },
+  "devDependencies": {
+    "@ts-kit/di": "file:../di",
+    "@types/jasmine": "^3.4.1",
+    "@types/node": "^12.12.3",
+    "jasmine": "^3.5.0",
+    "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-cli": "^2.0.0",
+    "karma-jasmine": "^2.0.1",
+    "karma-spec-reporter": "0.0.32",
+    "karma-webpack": "^4.0.2",
+    "lit-html": "^1.1.2",
+    "puppeteer": "^2.0.0",
+    "ts-loader": "^6.2.0",
+    "typescript": "~3.5.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "gitHead": "5311e9106073cfa598d2dee4372bba1503697bd5"
+}
