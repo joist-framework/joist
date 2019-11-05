@@ -5,6 +5,4 @@ A set of packages for helping with development
 | Package                                              |
 | ---------------------------------------------------- |
 | [@lit-kit/di](packages/di)                           |
-| [@lit-kit/lit-framework](packages/lit-framework)     |
-| [@lit-kit/state-container](packages/state-container) |
-| [@lit-kit/type-utils](packages/type-utils)           |
+| [@lit-kit/component](packages/component)             |
