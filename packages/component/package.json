@@ -28,7 +28,7 @@
     "build": "tsc --outDir out-browser --module es2015"
   },
   "peerDependencies": {
-    "@lit-kit/di": "^3.0.0",
+    "@lit-kit/di": "^1.0.0",
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
