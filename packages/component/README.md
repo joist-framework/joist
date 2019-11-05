@@ -64,7 +64,7 @@ import { html } from 'lit-html';
   }
 })
 class HelloWorldComponent implements OnPropChanges {
-  @Prop() title: string;
+  @Prop() title?: string;
 
   constructor(@State() private state: ComponentState<number>) {}
 
