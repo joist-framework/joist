@@ -11,7 +11,7 @@
   "description": "Dependency Injection in ~800 bytes",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/ts-kit.git"
+    "url": "git+https://github.com/deebloo/lit-kit.git"
   },
   "keywords": [
     "TypeScript",

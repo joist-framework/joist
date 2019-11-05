@@ -1,10 +1,10 @@
-# TsToolkit [![Actions Status](https://github.com/deebloo/ts-kit/workflows/CI/badge.svg)](https://github.com/deebloo/ts-kit/actions)
+# TsToolkit [![Actions Status](https://github.com/deebloo/lit-kit/workflows/CI/badge.svg)](https://github.com/deebloo/lit-kit/actions)
 
 A set of packages for helping with development
 
-| Package                                             |
-| --------------------------------------------------- |
-| [@ts-kit/di](packages/di)                           |
-| [@ts-kit/lit-framework](packages/lit-framework)     |
-| [@ts-kit/state-container](packages/state-container) |
-| [@ts-kit/type-utils](packages/type-utils)           |
+| Package                                              |
+| ---------------------------------------------------- |
+| [@lit-kit/di](packages/di)                           |
+| [@lit-kit/lit-framework](packages/lit-framework)     |
+| [@lit-kit/state-container](packages/state-container) |
+| [@lit-kit/type-utils](packages/type-utils)           |

@@ -5,13 +5,13 @@ Dependency Injection in ~800 bytes
 #### Installation:
 
 ```BASH
-npm i @ts-kit/di
+npm i @lit-kit/di
 ```
 
 #### Example:
 
 ```TS
-import { Injector, Inject } from '@ts-kit/di';
+import { Injector, Inject } from '@lit-kit/di';
 
 // Write a plain ol JS class
 class FooService {
@@ -42,7 +42,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 #### Override A Service:
 
 ```TS
-import { Injector, Inject } from '@ts-kit/di';
+import { Injector, Inject } from '@lit-kit/di';
 
 class FooService {
   sayHello() {
@@ -73,7 +73,7 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 #### Inject services with custom decorators:
 
 ```TS
-import { Injector, Inject } from '@ts-kit/di';
+import { Injector, Inject } from '@lit-kit/di';
 
 class FooService {
   sayHello() {

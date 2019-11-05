@@ -1,4 +1,4 @@
-import { Inject, SymbolToken, RootService } from '@ts-kit/di';
+import { Inject, SymbolToken, RootService } from '@lit-kit/di';
 
 abstract class StateBase<T> {
   constructor(private stateChangeCallback: (state: T) => void, public currentState: T) {}

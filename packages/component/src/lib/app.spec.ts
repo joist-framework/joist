@@ -1,4 +1,4 @@
-import { Injector } from '@ts-kit/di';
+import { Injector } from '@lit-kit/di';
 
 import { bootstrapApplication } from './app';
 

@@ -9,7 +9,7 @@
   "description": "Framework arouhd Lit-Html",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/ts-kit.git"
+    "url": "git+https://github.com/deebloo/lit-kit.git"
   },
   "keywords": [
     "lit-html",

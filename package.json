@@ -4,7 +4,7 @@
   "description": "A set of packages to help you be more productive",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/ts-kit.git"
+    "url": "git+https://github.com/deebloo/lit-kit.git"
   },
   "scripts": {
     "postinstall": "lerna exec npm install",

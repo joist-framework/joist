@@ -1,4 +1,4 @@
-import { Injector, ClassProviderToken } from '@ts-kit/di';
+import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { TemplateResult, render, html } from 'lit-html';
 
 import { ComponentState } from './state';

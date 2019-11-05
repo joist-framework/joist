@@ -1,4 +1,4 @@
-import { SymbolToken, Inject } from '@ts-kit/di';
+import { SymbolToken, Inject } from '@lit-kit/di';
 
 export const ELEMENT_REF = 'ELEMENT_REF';
 
