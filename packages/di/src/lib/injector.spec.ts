@@ -1,4 +1,4 @@
-import { RootService } from './service';
+import { Service } from './service';
 import { Injector } from './injector';
 import { Inject } from './inject';
 import { ProviderToken } from './provider';
@@ -313,10 +313,10 @@ describe('Injector', () => {
   });
 
   it('should use the parent Injector if specified', () => {
-    @RootService()
+    @Service()
     class BarService {}
 
-    @RootService()
+    @Service()
     class FooService {
       constructor(@Inject(BarService) public bar: BarService) {}
     }
