@@ -1,5 +1,5 @@
 {
-  "name": "@ts-kit/di",
+  "name": "@lit-kit/di",
   "version": "1.0.0",
   "main": "out-node/public_api.js",
   "browser": "out-browser/public_api.js",
@@ -7,6 +7,7 @@
     "out-browser/**/*",
     "out-node/**/*"
   ],
+  "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
   "repository": {
     "type": "git",
@@ -20,12 +21,11 @@
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/ts-kit/issues"
+    "url": "https://github.com/deebloo/lit-kit/issues"
   },
   "scripts": {
     "prepare": "npm run build",
     "test": "ts-node node_modules/jasmine/bin/jasmine src/test/*.spec.ts",
-    "test:coverage": "nyc -r text -e .ts -x 'src/test/*.spec.ts' npm run test",
     "build:browser": "tsc --outDir out-browser --module esnext",
     "build:node": "tsc --outDir out-node --module commonjs",
     "build": "npm run build:browser && npm run build:node"

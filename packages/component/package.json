@@ -2,24 +2,25 @@
   "name": "@lit-kit/component",
   "version": "1.0.0",
   "main": "out-browser/public_api.js",
-  "sideEffects": false,
   "files": [
     "out-browser/**/*"
   ],
+  "sideEffects": false,
   "description": "Framework arouhd Lit-Html",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/ts-kit.git"
   },
   "keywords": [
-    "TypeScript",
-    "DI",
-    "Dependency Injection"
+    "lit-html",
+    "Web Components",
+    "Custom Elements",
+    "Shadow DOM"
   ],
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/ts-kit/issues"
+    "url": "https://github.com/deebloo/lit-kit/issues"
   },
   "scripts": {
     "prepare": "npm run build",
@@ -27,13 +28,12 @@
     "build": "tsc --outDir out-browser --module es2015"
   },
   "peerDependencies": {
-    "@ts-kit/di": "^3.0.0",
+    "@lit-kit/di": "^3.0.0",
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
-    "@ts-kit/di": "file:../di",
+    "@lit-kit/di": "file:../di",
     "@types/jasmine": "^3.4.1",
-    "@types/node": "^12.12.3",
     "jasmine": "^3.5.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
