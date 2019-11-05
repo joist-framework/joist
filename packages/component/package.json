@@ -6,7 +6,7 @@
     "out-browser/**/*"
   ],
   "sideEffects": false,
-  "description": "Framework arouhd Lit-Html",
+  "description": "Framework around Lit-Html",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/lit-kit.git"
