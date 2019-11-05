@@ -16,7 +16,7 @@ Goals
 npm i @lit-kit/component @lit-kit/di lit-html
 ```
 
-#### Example:
+#### Component:
 
 ```TS
 import { Component, State, ComponentState, Handle } from '@lit-kit/component';
@@ -44,6 +44,32 @@ class HelloWorldComponent {
 
   @Handle('DECREMENT') onDecrement() {
     this.state.setState(state => state - 1);
+  }
+}
+```
+
+#### Component Props:
+
+```TS
+import { Component, State, ComponentState, Handle, Prop } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component<string>({
+  tag: 'app-title',
+  defaultState: '',
+  template(state, run) {
+    return html`
+      <h1>${state}</h1>
+    `
+  }
+})
+class HelloWorldComponent implements OnPropChanges {
+  @Prop() title: string;
+
+  constructor(@State() private state: ComponentState<number>) {}
+
+  onPropChanges() {
+    this.state.setState(() => this.title);
   }
 }
 ```
