@@ -128,11 +128,11 @@ import { html } from 'lit-html';
 class AppComponent {
   constructor(@State() private state: CompState<number>) {}
 
-  @Handle('INCREMENT') onIncrement() {
+  @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setState(this.state.value + 1);
   }
 
-  @Handle('DECREMENT') onDecrement() {
+  @Handle('DECREMENT') onDecrement(_: Event) {
     this.state.setState(this.state.value - 1);
   }
 }
