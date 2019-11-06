@@ -45,7 +45,7 @@
     "lit-html": "^1.1.2",
     "puppeteer": "^2.0.0",
     "ts-loader": "^6.2.0",
-    "typescript": "~3.6.0",
+    "typescript": "~3.7.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
   },
