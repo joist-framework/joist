@@ -4,5 +4,5 @@ A set of packages that leverage lit-html to help you write applications with web
 
 | Package                                  |
 | ---------------------------------------- |
-| [@lit-kit/di](packages/di)               |
 | [@lit-kit/component](packages/component) |
+| [@lit-kit/di](packages/di)               |
