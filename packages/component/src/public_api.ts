@@ -2,7 +2,7 @@ import { Injector } from '@lit-kit/di';
 
 declare global {
   interface Window {
-    ROOT__INJECTOR__: Injector;
+    __LIT_KIT_ROOT_INJECTOR__: Injector;
   }
 }
 

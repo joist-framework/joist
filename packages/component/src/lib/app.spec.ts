@@ -6,6 +6,6 @@ describe('app', () => {
   it('should create a global Injector instance', () => {
     bootstrapApplication();
 
-    expect(window.ROOT__INJECTOR__ instanceof Injector).toBe(true);
+    expect(window.__LIT_KIT_ROOT_INJECTOR__ instanceof Injector).toBe(true);
   });
 });

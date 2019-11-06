@@ -58,9 +58,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
       static observedAttributes = config.observedAttributes;
 
       public componentInstance: ComponentInstance;
-
       public componentState: CompState<T>;
-
       public componentInjector = new Injector(
         {
           providers: [
@@ -79,11 +77,10 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
             }
           ]
         },
-        window.ROOT__INJECTOR__ // The root injector is global
+        window.__LIT_KIT_ROOT_INJECTOR__ // The root injector is global
       );
 
       private shadow = this.attachShadow({ mode: 'open' });
-
       private run = (eventName: string, payload: unknown) => (e: Event) => {
         if (eventName in this.componentInstance.handlers) {
           this.componentInstance.handlers[eventName].call(this.componentInstance, e, payload);
@@ -105,7 +102,9 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
         this.componentState = this.componentInjector.get(CompState);
 
-        for (let i = 0; i < this.componentInstance.props.length; i++) {
+        const length = this.componentInstance.props.length;
+
+        for (let i = 0; i < length; i++) {
           const prop = this.componentInstance.props[i];
 
           Object.defineProperty(this, prop, {
