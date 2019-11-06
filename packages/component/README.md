@@ -119,6 +119,41 @@ class AppTitleComponent implements OnPropChanges {
 }
 ```
 
+### Component Handlers
+
+In order to trigger methods in a component you can use the `run` function that is provided the the template function.
+Decorate component methods with `@Handle('NAME')` to handle whatever is run.
+
+```TS
+import { Component, State, CompState, Handle } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component<number>({
+  tag: 'app-root',
+  defaultState: 0,
+  template(state, run) {
+    return html`
+      <button @click=${run('DECREMENT')}>Decrement</button>
+
+      ${state}
+
+      <button @click=${run('INCREMENT')}>Increment</button>
+    `
+  }
+})
+class AppComponent {
+  constructor(@State() private state: CompState<number>) {}
+
+  @Handle('INCREMENT') onIncrement() {
+    this.state.setState(this.state.value + 1);
+  }
+
+  @Handle('DECREMENT') onDecrement() {
+    this.state.setState(this.state.value - 1);
+  }
+}
+```
+
 ### Async State
 
 Component state can be set asynchronously.
