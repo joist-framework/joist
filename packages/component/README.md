@@ -24,12 +24,12 @@ Components are created via the "Component" decorator and a custom element is def
 import { Component } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-@Component<{ title: string }>({
+@Component<string>({
   tag: 'app-root',
-  defaultState: { title: 'Hello World' },
+  defaultState: 'Hello World',
   template(state) {
     return html`
-      <h1>${state.title}</h1>
+      <h1>${state}</h1>
     `
   }
 })
@@ -44,9 +44,9 @@ Styles are provided via a "style" property and do not have access to the compone
 import { Component } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-@Component<{ title: string }>({
+@Component<string>({
   tag: 'app-root',
-  defaultState: { title: 'Hello World' },
+  defaultState: 'Hello World',
   style: html`
     <style>
       h1 {
@@ -54,8 +54,8 @@ import { html } from 'lit-html';
       }
     </style>
   `,
-  template(state, run) {
-    <h1>${state.title}</h1>
+  template(state) {
+    <h1>${state}</h1>
   }
 })
 class AppComponent { }
@@ -99,7 +99,7 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-title',
   defaultState: '',
-  template(state, run) {
+  template(state) {
     return html`
       <h1>${state}</h1>
     `
