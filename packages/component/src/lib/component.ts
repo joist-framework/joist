@@ -1,7 +1,7 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { TemplateResult, render, html } from 'lit-html';
 
-import { ComponentState } from './state';
+import { CompState } from './state';
 import { ELEMENT_REF } from './el-ref';
 import {
   OnPropChanges,
@@ -37,7 +37,7 @@ export type ComponentInstance = Partial<OnPropChanges> &
 export type ElementInstance<T> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance;
-  componentState: ComponentState<T>;
+  componentState: CompState<T>;
   [key: string]: any;
 } & HTMLElement;
 
@@ -59,16 +59,16 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
       public componentInstance: ComponentInstance;
 
-      public componentState: ComponentState<T>;
+      public componentState: CompState<T>;
 
       public componentInjector = new Injector(
         {
           providers: [
             { provide: ELEMENT_REF, useFactory: () => this },
             {
-              provide: ComponentState,
+              provide: CompState,
               useFactory: () => {
-                return new ComponentState<T>(state => {
+                return new CompState<T>(state => {
                   const template = html`
                     ${config.style} ${config.template(state, this.run)}
                   `;
@@ -103,7 +103,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
         this.componentInstance.props = this.componentInstance.props || [];
 
-        this.componentState = this.componentInjector.get(ComponentState);
+        this.componentState = this.componentInjector.get(CompState);
 
         for (let i = 0; i < this.componentInstance.props.length; i++) {
           const prop = this.componentInstance.props[i];

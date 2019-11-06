@@ -22,7 +22,7 @@ abstract class StateBase<T> {
   }
 }
 
-export class ComponentState<T> extends StateBase<T> {}
+export class CompState<T> extends StateBase<T> {}
 
 @Service()
 export class AppState<T> extends StateBase<T> {}
@@ -30,4 +30,4 @@ export class AppState<T> extends StateBase<T> {}
 export const App = () => (c: SymbolToken<any>, k: string, i: number) => Inject(AppState)(c, k, i);
 
 export const State = () => (c: SymbolToken<any>, k: string, i: number) =>
-  Inject(ComponentState)(c, k, i);
+  Inject(CompState)(c, k, i);

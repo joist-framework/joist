@@ -2,7 +2,7 @@ import { Injector } from '@lit-kit/di';
 import { html } from 'lit-html';
 
 import { Component, createComponent } from './component';
-import { ComponentState } from './state';
+import { CompState } from './state';
 import { Prop } from './prop';
 
 describe('Component', () => {
@@ -33,7 +33,7 @@ describe('Component', () => {
     it('should create a componentState property', () => {
       const el = createComponent(MyComponent);
 
-      expect(el.componentState instanceof ComponentState).toBe(true);
+      expect(el.componentState instanceof CompState).toBe(true);
     });
   });
 
