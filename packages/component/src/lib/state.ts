@@ -1,4 +1,4 @@
-import { Inject, SymbolToken, RootService } from '@lit-kit/di';
+import { Inject, SymbolToken, Service } from '@lit-kit/di';
 
 abstract class StateBase<T> {
   private currentState: T;
@@ -24,7 +24,7 @@ abstract class StateBase<T> {
 
 export class ComponentState<T> extends StateBase<T> {}
 
-@RootService()
+@Service()
 export class AppState<T> extends StateBase<T> {}
 
 export const App = () => (c: SymbolToken<any>, k: string, i: number) => Inject(AppState)(c, k, i);
