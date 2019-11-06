@@ -10,13 +10,13 @@ Goals
 - [x] Uses dependency Injection
 - [x] Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
-#### Installation:
+### Installation
 
 ```BASH
 npm i @lit-kit/component @lit-kit/di lit-html
 ```
 
-#### Component:
+### Component
 
 ```TS
 import { Component, State, CompState, Handle } from '@lit-kit/component';
@@ -48,10 +48,10 @@ class CounterComponent {
 }
 ```
 
-#### Component Props:
+### Component Props
 
 ```TS
-import { Component, State, CompState, Handle, Prop, OnPropChanges } from '@lit-kit/component';
+import { Component, State, CompState, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -74,10 +74,10 @@ class AppTitleComponent implements OnPropChanges {
 }
 ```
 
-#### Async State
+### Async State
 
 ```TS
-import { Component, State, CompState, Handle, Prop } from '@lit-kit/component';
+import { Component, State, CompState } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 interface ComponentModel {
@@ -103,4 +103,27 @@ class AppComponent implements OnInit {
     this.state.setState(data);
   }
 }
+```
+
+### Component Styles
+
+```TS
+import { Component } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component({
+  tag: 'app-root',
+  defaultState: null,
+  style: html`
+    <style>
+      h1 {
+        font-weight: thin;
+      }
+    </style>
+  `
+  template(state, run) {
+    ...
+  }
+})
+class AppComponent { }
 ```
