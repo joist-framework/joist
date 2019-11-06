@@ -39,11 +39,11 @@ class HelloWorldComponent {
   constructor(@State() private state: ComponentState<number>) {}
 
   @Handle('INCREMENT') onIncrement() {
-    this.state.setState(state => state + 1);
+    this.state.setState(state.value + 1);
   }
 
   @Handle('DECREMENT') onDecrement() {
-    this.state.setState(state => state - 1);
+    this.state.setState(state.value - 1);
   }
 }
 ```
@@ -51,7 +51,7 @@ class HelloWorldComponent {
 #### Component Props:
 
 ```TS
-import { Component, State, ComponentState, Handle, Prop } from '@lit-kit/component';
+import { Component, State, ComponentState, Handle, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -69,7 +69,38 @@ class HelloWorldComponent implements OnPropChanges {
   constructor(@State() private state: ComponentState<number>) {}
 
   onPropChanges() {
-    this.state.setState(() => this.title);
+    this.state.setState(this.title);
+  }
+}
+```
+
+#### Async State
+
+```TS
+import { Component, State, ComponentState, Handle, Prop } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+interface ComponentModel {
+  loading: boolean;
+  data: string[];
+}
+
+@Component<ComponentModel>({
+  tag: 'app-title',
+  defaultState: { loading: false, data: [] },
+  template(state, run) {
+    ...
+  }
+})
+class HelloWorldComponent implements OnInit {
+  constructor(@State() private state: ComponentState<ComponentModel>) {}
+
+  onInit() {
+    this.state.setState({ data: [], loading: true });
+
+    const data = fetch('/data').then(res => res.json()).then(data => ({ loading: false, data }));
+
+    this.state.setState(data);
   }
 }
 ```

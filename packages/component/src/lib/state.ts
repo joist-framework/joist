@@ -1,17 +1,23 @@
 import { Inject, SymbolToken, RootService } from '@lit-kit/di';
 
 abstract class StateBase<T> {
-  constructor(private stateChangeCallback: (state: T) => void, public currentState: T) {}
+  private currentState: T;
 
-  setState(state: (state: T) => T | Promise<T>): void {
-    let stateRes = state(this.currentState);
+  get value() {
+    return this.currentState;
+  }
 
-    stateRes = stateRes instanceof Promise ? stateRes : Promise.resolve(stateRes);
+  constructor(private stateChangeCallback: (state: T) => void, defaultState: T) {
+    this.currentState = defaultState;
+  }
+
+  setState(state: T | Promise<T>): void {
+    let stateRes = state instanceof Promise ? state : Promise.resolve(state);
 
     stateRes.then(res => {
       this.currentState = res;
 
-      this.stateChangeCallback(this.currentState);
+      this.stateChangeCallback(this.value);
     });
   }
 }
