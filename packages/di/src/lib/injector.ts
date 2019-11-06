@@ -38,9 +38,7 @@ export class Injector {
     if (provider) {
       // if an override is available for this Injector use that
       return this.createFromOverride(provider);
-    }
-
-    if (this.parent && (this.parent.has(token) || token.provideInRoot)) {
+    } else if (this.parent && (this.parent.has(token) || token.provideInRoot)) {
       // if a parent is available and contains an instance of the provider already use that
       return this.parent.get(token);
     }
