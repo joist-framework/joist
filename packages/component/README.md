@@ -19,7 +19,7 @@ npm i @lit-kit/component @lit-kit/di lit-html
 #### Component:
 
 ```TS
-import { Component, State, ComponentState, Handle } from '@lit-kit/component';
+import { Component, State, CompState, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -36,7 +36,7 @@ import { html } from 'lit-html';
   }
 })
 class HelloWorldComponent {
-  constructor(@State() private state: ComponentState<number>) {}
+  constructor(@State() private state: CompState<number>) {}
 
   @Handle('INCREMENT') onIncrement() {
     this.state.setState(state.value + 1);
@@ -51,7 +51,7 @@ class HelloWorldComponent {
 #### Component Props:
 
 ```TS
-import { Component, State, ComponentState, Handle, Prop, OnPropChanges } from '@lit-kit/component';
+import { Component, State, CompState, Handle, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -66,7 +66,7 @@ import { html } from 'lit-html';
 class HelloWorldComponent implements OnPropChanges {
   @Prop() title?: string;
 
-  constructor(@State() private state: ComponentState<number>) {}
+  constructor(@State() private state: CompState<number>) {}
 
   onPropChanges() {
     this.state.setState(this.title);
@@ -77,7 +77,7 @@ class HelloWorldComponent implements OnPropChanges {
 #### Async State
 
 ```TS
-import { Component, State, ComponentState, Handle, Prop } from '@lit-kit/component';
+import { Component, State, CompState, Handle, Prop } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 interface ComponentModel {
@@ -93,7 +93,7 @@ interface ComponentModel {
   }
 })
 class HelloWorldComponent implements OnInit {
-  constructor(@State() private state: ComponentState<ComponentModel>) {}
+  constructor(@State() private state: CompState<ComponentModel>) {}
 
   onInit() {
     this.state.setState({ data: [], loading: true });
