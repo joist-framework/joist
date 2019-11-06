@@ -25,13 +25,9 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-root',
   defaultState: 'Hello World',
-  template(state) {
-    return html`
-      <h1>${state}</h1>
-    `
-  }
+  template: state => html`<h1>${state}</h1>`
 })
-class AppComponent { }
+class AppComponent {}
 ```
 
 ### Component Styles
@@ -52,13 +48,9 @@ import { html } from 'lit-html';
       }
     </style>
   `,
-  template(state) {
-    return html`
-      <h1>${state}</h1>
-    `
-  }
+  template: state => html`<h1>${state}</h1>`
 })
-class AppComponent { }
+class AppComponent {}
 ```
 
 ### Component State
@@ -73,11 +65,7 @@ import { html } from 'lit-html';
 @Component<number>({
   tag: 'app-root',
   defaultState: 0,
-  template(state) {
-    return html`
-      <h1>${state}</h1>
-    `
-  }
+  template: state => html`<h1>${state}</h1>`
 })
 class AppComponent implements OnInit {
   constructor(@State() private state: CompState<number>) {}
@@ -102,16 +90,12 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-title',
   defaultState: '',
-  template(state) {
-    return html`
-      <h1>${state}</h1>
-    `
-  }
+  template: state => html`<h1>${state}</h1>`
 })
 class AppTitleComponent implements OnPropChanges {
   @Prop() title?: string;
 
-  constructor(@State() private state: CompState<number>) {}
+  constructor(@State() private state: CompState<string>) {}
 
   onPropChanges() {
     this.state.setState(this.title);
@@ -144,17 +128,17 @@ import { html } from 'lit-html';
 class AppComponent {
   constructor(@State() private state: CompState<number>) {}
 
-  @Handle('INCREMENT') onIncrement() {
+  @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setState(this.state.value + 1);
   }
 
-  @Handle('DECREMENT') onDecrement() {
+  @Handle('DECREMENT') onDecrement(_: Event) {
     this.state.setState(this.state.value - 1);
   }
 }
 ```
 
-### Dispatching Event
+### Dispatching Events
 
 To emit custom events from a component you will need to access the acutal custom element instance.
 This can be accessed via the `@ElRef()` decorator.
@@ -212,9 +196,7 @@ interface ComponentModel {
 @Component<ComponentModel>({
   tag: 'app-root',
   defaultState: { loading: false, data: [] },
-  template(state, run) {
-    ...
-  }
+  template(state) { ... }
 })
 class AppComponent implements OnInit {
   constructor(@State() private state: CompState<ComponentModel>) {}
