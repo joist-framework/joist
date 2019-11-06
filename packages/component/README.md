@@ -23,7 +23,7 @@ import { Component, State, CompState, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
-  tag: 'hello-world',
+  tag: 'app-counter',
   defaultState: 0,
   template(state, run) {
     return html`
@@ -35,7 +35,7 @@ import { html } from 'lit-html';
     `
   }
 })
-class HelloWorldComponent {
+class CounterComponent {
   constructor(@State() private state: CompState<number>) {}
 
   @Handle('INCREMENT') onIncrement() {
@@ -63,7 +63,7 @@ import { html } from 'lit-html';
     `
   }
 })
-class HelloWorldComponent implements OnPropChanges {
+class AppTitleComponent implements OnPropChanges {
   @Prop() title?: string;
 
   constructor(@State() private state: CompState<number>) {}
@@ -86,13 +86,13 @@ interface ComponentModel {
 }
 
 @Component<ComponentModel>({
-  tag: 'app-title',
+  tag: 'app-root',
   defaultState: { loading: false, data: [] },
   template(state, run) {
     ...
   }
 })
-class HelloWorldComponent implements OnInit {
+class AppComponent implements OnInit {
   constructor(@State() private state: CompState<ComponentModel>) {}
 
   onInit() {
