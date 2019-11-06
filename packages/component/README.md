@@ -4,10 +4,8 @@ Create web components using [lit-html](https://lit-html.polymer-project.org/)
 
 Goals
 
-- [x] Small (~7k for small application)
-- [x] uses standards (custom elements and shadow dom)
+- [x] ~5kb Hello World ~7kb Todo App
 - [x] component template can ONLY be updated by calling set state. no exceptions
-- [x] Uses dependency Injection
 - [x] Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
 ### Installation
@@ -55,7 +53,9 @@ import { html } from 'lit-html';
     </style>
   `,
   template(state) {
-    <h1>${state}</h1>
+    return html`
+      <h1>${state}</h1>
+    `
   }
 })
 class AppComponent { }
