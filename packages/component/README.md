@@ -212,9 +212,7 @@ interface ComponentModel {
 @Component<ComponentModel>({
   tag: 'app-root',
   defaultState: { loading: false, data: [] },
-  template(state, run) {
-    ...
-  }
+  template(state) { ... }
 })
 class AppComponent implements OnInit {
   constructor(@State() private state: CompState<ComponentModel>) {}
