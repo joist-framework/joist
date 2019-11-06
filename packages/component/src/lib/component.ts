@@ -2,7 +2,7 @@ import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { TemplateResult, render, html } from 'lit-html';
 
 import { CompState } from './state';
-import { ELEMENT_REF } from './el-ref';
+import { ElRefToken } from './el-ref';
 import {
   OnPropChanges,
   OnInit,
@@ -64,7 +64,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
       public componentInjector = new Injector(
         {
           providers: [
-            { provide: ELEMENT_REF, useFactory: () => this },
+            { provide: ElRefToken, useFactory: () => this },
             {
               provide: CompState,
               useFactory: () => {

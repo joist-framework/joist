@@ -1,11 +1,11 @@
-import { SymbolToken } from './provider';
+import { ProviderToken } from './provider';
 
 export interface ServiceConfig {
   provideInRoot: boolean;
 }
 
 export function Service(serviceConfig: ServiceConfig = { provideInRoot: true }) {
-  return function(provider: SymbolToken<any>) {
+  return function(provider: ProviderToken<any>) {
     provider.provideInRoot = serviceConfig.provideInRoot;
   };
 }

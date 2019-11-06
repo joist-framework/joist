@@ -1,10 +1,4 @@
-import {
-  ProviderToken,
-  OverrideProvider,
-  ClassProviderToken,
-  FactoryProvider,
-  SymbolToken
-} from './provider';
+import { ProviderToken, OverrideProvider, ClassProviderToken, FactoryProvider } from './provider';
 
 export interface InjectorOptions {
   providers?: OverrideProvider<any>[];
@@ -19,8 +13,7 @@ export interface InjectorOptions {
  * @param parent a parent instance of Injector
  */
 export class Injector {
-  private providerWeakMap = new WeakMap<SymbolToken<any>, any>();
-  private providerMap = new Map<string, any>();
+  private providerWeakMap = new WeakMap<ProviderToken<any>, any>();
 
   constructor(private opts: InjectorOptions = {}, private parent?: Injector) {
     if (this.opts.bootstrap) {
@@ -32,13 +25,11 @@ export class Injector {
    * recursively check if a singleton instance is available for a provider
    */
   has(token: ProviderToken<any>): boolean {
-    if (!this.parent) {
-      return typeof token === 'string'
-        ? this.providerMap.has(token)
-        : this.providerWeakMap.has(token);
-    } else {
+    if (this.parent) {
       return this.parent.has(token);
     }
+
+    return this.providerWeakMap.has(token);
   }
 
   resolve<T>(token: ProviderToken<T>): T {
@@ -49,13 +40,7 @@ export class Injector {
       return this.createFromOverride(provider);
     }
 
-    if (typeof provider === 'string') {
-      throw new Error(`No provider found for ${provider}`);
-    }
-
-    const symbolToken = token as SymbolToken<T>;
-
-    if (this.parent && (this.parent.has(symbolToken) || symbolToken.provideInRoot)) {
+    if (this.parent && (this.parent.has(token) || token.provideInRoot)) {
       // if a parent is available and contains an instance of the provider already use that
       return this.parent.get(token);
     }
@@ -68,20 +53,13 @@ export class Injector {
    * fetches a singleton instance of a provider
    */
   get<T>(token: ProviderToken<T>): T {
-    if (typeof token === 'string' && this.providerMap.has(token)) {
-      // if provider has already been created in this scope return it
-      return this.providerMap.get(token);
-    } else if (this.providerWeakMap.has(token as SymbolToken<T>)) {
-      return this.providerWeakMap.get(token as SymbolToken<T>);
+    if (this.providerWeakMap.has(token)) {
+      return this.providerWeakMap.get(token);
     }
 
     let instance: T = this.resolve(token);
 
-    if (typeof token === 'string') {
-      this.providerMap.set(token, instance);
-    } else {
-      this.providerWeakMap.set(token, instance);
-    }
+    this.providerWeakMap.set(token, instance);
 
     return instance;
   }

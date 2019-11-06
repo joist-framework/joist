@@ -11,9 +11,7 @@ export type AbstractClassProviderToken<T> = Function & {
   provideInRoot?: boolean;
 };
 
-export type SymbolToken<T> = ClassProviderToken<T> | AbstractClassProviderToken<T>;
-
-export type ProviderToken<T> = SymbolToken<T> | string;
+export type ProviderToken<T> = ClassProviderToken<T> | AbstractClassProviderToken<T>;
 
 export interface ClassProvider<T> {
   provide: ProviderToken<T>;

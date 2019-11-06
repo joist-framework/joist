@@ -1,4 +1,4 @@
-import { Inject, SymbolToken, Service } from '@lit-kit/di';
+import { Inject, ProviderToken, Service } from '@lit-kit/di';
 
 abstract class StateBase<T> {
   private currentState: T;
@@ -27,7 +27,7 @@ export class CompState<T> extends StateBase<T> {}
 @Service()
 export class AppState<T> extends StateBase<T> {}
 
-export const App = () => (c: SymbolToken<any>, k: string, i: number) => Inject(AppState)(c, k, i);
+export const App = () => (c: ProviderToken<any>, k: string, i: number) => Inject(AppState)(c, k, i);
 
-export const State = () => (c: SymbolToken<any>, k: string, i: number) =>
+export const State = () => (c: ProviderToken<any>, k: string, i: number) =>
   Inject(CompState)(c, k, i);
