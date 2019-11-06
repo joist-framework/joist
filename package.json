@@ -1,7 +1,7 @@
 {
   "name": "lit-kit",
   "version": "0.0.0",
-  "description": "A set of packages to help you be more productive",
+  "description": "A set of packages that leverage lit-html to help you write applications with web components",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/lit-kit.git"
