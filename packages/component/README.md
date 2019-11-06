@@ -154,7 +154,7 @@ class AppComponent {
 }
 ```
 
-### Dispatching Event
+### Dispatching Events
 
 To emit custom events from a component you will need to access the acutal custom element instance.
 This can be accessed via the `@ElRef()` decorator.
