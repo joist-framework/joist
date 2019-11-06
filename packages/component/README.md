@@ -4,7 +4,7 @@ Create web components using lit-html
 
 Goals
 
-- [x] Small (~7k for todo app)
+- [x] Small (~7k for small application)
 - [x] uses standards (custom elements and shadow dom)
 - [x] component template can ONLY be updated by calling set state. no exceptions
 - [x] Uses dependency Injection
