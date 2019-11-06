@@ -63,7 +63,7 @@ class AppComponent { }
 
 ### Component State
 
-A component template can ONLY be updated by updating the components state.
+A component template can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `ComState` instance which is available via `@State()` 
 
 ```TS
