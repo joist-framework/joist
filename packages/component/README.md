@@ -92,6 +92,9 @@ class AppComponent implements OnInit {
 
 ### Component Props
 
+Component props are defined via the `@Prop()` decorator. This creates a property that is available via the custom element.
+Prop changes to not trigger template updates. Use custom setters or `onPropChanges` to set new state and update the template.
+
 ```TS
 import { Component, State, CompState, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
@@ -117,6 +120,8 @@ class AppTitleComponent implements OnPropChanges {
 ```
 
 ### Async State
+
+Component state can be set asynchronously.
 
 ```TS
 import { Component, State, CompState } from '@lit-kit/component';
