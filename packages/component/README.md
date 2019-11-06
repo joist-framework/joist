@@ -55,7 +55,9 @@ import { html } from 'lit-html';
     </style>
   `,
   template(state) {
-    <h1>${state}</h1>
+    return html`
+      <h1>${state}</h1>
+    `
   }
 })
 class AppComponent { }
