@@ -18,32 +18,74 @@ npm i @lit-kit/component @lit-kit/di lit-html
 
 ### Component
 
+Components are created via the "Component" decorator and a custom element is defined.
+
 ```TS
-import { Component, State, CompState, Handle } from '@lit-kit/component';
+import { Component } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-@Component<number>({
-  tag: 'app-counter',
-  defaultState: 0,
-  template(state, run) {
+@Component<{ title: string }>({
+  tag: 'app-root',
+  defaultState: { title: 'Hello World' },
+  template(state) {
     return html`
-      <button @click=${run('DECREMENT')}>Decrement</button>
-
-      ${state}
-
-      <button @click=${run('INCREMENT')}>Increment</button>
+      <h1>${state.title}</h1>
     `
   }
 })
-class CounterComponent {
+class AppComponent { }
+```
+
+### Component Styles
+
+Styles are provided via a "style" property and do not have access to the component state
+
+```TS
+import { Component } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component<{ title: string }>({
+  tag: 'app-root',
+  defaultState: { title: 'Hello World' },
+  style: html`
+    <style>
+      h1 {
+        font-weight: thin;
+      }
+    </style>
+  `,
+  template(state, run) {
+    <h1>${state.title}</h1>
+  }
+})
+class AppComponent { }
+```
+
+### Component State
+
+A component template can ONLY be updated by updating the components state.
+A component's state can be accessed and updated via it's `ComState` instance which is available via `@State()` 
+
+```TS
+import { Component, State, CompState, OnInit } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component<number>({
+  tag: 'app-root',
+  defaultState: 0,
+  template(state) {
+    return html`
+      <h1>${state}</h1>
+    `
+  }
+})
+class AppComponent implements OnInit {
   constructor(@State() private state: CompState<number>) {}
 
-  @Handle('INCREMENT') onIncrement() {
-    this.state.setState(state.value + 1);
-  }
-
-  @Handle('DECREMENT') onDecrement() {
-    this.state.setState(state.value - 1);
+  onInit() {
+    setInterval(() => {
+      this.state.setState(this.state.value + 1);
+    }, 1000);
   }
 }
 ```
@@ -105,25 +147,4 @@ class AppComponent implements OnInit {
 }
 ```
 
-### Component Styles
 
-```TS
-import { Component } from '@lit-kit/component';
-import { html } from 'lit-html';
-
-@Component({
-  tag: 'app-root',
-  defaultState: null,
-  style: html`
-    <style>
-      h1 {
-        font-weight: thin;
-      }
-    </style>
-  `
-  template(state, run) {
-    ...
-  }
-})
-class AppComponent { }
-```
