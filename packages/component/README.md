@@ -27,7 +27,7 @@ import { html } from 'lit-html';
   defaultState: 'Hello World',
   template: state => html`<h1>${state}</h1>`
 })
-class AppComponent { }
+class AppComponent {}
 ```
 
 ### Component Styles
@@ -50,7 +50,7 @@ import { html } from 'lit-html';
   `,
   template: state => html`<h1>${state}</h1>`
 })
-class AppComponent { }
+class AppComponent {}
 ```
 
 ### Component State
