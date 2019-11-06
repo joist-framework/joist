@@ -1,6 +1,6 @@
 # @lit-kit/component
 
-Create web components using lit-html
+Create web components using [lit-html](https://lit-html.polymer-project.org/)
 
 Goals
 
@@ -64,7 +64,7 @@ class AppComponent { }
 ### Component State
 
 A component template can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `ComState` instance which is available via `@State()` 
+A component's state can be accessed and updated via it's `CompState` instance which is available via `@State()`
 
 ```TS
 import { Component, State, CompState, OnInit } from '@lit-kit/component';
@@ -178,19 +178,19 @@ import { html } from 'lit-html';
 })
 class AppComponent {
   constructor(
-    @State() private state: CompState<number>, 
+    @State() private state: CompState<number>,
     @ElRef() private elRef: HTMLElement
   ) {}
 
   @Handle('INCREMENT') onIncrement() {
     this.state.setState(this.state.value + 1);
-    
+
     this.elRef.dispatchEvent(new CustomEvent('increment', { detail: this.state.value }));
   }
 
   @Handle('DECREMENT') onDecrement() {
     this.state.setState(this.state.value - 1);
-    
+
     this.elRef.dispatchEvent(new CustomEvent('decrement', { detail: this.state.value }));
   }
 }
@@ -228,5 +228,3 @@ class AppComponent implements OnInit {
   }
 }
 ```
-
-
