@@ -154,6 +154,48 @@ class AppComponent {
 }
 ```
 
+### Dispatching Event
+
+To emit custom events from a component you will need to access the acutal custom element instance.
+This can be accessed via the `@ElRef()` decorator.
+
+```TS
+import { Component, State, CompState, Handle, ElRef } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+@Component<number>({
+  tag: 'app-root',
+  defaultState: 0,
+  template(state, run) {
+    return html`
+      <button @click=${run('DECREMENT')}>Decrement</button>
+
+      ${state}
+
+      <button @click=${run('INCREMENT')}>Increment</button>
+    `
+  }
+})
+class AppComponent {
+  constructor(
+    @State() private state: CompState<number>, 
+    @ElRef() private elRef: HTMLElement
+  ) {}
+
+  @Handle('INCREMENT') onIncrement() {
+    this.state.setState(this.state.value + 1);
+    
+    this.elRef.dispatchEvent(new CustomEvent('increment', { detail: this.state.value }));
+  }
+
+  @Handle('DECREMENT') onDecrement() {
+    this.state.setState(this.state.value - 1);
+    
+    this.elRef.dispatchEvent(new CustomEvent('decrement', { detail: this.state.value }));
+  }
+}
+```
+
 ### Async State
 
 Component state can be set asynchronously.
