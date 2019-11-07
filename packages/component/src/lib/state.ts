@@ -2,12 +2,13 @@ import { Inject, ProviderToken, Service } from '@lit-kit/di';
 
 abstract class StateBase<T> {
   private currentState: T;
+  private listeners: Array<(state: T) => void> = [];
 
   get value() {
     return this.currentState;
   }
 
-  constructor(private stateChangeCallback: (state: T) => void, defaultState: T) {
+  constructor(defaultState: T) {
     this.currentState = defaultState;
   }
 
@@ -17,8 +18,16 @@ abstract class StateBase<T> {
     stateRes.then(res => {
       this.currentState = res;
 
-      this.stateChangeCallback(this.value);
+      this.listeners.forEach(cb => cb(this.value));
     });
+  }
+
+  onStateChange(cb: (state: T) => void) {
+    this.listeners.push(cb);
+
+    return () => {
+      this.listeners = this.listeners.filter(currentCb => currentCb !== cb);
+    };
   }
 }
 

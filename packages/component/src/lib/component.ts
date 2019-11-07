@@ -66,13 +66,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
             {
               provide: CompState,
               useFactory: () => {
-                return new CompState<T>(state => {
-                  const template = html`
-                    ${config.style} ${config.template(state, this.run)}
-                  `;
-
-                  render(template, this.shadow);
-                }, config.defaultState);
+                return new CompState<T>(config.defaultState);
               }
             }
           ]
@@ -101,6 +95,14 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         this.componentInstance.props = this.componentInstance.props || [];
 
         this.componentState = this.componentInjector.get(CompState);
+
+        this.componentState.onStateChange(state => {
+          const template = html`
+            ${config.style} ${config.template(state, this.run)}
+          `;
+
+          render(template, this.shadow);
+        });
 
         const length = this.componentInstance.props.length;
 
