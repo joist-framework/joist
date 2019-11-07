@@ -63,32 +63,28 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         {
           providers: [
             { provide: ElRefToken, useFactory: () => this },
-            {
-              provide: CompState,
-              useFactory: () => {
-                return new CompState<T>(config.defaultState);
-              }
-            }
+            { provide: CompState, useFactory: () => new CompState<T>(config.defaultState) }
           ]
         },
         window.__LIT_KIT_ROOT_INJECTOR__ // The root injector is global
       );
 
-      private shadow = this.attachShadow({ mode: 'open' });
-      private run = (eventName: string, payload: unknown) => (e: Event) => {
-        if (eventName in this.componentInstance.handlers) {
-          this.componentInstance.handlers[eventName].call(this.componentInstance, e, payload);
-        }
-      };
-
       constructor() {
         super();
 
+        const run = (eventName: string, payload: unknown) => (e: Event) => {
+          if (eventName in this.componentInstance.handlers) {
+            this.componentInstance.handlers[eventName].call(this.componentInstance, e, payload);
+          }
+        };
+
+        const shadow = this.attachShadow({ mode: 'open' });
+
         const template = html`
-          ${config.style} ${config.template(config.defaultState, this.run)}
+          ${config.style} ${config.template(config.defaultState, run)}
         `;
 
-        render(template, this.shadow);
+        render(template, shadow);
 
         this.componentInstance = this.componentInjector.create(componentDef);
 
@@ -98,10 +94,10 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
         this.componentState.onStateChange(state => {
           const template = html`
-            ${config.style} ${config.template(state, this.run)}
+            ${config.style} ${config.template(state, run)}
           `;
 
-          render(template, this.shadow);
+          render(template, shadow);
         });
 
         const length = this.componentInstance.props.length;
