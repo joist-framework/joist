@@ -1,5 +1,5 @@
 import { ProviderToken, Provider, ClassProviderToken, FactoryProvider } from './provider';
-import { metaDataCache } from './metadata';
+import { readMetadata } from './metadata';
 
 export interface InjectorOptions {
   providers?: Provider<any>[];
@@ -35,7 +35,7 @@ export class Injector {
 
   resolve<T>(token: ProviderToken<T>): T {
     const provider = this.findProvider(token);
-    const metaData = metaDataCache.get(token);
+    const metaData = readMetadata(token);
 
     if (provider) {
       // if an override is available for this Injector use that
@@ -65,7 +65,7 @@ export class Injector {
   }
 
   create<T>(P: ClassProviderToken<T>): T {
-    const metaData = metaDataCache.get(P);
+    const metaData = readMetadata(P);
 
     return metaData ? new P(...metaData.deps.map(dep => this.get(dep))) : new P();
   }

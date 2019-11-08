@@ -14,10 +14,24 @@ export interface ComponentConfig<T> {
   observedAttributes?: string[];
 }
 
-export class MetaData<T> {
+export class Metadata<T> {
   handlers: { [key: string]: Function } = {};
   props: string[] = [];
   config?: ComponentConfig<T>;
 }
 
-export const metaDataCache = new WeakMap<ProviderToken<any>, MetaData<any>>();
+const METADATA_KEY = '__LIT_KIT_COMPONENT_METADATA__';
+
+export const readMetadata = <T>(provider: ProviderToken<any>): Metadata<T> => {
+  const metadata = (provider as any)[METADATA_KEY];
+
+  if (!metadata) {
+    attachMetadata(provider, new Metadata());
+  }
+
+  return (provider as any)[METADATA_KEY];
+};
+
+export const attachMetadata = <T>(provider: ProviderToken<any>, metadata: Metadata<T>) => {
+  return ((provider as any)[METADATA_KEY] = metadata);
+};

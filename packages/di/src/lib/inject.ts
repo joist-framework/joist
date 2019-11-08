@@ -1,16 +1,10 @@
 import { ProviderToken } from './provider';
-import { metaDataCache, MetaData } from './metadata';
+import { readMetadata } from './metadata';
 
 export function Inject(injectable: ProviderToken<any>) {
   return function(provider: ProviderToken<any>, _prop: string, index: number) {
-    if (!metaDataCache.has(provider)) {
-      metaDataCache.set(provider, new MetaData());
-    }
+    const currentMetadata = readMetadata(provider);
 
-    const metadata = metaDataCache.get(provider) as MetaData;
-
-    if (metadata.deps[index] === undefined) {
-      metadata.deps[index] = injectable;
-    }
+    currentMetadata.deps[index] = injectable;
   };
 }

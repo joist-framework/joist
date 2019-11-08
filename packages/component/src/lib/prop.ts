@@ -1,13 +1,11 @@
-import { metaDataCache, MetaData } from './metadata';
+import { ProviderToken } from '@lit-kit/di';
+
+import { readMetadata } from './metadata';
 
 export function Prop() {
   return function(instance: any, key: string) {
-    if (!metaDataCache.has(instance.constructor)) {
-      metaDataCache.set(instance.constructor, new MetaData());
-    }
+    const metadata = readMetadata(instance.constructor as ProviderToken<any>);
 
-    const metaData = metaDataCache.get(instance.constructor) as MetaData<any>;
-
-    metaData.props.push(key);
+    metadata.props.push(key);
   };
 }

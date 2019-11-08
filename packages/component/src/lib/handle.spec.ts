@@ -1,5 +1,5 @@
 import { Handle } from './handle';
-import { metaDataCache, MetaData } from './metadata';
+import { readMetadata } from './metadata';
 
 describe('Handle', () => {
   class MyComponent {
@@ -8,7 +8,7 @@ describe('Handle', () => {
   }
 
   it('should add methods to the handlers map', () => {
-    const metadata = metaDataCache.get(MyComponent) as MetaData<any>;
+    const metadata = readMetadata(MyComponent);
 
     expect(Object.keys(metadata.handlers)).toEqual(['FOO', 'BAR']);
   });

@@ -3,7 +3,7 @@ import { render, html } from 'lit-html';
 
 import { CompState } from './state';
 import { ElRefToken } from './el-ref';
-import { MetaData, metaDataCache, ComponentConfig } from './metadata';
+import { Metadata, readMetadata, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
   OnInit,
@@ -21,13 +21,13 @@ export type ComponentInstance = Partial<OnPropChanges> &
 export type ElementInstance<T> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance;
-  componentMetaData: MetaData<T>;
+  componentMetaData: Metadata<T>;
   componentState: CompState<T>;
   [key: string]: any;
 } & HTMLElement;
 
 export const createComponent = <T>(componentDef: ProviderToken<any>) => {
-  const metaData = metaDataCache.get(componentDef) as MetaData<T>;
+  const metaData = readMetadata(componentDef) as Metadata<T>;
   const config = metaData.config as ComponentConfig<T>;
 
   return document.createElement(config.tag) as ElementInstance<T>;
@@ -36,13 +36,8 @@ export const createComponent = <T>(componentDef: ProviderToken<any>) => {
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
-  // If not metadata add default
-  if (!metaDataCache.has(componentDef)) {
-    metaDataCache.set(componentDef, new MetaData<T>());
-  }
-
   // add component config to metadata
-  const componentMetaData = metaDataCache.get(componentDef) as MetaData<T>;
+  const componentMetaData = readMetadata<T>(componentDef);
   componentMetaData.config = config;
 
   customElements.define(
