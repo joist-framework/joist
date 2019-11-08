@@ -70,6 +70,21 @@ const app = new Injector({
 app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRIDEN
 ```
 
+#### Root Service
+
+If you have nested injectors and you still want singleton instances decorator your services with `@Service()`
+
+```TS
+import { Service } from '@lit-kit/di';
+
+@Service()
+class FooService {
+  sayHello() {
+    return 'Hello From FooService';
+  }
+}
+```
+
 #### Inject services with custom decorators:
 
 ```TS
