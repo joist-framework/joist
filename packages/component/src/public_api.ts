@@ -13,3 +13,4 @@ export * from './lib/prop';
 export * from './lib/el-ref';
 export * from './lib/handle';
 export * from './lib/lifecycle';
+export { TemplateDef, TemplateEvent } from './lib/metadata';

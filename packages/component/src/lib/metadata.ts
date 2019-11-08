@@ -1,10 +1,9 @@
 import { ProviderToken } from '@lit-kit/di';
 import { TemplateResult } from 'lit-html';
 
-export type TemplateDef<T> = (
-  state: T,
-  run: (event: string, ...args: unknown[]) => (e: Event) => void
-) => TemplateResult;
+export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
+
+export type TemplateDef<T> = (state: T, run: TemplateEvent) => TemplateResult;
 
 export interface ComponentConfig<T> {
   tag: string;
