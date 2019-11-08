@@ -30,8 +30,6 @@ export const createComponent = <T>(componentDef: ProviderToken<any>) => {
   const metaData = metaDataCache.get(componentDef) as MetaData<T>;
   const config = metaData.config as ComponentConfig<T>;
 
-  console.log(metaData);
-
   return document.createElement(config.tag) as ElementInstance<T>;
 };
 
