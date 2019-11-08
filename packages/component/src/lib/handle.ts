@@ -1,13 +1,13 @@
-import { ComponentInstance } from './component';
+import { metaDataCache, MetaData } from './metadata';
 
 export function Handle(action: string) {
   return function(instance: any, key: string) {
-    const i = instance as ComponentInstance;
-
-    if (!i.handlers) {
-      i.handlers = {};
+    if (!metaDataCache.has(instance.constructor)) {
+      metaDataCache.set(instance.constructor, new MetaData());
     }
 
-    i.handlers[action] = i[key];
+    const metaData = metaDataCache.get(instance.constructor) as MetaData;
+
+    metaData.handlers[action] = instance[key];
   };
 }

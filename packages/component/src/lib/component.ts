@@ -3,6 +3,7 @@ import { TemplateResult, render, html } from 'lit-html';
 
 import { CompState } from './state';
 import { ElRefToken } from './el-ref';
+import { MetaData, metaDataCache } from './metadata';
 import {
   OnPropChanges,
   OnInit,
@@ -28,15 +29,12 @@ export type ComponentInstance = Partial<OnPropChanges> &
   Partial<OnInit> &
   Partial<OnConnected> &
   Partial<OnDisconnected> &
-  Partial<OnAttributeChanged> & {
-    props: string[];
-    handlers: { [key: string]: Function };
-    [key: string]: any;
-  };
+  Partial<OnAttributeChanged> & { [key: string]: any };
 
 export type ElementInstance<T> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance;
+  componentMetaData: MetaData;
   componentState: CompState<T>;
   [key: string]: any;
 } & HTMLElement;
@@ -44,6 +42,10 @@ export type ElementInstance<T> = {
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
+  if (!metaDataCache.has(componentDef)) {
+    metaDataCache.set(componentDef, new MetaData());
+  }
+
   customElements.define(
     config.tag,
     class extends HTMLElement implements ElementInstance<T> {
@@ -51,11 +53,12 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
       public componentInstance: ComponentInstance;
       public componentState: CompState<T>;
+      public componentMetaData: MetaData = metaDataCache.get(componentDef) as MetaData;
       public componentInjector = new Injector(
         {
           providers: [
-            { provide: ElRefToken, useFactory: () => this },
-            { provide: CompState, useFactory: () => new CompState<T>(config.defaultState) }
+            { provide: ElRefToken, useFactory: () => this, deps: [] },
+            { provide: CompState, useFactory: () => new CompState(config.defaultState), deps: [] }
           ]
         },
         window.__LIT_KIT_ROOT_INJECTOR__ // The root injector is global
@@ -65,8 +68,8 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         super();
 
         const run = (eventName: string, payload: unknown) => (e: Event) => {
-          if (eventName in this.componentInstance.handlers) {
-            this.componentInstance.handlers[eventName].call(this.componentInstance, e, payload);
+          if (eventName in this.componentMetaData.handlers) {
+            this.componentMetaData.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
 
@@ -79,7 +82,6 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         render(template, shadow);
 
         this.componentInstance = this.componentInjector.create(componentDef);
-        this.componentInstance.props = this.componentInstance.props || [];
         this.componentState = this.componentInjector.get(CompState);
 
         this.componentState.onStateChange(state => {
@@ -90,10 +92,10 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           render(template, shadow);
         });
 
-        const length = this.componentInstance.props.length;
+        const length = this.componentMetaData.props.length;
 
         for (let i = 0; i < length; i++) {
-          const prop = this.componentInstance.props[i];
+          const prop = this.componentMetaData.props[i];
 
           Object.defineProperty(this, prop, {
             set: value => {

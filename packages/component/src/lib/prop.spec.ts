@@ -1,4 +1,5 @@
 import { Prop } from './prop';
+import { metaDataCache, MetaData } from './metadata';
 
 describe('Props', () => {
   class MyComponent {
@@ -7,8 +8,8 @@ describe('Props', () => {
   }
 
   it('should add property keys to metadata', () => {
-    const component = new MyComponent() as any;
+    const metadata = metaDataCache.get(MyComponent) as MetaData;
 
-    expect(component.props).toEqual(['foo', 'bar']);
+    expect(metadata.props).toEqual(['foo', 'bar']);
   });
 });
