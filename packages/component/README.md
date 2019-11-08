@@ -11,7 +11,7 @@ Goals
 ### Installation
 
 ```BASH
-npm i @lit-kit/component @lit-kit/di lit-html
+npm i @lit-kit/component@alpha @lit-kit/di@alpha lit-html
 ```
 
 ### Component
