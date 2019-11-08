@@ -41,17 +41,9 @@ export type ElementInstance<T> = {
   [key: string]: any;
 } & HTMLElement;
 
-export type ComponentDef<T> = ClassProviderToken<T> & { tag?: string };
-
-export const createComponent = <T>(componentDef: ComponentDef<any>) => {
-  return document.createElement(componentDef.tag as string) as ElementInstance<T>;
-};
-
 export const Component = <T = any>(config: ComponentConfig<T>) => (
-  componentDef: ComponentDef<any>
+  componentDef: ClassProviderToken<any>
 ) => {
-  componentDef.tag = config.tag;
-
   customElements.define(
     config.tag,
     class extends HTMLElement implements ElementInstance<T> {
@@ -87,9 +79,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         render(template, shadow);
 
         this.componentInstance = this.componentInjector.create(componentDef);
-
         this.componentInstance.props = this.componentInstance.props || [];
-
         this.componentState = this.componentInjector.get(CompState);
 
         this.componentState.onStateChange(state => {

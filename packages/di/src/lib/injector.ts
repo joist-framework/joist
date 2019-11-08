@@ -1,4 +1,5 @@
 import { ProviderToken, OverrideProvider, ClassProviderToken, FactoryProvider } from './provider';
+import { metaDataCache, MetaData } from './metadata';
 
 export interface InjectorOptions {
   providers?: OverrideProvider<any>[];
@@ -34,11 +35,12 @@ export class Injector {
 
   resolve<T>(token: ProviderToken<T>): T {
     const provider = this.findProvider(token);
+    const metaData = metaDataCache.get(token) || new MetaData();
 
     if (provider) {
       // if an override is available for this Injector use that
       return this.createFromOverride(provider);
-    } else if (this.parent && (this.parent.has(token) || token.provideInRoot)) {
+    } else if (this.parent && (this.parent.has(token) || metaData.provideInRoot)) {
       // if a parent is available and contains an instance of the provider already use that
       return this.parent.get(token);
     }
@@ -63,7 +65,9 @@ export class Injector {
   }
 
   create<T>(P: ClassProviderToken<T>): T {
-    return P.deps ? new P(...P.deps.map(dep => this.get(dep))) : new P();
+    const metaData = metaDataCache.get(P) || new MetaData();
+
+    return new P(...metaData.deps.map(dep => this.get(dep)));
   }
 
   private createFromOverride<T>(provider: OverrideProvider<T>): T | null {
@@ -77,9 +81,7 @@ export class Injector {
   }
 
   private createFromFactory<T>(token: FactoryProvider<T>) {
-    const deps = token.deps ? token.deps.map(dep => this.get(dep)) : [];
-
-    return token.useFactory.apply(token, deps);
+    return token.useFactory.apply(token, token.deps.map(token => this.get(token)));
   }
 
   private findProvider(token: ProviderToken<any>): OverrideProvider<any> | null {

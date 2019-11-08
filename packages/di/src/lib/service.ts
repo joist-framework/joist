@@ -1,4 +1,5 @@
 import { ProviderToken } from './provider';
+import { metaDataCache, MetaData } from './metadata';
 
 export interface ServiceConfig {
   provideInRoot: boolean;
@@ -6,6 +7,12 @@ export interface ServiceConfig {
 
 export function Service(serviceConfig: ServiceConfig = { provideInRoot: true }) {
   return function(provider: ProviderToken<any>) {
-    provider.provideInRoot = serviceConfig.provideInRoot;
+    if (!metaDataCache.has(provider)) {
+      metaDataCache.set(provider, { deps: [], provideInRoot: false });
+    }
+
+    const metadata = metaDataCache.get(provider) as MetaData;
+
+    metadata.provideInRoot = serviceConfig.provideInRoot;
   };
 }

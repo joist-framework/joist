@@ -252,7 +252,8 @@ describe('Injector', () => {
           provide: MyService,
           useFactory(): MyService {
             return new MyService('TEST');
-          }
+          },
+          deps: []
         }
       ]
     });
