@@ -2,9 +2,7 @@ export type ClassProviderToken<T> = {
   new (...args: any[]): T;
 };
 
-export type AbstractClassProviderToken<T> = Function & {
-  prototype: T;
-};
+export type AbstractClassProviderToken<T> = Function & { prototype: T };
 
 export type ProviderToken<T> = ClassProviderToken<T> | AbstractClassProviderToken<T>;
 
@@ -19,4 +17,4 @@ export interface FactoryProvider<T> {
   deps: ProviderToken<any>[];
 }
 
-export type OverrideProvider<T> = ClassProvider<T> | FactoryProvider<T>;
+export type Provider<T> = ClassProvider<T> | FactoryProvider<T>;

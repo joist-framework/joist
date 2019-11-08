@@ -1,8 +1,8 @@
-import { ProviderToken, OverrideProvider, ClassProviderToken, FactoryProvider } from './provider';
-import { metaDataCache, MetaData } from './metadata';
+import { ProviderToken, Provider, ClassProviderToken, FactoryProvider } from './provider';
+import { metaDataCache } from './metadata';
 
 export interface InjectorOptions {
-  providers?: OverrideProvider<any>[];
+  providers?: Provider<any>[];
   bootstrap?: ProviderToken<any>[];
 }
 
@@ -14,7 +14,7 @@ export interface InjectorOptions {
  * @param parent a parent instance of Injector
  */
 export class Injector {
-  private providerWeakMap = new WeakMap<ProviderToken<any>, any>();
+  private providerMap = new WeakMap<ProviderToken<any>, any>();
 
   constructor(private opts: InjectorOptions = {}, private parent?: Injector) {
     if (this.opts.bootstrap) {
@@ -30,47 +30,47 @@ export class Injector {
       return this.parent.has(token);
     }
 
-    return this.providerWeakMap.has(token);
+    return this.providerMap.has(token);
   }
 
   resolve<T>(token: ProviderToken<T>): T {
     const provider = this.findProvider(token);
-    const metaData = metaDataCache.get(token) || new MetaData();
+    const metaData = metaDataCache.get(token);
 
     if (provider) {
       // if an override is available for this Injector use that
-      return this.createFromOverride(provider);
-    } else if (this.parent && (this.parent.has(token) || metaData.provideInRoot)) {
+      return this.createFromProvider(provider);
+    } else if (this.parent && (this.parent.has(token) || (metaData && metaData.provideInRoot))) {
       // if a parent is available and contains an instance of the provider already use that
       return this.parent.get(token);
     }
 
     // if nothing else found assume provider is a class provider
-    return this.create(<ClassProviderToken<T>>token);
+    return this.create(token as ClassProviderToken<T>);
   }
 
   /**
    * fetches a singleton instance of a provider
    */
   get<T>(token: ProviderToken<T>): T {
-    if (this.providerWeakMap.has(token)) {
-      return this.providerWeakMap.get(token);
+    if (this.providerMap.has(token)) {
+      return this.providerMap.get(token);
     }
 
     let instance: T = this.resolve(token);
 
-    this.providerWeakMap.set(token, instance);
+    this.providerMap.set(token, instance);
 
     return instance;
   }
 
   create<T>(P: ClassProviderToken<T>): T {
-    const metaData = metaDataCache.get(P) || new MetaData();
+    const metaData = metaDataCache.get(P);
 
-    return new P(...metaData.deps.map(dep => this.get(dep)));
+    return metaData ? new P(...metaData.deps.map(dep => this.get(dep))) : new P();
   }
 
-  private createFromOverride<T>(provider: OverrideProvider<T>): T | null {
+  private createFromProvider<T>(provider: Provider<T>): T | null {
     if ('useClass' in provider) {
       return this.create(provider.useClass);
     } else if ('useFactory' in provider) {
@@ -84,7 +84,7 @@ export class Injector {
     return token.useFactory.apply(token, token.deps.map(token => this.get(token)));
   }
 
-  private findProvider(token: ProviderToken<any>): OverrideProvider<any> | null {
+  private findProvider(token: ProviderToken<any>): Provider<any> | null {
     if (!this.opts.providers) {
       return null;
     }

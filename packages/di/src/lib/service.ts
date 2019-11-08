@@ -8,7 +8,7 @@ export interface ServiceConfig {
 export function Service(serviceConfig: ServiceConfig = { provideInRoot: true }) {
   return function(provider: ProviderToken<any>) {
     if (!metaDataCache.has(provider)) {
-      metaDataCache.set(provider, { deps: [], provideInRoot: false });
+      metaDataCache.set(provider, new MetaData());
     }
 
     const metadata = metaDataCache.get(provider) as MetaData;

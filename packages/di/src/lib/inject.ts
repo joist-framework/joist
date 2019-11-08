@@ -4,7 +4,7 @@ import { metaDataCache, MetaData } from './metadata';
 export function Inject(injectable: ProviderToken<any>) {
   return function(provider: ProviderToken<any>, _prop: string, index: number) {
     if (!metaDataCache.has(provider)) {
-      metaDataCache.set(provider, { deps: [], provideInRoot: false });
+      metaDataCache.set(provider, new MetaData());
     }
 
     const metadata = metaDataCache.get(provider) as MetaData;
