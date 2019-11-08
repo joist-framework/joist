@@ -23,15 +23,15 @@ export class Metadata<T> {
 const METADATA_KEY = '__LIT_KIT_COMPONENT_METADATA__';
 
 export const readMetadata = <T>(provider: ProviderToken<any>): Metadata<T> => {
-  const metadata = (provider as any)[METADATA_KEY];
+  const metadata = provider[METADATA_KEY];
 
   if (!metadata) {
     attachMetadata(provider, new Metadata());
   }
 
-  return (provider as any)[METADATA_KEY];
+  return provider[METADATA_KEY];
 };
 
 export const attachMetadata = <T>(provider: ProviderToken<any>, metadata: Metadata<T>) => {
-  return ((provider as any)[METADATA_KEY] = metadata);
+  provider[METADATA_KEY] = metadata;
 };
