@@ -11,7 +11,7 @@ Goals
 ### Installation
 
 ```BASH
-npm i @lit-kit/component @lit-kit/di lit-html
+npm i @lit-kit/component@alpha @lit-kit/di@alpha lit-html
 ```
 
 ### Component
@@ -169,13 +169,13 @@ class AppComponent {
   @Handle('INCREMENT') onIncrement() {
     this.state.setState(this.state.value + 1);
 
-    this.elRef.dispatchEvent(new CustomEvent('increment', { detail: this.state.value }));
+    this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
   }
 
   @Handle('DECREMENT') onDecrement() {
     this.state.setState(this.state.value - 1);
 
-    this.elRef.dispatchEvent(new CustomEvent('decrement', { detail: this.state.value }));
+    this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
   }
 }
 ```
