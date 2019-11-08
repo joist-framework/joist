@@ -1,6 +1,6 @@
 import { html } from 'lit-html';
 
-import { Component, ElementInstance } from './component';
+import { Component, createComponent } from './component';
 import { ElRef } from './el-ref';
 
 describe('ElRef', () => {
@@ -14,8 +14,7 @@ describe('ElRef', () => {
   }
 
   it('should provide an instance of the Custom Element', () => {
-    const el = document.createElement('el-ref-component-test-1') as ElementInstance<unknown> &
-      MyComponent;
+    const el = createComponent(MyComponent);
 
     expect(el.componentInstance.elRef).toBe(el);
   });

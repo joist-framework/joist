@@ -1,9 +1,9 @@
-import { Injector, ClassProviderToken } from '@lit-kit/di';
-import { TemplateResult, render, html } from 'lit-html';
+import { Injector, ClassProviderToken, ProviderToken } from '@lit-kit/di';
+import { render, html } from 'lit-html';
 
 import { CompState } from './state';
 import { ElRefToken } from './el-ref';
-import { MetaData, metaDataCache } from './metadata';
+import { MetaData, metaDataCache, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
   OnInit,
@@ -11,19 +11,6 @@ import {
   OnDisconnected,
   OnAttributeChanged
 } from './lifecycle';
-
-export type TemplateDef<T> = (
-  state: T,
-  run: (event: string, ...args: unknown[]) => (e: Event) => void
-) => TemplateResult;
-
-export interface ComponentConfig<T> {
-  tag: string;
-  template: TemplateDef<T>;
-  defaultState: T;
-  style?: TemplateResult;
-  observedAttributes?: string[];
-}
 
 export type ComponentInstance = Partial<OnPropChanges> &
   Partial<OnInit> &
@@ -34,17 +21,29 @@ export type ComponentInstance = Partial<OnPropChanges> &
 export type ElementInstance<T> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance;
-  componentMetaData: MetaData;
+  componentMetaData: MetaData<T>;
   componentState: CompState<T>;
   [key: string]: any;
 } & HTMLElement;
+
+export const createComponent = <T>(componentDef: ProviderToken<any>) => {
+  const metaData = metaDataCache.get(componentDef) as MetaData<T>;
+  const config = metaData.config as ComponentConfig<T>;
+
+  console.log(metaData);
+
+  return document.createElement(config.tag) as ElementInstance<T>;
+};
 
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
   if (!metaDataCache.has(componentDef)) {
-    metaDataCache.set(componentDef, new MetaData());
+    metaDataCache.set(componentDef, new MetaData<T>());
   }
+
+  const componentMetaData = metaDataCache.get(componentDef) as MetaData<T>;
+  componentMetaData.config = config;
 
   customElements.define(
     config.tag,
@@ -53,7 +52,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
       public componentInstance: ComponentInstance;
       public componentState: CompState<T>;
-      public componentMetaData: MetaData = metaDataCache.get(componentDef) as MetaData;
+      public componentMetaData = componentMetaData;
       public componentInjector = new Injector(
         {
           providers: [

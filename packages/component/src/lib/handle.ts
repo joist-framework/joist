@@ -6,7 +6,7 @@ export function Handle(action: string) {
       metaDataCache.set(instance.constructor, new MetaData());
     }
 
-    const metaData = metaDataCache.get(instance.constructor) as MetaData;
+    const metaData = metaDataCache.get(instance.constructor) as MetaData<any>;
 
     metaData.handlers[action] = instance[key];
   };

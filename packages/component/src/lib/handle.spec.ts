@@ -8,7 +8,7 @@ describe('Handle', () => {
   }
 
   it('should add methods to the handlers map', () => {
-    const metadata = metaDataCache.get(MyComponent) as MetaData;
+    const metadata = metaDataCache.get(MyComponent) as MetaData<any>;
 
     expect(Object.keys(metadata.handlers)).toEqual(['FOO', 'BAR']);
   });

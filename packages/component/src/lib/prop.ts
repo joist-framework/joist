@@ -6,7 +6,7 @@ export function Prop() {
       metaDataCache.set(instance.constructor, new MetaData());
     }
 
-    const metaData = metaDataCache.get(instance.constructor) as MetaData;
+    const metaData = metaDataCache.get(instance.constructor) as MetaData<any>;
 
     metaData.props.push(key);
   };
