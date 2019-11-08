@@ -1,9 +1,10 @@
 import { Injector } from '@lit-kit/di';
 import { html } from 'lit-html';
 
-import { Component, createComponent } from './component';
+import { Component } from './component';
 import { CompState } from './state';
 import { Prop } from './prop';
+import { createComponent } from './create-component';
 
 describe('Component', () => {
   describe('creation', () => {

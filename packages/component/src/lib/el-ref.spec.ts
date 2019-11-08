@@ -1,7 +1,8 @@
 import { html } from 'lit-html';
 
-import { Component, createComponent } from './component';
+import { Component } from './component';
 import { ElRef } from './el-ref';
+import { createComponent } from './create-component';
 
 describe('ElRef', () => {
   @Component({

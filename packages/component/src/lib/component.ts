@@ -1,4 +1,4 @@
-import { Injector, ClassProviderToken, ProviderToken } from '@lit-kit/di';
+import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { render, html } from 'lit-html';
 
 import { CompState } from './state';
@@ -25,18 +25,6 @@ export type ElementInstance<T> = {
   componentState: CompState<T>;
   [key: string]: any;
 } & HTMLElement;
-
-export const createComponent = <T>(componentDef: ProviderToken<any>) => {
-  const metadata = readMetadata<T>(componentDef);
-
-  if (!metadata.config) {
-    throw new Error(
-      `${componentDef.name} is not a Component. Decorate it with the @Component() decorator`
-    );
-  }
-
-  return document.createElement(metadata.config.tag) as ElementInstance<T>;
-};
 
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
