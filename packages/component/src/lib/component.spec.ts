@@ -37,6 +37,16 @@ describe('Component', () => {
     });
   });
 
+  describe('creation Error', () => {
+    class SomeClass {}
+
+    it('should throw an error if trying to use a non component class to create', () => {
+      expect(() => createComponent(SomeClass)).toThrowError(
+        'SomeClass is not a Component. Decorate it with the @Component() decorator'
+      );
+    });
+  });
+
   describe('props', () => {
     @Component({
       tag: 'component-test-2',

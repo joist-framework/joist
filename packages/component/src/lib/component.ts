@@ -27,10 +27,15 @@ export type ElementInstance<T> = {
 } & HTMLElement;
 
 export const createComponent = <T>(componentDef: ProviderToken<any>) => {
-  const metaData = readMetadata(componentDef) as Metadata<T>;
-  const config = metaData.config as ComponentConfig<T>;
+  const metadata = readMetadata<T>(componentDef);
 
-  return document.createElement(config.tag) as ElementInstance<T>;
+  if (!metadata.config) {
+    throw new Error(
+      `${componentDef.name} is not a Component. Decorate it with the @Component() decorator`
+    );
+  }
+
+  return document.createElement(metadata.config.tag) as ElementInstance<T>;
 };
 
 export const Component = <T = any>(config: ComponentConfig<T>) => (
