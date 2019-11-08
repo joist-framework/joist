@@ -38,10 +38,12 @@ export const createComponent = <T>(componentDef: ProviderToken<any>) => {
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
+  // If not metadata add default
   if (!metaDataCache.has(componentDef)) {
     metaDataCache.set(componentDef, new MetaData<T>());
   }
 
+  // add component config to metadata
   const componentMetaData = metaDataCache.get(componentDef) as MetaData<T>;
   componentMetaData.config = config;
 
@@ -93,6 +95,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
         const length = this.componentMetaData.props.length;
 
+        // Define setters and getters to map custom element properties to component properties
         for (let i = 0; i < length; i++) {
           const prop = this.componentMetaData.props[i];
 
