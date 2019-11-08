@@ -3,6 +3,7 @@ import { render, html } from 'lit-html';
 
 import { CompState } from './state';
 import { ElRefToken } from './el-ref';
+import { ROOT_INJECTOR } from './app';
 import { Metadata, readMetadata, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
@@ -48,7 +49,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
             { provide: CompState, useFactory: () => new CompState(config.defaultState), deps: [] }
           ]
         },
-        window.__LIT_KIT_ROOT_INJECTOR__ // The root injector is global
+        ROOT_INJECTOR
       );
 
       constructor() {

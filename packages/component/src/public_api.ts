@@ -1,11 +1,3 @@
-import { Injector } from '@lit-kit/di';
-
-declare global {
-  interface Window {
-    __LIT_KIT_ROOT_INJECTOR__: Injector;
-  }
-}
-
 export * from './lib/app';
 export * from './lib/component';
 export * from './lib/state';

@@ -1,5 +1,7 @@
 import { Injector } from '@lit-kit/di';
 
+export let ROOT_INJECTOR: Injector | undefined;
+
 export const bootstrapApplication = () => {
-  window.__LIT_KIT_ROOT_INJECTOR__ = new Injector();
+  ROOT_INJECTOR = new Injector();
 };
