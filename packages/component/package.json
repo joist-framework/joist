@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/component",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "main": "out-browser/public_api.js",
   "files": [
     "out-browser/**/*"
