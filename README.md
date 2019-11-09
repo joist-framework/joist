@@ -2,9 +2,9 @@
 
 A set of packages that leverage lit-html to help you write applications with web components
 
-| Package                                    |
-| ------------------------------------------ |
-| [@lit-kit/component](packages/component)   |
-| [@lit-kit/di](packages/di)                 |
-| [@lit-kit/schematics](packages/schematics) |
+| Package                                    | Description                                                    |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| [@lit-kit/component](packages/component)   | Create Web Components                                          |
+| [@lit-kit/di](packages/di)                 | IOC container                                                  |
+| [@lit-kit/schematics](packages/schematics) | Schematics for generating components and creating applications |
 
