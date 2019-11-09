@@ -28,7 +28,9 @@
   "schematics": "./src/collection.json",
   "dependencies": {
     "@angular-devkit/core": "8.3.18",
-    "@angular-devkit/schematics": "8.3.18",
+    "@angular-devkit/schematics": "8.3.18"
+  },
+  "devDependencies": {
     "@types/jasmine": "3.4.6",
     "@types/node": "8.10.59",
     "jasmine": "3.5.0",
