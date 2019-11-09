@@ -9,17 +9,20 @@
     "!src/**/*_spec.*",
     "src/**/files/*"
   ],
+  "keywords": [
+    "schematics"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/lit-kit.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "ts-node node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
   },
-  "keywords": [
-    "schematics"
-  ],
   "author": "",
   "license": "MIT",
   "schematics": "./src/collection.json",
@@ -32,5 +35,5 @@
     "ts-node": "^8.4.1",
     "typescript": "~3.7.0"
   },
-  "gitHead": "e0c35f774aeefc27c61ac13eae211b9417eca850"
+  "gitHead": "722189ceb3eb1d2f6be177a8f86842a5e3a18534"
 }
