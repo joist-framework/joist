@@ -1,0 +1,24 @@
+import { Component, State, CompState } from '@lit-kit/component';
+import { html } from 'lit-html';
+
+export interface <%= classify(name) %>State {}
+
+@Component<<%= classify(name) %>State>({
+  tag: '<%= name %>',
+  defaultState: {},
+  style: html`
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  `,
+  template(_state, _run) {
+    return html`
+      <%= name %> Worked!
+    `;
+  }
+})
+export class <%= classify(name) %>Component {
+  constructor(@State() _state: CompState<<%= classify(name) %>State>) {}
+}
