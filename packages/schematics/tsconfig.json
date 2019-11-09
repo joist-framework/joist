@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "tsconfig",
+    "lib": ["es2018", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "rootDir": "src/",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "types": ["jasmine", "node"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/*/files/**/*"]
+}
