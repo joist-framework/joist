@@ -37,7 +37,7 @@
   "devDependencies": {
     "@lit-kit/di": "^1.0.0-alpha.22",
     "@types/jasmine": "3.4.6",
-    "@types/node": "12.12.5",
+    "@types/node": "12.12.7",
     "jasmine-core": "3.5.0",
     "karma": "4.4.1",
     "karma-chrome-launcher": "3.1.0",
