@@ -3,7 +3,8 @@
   "schematics": {
     "application": {
       "description": "Generate a new application",
-      "factory": "./application/index#application"
+      "factory": "./application/index#application",
+      "schema": "./application/schema.json"
     }
   }
 }

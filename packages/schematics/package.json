@@ -2,6 +2,13 @@
   "name": "@lit-kit/schematics",
   "version": "0.0.0",
   "description": "A blank schematics",
+  "files": [
+    "src/**/*",
+    "!src/**/*.ts",
+    "src/**/*.d.ts",
+    "!src/**/*_spec.*",
+    "src/**/files/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/lit-kit.git"
