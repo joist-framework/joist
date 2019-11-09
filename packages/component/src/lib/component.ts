@@ -13,17 +13,18 @@ import {
   OnAttributeChanged
 } from './lifecycle';
 
-export type ComponentInstance = Partial<OnPropChanges> &
+export type ComponentInstance<T> = T &
+  Partial<OnPropChanges> &
   Partial<OnInit> &
   Partial<OnConnected> &
   Partial<OnDisconnected> &
   Partial<OnAttributeChanged> & { [key: string]: any };
 
-export type ElementInstance<T> = {
+export type ElementInstance<Component, State> = {
   componentInjector: Injector;
-  componentInstance: ComponentInstance;
-  componentMetaData: Metadata<T>;
-  componentState: CompState<T>;
+  componentInstance: ComponentInstance<Component>;
+  componentMetaData: Metadata<State>;
+  componentState: CompState<State>;
   [key: string]: any;
 } & HTMLElement;
 
@@ -36,10 +37,10 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
 
   customElements.define(
     config.tag,
-    class extends HTMLElement implements ElementInstance<T> {
+    class extends HTMLElement implements ElementInstance<typeof componentDef, T> {
       static observedAttributes = config.observedAttributes;
 
-      public componentInstance: ComponentInstance;
+      public componentInstance: ComponentInstance<typeof componentDef>;
       public componentState: CompState<T>;
       public componentMetaData = componentMetaData;
       public componentInjector = new Injector(

@@ -3,8 +3,8 @@ import { ProviderToken } from '@lit-kit/di';
 import { readMetadata } from './metadata';
 import { ElementInstance } from './component';
 
-export const createComponent = <T>(componentDef: ProviderToken<any>) => {
-  const metadata = readMetadata<T>(componentDef);
+export const createComponent = <Component, State>(componentDef: ProviderToken<any>) => {
+  const metadata = readMetadata<State>(componentDef);
 
   if (!metadata.config) {
     throw new Error(
@@ -12,5 +12,5 @@ export const createComponent = <T>(componentDef: ProviderToken<any>) => {
     );
   }
 
-  return document.createElement(metadata.config.tag) as ElementInstance<T>;
+  return document.createElement(metadata.config.tag) as ElementInstance<Component, State>;
 };

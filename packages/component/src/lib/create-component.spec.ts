@@ -2,9 +2,11 @@ import { createComponent } from './create-component';
 
 describe('create-component', () => {
   it('should throw an error if trying to use a non component class to create', () => {
-    class NotComponent {}
+    class NotComponent {
+      helloWorld = '';
+    }
 
-    expect(() => createComponent(NotComponent)).toThrowError(
+    expect(() => createComponent<NotComponent, void>(NotComponent)).toThrowError(
       'NotComponent is not a Component. Decorate it with the @Component() decorator'
     );
   });

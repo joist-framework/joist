@@ -20,19 +20,19 @@ describe('Component', () => {
     class MyComponent1 {}
 
     it('should create a componentInjector property', () => {
-      const el = createComponent(MyComponent1);
+      const el = createComponent<MyComponent1, void>(MyComponent1);
 
       expect(el.componentInjector instanceof Injector).toBe(true);
     });
 
     it('should create a componentInstance property', () => {
-      const el = createComponent(MyComponent1);
+      const el = createComponent<MyComponent1, void>(MyComponent1);
 
       expect(el.componentInstance instanceof MyComponent1).toBe(true);
     });
 
     it('should create a componentState property', () => {
-      const el = createComponent(MyComponent1);
+      const el = createComponent<MyComponent1, void>(MyComponent1);
 
       expect(el.componentState instanceof CompState).toBe(true);
     });
@@ -53,13 +53,14 @@ describe('Component', () => {
     }
 
     it('should use the value from the componentInstance when getting a property value from the custom element', () => {
-      const el = createComponent(MyComponent2);
+      const el = createComponent<MyComponent2, void>(MyComponent2);
 
+      expect(el.componentInstance.foo).toBe('Hello World');
       expect(el.foo).toBe('Hello World');
     });
 
     it('should set componentInstance props when they are set on the custom element', () => {
-      const el = createComponent(MyComponent2);
+      const el = createComponent<MyComponent2, void>(MyComponent2);
 
       el.foo = 'Hello World - 2';
 
