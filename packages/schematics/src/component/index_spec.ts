@@ -8,11 +8,11 @@ describe('new-component', () => {
   it('creates the correct files', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
 
-    const tree = runner.runSchematic('component', { name: 'hello-world' }, Tree.empty());
+    const tree = runner.runSchematic('component', { name: 'src/app/hello-world' }, Tree.empty());
 
     expect(tree.files.sort()).toEqual([
-      '/hello-world/hello-world.component.spec.ts',
-      '/hello-world/hello-world.component.ts'
+      '/src/app/hello-world/hello-world.component.spec.ts',
+      '/src/app/hello-world/hello-world.component.ts'
     ]);
   });
 });
