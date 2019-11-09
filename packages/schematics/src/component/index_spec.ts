@@ -15,4 +15,64 @@ describe('new-component', () => {
       '/src/app/hello-world/hello-world.component.ts'
     ]);
   });
+
+  describe('component file generation', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+
+    const tree = runner.runSchematic('component', { name: 'src/app/hello-world' }, Tree.empty());
+
+    const file = tree.read('/src/app/hello-world/hello-world.component.ts') as Buffer;
+    const content = file.toString();
+
+    it('should create a state interface', () => {
+      expect(content.includes('export interface HelloWorldState {}')).toBe(true);
+    });
+
+    it('should create component definition', () => {
+      expect(content.includes('@Component<HelloWorldState>({')).toBe(true);
+    });
+
+    it('should have the correct tag name', () => {
+      expect(content.includes(`tag: 'hello-world',`)).toBe(true);
+    });
+
+    it('should create the correct component class', () => {
+      expect(content.includes('export class HelloWorldComponent {')).toBe(true);
+    });
+
+    it('should provide component state', () => {
+      expect(content.includes('constructor(@State() _state: CompState<HelloWorldState>) {}')).toBe(
+        true
+      );
+    });
+  });
+
+  describe('component spec file generation', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+
+    const tree = runner.runSchematic('component', { name: 'src/app/hello-world' }, Tree.empty());
+
+    const file = tree.read('/src/app/hello-world/hello-world.component.spec.ts') as Buffer;
+    const content = file.toString();
+
+    it('should import the component and state', () => {
+      expect(
+        content.includes(
+          `import { HelloWorldComponent, HelloWorldState } from './hello-world.component.ts';`
+        )
+      ).toBe(true);
+    });
+
+    it('should create the describe block', () => {
+      expect(content.includes(`describe('HelloWorldComponent', () => {`)).toBe(true);
+    });
+
+    it('should create an element instance', () => {
+      expect(
+        content.includes(
+          `const el = createComponent<HelloWorldComponent, HelloWorldState>(HelloWorldComponent);`
+        )
+      ).toBe(true);
+    });
+  });
 });
