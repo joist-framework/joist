@@ -5,7 +5,7 @@ describe('Inject', () => {
   class A {}
   class B {}
   class C {
-    constructor(@Inject(A) _service1: A, @Inject(B) _service2: B) {}
+    constructor(@Inject(A) _a: A, @Inject(B) _b: B) {}
   }
 
   it('should add deps to metadata', () => {
