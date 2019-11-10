@@ -14,9 +14,6 @@
     "types": ["jasmine", "node"],
     "typeRoots": [],
     "declaration": false,
-    "baseUrl": ".",
-    "paths": {
-      "lit-html": ["node_modules/lit-html"]
-    }
+    "baseUrl": "."
   }
 }
