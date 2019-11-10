@@ -5,13 +5,13 @@ import { ProviderToken } from './provider';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
-    class MyService {
+    class A {
       foo = 'Hello World';
     }
 
     const app = new Injector();
 
-    expect(app.get(MyService).foo).toBe('Hello World');
+    expect(app.get(A).foo).toBe('Hello World');
   });
 
   it('should inject providers in the correct order', () => {
@@ -35,24 +35,6 @@ describe('Injector', () => {
     const app = new Injector();
 
     expect(app.get(MyService).value).toBe('FOOBAR');
-  });
-
-  it('should create a new instance of a provider with a dependency', () => {
-    class BarService {
-      foo = 'Hello World';
-    }
-
-    class FooService {
-      constructor(@Inject(BarService) private bar: BarService) {}
-
-      sayHello() {
-        return this.bar.foo;
-      }
-    }
-
-    const app = new Injector();
-
-    expect(app.get(FooService).sayHello()).toBe('Hello World');
   });
 
   it('should create a new instance of a provider that has a full dep tree', () => {
@@ -298,7 +280,8 @@ describe('Injector', () => {
       }
     }
 
-    const MyFirst = () => (c: any, k: string, i: number) => Inject(MyFirstService)(c, k, i);
+    const MyFirst = () => (c: ProviderToken<any>, k: string, i: number) =>
+      Inject(MyFirstService)(c, k, i);
 
     class MyService {
       constructor(@MyFirst() private test: MyFirstService) {}
@@ -313,11 +296,10 @@ describe('Injector', () => {
     expect(app.get(MyService).sayHello()).toBe('HELLO WORLD TESTING');
   });
 
-  it('should use the parent Injector if specified', () => {
+  it('should use the root Injector if specified', () => {
     @Service()
     class BarService {}
 
-    @Service()
     class FooService {
       constructor(@Inject(BarService) public bar: BarService) {}
     }
@@ -328,6 +310,6 @@ describe('Injector', () => {
 
     const app = new Injector({}, child2);
 
-    expect(app.get(FooService)).toBe(parent.get(FooService));
+    expect(app.get(FooService).bar).toBe(parent.get(BarService));
   });
 });
