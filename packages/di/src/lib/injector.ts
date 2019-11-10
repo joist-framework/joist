@@ -33,24 +33,6 @@ export class Injector {
     return this.providerMap.has(token);
   }
 
-  resolve<T>(token: ProviderToken<T>): T {
-    const provider = this.findProvider(token);
-
-    if (provider) {
-      return this.createFromProvider(provider);
-    }
-
-    const metaData = readMetadata(token);
-
-    if (this.parent && (metaData.provideInRoot || this.parent.has(token))) {
-      // if a parent is available and contains an instance of the provider already use that
-      return this.parent.get(token);
-    }
-
-    // if nothing else found assume ClassProviderToken
-    return this.create(token as ClassProviderToken<T>);
-  }
-
   /**
    * fetches a singleton instance of a provider
    */
@@ -70,6 +52,24 @@ export class Injector {
     const metaData = readMetadata(P);
 
     return metaData ? new P(...metaData.deps.map(dep => this.get(dep))) : new P();
+  }
+
+  private resolve<T>(token: ProviderToken<T>): T {
+    const provider = this.findProvider(token);
+
+    if (provider) {
+      return this.createFromProvider(provider);
+    }
+
+    const metaData = readMetadata(token);
+
+    if (this.parent && (metaData.provideInRoot || this.parent.has(token))) {
+      // if a parent is available and contains an instance of the provider already use that
+      return this.parent.get(token);
+    }
+
+    // if nothing else found assume ClassProviderToken
+    return this.create(token as ClassProviderToken<T>);
   }
 
   private createFromProvider<T>(provider: Provider<T>): T | null {
