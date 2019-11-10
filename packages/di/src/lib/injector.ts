@@ -35,17 +35,19 @@ export class Injector {
 
   resolve<T>(token: ProviderToken<T>): T {
     const provider = this.findProvider(token);
-    const metaData = readMetadata(token);
 
     if (provider) {
-      // if an override is available for this Injector use that
       return this.createFromProvider(provider);
-    } else if (this.parent && (this.parent.has(token) || (metaData && metaData.provideInRoot))) {
+    }
+
+    const metaData = readMetadata(token);
+
+    if (this.parent && (metaData.provideInRoot || this.parent.has(token))) {
       // if a parent is available and contains an instance of the provider already use that
       return this.parent.get(token);
     }
 
-    // if nothing else found assume provider is a class provider
+    // if nothing else found assume ClassProviderToken
     return this.create(token as ClassProviderToken<T>);
   }
 
