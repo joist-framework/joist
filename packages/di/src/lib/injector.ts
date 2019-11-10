@@ -1,5 +1,5 @@
 import { ProviderToken, Provider, ClassProviderToken, FactoryProvider } from './provider';
-import { readMetadata } from './metadata';
+import { getMetadataRef } from './metadata';
 
 export interface InjectorOptions {
   providers?: Provider<any>[];
@@ -49,7 +49,7 @@ export class Injector {
   }
 
   create<T>(P: ClassProviderToken<T>): T {
-    const metaData = readMetadata(P);
+    const metaData = getMetadataRef(P);
 
     return metaData ? new P(...metaData.deps.map(dep => this.get(dep))) : new P();
   }
@@ -61,7 +61,7 @@ export class Injector {
       return this.createFromProvider(provider);
     }
 
-    const metaData = readMetadata(token);
+    const metaData = getMetadataRef(token);
 
     if (this.parent && (metaData.provideInRoot || this.parent.has(token))) {
       // if a parent is available and contains an instance of the provider already use that

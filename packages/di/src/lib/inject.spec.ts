@@ -1,4 +1,4 @@
-import { readMetadata } from './metadata';
+import { getMetadataRef } from './metadata';
 import { Inject } from './inject';
 
 describe('Inject', () => {
@@ -9,7 +9,7 @@ describe('Inject', () => {
   }
 
   it('should add deps to metadata', () => {
-    const metadata = readMetadata(C);
+    const metadata = getMetadataRef(C);
 
     expect(metadata.deps).toEqual([A, B]);
   });

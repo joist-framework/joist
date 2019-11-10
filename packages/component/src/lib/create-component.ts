@@ -1,10 +1,10 @@
 import { ProviderToken } from '@lit-kit/di';
 
-import { readMetadata } from './metadata';
+import { getMetadataRef } from './metadata';
 import { ElementInstance } from './component';
 
 export const createComponent = <Component, State>(componentDef: ProviderToken<any>) => {
-  const metadata = readMetadata<State>(componentDef);
+  const metadata = getMetadataRef<State>(componentDef);
 
   if (!metadata.config) {
     throw new Error(

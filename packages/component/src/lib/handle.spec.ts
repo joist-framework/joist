@@ -1,5 +1,5 @@
 import { Handle } from './handle';
-import { readMetadata } from './metadata';
+import { getMetadataRef } from './metadata';
 
 describe('Handle', () => {
   class MyComponent {
@@ -8,7 +8,7 @@ describe('Handle', () => {
   }
 
   it('should add methods to the handlers map', () => {
-    const metadata = readMetadata(MyComponent);
+    const metadata = getMetadataRef(MyComponent);
 
     expect(Object.keys(metadata.handlers)).toEqual(['FOO', 'BAR']);
   });

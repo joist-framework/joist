@@ -4,7 +4,7 @@ import { render, html } from 'lit-html';
 import { CompState } from './state';
 import { ElRefToken } from './el-ref';
 import { ROOT_INJECTOR } from './app';
-import { Metadata, readMetadata, ComponentConfig } from './metadata';
+import { Metadata, getMetadataRef, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
   OnInit,
@@ -32,7 +32,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
   // add component config to metadata
-  const componentMetaData = readMetadata<T>(componentDef);
+  const componentMetaData = getMetadataRef<T>(componentDef);
   componentMetaData.config = config;
 
   customElements.define(

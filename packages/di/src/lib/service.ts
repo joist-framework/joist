@@ -1,5 +1,5 @@
 import { ProviderToken } from './provider';
-import { readMetadata } from './metadata';
+import { getMetadataRef } from './metadata';
 
 export interface ServiceConfig {
   provideInRoot: boolean;
@@ -7,7 +7,7 @@ export interface ServiceConfig {
 
 export function Service(serviceConfig: ServiceConfig = { provideInRoot: true }) {
   return function(provider: ProviderToken<any>) {
-    const currentMetadata = readMetadata(provider);
+    const currentMetadata = getMetadataRef(provider);
 
     currentMetadata.provideInRoot = serviceConfig.provideInRoot;
   };

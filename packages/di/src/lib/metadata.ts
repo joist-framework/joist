@@ -7,16 +7,12 @@ export class MetaData {
 
 const METADATA_KEY = '__LIT_KIT_PROVIDER_METADATA__';
 
-export const readMetadata = (provider: ProviderToken<any>): MetaData => {
+export const getMetadataRef = (provider: ProviderToken<any>): MetaData => {
   const metadata = provider[METADATA_KEY];
 
   if (!metadata) {
-    attachMetadata(provider, new MetaData());
+    provider[METADATA_KEY] = new MetaData();
   }
 
   return provider[METADATA_KEY];
-};
-
-export const attachMetadata = (provider: ProviderToken<any>, metadata: MetaData) => {
-  provider[METADATA_KEY] = metadata;
 };
