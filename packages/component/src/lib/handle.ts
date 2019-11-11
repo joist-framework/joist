@@ -4,8 +4,6 @@ import { getMetadataRef } from './metadata';
 
 export function Handle(action: string) {
   return function(instance: { constructor: ProviderToken<any>; [key: string]: any }, key: string) {
-    const metadata = getMetadataRef(instance.constructor as ProviderToken<any>);
-
-    metadata.handlers[action] = instance[key];
+    getMetadataRef(instance.constructor).handlers[action] = instance[key];
   };
 }
