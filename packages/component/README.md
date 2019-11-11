@@ -196,18 +196,18 @@ Component state can be set asynchronously.
 import { Component, State, CompState } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-interface ComponentModel {
+interface AppState {
   loading: boolean;
   data: string[];
 }
 
-@Component<ComponentModel>({
+@Component<AppState>({
   tag: 'app-root',
   defaultState: { loading: false, data: [] },
   template(state) { ... }
 })
 class AppComponent implements OnInit {
-  constructor(@State() private state: CompState<ComponentModel>) {}
+  constructor(@State() private state: CompState<AppState>) {}
 
   onInit() {
     this.state.setState({ data: [], loading: true });
