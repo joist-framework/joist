@@ -10,10 +10,10 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Bootstrap
-        run: npm i
+        run: npm i -g lerna && lerna bootstrap
 
       - name: Test
-        run: npx lerna run test
+        run: lerna run test
 
       - name: Build Integrations
-        run: npx lerna run build --scope=@lit-kit-demos/*
+        run: lerna run build --scope=@lit-kit-demos/*

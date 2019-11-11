@@ -6,21 +6,49 @@
     "type": "git",
     "url": "git+https://github.com/deebloo/lit-kit.git"
   },
-  "scripts": {
-    "install": "lerna exec npm install"
-  },
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deebloo/lit-kit/issues"
   },
+  "dependencies": {
+    "@lit-kit-demos/hacker-news": "file:integration/hacker-news",
+    "@lit-kit-demos/hello-world": "file:integration/hello-world",
+    "@lit-kit-demos/resistor-value": "file:integration/resistor-value",
+    "@lit-kit/component": "file:packages/component",
+    "@lit-kit/di": "file:packages/di",
+    "@lit-kit/schematics": "file:packages/schematics"
+  },
   "devDependencies": {
     "@commitlint/cli": "8.2.0",
     "@commitlint/config-conventional": "8.2.0",
+    "@lit-kit/di": "^1.0.0-alpha.25",
+    "@types/jasmine": "3.4.6",
+    "@types/node": "8.10.59",
+    "copy-webpack-plugin": "5.0.5",
+    "html-webpack-plugin": "3.2.0",
     "husky": "3.0.9",
+    "jasmine": "3.5.0",
+    "jasmine-core": "3.5.0",
+    "karma": "4.4.1",
+    "karma-chrome-launcher": "3.1.0",
+    "karma-cli": "2.0.0",
+    "karma-jasmine": "2.0.1",
+    "karma-spec-reporter": "0.0.32",
+    "karma-webpack": "4.0.2",
     "lerna": "3.18.4",
     "lint-staged": "9.4.2",
-    "prettier": "1.19.1"
+    "lit-html": "1.1.2",
+    "prettier": "1.19.1",
+    "puppeteer": "2.0.0",
+    "ts-loader": "6.2.1",
+    "ts-node": "8.5.0",
+    "typescript": "3.7.2",
+    "webpack": "4.41.2",
+    "webpack-bundle-analyzer": "3.6.0",
+    "webpack-cli": "3.3.10",
+    "webpack-dev-server": "3.9.0",
+    "workbox-webpack-plugin": "4.3.1"
   },
   "lint-staged": {
     "*.{js,ts,json,css,md,html}": [
