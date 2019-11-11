@@ -11,6 +11,9 @@
   "bugs": {
     "url": "https://github.com/deebloo/lit-kit/issues"
   },
+  "scripts": {
+    "install": "lerna run build"
+  },
   "dependencies": {
     "@lit-kit-demos/hacker-news": "file:integration/hacker-news",
     "@lit-kit-demos/hello-world": "file:integration/hello-world",
