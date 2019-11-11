@@ -15,9 +15,6 @@
     "install": "lerna run build --scope @lit-kit/*"
   },
   "dependencies": {
-    "@lit-kit-demos/hacker-news": "file:integration/hacker-news",
-    "@lit-kit-demos/hello-world": "file:integration/hello-world",
-    "@lit-kit-demos/resistor-value": "file:integration/resistor-value",
     "@lit-kit/component": "file:packages/component",
     "@lit-kit/di": "file:packages/di",
     "@lit-kit/schematics": "file:packages/schematics"
