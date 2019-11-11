@@ -25,7 +25,9 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-root',
   defaultState: 'Hello World',
-  template: state => html`<h1>${state}</h1>`
+  template(state) {
+    return html`<h1>${state}</h1>`
+  }
 })
 class AppComponent {}
 ```
@@ -48,7 +50,9 @@ import { html } from 'lit-html';
       }
     </style>
   `,
-  template: state => html`<h1>${state}</h1>`
+  template(state) {
+    return html`<h1>${state}</h1>`
+  }
 })
 class AppComponent {}
 ```
@@ -65,7 +69,9 @@ import { html } from 'lit-html';
 @Component<number>({
   tag: 'app-root',
   defaultState: 0,
-  template: state => html`<h1>${state}</h1>`
+  template(state) {
+    return html`<h1>${state}</h1>`
+  }
 })
 class AppComponent implements OnInit {
   constructor(@State() private state: CompState<number>) {}
@@ -90,7 +96,9 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-title',
   defaultState: '',
-  template: state => html`<h1>${state}</h1>`
+  template(state) {
+    return html`<h1>${state}</h1>`
+  }
 })
 class AppTitleComponent implements OnPropChanges {
   @Prop() title?: string;
