@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "ts-node node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
+    "test": "ts-node ../../node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
   },
   "author": "",
   "license": "MIT",
