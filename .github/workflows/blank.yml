@@ -14,3 +14,6 @@ jobs:
 
       - name: Test
         run: npm run test
+
+      - name: Build Integrations
+        run: npx lerna run build --scope=@lit-kit-demos/*
