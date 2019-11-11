@@ -3,7 +3,6 @@
   "version": "1.0.0-alpha.24",
   "command": {
     "publish": {
-      "ignore": "@lit-kit-demos/*",
       "forcePublish": "*"
     }
   }
