@@ -16,7 +16,7 @@
   "dependencies": {
     "@lit-kit/component": "^1.0.0-alpha.22",
     "@lit-kit/di": "^1.0.0-alpha.22",
-    "lit-html": "^1.1.2"
+    "lit-html": "1.1.2"
   },
   "devDependencies": {
     "@types/jasmine": "3.4.6",
