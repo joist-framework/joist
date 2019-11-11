@@ -10,8 +10,8 @@ A set of packages that leverage lit-html to help you write applications with web
 
 ### Demos
 
-| Project                                                    | Description                                                       |
-| ---------------------------------------------------------- | ----------------------------------------------------------------- |
-| [@lit-kit-demo/hacker-news](integration/hacker-news)       | Hacker news PWA                                                   |
-| [@lit-kit-demo/hello-world](integration/hello-world)       | Hello World                                                       |
-| [@lit-kit-demo/resistor-value](integration/resistor-value) | PWA for calculating the value of resistors from their color bands |
+| Project                                      | Description                                                       |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| [hacker-news](integration/hacker-news)       | Hacker news PWA                                                   |
+| [hello-world](integration/hello-world)       | Hello World                                                       |
+| [resistor-value](integration/resistor-value) | PWA for calculating the value of resistors from their color bands |
