@@ -88,11 +88,13 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           const prop = this.componentMetaData.props[i];
 
           Object.defineProperty(this, prop, {
-            set: value => {
-              this.componentInstance[prop] = value;
+            set: newValue => {
+              const oldValue = this.componentInstance[prop];
+
+              this.componentInstance[prop] = newValue;
 
               if (this.componentInstance.onPropChanges) {
-                this.componentInstance.onPropChanges(prop, value);
+                this.componentInstance.onPropChanges(prop, oldValue, newValue);
               }
             },
             get: () => this.componentInstance[prop]

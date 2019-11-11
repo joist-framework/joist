@@ -3,7 +3,7 @@ export interface OnInit {
 }
 
 export interface OnPropChanges {
-  onPropChanges(prop: string, value: any): void;
+  onPropChanges(prop: string, oldVal: any, newVal: any): void;
 }
 
 export interface OnConnected {
