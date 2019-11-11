@@ -31,7 +31,7 @@
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "4.0.2",
     "ts-loader": "6.2.1",
-    "typescript": "3.5.3",
+    "typescript": "3.7.2",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0",
