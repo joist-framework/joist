@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Bootstrap
-        run: npm i lerna && npx lerna bootstrap
+        run: npm i lerna@3.18.4 && npx lerna bootstrap
 
       - name: Test
         run: npx lerna run test
