@@ -4,8 +4,6 @@ import { getMetadataRef } from './metadata';
 
 export function Prop() {
   return function(instance: { constructor: ProviderToken<any> }, key: string) {
-    const metadata = getMetadataRef(instance.constructor);
-
-    metadata.props.push(key);
+    getMetadataRef(instance.constructor).props.push(key);
   };
 }

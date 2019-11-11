@@ -1,11 +1,19 @@
 import { Injector, Service, Inject } from '@lit-kit/di';
 
-import { bootstrapApplication, ROOT_INJECTOR } from './app';
+import { bootstrapApplication, ROOT_INJECTOR, clearApplication } from './app';
 import { Component } from './component';
 import { html } from 'lit-html';
 import { createComponent } from './create-component';
 
 describe('app', () => {
+  afterEach(() => {
+    clearApplication();
+  });
+
+  it('should be null by default', () => {
+    expect(ROOT_INJECTOR).toBe(undefined);
+  });
+
   it('should create a global Injector instance', () => {
     bootstrapApplication();
 
@@ -20,7 +28,7 @@ describe('app', () => {
 
     @Component({
       tag: 'my-component',
-      defaultState: undefined,
+      defaultState: {},
       template() {
         return html``;
       }

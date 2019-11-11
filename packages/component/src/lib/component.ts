@@ -1,7 +1,7 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { render, html } from 'lit-html';
 
-import { CompState } from './state';
+import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { ROOT_INJECTOR } from './app';
 import { Metadata, getMetadataRef, ComponentConfig } from './metadata';
@@ -20,11 +20,11 @@ export type ComponentInstance<T> = T &
   Partial<OnDisconnected> &
   Partial<OnAttributeChanged> & { [key: string]: any };
 
-export type ElementInstance<Component, State> = {
+export type ElementInstance<C, S> = {
   componentInjector: Injector;
-  componentInstance: ComponentInstance<Component>;
-  componentMetaData: Metadata<State>;
-  componentState: CompState<State>;
+  componentInstance: ComponentInstance<C>;
+  componentMetaData: Metadata<S>;
+  componentState: State<S>;
   [key: string]: any;
 } & HTMLElement;
 
@@ -41,13 +41,13 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
       static observedAttributes = config.observedAttributes;
 
       public componentInstance: ComponentInstance<typeof componentDef>;
-      public componentState: CompState<T>;
+      public componentState: State<T>;
       public componentMetaData = componentMetaData;
       public componentInjector = new Injector(
         {
           providers: [
             { provide: ElRefToken, useFactory: () => this, deps: [] },
-            { provide: CompState, useFactory: () => new CompState(config.defaultState), deps: [] }
+            { provide: State, useFactory: () => new State(config.defaultState), deps: [] }
           ]
         },
         ROOT_INJECTOR
@@ -71,7 +71,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         render(template, shadow);
 
         this.componentInstance = this.componentInjector.create(componentDef);
-        this.componentState = this.componentInjector.get(CompState);
+        this.componentState = this.componentInjector.get(State);
 
         this.componentState.onStateChange(state => {
           const template = html`

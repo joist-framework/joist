@@ -7,7 +7,7 @@ import { createComponent } from './create-component';
 describe('ElRef', () => {
   @Component({
     tag: 'el-ref-component-test-1',
-    defaultState: undefined,
+    defaultState: {},
     template: () => html``
   })
   class MyComponent {

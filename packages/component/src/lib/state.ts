@@ -31,12 +31,13 @@ abstract class StateBase<T> {
   }
 }
 
-export class CompState<T> extends StateBase<T> {}
+export class State<T> extends StateBase<T> {}
+
+export const StateRef = () => (c: ProviderToken<any>, k: string, i: number) =>
+  Inject(State)(c, k, i);
 
 @Service()
 export class AppState<T> extends StateBase<T> {}
 
-export const App = () => (c: ProviderToken<any>, k: string, i: number) => Inject(AppState)(c, k, i);
-
-export const State = () => (c: ProviderToken<any>, k: string, i: number) =>
-  Inject(CompState)(c, k, i);
+export const AppStateRef = () => (c: ProviderToken<any>, k: string, i: number) =>
+  Inject(AppState)(c, k, i);

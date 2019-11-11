@@ -60,10 +60,10 @@ class AppComponent {}
 ### Component State
 
 A component template can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `CompState` instance which is available via `@State()`
+A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef()`
 
 ```TS
-import { Component, State, CompState, OnInit } from '@lit-kit/component';
+import { Component, StateRef, State, OnInit } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -74,7 +74,7 @@ import { html } from 'lit-html';
   }
 })
 class AppComponent implements OnInit {
-  constructor(@State() private state: CompState<number>) {}
+  constructor(@StateRef() private state: State<number>) {}
 
   onInit() {
     setInterval(() => {
@@ -90,7 +90,7 @@ Component props are defined via the `@Prop()` decorator. This creates a property
 Prop changes to not trigger template updates. Use custom setters or `onPropChanges` to set new state and update the template.
 
 ```TS
-import { Component, State, CompState, Prop, OnPropChanges } from '@lit-kit/component';
+import { Component, StateRef, State, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -103,7 +103,7 @@ import { html } from 'lit-html';
 class AppTitleComponent implements OnPropChanges {
   @Prop() title?: string;
 
-  constructor(@State() private state: CompState<string>) {}
+  constructor(@StateRef() private state: State<string>) {}
 
   onPropChanges() {
     this.state.setState(this.title);
@@ -117,7 +117,7 @@ In order to trigger methods in a component you can use the `run` function that i
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
 
 ```TS
-import { Component, State, CompState, Handle } from '@lit-kit/component';
+import { Component, StateRef, State, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -134,7 +134,7 @@ import { html } from 'lit-html';
   }
 })
 class AppComponent {
-  constructor(@State() private state: CompState<number>) {}
+  constructor(@StateRef() private state: State<number>) {}
 
   @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setState(this.state.value + 1);
@@ -152,7 +152,7 @@ To emit custom events from a component you will need to access the acutal custom
 This can be accessed via the `@ElRef()` decorator.
 
 ```TS
-import { Component, State, CompState, Handle, ElRef } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, ElRef } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -170,7 +170,7 @@ import { html } from 'lit-html';
 })
 class AppComponent {
   constructor(
-    @State() private state: CompState<number>,
+    @StateRef() private state: State<number>,
     @ElRef() private elRef: HTMLElement
   ) {}
 
@@ -193,7 +193,7 @@ class AppComponent {
 Component state can be set asynchronously.
 
 ```TS
-import { Component, State, CompState } from '@lit-kit/component';
+import { Component, StateRef, State } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 interface AppState {
@@ -207,7 +207,7 @@ interface AppState {
   template(state) { ... }
 })
 class AppComponent implements OnInit {
-  constructor(@State() private state: CompState<AppState>) {}
+  constructor(@StateRef() private state: State<AppState>) {}
 
   onInit() {
     this.state.setState({ data: [], loading: true });

@@ -1,6 +1,6 @@
 import { createComponent } from './create-component';
 
-describe('create-component', () => {
+describe('createComponent', () => {
   it('should throw an error if trying to use a non component class to create', () => {
     class NotComponent {
       helloWorld = '';
