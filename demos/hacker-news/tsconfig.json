@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["jasmine", "node"],
+    "typeRoots": [],
+    "declaration": false,
+    "baseUrl": ".",
+    "paths": {
+      "lit-html": ["node_modules/lit-html"]
+    }
+  }
+}
