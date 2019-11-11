@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "test": "karma start",
-    "build": "NODE_ENV=production rm -rf dist && webpack && gzip dist/*.js --keep"
+    "build": "NODE_ENV=production rm -rf dist && webpack --profile --json > stats.json && gzip dist/*.js --keep"
   },
   "repository": {
     "type": "git",

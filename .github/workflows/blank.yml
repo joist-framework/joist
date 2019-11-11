@@ -13,7 +13,7 @@ jobs:
         run: npm i
 
       - name: Test
-        run: npm run test
+        run: npx lerna run test
 
       - name: Build Integrations
         run: npx lerna run build --scope=@lit-kit-demos/*
