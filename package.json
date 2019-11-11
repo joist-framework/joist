@@ -12,7 +12,7 @@
     "url": "https://github.com/deebloo/lit-kit/issues"
   },
   "scripts": {
-    "install": "lerna run build"
+    "install": "lerna run build --scope @lit-kit/*"
   },
   "dependencies": {
     "@lit-kit-demos/hacker-news": "file:integration/hacker-news",

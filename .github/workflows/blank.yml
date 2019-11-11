@@ -12,8 +12,8 @@ jobs:
       - name: Bootstrap
         run: npm i lerna && npx lerna bootstrap
 
-      - name: Build
-        run: npx lerna run build
-
       - name: Test
         run: npx lerna run test
+
+      - name: Build Integration
+        run: npx lerna run build --scope @lit-kit-demos/*
