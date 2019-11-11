@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-demos/hacker-news",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.25",
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
@@ -15,8 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lit-kit/component": "^1.0.0-alpha.22",
-    "@lit-kit/di": "^1.0.0-alpha.22",
+    "@lit-kit/component": "^1.0.0-alpha.25",
+    "@lit-kit/di": "^1.0.0-alpha.25",
     "lit-html": "1.1.2"
   },
   "devDependencies": {
