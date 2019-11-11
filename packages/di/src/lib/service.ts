@@ -7,8 +7,6 @@ export interface ServiceConfig {
 
 export function Service(serviceConfig: ServiceConfig = { provideInRoot: true }) {
   return function(provider: ProviderToken<any>) {
-    const currentMetadata = getMetadataRef(provider);
-
-    currentMetadata.provideInRoot = serviceConfig.provideInRoot;
+    getMetadataRef(provider).provideInRoot = serviceConfig.provideInRoot;
   };
 }
