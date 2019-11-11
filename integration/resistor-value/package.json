@@ -16,7 +16,7 @@
   "dependencies": {
     "@lit-kit/component": "^1.0.0-alpha.22",
     "@lit-kit/di": "^1.0.0-alpha.22",
-    "lit-html": "^1.1.2"
+    "lit-html": "1.1.2"
   },
   "devDependencies": {
     "@types/jasmine": "3.4.6",
@@ -32,7 +32,7 @@
     "karma-webpack": "4.0.2",
     "puppeteer": "2.0.0",
     "ts-loader": "6.2.1",
-    "typescript": "3.5.3",
+    "typescript": "3.7.2",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0",
