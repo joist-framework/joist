@@ -1,20 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const { GenerateSW } = require('workbox-webpack-plugin');
 
-const plugins = [
-  new HtmlWebpackPlugin({ template: './src/index.html' }),
-  new CopyPlugin([
-    { from: './src/manifest.json', to: './manifest.json' },
-    { from: './src/assets', to: './assets' }
-  ])
-];
-
-if (process.env.NODE_ENV === 'production') {
-  plugins.push(new GenerateSW());
-}
+const plugins = [new HtmlWebpackPlugin({ template: './src/index.html' })];
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
@@ -43,7 +31,10 @@ module.exports = {
       index: 'src/index.html'
     }
   },
-  plugins,
+  performance: {
+    hints: 'error',
+    maxEntrypointSize: 100000
+  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -53,5 +44,6 @@ module.exports = {
         terserOptions: { output: { comments: false } }
       })
     ]
-  }
+  },
+  plugins
 };

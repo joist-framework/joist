@@ -1,15 +1,15 @@
 {
   "name": "@lit-kit-demos/resistor-value",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "PWA for calculating resistor values",
   "scripts": {
     "start": "webpack-dev-server",
     "test": "karma start",
     "build": "NODE_ENV=production rm -rf dist && webpack && gzip dist/*.js --keep"
   },
   "repository": {
-    "url": "git@github.com:deebloo/resistor-value.git"
+    "type": "git",
+    "url": "git+https://github.com/deebloo/lit-kit.git"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +23,6 @@
     "@types/node": "^12.12.3",
     "copy-webpack-plugin": "^5.0.4",
     "html-webpack-plugin": "^3.2.0",
-    "husky": "^3.0.3",
     "jasmine-core": "^3.5.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
@@ -31,26 +30,12 @@
     "karma-jasmine": "^2.0.1",
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "^4.0.2",
-    "lint-staged": "^9.2.1",
-    "prettier": "^1.16.4",
     "puppeteer": "^2.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "~3.5.0",
     "webpack": "^4.41.2",
-    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.9.0",
     "workbox-webpack-plugin": "^4.3.1"
-  },
-  "lint-staged": {
-    "*.{js,ts,json,css,md,html}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }

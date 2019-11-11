@@ -8,8 +8,8 @@
   },
   "scripts": {
     "postinstall": "lerna exec npm install",
-    "test": "lerna run test --stream",
-    "build": "lerna run build --stream",
+    "test": "lerna run test",
+    "build": "lerna run build",
     "publish": "lerna publish --force-publish=* --scope=@lit-kit/*"
   },
   "author": "deebloo",
