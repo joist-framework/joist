@@ -7,10 +7,7 @@
     "url": "git+https://github.com/deebloo/lit-kit.git"
   },
   "scripts": {
-    "postinstall": "lerna exec npm install",
-    "test": "lerna run test",
-    "build": "lerna run build",
-    "publish": "lerna publish --force-publish=* --scope=@lit-kit/*"
+    "install": "lerna exec npm install"
   },
   "author": "deebloo",
   "license": "MIT",

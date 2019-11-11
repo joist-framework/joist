@@ -2,6 +2,7 @@
   "name": "@lit-kit-demos/hello-world",
   "version": "1.0.0",
   "description": "Hello World",
+  "private": true,
   "scripts": {
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production rm -rf dist && webpack"

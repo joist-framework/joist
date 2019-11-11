@@ -2,6 +2,7 @@
   "name": "@lit-kit-demos/hacker-news",
   "version": "1.0.0",
   "description": "Hacker News PWA",
+  "private": true,
   "scripts": {
     "start": "webpack-dev-server",
     "test": "karma start",
