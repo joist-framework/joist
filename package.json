@@ -10,7 +10,7 @@
     "postinstall": "lerna exec npm install",
     "test": "lerna run test --stream",
     "build": "lerna run build --stream",
-    "publish": "lerna publish --force-publish=*"
+    "publish": "lerna publish --force-publish=* --scope=@lit-kit/*"
   },
   "author": "deebloo",
   "license": "MIT",
