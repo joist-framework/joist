@@ -34,11 +34,7 @@
     "build": "npm run build:browser && npm run build:node"
   },
   "devDependencies": {
-    "@types/jasmine": "3.4.6",
-    "@types/node": "12.12.7",
-    "jasmine": "3.5.0",
-    "ts-node": "8.5.0",
     "typescript": "3.7.2"
   },
-  "gitHead": "722189ceb3eb1d2f6be177a8f86842a5e3a18534"
+  "gitHead": "83cfa7c034d03e2c0e07b50da4b21d3f31137ccb"
 }
