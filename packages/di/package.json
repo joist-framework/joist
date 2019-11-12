@@ -28,9 +28,9 @@
   },
   "scripts": {
     "prepare": "npm run build",
-    "test": "npx ts-node ../../node_modules/jasmine/bin/jasmine src/lib/*.spec.ts",
-    "build:browser": "npx tsc --outDir out-browser --module esnext",
-    "build:node": "npx tsc --outDir out-node --module commonjs",
+    "test": "ts-node ../../node_modules/jasmine/bin/jasmine src/lib/*.spec.ts",
+    "build:browser": "../../node_modules/.bin/tsc --outDir out-browser --module esnext",
+    "build:node": "../../node_modules/.bin/tsc --outDir out-node --module commonjs",
     "build": "npm run build:browser && npm run build:node"
   },
   "devDependencies": {

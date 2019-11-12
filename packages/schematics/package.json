@@ -20,8 +20,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npx tsc -p tsconfig.json",
-    "test": "npx ts-node ../../node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
+    "build": "../../node_modules/.bin/tsc -p tsconfig.json",
+    "test": "ts-node ../../node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
   },
   "author": "",
   "license": "MIT",

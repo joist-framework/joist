@@ -27,8 +27,8 @@
   },
   "scripts": {
     "prepare": "npm run build",
-    "test": "npx karma start",
-    "build": "npx tsc --outDir out-browser --module es2015"
+    "test": "karma start",
+    "build": "../../node_modules/.bin/tsc --outDir out-browser --module es2015"
   },
   "peerDependencies": {
     "@lit-kit/di": "^1.0.0",
