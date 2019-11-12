@@ -1,5 +1,5 @@
 {
-  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "application": {
       "description": "Generate a new application",
@@ -10,6 +10,11 @@
       "description": "Generate a new component",
       "factory": "./component/index#component",
       "schema": "./component/schema.json"
+    },
+    "service": {
+      "description": "Generate a new service",
+      "factory": "./service/index#service",
+      "schema": "./service/schema.json"
     }
   }
 }

@@ -1,13 +1,13 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "componentSchema",
-  "title": "generates service",
+  "id": "serviceSchema",
+  "title": "generates a new Service",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "The component name",
-      "x-prompt": "What is the name of your component?",
+      "description": "The service name",
+      "x-prompt": "What is the name of your service?",
       "$default": {
         "$source": "argv",
         "index": 0
