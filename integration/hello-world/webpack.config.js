@@ -2,8 +2,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const plugins = [new HtmlWebpackPlugin({ template: './src/index.html' }), new CompressionPlugin()];
+const plugins = [
+  new CleanWebpackPlugin(),
+  new HtmlWebpackPlugin({ template: './src/index.html' }),
+  new CompressionPlugin()
+];
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',

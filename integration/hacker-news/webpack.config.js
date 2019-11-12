@@ -4,8 +4,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const plugins = [
+  new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({ template: './src/index.html' }),
   new CopyPlugin([
     { from: './src/manifest.json', to: './manifest.json' },
