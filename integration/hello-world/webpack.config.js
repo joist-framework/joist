@@ -1,8 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
-const plugins = [new HtmlWebpackPlugin({ template: './src/index.html' })];
+const plugins = [new HtmlWebpackPlugin({ template: './src/index.html' }), new CompressionPlugin()];
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
@@ -33,7 +34,7 @@ module.exports = {
   },
   performance: {
     hints: 'error',
-    maxEntrypointSize: 100000
+    maxEntrypointSize: 14000
   },
   optimization: {
     minimize: true,

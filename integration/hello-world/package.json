@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "NODE_ENV=production rm -rf dist && webpack --profile --json > stats.json"
+    "build": "rm -rf dist && NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",

@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const plugins = [
   new HtmlWebpackPlugin({ template: './src/index.html' }),
@@ -14,6 +15,7 @@ const plugins = [
 
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new GenerateSW());
+  plugins.push(new CompressionPlugin());
 }
 
 module.exports = {
@@ -43,7 +45,10 @@ module.exports = {
       index: 'src/index.html'
     }
   },
-  plugins,
+  performance: {
+    hints: 'error',
+    maxEntrypointSize: 25000
+  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -53,5 +58,6 @@ module.exports = {
         terserOptions: { output: { comments: false } }
       })
     ]
-  }
+  },
+  plugins
 };
