@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/component",
-  "version": "1.0.0-alpha.26",
+  "version": "1.0.0-alpha.27",
   "main": "out-browser/public_api.js",
   "files": [
     "out-browser/**/*"
@@ -35,7 +35,7 @@
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
-    "@lit-kit/di": "^1.0.0-alpha.26",
+    "@lit-kit/di": "^1.0.0-alpha.27",
     "typescript": "3.7.2"
   },
   "gitHead": "83cfa7c034d03e2c0e07b50da4b21d3f31137ccb"

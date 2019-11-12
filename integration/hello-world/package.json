@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-demos/hello-world",
-  "version": "1.0.0-alpha.26",
+  "version": "1.0.0-alpha.27",
   "description": "Hello World",
   "private": true,
   "scripts": {
