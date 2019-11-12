@@ -26,7 +26,7 @@ export interface HackerNewsItemFull extends HackerNewsItem {
   comments: HackerNewsItemComment[];
 }
 
-export const HackerNews = () => (c: any, p: any, i: any) => Inject(HackerNewsService)(c, p, i);
+export const HackerNewsRef = () => (c: any, p: any, i: any) => Inject(HackerNewsService)(c, p, i);
 
 @Service()
 export class HackerNewsService {

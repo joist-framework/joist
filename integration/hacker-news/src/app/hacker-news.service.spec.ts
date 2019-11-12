@@ -1,12 +1,12 @@
 import { Injector } from '@lit-kit/di';
-import { HackerNews, HackerNewsService } from './hacker-news.service';
+import { HackerNewsRef, HackerNewsService } from './hacker-news.service';
 
 describe('HackerNewsService', () => {
   it('should work', () => {
     const injector = new Injector();
 
     class MyTestService {
-      constructor(@HackerNews() public hackerNews: HackerNewsService) {}
+      constructor(@HackerNewsRef() public hackerNews: HackerNewsService) {}
     }
 
     expect(injector.get(MyTestService).hackerNews).toBe(injector.get(HackerNewsService));

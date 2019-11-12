@@ -7,7 +7,7 @@ import { until } from 'lit-html/directives/until';
 import {
   HackerNewsService,
   HackerNewsItem,
-  HackerNews,
+  HackerNewsRef,
   HackerNewsItemFull
 } from './hacker-news.service';
 
@@ -114,7 +114,7 @@ export interface AppState {
 export class AppComponent implements OnInit {
   constructor(
     @StateRef() private state: State<AppState>,
-    @HackerNews() private hackerNews: HackerNewsService
+    @HackerNewsRef() private hackerNews: HackerNewsService
   ) {}
 
   onInit(): void {
