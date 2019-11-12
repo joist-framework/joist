@@ -3,7 +3,7 @@ import { html } from 'lit-html';
 
 import { HackerNewsItem } from './hacker-news.service';
 
-type NewsCardState = HackerNewsItem | null;
+export type NewsCardState = HackerNewsItem | null;
 
 @Component<NewsCardState>({
   tag: 'news-card',

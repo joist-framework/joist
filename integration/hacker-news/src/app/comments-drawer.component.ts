@@ -3,7 +3,7 @@ import { html } from 'lit-html';
 
 import { HackerNewsItemComment } from './hacker-news.service';
 
-interface CommentsDrawerState {
+export interface CommentsDrawerState {
   comments: HackerNewsItemComment[];
 }
 
