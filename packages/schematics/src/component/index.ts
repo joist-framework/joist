@@ -1,4 +1,4 @@
-import { Rule, url, apply, template, mergeWith, chain } from '@angular-devkit/schematics';
+import { Rule, url, apply, template, mergeWith, chain, Tree } from '@angular-devkit/schematics';
 import { classify } from '@angular-devkit/core/src/utils/strings';
 
 const stringUtils = { classify };
@@ -11,7 +11,11 @@ export function component(options: ComponentOptions): Rule {
   const parsed = options.name.split('/');
   const name = parsed[parsed.length - 1];
 
-  return () => {
+  return (_: Tree) => {
+    if (name.split('-').length < 2) {
+      throw new Error(`${name} is not a valid component tag. tag must have at least one -`);
+    }
+
     return chain([
       (tree, context) => {
         const sourceTemplates = url('./files');

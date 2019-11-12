@@ -16,6 +16,14 @@ describe('new-component', () => {
     ]);
   });
 
+  it('should throw an exception if the component tag is not valid', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+
+    expect(() =>
+      runner.runSchematic('component', { name: 'src/app/hello' }, Tree.empty())
+    ).toThrowError('hello is not a valid component tag. tag must have at least one -');
+  });
+
   describe('component file generation', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
 
