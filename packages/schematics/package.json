@@ -20,8 +20,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "ts-node ../../node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
+    "build": "npx tsc -p tsconfig.json",
+    "test": "npx ts-node ../../node_modules/jasmine/bin/jasmine src/**/*_spec.ts"
   },
   "author": "",
   "license": "MIT",
@@ -29,9 +29,6 @@
   "dependencies": {
     "@angular-devkit/core": "8.3.18",
     "@angular-devkit/schematics": "8.3.18"
-  },
-  "devDependencies": {
-    "typescript": "3.7.2"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
