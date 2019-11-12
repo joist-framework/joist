@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/schematics",
-  "version": "1.0.0-alpha.28",
+  "version": "1.0.0-alpha.29",
   "description": "A blank schematics",
   "files": [
     "src/**/*",
@@ -33,5 +33,5 @@
   "devDependencies": {
     "typescript": "3.7.2"
   },
-  "gitHead": "43561654a6478516ea199df437bf52d724bd62d3"
+  "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
