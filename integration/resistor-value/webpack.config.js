@@ -15,9 +15,13 @@ const plugins = [
   ])
 ];
 
+const performance = {};
+
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new GenerateSW());
   plugins.push(new CompressionPlugin());
+  performance.hints = 'error';
+  performance.maxEntrypointSize = 25000;
 }
 
 module.exports = {
@@ -47,10 +51,6 @@ module.exports = {
       index: 'src/index.html'
     }
   },
-  performance: {
-    hints: 'error',
-    maxEntrypointSize: 27000
-  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -61,5 +61,6 @@ module.exports = {
       })
     ]
   },
+  performance,
   plugins
 };
