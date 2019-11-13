@@ -3,7 +3,7 @@
 A collection of schematics for generating components and applications
 
 ```BASH
-npm i -g @angular-devkit/schematics-cli @lit-kit/schematics@alpha
+npm i -g @angular-devkit/schematics-cli @lit-kit/schematics
 ```
 
 ### Generate App
