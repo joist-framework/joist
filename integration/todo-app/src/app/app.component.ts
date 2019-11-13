@@ -39,16 +39,24 @@ export interface AppState {
       }
 
       ul li.complete {
-        opacity: 0.5;
+        background: none;
       }
 
-      ul li.complete span {
+      ul li.complete .todo-name {
         text-decoration: line-through;
+        opacity: 0.5;
       }
 
       todo-form {
         width: 100%;
         margin-bottom: 0.5rem;
+      }
+
+      .placeholder {
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 1rem 0;
+        color: gray;
       }
     </style>
   `,
@@ -56,13 +64,26 @@ export interface AppState {
     return html`
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
+      ${!state.todos.length
+        ? html`
+            <div class="placeholder">Looks Like Everything is Done!</div>
+          `
+        : ''}
+
       <ul>
         ${state.todos.map((todo, index) => {
           return html`
             <li class=${todo.isComplete ? 'complete' : ''}>
               <span class="todo-name">${todo.name}</span>
 
-              <button @click=${run('COMPLETE_TODO', index)}>COMPLETE</button>
+              ${todo.isComplete
+                ? html`
+                    <button @click=${run('UNDO_COMPLETE', index)}>UNDO</button>
+                  `
+                : html`
+                    <button @click=${run('COMPLETE_TODO', index)}>COMPLETE</button>
+                  `}
+
               <button @click=${run('REMOVE_TODO', index)}>REMOVE</button>
             </li>
           `;
@@ -95,5 +116,9 @@ export class AppComponent implements OnInit {
 
   @Handle('COMPLETE_TODO') onCompleteTodo(_: Event, payload: number): void {
     this.todo.markTodoAsComplete(payload);
+  }
+
+  @Handle('UNDO_COMPLETE') onUndoComplete(_: Event, payload: number): void {
+    this.todo.markTodoAsComplete(payload, false);
   }
 }

@@ -33,7 +33,7 @@ export interface TodoFormState {
   template(state, run) {
     return html`
       <form @submit=${run('FORM_SUBMIT')}>
-        <input name="todo" placeholder="Add New Todo" .value=${state.todo} />
+        <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state.todo} />
 
         <button>Add Todo</button>
       </form>
@@ -55,9 +55,11 @@ export class TodoFormComponent {
 
     this.state.setState({ todo });
 
-    this.dispatchAddTodo(todo);
+    if (todo.length) {
+      this.dispatchAddTodo(todo);
 
-    this.state.setState({ todo: '' });
+      this.state.setState({ todo: '' });
+    }
   }
 
   private dispatchAddTodo(detail: string) {

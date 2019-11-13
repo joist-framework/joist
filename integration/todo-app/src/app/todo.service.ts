@@ -9,12 +9,7 @@ export class Todo {
 
 @Service()
 export class TodoService {
-  public readonly todos = new State<Todo[]>([
-    new Todo('test', false),
-    new Todo('test', false),
-    new Todo('test', false),
-    new Todo('test', false)
-  ]);
+  public readonly todos = new State<Todo[]>([]);
 
   addTodo(todo: Todo): void {
     this.todos.setState([...this.todos.value, todo]);
@@ -24,11 +19,11 @@ export class TodoService {
     this.todos.setState(this.todos.value.filter((_, i) => i !== index));
   }
 
-  markTodoAsComplete(index: number) {
+  markTodoAsComplete(index: number, isComplete: boolean = true) {
     this.todos.setState(
       this.todos.value.map((todo, i) => {
         if (i === index) {
-          return new Todo(todo.name, true);
+          return new Todo(todo.name, isComplete);
         }
 
         return todo;
