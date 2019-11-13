@@ -5,6 +5,7 @@ import { Component } from './component';
 import { State } from './state';
 import { Prop } from './prop';
 import { createComponent } from './create-component';
+import { Handle } from './handle';
 
 describe('Component', () => {
   describe('creation', () => {
@@ -65,6 +66,33 @@ describe('Component', () => {
       el.foo = 'Hello World - 2';
 
       expect(el.componentInstance.foo).toBe('Hello World - 2');
+    });
+  });
+
+  describe('handlers', () => {
+    it('should call a function if the trigger is mapped to a class method', done => {
+      @Component({
+        tag: 'component-test-3',
+        defaultState: {},
+        template(_, run) {
+          return html`
+            <button @click=${run('TEST_RUN', 'Hello World')}>click</button>
+          `;
+        }
+      })
+      class MyComponent3 {
+        @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
+          expect(e instanceof Event).toBe(true);
+          expect(payload).toBe('Hello World');
+
+          done();
+        }
+      }
+
+      const el = createComponent<MyComponent3, void>(MyComponent3);
+      const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
+
+      button.click();
     });
   });
 });
