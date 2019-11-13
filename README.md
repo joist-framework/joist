@@ -8,7 +8,7 @@ A set of packages that leverage lit-html to help you write applications with web
 | [@lit-kit/di](packages/di)                 | IOC container                                                  |
 | [@lit-kit/schematics](packages/schematics) | Schematics for generating components and creating applications |
 
-### Demos
+### Example
 
 | Project                                      | Description                                                       |
 | -------------------------------------------- | ----------------------------------------------------------------- |
