@@ -11,8 +11,8 @@ describe('new-service', () => {
     const tree = runner.runSchematic('service', { name: 'src/app/hello-world' }, Tree.empty());
 
     expect(tree.files.sort()).toEqual([
-      '/src/app/hello-world/hello-world.service.spec.ts',
-      '/src/app/hello-world/hello-world.service.ts'
+      '/src/app/hello-world.service.spec.ts',
+      '/src/app/hello-world.service.ts'
     ]);
   });
 
@@ -21,7 +21,7 @@ describe('new-service', () => {
 
     const tree = runner.runSchematic('service', { name: 'src/app/hello-world' }, Tree.empty());
 
-    const file = tree.read('/src/app/hello-world/hello-world.service.ts') as Buffer;
+    const file = tree.read('/src/app/hello-world.service.ts') as Buffer;
     const content = file.toString();
 
     it('should create service ref decorator', () => {
@@ -42,7 +42,7 @@ describe('new-service', () => {
 
     const tree = runner.runSchematic('service', { name: 'src/app/hello-world' }, Tree.empty());
 
-    const file = tree.read('/src/app/hello-world/hello-world.service.spec.ts') as Buffer;
+    const file = tree.read('/src/app/hello-world.service.spec.ts') as Buffer;
     const content = file.toString();
 
     it('should import the correct service', () => {

@@ -16,4 +16,4 @@ jobs:
         run: npx lerna run test
 
       - name: Build Integration
-        run: npx lerna run build --scope @lit-kit-demos/*
+        run: npx lerna run build --scope @lit-kit-examples/*

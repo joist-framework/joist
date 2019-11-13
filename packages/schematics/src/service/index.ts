@@ -9,7 +9,8 @@ export interface ComponentOptions {
 
 export function service(options: ComponentOptions): Rule {
   const parsed = options.name.split('/');
-  const name = parsed[parsed.length - 1];
+  const name = parsed.pop();
+  const path = parsed.join('/');
 
   return () => {
     return chain([
@@ -20,8 +21,8 @@ export function service(options: ComponentOptions): Rule {
         return mergeWith(completedTemplates)(tree, context);
       },
       tree => {
-        tree.rename(`./service.ts.template`, `${options.name}/${name}.service.ts`);
-        tree.rename(`./service.spec.ts.template`, `${options.name}/${name}.service.spec.ts`);
+        tree.rename(`./service.ts.template`, `${path}/${name}.service.ts`);
+        tree.rename(`./service.spec.ts.template`, `${path}/${name}.service.spec.ts`);
 
         return tree;
       }
