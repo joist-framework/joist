@@ -13,29 +13,22 @@ npm i @lit-kit/di
 ```TS
 import { Injector, Inject } from '@lit-kit/di';
 
-// Write a plain ol JS class
 class FooService {
   sayHello() {
     return 'Hello From FooService';
   }
 }
 
-// Declare that class as a static dependency of another class
 class BarService {
-  // an instance of that class will be passed to this one;
-  constructor(
-    @Inject(FooService) private foo: FooService
-  ) {}
+  constructor(@Inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
   }
 }
 
-// create a new instance of our injector
 const app = new Injector();
 
-// Use that injector to create new instances of objects
 app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
 ```
 
@@ -51,9 +44,7 @@ class FooService {
 }
 
 class BarService {
-  constructor(
-    @Inject(FooService) private foo: FooService
-  ) {}
+  constructor(@Inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
@@ -63,7 +54,14 @@ class BarService {
 // Override FooService with an alternate implementation
 const app = new Injector({
   providers: [
-    { provide: FooService, useFactory: () => ({sayHello: () => 'IT HAS BEEN OVERRIDEN' } as FooService) }
+    { 
+      provide: FooService, 
+      useClass: class extends FooService {
+        sayHello() {
+          return 'IT HAS BEEN OVERRIDEN'
+        }
+      }
+    }
   ]
 });
 
@@ -96,13 +94,10 @@ class FooService {
   }
 }
 
-const Foo = () => (c: any, k: string, i: number) => Inject(FooService)(c, k, i);
+const FooRef = () => (c: any, k: string, i: number) => Inject(FooService)(c, k, i);
 
 class BarService {
-  // Use custom decorator to provide FooService
-  constructor(
-    @Foo() private foo: FooService
-  ) {}
+  constructor(@FooRef() private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
