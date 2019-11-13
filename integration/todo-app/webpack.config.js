@@ -11,7 +11,7 @@ const performance = {};
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new CompressionPlugin());
   performance.hints = 'error';
-  performance.maxEntrypointSize = 19000;
+  performance.maxEntrypointSize = 20000;
 }
 
 module.exports = {
