@@ -1,4 +1,4 @@
-import './loader.component';
+import './loader/loader.component';
 
 import { Component, StateRef, State, OnInit, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
@@ -87,7 +87,7 @@ export interface AppState {
       <div class="cards">
         ${state.news.map(news =>
           until(
-            import('./news-card.component').then(
+            import('./news-card/news-card.component').then(
               () =>
                 html`
                   <news-card .newsItem=${news} @click=${run('CARD_CLICKED', news)}></news-card>
@@ -137,7 +137,9 @@ export class AppComponent implements OnInit {
     }));
 
     this.state.setState(
-      Promise.all([state, import('./comments-drawer.component')]).then(res => res[0])
+      Promise.all([state, import('./comments-drawer/comments-drawer.component')]).then(
+        res => res[0]
+      )
     );
   }
 

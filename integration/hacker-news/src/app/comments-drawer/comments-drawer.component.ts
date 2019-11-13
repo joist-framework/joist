@@ -1,7 +1,7 @@
 import { Component, StateRef, State, Prop, OnPropChanges, Handle, ElRef } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-import { HackerNewsItemComment } from './hacker-news.service';
+import { HackerNewsItemComment } from '../hacker-news.service';
 
 export interface CommentsDrawerState {
   comments: HackerNewsItemComment[];

@@ -1,7 +1,7 @@
 import { Component, StateRef, State, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-import { HackerNewsItem } from './hacker-news.service';
+import { HackerNewsItem } from '../hacker-news.service';
 
 export type NewsCardState = HackerNewsItem | null;
 
