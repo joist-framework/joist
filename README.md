@@ -15,3 +15,4 @@ A set of packages that leverage lit-html to help you write applications with web
 | [hacker-news](integration/hacker-news)       | Hacker news PWA                                                   |
 | [hello-world](integration/hello-world)       | Hello World                                                       |
 | [resistor-value](integration/resistor-value) | PWA for calculating the value of resistors from their color bands |
+| [todo-app](integration/todo-app)             | Todo app                                                          |
