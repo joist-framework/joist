@@ -53,12 +53,12 @@ export class TodoFormComponent {
     const form = new FormData(el);
     const todo = form.get('todo') as string;
 
-    this.state.setState({ todo });
+    this.state.setValue({ todo });
 
     if (todo.length) {
       this.dispatchAddTodo(todo);
 
-      this.state.setState({ todo: '' });
+      this.state.setValue({ todo: '' });
     }
   }
 

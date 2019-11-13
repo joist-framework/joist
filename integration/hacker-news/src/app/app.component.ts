@@ -118,17 +118,17 @@ export class AppComponent implements OnInit {
   ) {}
 
   onInit(): void {
-    this.state.setState({ ...this.state.value, loadingNews: true });
+    this.state.setValue({ ...this.state.value, loadingNews: true });
 
     const state: Promise<AppState> = this.hackerNews
       .getNews()
       .then(news => ({ ...this.state.value, news, loadingNews: false }));
 
-    this.state.setState(state);
+    this.state.setValue(state);
   }
 
   @Handle('CARD_CLICKED') onCardClicked(_: Event, news: HackerNewsItemFull): void {
-    this.state.setState({ ...this.state.value, loadingCurrentNewsItem: true });
+    this.state.setValue({ ...this.state.value, loadingCurrentNewsItem: true });
 
     const state: Promise<AppState> = this.hackerNews.getNewsItem(news.id).then(currentNewsItem => ({
       ...this.state.value,
@@ -136,7 +136,7 @@ export class AppComponent implements OnInit {
       loadingCurrentNewsItem: false
     }));
 
-    this.state.setState(
+    this.state.setValue(
       Promise.all([state, import('./comments-drawer/comments-drawer.component')]).then(
         res => res[0]
       )
@@ -144,6 +144,6 @@ export class AppComponent implements OnInit {
   }
 
   @Handle('CLOSE_DRAWER') onCloseDrawer(_: CustomEvent): void {
-    this.state.setState({ ...this.state.value, currentNewsItem: undefined });
+    this.state.setValue({ ...this.state.value, currentNewsItem: undefined });
   }
 }

@@ -10,24 +10,24 @@ describe('state', () => {
   it('should correctly run the callback when there is a state change', done => {
     const state = new State<string>('Hello');
 
-    state.onStateChange(state => {
+    state.onChange(state => {
       expect(state).toBe('Hello World');
 
       done();
     });
 
-    state.setState(state.value + ' World');
+    state.setValue(state.value + ' World');
   });
 
   it('should set state when state change returns a promise', done => {
     const state = new State<string>('Hello');
 
-    state.onStateChange(state => {
+    state.onChange(state => {
       expect(state).toBe('Hello World');
 
       done();
     });
 
-    state.setState(Promise.resolve(state.value + ' World'));
+    state.setValue(Promise.resolve(state.value + ' World'));
   });
 });

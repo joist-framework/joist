@@ -89,7 +89,7 @@ export class CommentsDrawerComponent implements OnPropChanges {
   ) {}
 
   onPropChanges() {
-    this.state.setState({ comments: this.comments });
+    this.state.setValue({ comments: this.comments });
   }
 
   @Handle('CLOSE_DRAWER') onCloseDrawer() {

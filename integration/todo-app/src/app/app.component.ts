@@ -99,10 +99,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   onInit(): void {
-    this.componentState.setState({ todos: this.todo.todos.value });
+    this.componentState.setValue({ todos: this.todo.todos.value });
 
-    this.todo.todos.onStateChange(todos => {
-      this.componentState.setState({ todos });
+    this.todo.todos.onChange(todos => {
+      this.componentState.setValue({ todos });
     });
   }
 

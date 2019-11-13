@@ -73,7 +73,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         this.componentInstance = this.componentInjector.create(componentDef);
         this.componentState = this.componentInjector.get(State);
 
-        this.componentState.onStateChange(state => {
+        this.componentState.onChange(state => {
           const template = html`
             ${config.style} ${config.template(state, run)}
           `;

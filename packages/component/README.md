@@ -5,7 +5,7 @@ Create web components using [lit-html](https://lit-html.polymer-project.org/)
 Goals
 
 - [x] ~5kb Hello World ~7kb Todo App
-- [x] component template can ONLY be updated by calling set state. no exceptions
+- [x] component template can ONLY be updated by updating state. no exceptions
 - [x] Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
 ### Installation
@@ -78,7 +78,7 @@ class AppComponent implements OnInit {
 
   onInit() {
     setInterval(() => {
-      this.state.setState(this.state.value + 1);
+      this.state.setValue(this.state.value + 1);
     }, 1000);
   }
 }
@@ -106,7 +106,7 @@ class AppTitleComponent implements OnPropChanges {
   constructor(@StateRef() private state: State<string>) {}
 
   onPropChanges() {
-    this.state.setState(this.title);
+    this.state.setValue(this.title);
   }
 }
 ```
@@ -137,11 +137,11 @@ class AppComponent {
   constructor(@StateRef() private state: State<number>) {}
 
   @Handle('INCREMENT') onIncrement(_: Event) {
-    this.state.setState(this.state.value + 1);
+    this.state.setValue(this.state.value + 1);
   }
 
   @Handle('DECREMENT') onDecrement(_: Event) {
-    this.state.setState(this.state.value - 1);
+    this.state.setValue(this.state.value - 1);
   }
 }
 ```
@@ -175,13 +175,13 @@ class AppComponent {
   ) {}
 
   @Handle('INCREMENT') onIncrement() {
-    this.state.setState(this.state.value + 1);
+    this.state.setValue(this.state.value + 1);
 
     this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
   }
 
   @Handle('DECREMENT') onDecrement() {
-    this.state.setState(this.state.value - 1);
+    this.state.setValue(this.state.value - 1);
 
     this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
   }
@@ -210,11 +210,11 @@ class AppComponent implements OnInit {
   constructor(@StateRef() private state: State<AppState>) {}
 
   onInit() {
-    this.state.setState({ data: [], loading: true });
+    this.state.setValue({ data: [], loading: true });
 
     const data = fetch('/data').then(res => res.json()).then(data => ({ loading: false, data }));
 
-    this.state.setState(data);
+    this.state.setValue(data);
   }
 }
 ```

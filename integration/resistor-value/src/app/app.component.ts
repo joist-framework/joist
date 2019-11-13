@@ -123,13 +123,13 @@ export class AppComponent implements OnInit {
   onInit() {
     const bands = this.resistor.getResistorBands();
 
-    this.state.setState({ ...this.state.value, bands });
+    this.state.setValue({ ...this.state.value, bands });
   }
 
   @Handle('BAND_COUNT_SELECTED') onBandCountSelected(e: CustomEvent<number>): void {
     const bandLimit = e.detail;
 
-    this.state.setState({
+    this.state.setValue({
       ...this.state.value,
       selectedBands: [],
       resistorValue: undefined,
@@ -146,7 +146,7 @@ export class AppComponent implements OnInit {
 
     const selectedBands = [...this.state.value.selectedBands, e.detail];
 
-    this.state.setState({
+    this.state.setValue({
       ...this.state.value,
       selectedBands,
       availableBands: this.getAvailableBands(selectedBands, this.state.value.bandLimit),

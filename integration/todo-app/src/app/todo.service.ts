@@ -12,15 +12,15 @@ export class TodoService {
   public readonly todos = new State<Todo[]>([]);
 
   addTodo(todo: Todo): void {
-    this.todos.setState([...this.todos.value, todo]);
+    this.todos.setValue([...this.todos.value, todo]);
   }
 
   removeTodo(index: number) {
-    this.todos.setState(this.todos.value.filter((_, i) => i !== index));
+    this.todos.setValue(this.todos.value.filter((_, i) => i !== index));
   }
 
   markTodoAsComplete(index: number, isComplete: boolean = true) {
-    this.todos.setState(
+    this.todos.setValue(
       this.todos.value.map((todo, i) => {
         if (i === index) {
           return new Todo(todo.name, isComplete);

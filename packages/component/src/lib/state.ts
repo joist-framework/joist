@@ -12,7 +12,7 @@ abstract class StateBase<T> {
     this.currentState = defaultState;
   }
 
-  setState(state: T | Promise<T>): void {
+  setValue(state: T | Promise<T>): void {
     let stateRes = state instanceof Promise ? state : Promise.resolve(state);
 
     stateRes.then(res => {
@@ -22,7 +22,7 @@ abstract class StateBase<T> {
     });
   }
 
-  onStateChange(cb: (state: T) => void) {
+  onChange(cb: (state: T) => void) {
     this.listeners.push(cb);
 
     return () => {

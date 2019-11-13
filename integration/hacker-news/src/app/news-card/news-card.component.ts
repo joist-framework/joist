@@ -68,6 +68,6 @@ export class NewsCardComponent implements OnPropChanges {
   constructor(@StateRef() private state: State<NewsCardState>) {}
 
   onPropChanges() {
-    this.state.setState(this.newsItem);
+    this.state.setValue(this.newsItem);
   }
 }
