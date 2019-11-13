@@ -17,3 +17,9 @@ schematics @lit-kit/schematics:application
 ```bash
 schematics @lit-kit/schematics:component
 ```
+
+### Generate Service
+
+```bash
+schematics @lit-kit/schematics:service
+```
