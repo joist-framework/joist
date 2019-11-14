@@ -66,7 +66,7 @@ describe('new-component', () => {
     it('should import the component and state', () => {
       expect(
         content.includes(
-          `import { HelloWorldComponent, HelloWorldState } from './hello-world.component.ts';`
+          `import { HelloWorldComponent, HelloWorldState } from './hello-world.component';`
         )
       ).toBe(true);
     });
