@@ -4,7 +4,7 @@ Create web components using [lit-html](https://lit-html.polymer-project.org/)
 
 Goals
 
-- [x] ~5kb Hello World ~7kb Todo App
+- [x] ~5kb Hello World ~6kb Todo App
 - [x] component template can ONLY be updated by updating state. no exceptions
 - [x] Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
