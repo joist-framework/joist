@@ -28,6 +28,31 @@ export type ElementInstance<C, S> = {
   [key: string]: any;
 } & HTMLElement;
 
+const mapComponentProperties = <T>(
+  metadata: Metadata<T>,
+  el: ElementInstance<any, T>,
+  instance: ComponentInstance<any>
+) => {
+  const length = metadata.props.length;
+
+  for (let i = 0; i < length; i++) {
+    const prop = metadata.props[i];
+
+    Object.defineProperty(el, prop, {
+      set: newValue => {
+        const oldValue = instance[prop];
+
+        instance[prop] = newValue;
+
+        if (instance.onPropChanges) {
+          instance.onPropChanges(prop, oldValue, newValue);
+        }
+      },
+      get: () => instance[prop]
+    });
+  }
+};
+
 export const Component = <T = any>(config: ComponentConfig<T>) => (
   componentDef: ClassProviderToken<any>
 ) => {
@@ -82,25 +107,8 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           componentRender(state);
         });
 
-        const length = this.componentMetaData.props.length;
-
         // Define setters and getters to map custom element properties to component properties
-        for (let i = 0; i < length; i++) {
-          const prop = this.componentMetaData.props[i];
-
-          Object.defineProperty(this, prop, {
-            set: newValue => {
-              const oldValue = this.componentInstance[prop];
-
-              this.componentInstance[prop] = newValue;
-
-              if (this.componentInstance.onPropChanges) {
-                this.componentInstance.onPropChanges(prop, oldValue, newValue);
-              }
-            },
-            get: () => this.componentInstance[prop]
-          });
-        }
+        mapComponentProperties(componentMetaData, this, this.componentInstance);
 
         if (this.componentInstance.onInit) {
           this.componentInstance.onInit();
