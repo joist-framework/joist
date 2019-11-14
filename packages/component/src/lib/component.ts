@@ -62,23 +62,24 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           }
         };
 
+        const componentRender = (state: T) => {
+          render(
+            html`
+              ${config.style} ${config.template(state, run)}
+            `,
+            shadow
+          );
+        };
+
         const shadow = this.attachShadow({ mode: 'open' });
 
-        const template = html`
-          ${config.style} ${config.template(config.defaultState, run)}
-        `;
-
-        render(template, shadow);
+        componentRender(config.defaultState);
 
         this.componentInstance = this.componentInjector.create(componentDef);
         this.componentState = this.componentInjector.get(State);
 
         this.componentState.onChange(state => {
-          const template = html`
-            ${config.style} ${config.template(state, run)}
-          `;
-
-          render(template, shadow);
+          componentRender(state);
         });
 
         const length = this.componentMetaData.props.length;
