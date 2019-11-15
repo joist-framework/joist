@@ -14,6 +14,29 @@ Goals
 npm i @lit-kit/component @lit-kit/di lit-html
 ```
 
+### Bootstrap Application
+
+If you plan on using lit-kit to create an application you will probably want to use services. To make sure you have singletons you need to bootstrap.
+
+```TS
+import { bootstrapApplication } from '@lit-kit/component';
+
+bootstrapApplication()
+```
+
+### Bootstrap Shady Application
+
+If you need to support older browsers (IE11) you will need to use the web components polyfills and enable shady css rendering.
+
+```TS
+import { bootstrapApplication, Renderer } from '@lit-kit/component';
+import { ShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
+
+bootstrapApplication([
+  { provide: Renderer, useClass: ShadyRenderer }
+]);
+```
+
 ### Component
 
 Components are created via the "Component" decorator and a custom element is defined.
