@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lit-kit/component": "^1.0.0",
-    "@lit-kit/di": "^1.0.0",
+    "@lit-kit/component": "^1.0.0-beta",
+    "@lit-kit/di": "^1.0.0-beta",
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
