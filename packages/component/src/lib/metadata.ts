@@ -9,7 +9,7 @@ export interface ComponentConfig<T> {
   tag: string;
   template: TemplateDef<T>;
   defaultState: T;
-  style?: TemplateResult;
+  style?: TemplateResult | string;
   observedAttributes?: string[];
 }
 

@@ -29,11 +29,9 @@ export type ElementInstance<C, S> = {
   [key: string]: any;
 } & HTMLElement;
 
-const mapComponentProperties = <T>(
-  metadata: Metadata<T>,
-  el: ElementInstance<any, T>,
-  instance: ComponentInstance<any>
-) => {
+const mapComponentProperties = <T>(el: ElementInstance<any, T>) => {
+  const metadata = el.componentMetaData;
+  const instance = el.componentInstance;
   const length = metadata.props.length;
 
   for (let i = 0; i < length; i++) {
@@ -111,7 +109,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         });
 
         // Define setters and getters to map custom element properties to component properties
-        mapComponentProperties(componentMetaData, this, this.componentInstance);
+        mapComponentProperties(this);
 
         if (this.componentInstance.onInit) {
           this.componentInstance.onInit();
