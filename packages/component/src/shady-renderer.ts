@@ -2,6 +2,7 @@ import { TemplateResult } from 'lit-html';
 import { ShadyRenderOptions, render } from 'lit-html/lib/shady-render';
 
 import { Renderer } from './lib/renderer';
+import { Provider } from '@lit-kit/di';
 
 export class ShadyRenderer implements Renderer {
   render(
@@ -11,4 +12,8 @@ export class ShadyRenderer implements Renderer {
   ) {
     render(templateResult, container, options);
   }
+}
+
+export function useShadyRenderer(): Provider<Renderer> {
+  return { provide: Renderer, useClass: ShadyRenderer };
 }

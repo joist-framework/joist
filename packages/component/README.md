@@ -30,11 +30,9 @@ If you need to support older browsers (IE11) you will need to use the web compon
 
 ```TS
 import { bootstrapApplication, Renderer } from '@lit-kit/component';
-import { ShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
+import { useShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
 
-bootstrapApplication([
-  { provide: Renderer, useClass: ShadyRenderer }
-]);
+bootstrapApplication([useShadyRenderer()]);
 ```
 
 ### Component
