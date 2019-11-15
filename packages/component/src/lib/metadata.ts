@@ -3,7 +3,7 @@ import { TemplateResult } from 'lit-html';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
 
-export type TemplateDef<T> = (state: T, run: TemplateEvent) => TemplateResult;
+export type TemplateDef<T> = (state: T, run: TemplateEvent) => TemplateResult | string;
 
 export interface ComponentConfig<T> {
   tag: string;
