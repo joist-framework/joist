@@ -7,3 +7,4 @@ export * from './lib/handle';
 export * from './lib/lifecycle';
 export * from './lib/create-component';
 export { TemplateDef, TemplateEvent } from './lib/metadata';
+export * from './lib/renderer';

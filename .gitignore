@@ -2,6 +2,7 @@
 
 # compiled output
 **/out-*/
+**/out
 **/.nyc_output
 **/.cache
 **/*.d.ts
