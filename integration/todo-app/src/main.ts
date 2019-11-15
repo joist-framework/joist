@@ -1,9 +1,8 @@
 import './app/app.component';
 
-import { bootstrapApplication, Renderer } from '@lit-kit/component';
-import { ShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
+import { bootstrapApplication } from '@lit-kit/component';
 
-bootstrapApplication([{ provide: Renderer, useClass: ShadyRenderer }]); // only needed if you want singleton providers
+bootstrapApplication(); // only needed if you want singleton providers
 
 if (process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('/service-worker.js').then(
