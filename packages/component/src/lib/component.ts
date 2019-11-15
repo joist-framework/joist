@@ -1,5 +1,6 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
-import { render, html } from 'lit-html';
+import { html } from 'lit-html';
+import { render } from 'lit-html/lib/shady-render';
 
 import { State } from './state';
 import { ElRefToken } from './el-ref';
@@ -92,7 +93,8 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
             html`
               ${config.style} ${config.template(state, run)}
             `,
-            shadow
+            shadow,
+            { scopeName: this.tagName.toLowerCase(), eventContext: this }
           );
         };
 

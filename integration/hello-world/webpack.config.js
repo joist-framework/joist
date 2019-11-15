@@ -3,11 +3,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 const plugins = [
   new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({ template: './src/index.html' }),
-  new CompressionPlugin()
+  new CompressionPlugin(),
+  new webpack.NormalModuleReplacementPlugin(new RegExp('lit-html/lib/shady-render'), 'lit-html')
 ];
 
 module.exports = {
