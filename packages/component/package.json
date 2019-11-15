@@ -1,7 +1,7 @@
 {
   "name": "@lit-kit/component",
   "version": "1.0.0-beta.8",
-  "main": "out/public_api.js",
+  "main": "lib/public_api.js",
   "files": [
     "out/**/*"
   ],
@@ -28,7 +28,7 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "karma start",
-    "build": "../../node_modules/.bin/tsc --outDir out --module es2015"
+    "build": "../../node_modules/.bin/tsc --outDir lib --module es2015"
   },
   "peerDependencies": {
     "@lit-kit/di": "^1.0.0",
