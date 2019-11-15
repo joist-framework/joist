@@ -5,7 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
 
 const plugins = [
   new CleanWebpackPlugin(),
@@ -13,8 +12,7 @@ const plugins = [
   new CopyPlugin([
     { from: './src/manifest.json', to: './manifest.json' },
     { from: './src/assets', to: './assets' }
-  ]),
-  new webpack.NormalModuleReplacementPlugin(new RegExp('lit-html/lib/shady-render'), 'lit-html')
+  ])
 ];
 
 const performance = {};

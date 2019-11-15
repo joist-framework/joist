@@ -1,7 +1,7 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
 import { html } from 'lit-html';
-import { render } from 'lit-html/lib/shady-render';
 
+import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { ROOT_INJECTOR } from './app';
@@ -82,14 +82,20 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
       constructor() {
         super();
 
+        const shadow = this.attachShadow({ mode: 'open' });
         const run = (eventName: string, payload: unknown) => (e: Event) => {
           if (eventName in this.componentMetaData.handlers) {
             this.componentMetaData.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
 
+        this.componentInstance = this.componentInjector.create(componentDef);
+        this.componentState = this.componentInjector.get(State);
+
+        const renderer = this.componentInjector.get(Renderer);
+
         const componentRender = (state: T) => {
-          render(
+          renderer.render(
             html`
               ${config.style} ${config.template(state, run)}
             `,
@@ -98,12 +104,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           );
         };
 
-        const shadow = this.attachShadow({ mode: 'open' });
-
         componentRender(config.defaultState);
-
-        this.componentInstance = this.componentInjector.create(componentDef);
-        this.componentState = this.componentInjector.get(State);
 
         this.componentState.onChange(state => {
           componentRender(state);
