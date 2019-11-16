@@ -122,12 +122,12 @@ import { html } from 'lit-html';
   }
 })
 class AppTitleComponent implements OnPropChanges {
-  @Prop() title?: string;
+  @Prop() title: string = '';
 
   constructor(@StateRef() private state: State<string>) {}
 
-  onPropChanges() {
-    this.state.setValue(this.title);
+  onPropChanges(_prop: string, _oldVal: any, newValue: any) {
+    this.state.setValue(newVal);
   }
 }
 ```
@@ -238,4 +238,64 @@ class AppComponent implements OnInit {
     this.state.setValue(data);
   }
 }
+```
+
+### Testing
+
+Testing can be handled in a couple of ways. The most straight forward way is to use the available "createComponent" function. All that createComponent does is grab the metadata from a component class and run document.createElement.
+
+```TS
+import { createComponent, ElementInstance } from '@lit-kit/component';
+
+import { AppComponent, AppState } from './app.component';
+
+describe('AppComponent', () => {
+  let el: ElementInstance<AppComponent, AppState>;
+
+  beforeEach(() => {
+    el = createComponent(AppComponent);
+  });
+
+  it('should work', () => {
+    expect(el).toBeTruthy();
+  });
+});
+```
+
+If you want to test your component code without creating an instance of an HTMLElement you can manually create instances yourself.
+
+```TS
+import { createComponent, ElementInstance, State } from '@lit-kit/component';
+
+import { AppComponent, AppState } from './app.component';
+
+describe('AppComponent', () => {
+  let component: AppComponent;
+
+  beforeEach(() => {
+    component = new AppComponent(new State({}));
+  });
+
+  it('should work', () => {
+    expect(component).toBeTruthy();
+  });
+});
+```
+
+And of course you can manually create the element yourself
+
+```TS
+import './app.component';
+
+describe('AppComponent', () => {
+  let el: HTMLElement;
+
+  beforeEach(() => {
+    el = document.createElement('app-root');
+  });
+
+  it('should work', () => {
+    expect(el).toBeTruthy();
+  });
+});
 ```
