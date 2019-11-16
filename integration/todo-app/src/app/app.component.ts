@@ -12,8 +12,8 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   defaultState: { todos: [] },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
       }
@@ -58,8 +58,8 @@ export interface AppState {
         padding: 1rem 0;
         color: gray;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>

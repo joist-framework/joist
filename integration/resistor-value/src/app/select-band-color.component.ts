@@ -10,8 +10,8 @@ export interface SelectBandColorState {
 @Component<SelectBandColorState>({
   tag: 'select-band-color',
   defaultState: { bands: [] },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
         position: relative;
@@ -39,8 +39,8 @@ export interface SelectBandColorState {
         display: inline-block;
         margin-right: 1rem;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       ${state.bands.map(band => {

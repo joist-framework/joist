@@ -6,8 +6,8 @@ import { ResistorBand } from './resistor.service';
 @Component<ResistorBand[]>({
   tag: 'resistor-value',
   defaultState: [],
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: flex;
         align-items: center;
@@ -65,8 +65,8 @@ import { ResistorBand } from './resistor.service';
       .band:last-child {
         margin-right: 0;
       }
-    </style>
-  `,
+    `
+  ],
   template(state) {
     return html`
       <section class="start"></section>

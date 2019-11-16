@@ -25,9 +25,9 @@ export interface AppState {
     availableBands: [],
     displayColors: false
   },
-  style: html`
-    <style>
-      select-band-color {
+  styles: [
+    `
+      <style > select-band-color {
         position: absolute;
         top: 20rem;
         left: 0;
@@ -80,8 +80,8 @@ export interface AppState {
           transform: translateY(100%);
         }
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       <div class="value">

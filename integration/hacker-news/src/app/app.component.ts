@@ -21,8 +21,8 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   defaultState: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
         max-width: 1200px;
@@ -74,8 +74,8 @@ export interface AppState {
           transform: translateY(0);
         }
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       ${state.loadingNews || state.loadingCurrentNewsItem

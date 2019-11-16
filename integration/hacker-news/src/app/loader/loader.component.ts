@@ -4,8 +4,8 @@ import { html } from 'lit-html';
 @Component({
   tag: 'app-loader',
   defaultState: null,
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: inline-block;
         position: relative;
@@ -62,8 +62,8 @@ import { html } from 'lit-html';
           transform: translate(19px, 0);
         }
       }
-    </style>
-  `,
+    `
+  ],
   template() {
     return html`
       <div></div>

@@ -10,8 +10,8 @@ export interface CommentsDrawerState {
 @Component<CommentsDrawerState>({
   tag: 'comments-drawer',
   defaultState: { comments: [] },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
       }
@@ -53,8 +53,8 @@ export interface CommentsDrawerState {
         top: var(--header-height);
         word-wrap: break-word;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       <div class="drawer-header">

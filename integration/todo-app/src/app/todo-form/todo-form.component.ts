@@ -8,8 +8,8 @@ export interface TodoFormState {
 @Component<TodoFormState>({
   tag: 'todo-form',
   defaultState: { todo: '' },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: inline-block;
       }
@@ -28,8 +28,8 @@ export interface TodoFormState {
       button {
         display: none;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       <form @submit=${run('FORM_SUBMIT')}>

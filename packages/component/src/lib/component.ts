@@ -91,11 +91,16 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         this.componentState = this.componentInjector.get(State);
 
         const renderer = this.componentInjector.get(Renderer);
+        const styles = config.styles ? config.styles.join('') : '';
 
         const componentRender = (state: T) => {
           renderer.render(
             html`
-              ${config.style} ${config.template(state, run)}
+              <style>
+                ${styles}
+              </style>
+
+              ${config.template(state, run)}
             `,
             shadow,
             { scopeName: this.tagName.toLowerCase(), eventContext: this }

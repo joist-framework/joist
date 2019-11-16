@@ -8,8 +8,8 @@ export type NewsCardState = HackerNewsItem | null;
 @Component<NewsCardState>({
   tag: 'news-card',
   defaultState: null,
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
         padding: 1rem 1.5rem;
@@ -42,8 +42,8 @@ export type NewsCardState = HackerNewsItem | null;
         cursor: pointer;
         text-decoration: none;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, _run) {
     if (!state) {
       return html``;

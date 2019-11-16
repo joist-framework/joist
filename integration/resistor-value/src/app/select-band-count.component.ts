@@ -11,8 +11,8 @@ interface SelectBandCountState {
 @Component<SelectBandCountState>({
   tag: 'select-band-count',
   defaultState: { bandLimit: 0, selectedBands: [] },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
         position: relative;
@@ -68,8 +68,8 @@ interface SelectBandCountState {
           opacity: 1;
         }
       }
-    </style>
-  `,
+    `
+  ],
   template(state, run) {
     return html`
       ${state.bandLimit
