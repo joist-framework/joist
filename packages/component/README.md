@@ -126,8 +126,8 @@ class AppTitleComponent implements OnPropChanges {
 
   constructor(@StateRef() private state: State<string>) {}
 
-  onPropChanges() {
-    this.state.setValue(this.title);
+  onPropChanges(_prop: string, _oldVal: any, newValue: any) {
+    this.state.setValue(newVal);
   }
 }
 ```
