@@ -244,7 +244,7 @@ class AppComponent implements OnInit {
 
 Testing can be handled in a couple of ways. The most straight forward way is to use the available "createComponent" function. All that createComponent does is grab the metadata from a component class and run document.createElement.
 
-```
+```TS
 import { createComponent, ElementInstance } from '@lit-kit/component';
 
 import { AppComponent, AppState } from './app.component';
@@ -264,7 +264,7 @@ describe('AppComponent', () => {
 
 If you want to test your component code without creating an instance of an HTMLElement you can manually create instances yourself.
 
-```
+```TS
 import { createComponent, ElementInstance, State } from '@lit-kit/component';
 
 import { AppComponent, AppState } from './app.component';
@@ -284,7 +284,7 @@ describe('AppComponent', () => {
 
 And of course you can manually create the element yourself
 
-```
+```TS
 import './app.component';
 
 describe('AppComponent', () => {
