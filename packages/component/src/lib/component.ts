@@ -59,12 +59,16 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
   const componentMetaData = getMetadataRef<T>(componentDef);
   componentMetaData.config = config;
 
+  const stylesString = config.styles ? config.styles.join('') : '';
+
+  type ComponentDef = typeof componentDef;
+
   customElements.define(
     config.tag,
-    class extends HTMLElement implements ElementInstance<typeof componentDef, T> {
+    class extends HTMLElement implements ElementInstance<ComponentDef, T> {
       static observedAttributes = config.observedAttributes;
 
-      public componentInstance: ComponentInstance<typeof componentDef>;
+      public componentInstance: ComponentInstance<ComponentDef>;
       public componentState: State<T>;
       public componentMetaData = componentMetaData;
       public componentInjector = new Injector(
@@ -91,7 +95,6 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         this.componentState = this.componentInjector.get(State);
 
         const renderer = this.componentInjector.get(Renderer);
-        const stylesString = config.styles ? config.styles.join('') : '';
 
         const componentRender = (state: T, styles: string) => {
           renderer.render(
