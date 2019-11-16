@@ -8,8 +8,8 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   defaultState: { title: '<%= name %>' },
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
       }
@@ -17,8 +17,8 @@ export interface AppState {
       h1 {
         color: red;
       }
-    </style>
-  `,
+    `
+  ],
   template(state, _run) {
     return html`
       <h1>${state.title}</h1>

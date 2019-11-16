@@ -6,13 +6,13 @@ export interface <%= classify(name) %>State {}
 @Component<<%= classify(name) %>State>({
   tag: '<%= name %>',
   defaultState: {},
-  style: html`
-    <style>
+  styles: [
+    `
       :host {
         display: block;
       }
-    </style>
-  `,
+    `
+  ],
   template(_state, _run) {
     return html`
       <%= name %> Worked!
