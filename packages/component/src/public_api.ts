@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    ShadyCSS: any;
+  }
+}
+
 export * from './lib/app';
 export * from './lib/component';
 export * from './lib/state';

@@ -12,8 +12,8 @@ abstract class StateBase<T> {
     this.currentState = defaultState;
   }
 
-  setValue(state: T | Promise<T>): void {
-    Promise.resolve(state).then(res => {
+  setValue(state: T | Promise<T>): Promise<void> {
+    return Promise.resolve(state).then(res => {
       this.currentState = res;
 
       this.listeners.forEach(cb => cb(this.value));
