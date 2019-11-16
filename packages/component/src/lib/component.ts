@@ -125,12 +125,12 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
       }
 
       connectedCallback() {
-        if (this.componentInstance.connectedCallback) {
-          this.componentInstance.connectedCallback();
-        }
-
         if (window.ShadyCSS) {
           window.ShadyCSS.styleElement(this);
+        }
+
+        if (this.componentInstance.connectedCallback) {
+          this.componentInstance.connectedCallback();
         }
       }
 
