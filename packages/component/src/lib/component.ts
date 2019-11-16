@@ -91,9 +91,9 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         this.componentState = this.componentInjector.get(State);
 
         const renderer = this.componentInjector.get(Renderer);
-        const styles = config.styles ? config.styles.join('') : '';
+        const stylesString = config.styles ? config.styles.join('') : '';
 
-        const componentRender = (state: T) => {
+        const componentRender = (state: T, styles: string) => {
           renderer.render(
             html`
               <style>
@@ -107,10 +107,10 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
           );
         };
 
-        componentRender(config.defaultState);
+        componentRender(config.defaultState, stylesString);
 
         this.componentState.onChange(state => {
-          componentRender(state);
+          componentRender(state, stylesString);
         });
 
         // Define setters and getters to map custom element properties to component properties
