@@ -122,7 +122,7 @@ import { html } from 'lit-html';
   }
 })
 class AppTitleComponent implements OnPropChanges {
-  @Prop() title?: string;
+  @Prop() title: string = '';
 
   constructor(@StateRef() private state: State<string>) {}
 
