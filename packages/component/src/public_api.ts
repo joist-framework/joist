@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-export { bootstrapApplication, clearApplication } from './lib/app';
+export { bootstrapApplication, clearApplication, getApplicationRef } from './lib/app';
 export { ComponentInstance, Component, ElementInstance } from './lib/component';
 export { State, StateRef } from './lib/state';
 export { Prop } from './lib/prop';

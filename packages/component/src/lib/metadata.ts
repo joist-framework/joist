@@ -1,4 +1,4 @@
-import { ProviderToken } from '@lit-kit/di';
+import { ProviderToken, Provider } from '@lit-kit/di';
 import { TemplateResult } from 'lit-html';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
@@ -11,6 +11,7 @@ export interface ComponentConfig<T> {
   defaultState: T;
   styles?: string[];
   observedAttributes?: string[];
+  providers?: Provider<any>[];
 }
 
 export class Metadata<T> {

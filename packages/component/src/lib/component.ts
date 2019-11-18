@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
-import { ROOT_INJECTOR } from './app';
+import { getApplicationRef } from './app';
 import { Metadata, getMetadataRef, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
@@ -57,6 +57,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
     type ComponentDef = typeof componentDef;
 
     const stylesString = config.styles ? config.styles.join('') : '';
+    const componentProviders = config.providers || [];
     const componentMetaData = getMetadataRef<T>(componentDef);
 
     componentMetaData.config = config;
@@ -69,12 +70,12 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       public componentMetaData = componentMetaData;
       public componentInjector = new Injector(
         {
-          providers: [
+          providers: componentProviders.concat([
             { provide: ElRefToken, useFactory: () => this, deps: [] },
             { provide: State, useFactory: () => new State(config.defaultState), deps: [] }
-          ]
+          ])
         },
-        ROOT_INJECTOR
+        getApplicationRef()
       );
 
       constructor() {

@@ -95,4 +95,24 @@ describe('Component', () => {
       button.click();
     });
   });
+
+  describe('providers', () => {
+    it('should allow component specific services to be provided', () => {
+      class TestToken {}
+
+      @Component({
+        tag: 'component-test-4',
+        defaultState: {},
+        template() {
+          return html``;
+        },
+        providers: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }]
+      })
+      class MyComponent4 {}
+
+      const el = createComponent<MyComponent4, void>(MyComponent4);
+
+      expect(el.componentInjector.get(TestToken)).toBe('Hello World');
+    });
+  });
 });
