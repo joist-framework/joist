@@ -2,7 +2,7 @@
 
 This document outlines the overall goals and design for lit-kit.
 
-1. All that is needed to create an elent is to call `document.createElement`;
+1. All that is needed to create an element is to call `document.createElement`;
    - The custom element class holds ALL of the information needed to render and update a component.
    - It does this by attaching all important information onto properties on the element itself in what is defined as an "ElementInstance"
 
