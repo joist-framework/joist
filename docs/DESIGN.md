@@ -63,6 +63,7 @@ el.bar // goodbye world
   - by abstracting the component class away from the custom element class it is possible to do constructor based dependency injection (DI)
   - global singleton services are available but NOT required
   - Each component gets it's own injector that will reference an optional global parent injector
+  - This means we can swap out core parts of the pipeline for things like standard render -> shadyCssRender
 
 ```TS
 @Service()
