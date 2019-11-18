@@ -14,7 +14,7 @@ The Goals of lit-kit are to be able to build web components using typescipt, dep
   - It does this by attaching all important information onto properties on the element itself in what is defined as an `ElementInstance`
 
 ```TS
-interface ElementInstance<C, S> = {
+type ElementInstance<C, S> = HTMLElement & {
   // The injector available to the commponent. Is passed the parent injector if it exists
   componentInjector: Injector;
 
