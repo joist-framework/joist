@@ -25,11 +25,8 @@ describe('new-service', () => {
     const content = file.toString();
 
     it('should create service ref decorator', () => {
-      expect(
-        content.includes(
-          'export const HelloWorldRef = () => (c: any, p: any, i: any) => Inject(HelloWorldService)(c, p, i);'
-        )
-      ).toBe(true);
+      expect(content.includes('export function HelloWorldRef() {')).toBe(true);
+      expect(content.includes('Inject(HelloWorldService)(c, p, i);')).toBe(true);
     });
 
     it('should define service class with the correct name', () => {

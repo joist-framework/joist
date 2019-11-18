@@ -1,10 +1,14 @@
 import { Service, Inject } from '@lit-kit/di';
 import { State } from '@lit-kit/component';
 
-export const TodoRef = () => (c: any, p: any, i: any) => Inject(TodoService)(c, p, i);
-
 export class Todo {
   constructor(public readonly name: string, public readonly isComplete: boolean) {}
+}
+
+export function TodoRef() {
+  return function(c: any, p: string, i: number) {
+    Inject(TodoService)(c, p, i);
+  };
 }
 
 @Service()

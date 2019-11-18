@@ -5,7 +5,7 @@ import './select-band-color.component';
 import { Component, StateRef, State, Handle, OnInit } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-import { ResistorService, Resistor, ResistorBand } from './resistor.service';
+import { ResistorService, ResistorRef, ResistorBand } from './resistor.service';
 
 export interface AppState {
   bands: ResistorBand[];
@@ -116,7 +116,7 @@ export interface AppState {
 })
 export class AppComponent implements OnInit {
   constructor(
-    @Resistor() private resistor: ResistorService,
+    @ResistorRef() private resistor: ResistorService,
     @StateRef() private state: State<AppState>
   ) {}
 

@@ -1,6 +1,10 @@
 import { Service, Inject } from '@lit-kit/di';
 
-export const <%= classify(name) %>Ref = () => (c: any, p: any, i: any) => Inject(<%= classify(name) %>Service)(c, p, i);
+export function <%= classify(name) %>Ref() {
+  return function (c: any, p: string, i: number) {
+    Inject(<%= classify(name) %>Service)(c, p, i);
+  }
+}
 
 @Service()
 export class <%= classify(name) %>Service {}

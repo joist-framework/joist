@@ -22,7 +22,11 @@ export interface ResistorBand {
   tolerance?: number;
 }
 
-export const Resistor = () => (c: any, k: any, i: any) => Inject(ResistorService)(c, k, i);
+export function ResistorRef() {
+  return function(c: any, p: string, i: number) {
+    Inject(ResistorService)(c, p, i);
+  };
+}
 
 @Service()
 export class ResistorService {
