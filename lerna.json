@@ -1,6 +1,6 @@
 {
   "packages": ["integration/*", "packages/*"],
-  "version": "1.0.0-beta.15",
+  "version": "1.0.0-beta.16",
   "command": {
     "publish": {
       "forcePublish": "*"
