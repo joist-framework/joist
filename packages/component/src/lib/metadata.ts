@@ -21,7 +21,7 @@ export class Metadata<T> {
 
 const METADATA_KEY = '__LIT_KIT_COMPONENT_METADATA__';
 
-export const getMetadataRef = <T>(provider: ProviderToken<any>): Metadata<T> => {
+export function getMetadataRef<T>(provider: ProviderToken<any>): Metadata<T> {
   const metadata = provider[METADATA_KEY];
 
   if (!metadata) {
@@ -29,4 +29,4 @@ export const getMetadataRef = <T>(provider: ProviderToken<any>): Metadata<T> => 
   }
 
   return provider[METADATA_KEY];
-};
+}

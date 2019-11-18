@@ -29,7 +29,7 @@ export type ElementInstance<C, S> = {
   [key: string]: any;
 } & HTMLElement;
 
-const mapComponentProperties = <T>(el: ElementInstance<any, T>) => {
+function mapComponentProperties<T>(el: ElementInstance<any, T>) {
   const metadata = el.componentMetaData;
   const instance = el.componentInstance;
   const length = metadata.props.length;
@@ -50,22 +50,18 @@ const mapComponentProperties = <T>(el: ElementInstance<any, T>) => {
       get: () => instance[prop]
     });
   }
-};
+}
 
-export const Component = <T = any>(config: ComponentConfig<T>) => (
-  componentDef: ClassProviderToken<any>
-) => {
-  // add component config to metadata
-  const componentMetaData = getMetadataRef<T>(componentDef);
-  componentMetaData.config = config;
+export function Component<T = any>(config: ComponentConfig<T>) {
+  return function(componentDef: ClassProviderToken<any>) {
+    type ComponentDef = typeof componentDef;
 
-  const stylesString = config.styles ? config.styles.join('') : '';
+    const stylesString = config.styles ? config.styles.join('') : '';
+    const componentMetaData = getMetadataRef<T>(componentDef);
 
-  type ComponentDef = typeof componentDef;
+    componentMetaData.config = config;
 
-  customElements.define(
-    config.tag,
-    class extends HTMLElement implements ElementInstance<ComponentDef, T> {
+    class LitKitElement extends HTMLElement implements ElementInstance<ComponentDef, T> {
       static observedAttributes = config.observedAttributes;
 
       public componentInstance: ComponentInstance<ComponentDef>;
@@ -146,5 +142,7 @@ export const Component = <T = any>(config: ComponentConfig<T>) => (
         }
       }
     }
-  );
-};
+
+    customElements.define(config.tag, LitKitElement);
+  };
+}

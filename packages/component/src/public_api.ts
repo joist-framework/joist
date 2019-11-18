@@ -4,13 +4,19 @@ declare global {
   }
 }
 
-export * from './lib/app';
-export * from './lib/component';
-export * from './lib/state';
-export * from './lib/prop';
-export * from './lib/el-ref';
-export * from './lib/handle';
-export * from './lib/lifecycle';
-export * from './lib/create-component';
+export { bootstrapApplication, clearApplication } from './lib/app';
+export { ComponentInstance, Component, ElementInstance } from './lib/component';
+export { State, StateRef } from './lib/state';
+export { Prop } from './lib/prop';
+export { ElRef } from './lib/el-ref';
+export { Handle } from './lib/handle';
+export { createComponent } from './lib/create-component';
 export { TemplateDef, TemplateEvent } from './lib/metadata';
-export * from './lib/renderer';
+export { Renderer } from './lib/renderer';
+export {
+  OnAttributeChanged,
+  OnConnected,
+  OnDisconnected,
+  OnInit,
+  OnPropChanges
+} from './lib/lifecycle';

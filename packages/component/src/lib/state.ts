@@ -31,5 +31,8 @@ abstract class StateBase<T> {
 
 export class State<T> extends StateBase<T> {}
 
-export const StateRef = () => (c: ProviderToken<any>, k: string, i: number) =>
-  Inject(State)(c, k, i);
+export function StateRef() {
+  return function(c: ProviderToken<any>, k: string, i: number) {
+    Inject(State)(c, k, i);
+  };
+}
