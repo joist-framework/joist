@@ -59,7 +59,7 @@ el.componentInstance.bar = 'goodbye world';
 el.bar // goodbye world
 ```
 
-333 Inversion of Control (IOC)
+### Inversion of Control (IOC)
   - by abstracting the component class away from the custom element class it is possible to do constructor based dependency injection (DI)
   - global singleton services are available but NOT required
   - Each component gets it's own injector that will reference an optional global parent injector
