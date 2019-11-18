@@ -263,7 +263,13 @@ describe('AppComponent', () => {
 
   beforeEach(() => {
     el = createComponent(AppComponent);
+
+    document.body.appendChild(el);
   });
+
+  afterEach(() => {
+    document.body.removeChild(el);
+  }))
 
   it('should work', () => {
     expect(el).toBeTruthy();
@@ -301,7 +307,13 @@ describe('AppComponent', () => {
 
   beforeEach(() => {
     el = document.createElement('app-root');
+
+    document.body.appendChild(el);
   });
+
+  afterEach(() => {
+    document.body.removeChild(el);
+  }))
 
   it('should work', () => {
     expect(el).toBeTruthy();
