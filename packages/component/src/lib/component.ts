@@ -6,20 +6,9 @@ import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { getApplicationRef } from './app';
 import { getMetadataRef, ComponentConfig } from './metadata';
-import {
-  OnPropChanges,
-  OnInit,
-  OnConnected,
-  OnDisconnected,
-  OnAttributeChanged
-} from './lifecycle';
+import { Lifecycle } from './lifecycle';
 
-export type ComponentInstance<T> = T &
-  Partial<OnPropChanges> &
-  Partial<OnInit> &
-  Partial<OnConnected> &
-  Partial<OnDisconnected> &
-  Partial<OnAttributeChanged> & { [key: string]: any };
+export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
 
 export type ElementInstance<C, S> = {
   componentInjector: Injector;
@@ -28,6 +17,10 @@ export type ElementInstance<C, S> = {
   [key: string]: any;
 } & HTMLElement;
 
+/**
+ * Map custom element properties to component instance properties.
+ * Only maps properties that are decorated with the @Prop() decorator
+ */
 function mapComponentProperties<T>(el: ElementInstance<any, T>) {
   const metadata = el.componentMetaData;
   const instance = el.componentInstance;
@@ -51,14 +44,20 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
   }
 }
 
+/**
+ * Decorates a class with metadata and defines how a custom element is created.
+ *
+ * NOTE: since the decorator function is only run once per class type do as much preparation work outside of the custom element itself.
+ * This means work like calculating initial styles only needs to be done once.
+ */
 export function Component<T = any>(config: ComponentConfig<T>) {
+  const stylesString = config.styles ? config.styles.join('') : '';
+  const componentProviders = config.providers || [];
+
   return function(componentDef: ClassProviderToken<any>) {
     type ComponentDef = typeof componentDef;
 
-    const stylesString = config.styles ? config.styles.join('') : '';
-    const componentProviders = config.providers || [];
     const componentMetaData = getMetadataRef<T>(componentDef);
-
     componentMetaData.config = config;
 
     class LitKitElement extends HTMLElement implements ElementInstance<ComponentDef, T> {
@@ -120,9 +119,9 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         }
       }
 
-      connectedCallback() {
-        if (window.ShadyCSS) {
-          window.ShadyCSS.styleElement(this);
+      public connectedCallback() {
+        if ((window as any).ShadyCSS) {
+          (window as any).ShadyCSS.styleElement(this);
         }
 
         if (this.componentInstance.connectedCallback) {
@@ -130,13 +129,13 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         }
       }
 
-      disconnectedCallback() {
+      public disconnectedCallback() {
         if (this.componentInstance.disconnectedCallback) {
           this.componentInstance.disconnectedCallback();
         }
       }
 
-      attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
+      public attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
         if (this.componentInstance.attributeChangedCallback) {
           this.componentInstance.attributeChangedCallback(attrName, oldVal, newVal);
         }

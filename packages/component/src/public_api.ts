@@ -1,9 +1,3 @@
-declare global {
-  interface Window {
-    ShadyCSS: any;
-  }
-}
-
 export { bootstrapApplication, clearApplication, getApplicationRef } from './lib/app';
 export { ComponentInstance, Component, ElementInstance } from './lib/component';
 export { State, StateRef } from './lib/state';
@@ -18,5 +12,6 @@ export {
   OnConnected,
   OnDisconnected,
   OnInit,
-  OnPropChanges
+  OnPropChanges,
+  Lifecycle
 } from './lib/lifecycle';

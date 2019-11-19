@@ -17,3 +17,9 @@ export interface OnDisconnected {
 export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
+
+export type Lifecycle = Partial<OnPropChanges> &
+  Partial<OnInit> &
+  Partial<OnConnected> &
+  Partial<OnDisconnected> &
+  Partial<OnAttributeChanged>;
