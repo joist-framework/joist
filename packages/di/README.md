@@ -94,7 +94,11 @@ class FooService {
   }
 }
 
-const FooRef = () => (c: any, k: string, i: number) => Inject(FooService)(c, k, i);
+function FooRef() {
+  return function(c: any, k: string, i: number) {
+    Inject(FooService)(c, k, i)
+  }
+}
 
 class BarService {
   constructor(@FooRef() private foo: FooService) {}
