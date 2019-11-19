@@ -1,7 +1,7 @@
 import { Service, Inject } from '@lit-kit/di';
 
 export function <%= classify(name) %>Ref() {
-  return function (c: any, p: string, i: number) {
+  return function(c: any, p: string, i: number) {
     Inject(<%= classify(name) %>Service)(c, p, i);
   }
 }

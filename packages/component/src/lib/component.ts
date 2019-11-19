@@ -5,7 +5,7 @@ import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { getApplicationRef } from './app';
-import { Metadata, getMetadataRef, ComponentConfig } from './metadata';
+import { getMetadataRef, ComponentConfig } from './metadata';
 import {
   OnPropChanges,
   OnInit,
@@ -24,7 +24,6 @@ export type ComponentInstance<T> = T &
 export type ElementInstance<C, S> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance<C>;
-  componentMetaData: Metadata<S>;
   componentState: State<S>;
   [key: string]: any;
 } & HTMLElement;
