@@ -5,7 +5,7 @@ import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { getApplicationRef } from './app';
-import { getMetadataRef, ComponentConfig } from './metadata';
+import { getMetadataRef, ComponentConfig, Metadata } from './metadata';
 import { Lifecycle } from './lifecycle';
 
 export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
@@ -63,9 +63,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
     class LitKitElement extends HTMLElement implements ElementInstance<ComponentDef, T> {
       static observedAttributes = config.observedAttributes;
 
-      public componentInstance: ComponentInstance<ComponentDef>;
-      public componentState: State<T>;
-      public componentMetaData = componentMetaData;
       public componentInjector = new Injector(
         {
           providers: componentProviders.concat([
@@ -74,6 +71,12 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           ])
         },
         getApplicationRef()
+      );
+
+      public componentMetaData: Metadata<T> = componentMetaData;
+      public componentState: State<T> = this.componentInjector.get(State);
+      public componentInstance: ComponentInstance<ComponentDef> = this.componentInjector.create(
+        componentDef
       );
 
       constructor() {
@@ -85,9 +88,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
             this.componentMetaData.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
-
-        this.componentInstance = this.componentInjector.create(componentDef);
-        this.componentState = this.componentInjector.get(State);
 
         const renderer = this.componentInjector.get(Renderer);
 
