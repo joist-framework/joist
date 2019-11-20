@@ -42,14 +42,7 @@ module.exports = {
     maxEntrypointSize: 14000
   },
   optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        terserOptions: { output: { comments: false } }
-      })
-    ]
+    minimizer: [new TerserPlugin({ terserOptions: { output: { comments: false } } })]
   },
   plugins
 };
