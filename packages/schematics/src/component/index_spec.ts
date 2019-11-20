@@ -77,10 +77,10 @@ describe('new-component', () => {
 
     it('should create an element instance', () => {
       expect(
-        content.includes(
-          `const el = createComponent<HelloWorldComponent, HelloWorldState>(HelloWorldComponent);`
-        )
+        content.includes(`let el: ElementInstance<HelloWorldComponent, HelloWorldState>;`)
       ).toBe(true);
+
+      expect(content.includes(`el = createComponent(HelloWorldComponent);`)).toBe(true);
     });
   });
 });

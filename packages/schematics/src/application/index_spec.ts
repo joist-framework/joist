@@ -16,6 +16,7 @@ describe('new-application', () => {
       '/hello-world/README.md',
       '/hello-world/karma.conf.js',
       '/hello-world/package.json',
+      '/hello-world/src/app/app.component.spec.ts',
       '/hello-world/src/app/app.component.ts',
       '/hello-world/src/assets/.gitkeep',
       '/hello-world/src/assets/icons/apple-touch-icon-180.png',

@@ -3,9 +3,19 @@ import { createComponent } from '@lit-kit/component';
 import { <%= classify(name) %>Component, <%= classify(name) %>State } from './<%= name %>.component';
 
 describe('<%= classify(name) %>Component', () => {
-  it('should work', () => {
-    const el = createComponent<<%= classify(name) %>Component, <%= classify(name) %>State>(<%= classify(name) %>Component);
+  let el: ElementInstance<<%= classify(name) %>Component, <%= classify(name) %>State>;
 
+  beforeEach(() => {
+    el = createComponent(<%= classify(name) %>Component);
+    
+    document.body.appendChild(el);
+  });
+
+  afterEach(() => {
+    document.body.removeChild(el);
+  });
+
+  it('should work', () => {
     expect(el).toBeTruthy();
   });
 });
