@@ -13,6 +13,7 @@ export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
 export type ElementInstance<C, S> = {
   componentInjector: Injector;
   componentInstance: ComponentInstance<C>;
+  componentMetadata: Metadata<S>;
   componentState: State<S>;
   [key: string]: any;
 } & HTMLElement;
@@ -73,7 +74,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         getApplicationRef()
       );
 
-      public componentMetaData: Metadata<T> = componentMetaData;
+      public componentMetadata: Metadata<T> = componentMetaData;
       public componentState: State<T> = this.componentInjector.get(State);
       public componentInstance: ComponentInstance<ComponentDef> = this.componentInjector.create(
         componentDef
@@ -84,8 +85,8 @@ export function Component<T = any>(config: ComponentConfig<T>) {
 
         const shadow = this.attachShadow({ mode: 'open' });
         const run = (eventName: string, payload: unknown) => (e: Event) => {
-          if (eventName in this.componentMetaData.handlers) {
-            this.componentMetaData.handlers[eventName].call(this.componentInstance, e, payload);
+          if (eventName in this.componentMetadata.handlers) {
+            this.componentMetadata.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
 
