@@ -42,7 +42,7 @@
     "lit-html": "1.1.2",
     "prettier": "1.19.1",
     "puppeteer": "2.0.0",
-    "rollup": "1.27.2",
+    "rollup": "1.27.3",
     "rollup-plugin-cleanup": "3.1.1",
     "rollup-plugin-gzip": "2.2.0",
     "rollup-plugin-node-resolve": "5.2.0",
