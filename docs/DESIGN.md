@@ -2,13 +2,10 @@
 
 This document outlines the overall design for lit-kit
 
-### Goals
-
-The Goals of lit-kit are to be able to build web components using typescipt, dependency injection, and lit-html.
-
-- [x] Small: ~5kb Hello World ~6kb Todo App
-- [x] Use dependency injection to allow core pieces to be overridden and make components constructable from their dependencies.
-- [x] Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
+### Small and opinionated
+- Small: ~5kb Hello World ~6kb Todo App
+- there should only be one way to do things (unless there is an obvious exception)
+- Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
 ### All that is needed to create an element is to call `document.createElement`;
 
