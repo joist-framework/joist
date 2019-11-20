@@ -112,7 +112,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           componentRender(state, stylesString);
         });
 
-        // Define setters and getters to map custom element properties to component properties
         mapComponentProperties(this);
 
         if (this.componentInstance.onInit) {
