@@ -22,6 +22,9 @@ type ElementInstance<C, S> = HTMLElement & {
 
   // The actual instance of the component defined by the user
   componentInstance: ComponentInstance<C>;
+  
+  // metadata used to create the element
+  componentMetadata: Metadata<S>;
 
   // the components state container. Is the only way to update the component template
   componentState: State<S>;
