@@ -1,4 +1,4 @@
-![lit-kit logo](images/logo.png)
+![lit-kit logo](images/lit-kit-logo.png)
 
 [![Actions Status](https://github.com/deebloo/lit-kit/workflows/CI/badge.svg)](https://github.com/deebloo/lit-kit/actions)
 
