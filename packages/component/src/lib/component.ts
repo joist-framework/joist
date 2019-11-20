@@ -23,7 +23,7 @@ export type ElementInstance<C, S> = {
  * Only maps properties that are decorated with the @Prop() decorator
  */
 function mapComponentProperties<T>(el: ElementInstance<any, T>) {
-  const metadata = el.componentMetaData;
+  const metadata = el.componentMetadata;
   const instance = el.componentInstance;
   const length = metadata.props.length;
 
