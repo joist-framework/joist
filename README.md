@@ -1,5 +1,3 @@
-![lit-kit logo](images/lit-kit-logo.png | width=100)
-
 <img src="images/lit-kit-logo.png" data-canonical-src="images/lit-kit-logo.png" height="200" />
 
 [![Actions Status](https://github.com/deebloo/lit-kit/workflows/CI/badge.svg)](https://github.com/deebloo/lit-kit/actions)
