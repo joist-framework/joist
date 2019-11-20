@@ -1,4 +1,4 @@
-import { createComponent } from '@lit-kit/component';
+import { createComponent, ElementInstance } from '@lit-kit/component';
 
 import { <%= classify(name) %>Component, <%= classify(name) %>State } from './<%= name %>.component';
 

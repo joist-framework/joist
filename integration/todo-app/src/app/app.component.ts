@@ -1,4 +1,5 @@
 import './todo-form/todo-form.component';
+import './todo-card/todo-card.component';
 
 import { Component, StateRef, State, OnInit, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
@@ -18,37 +19,12 @@ export interface AppState {
         display: block;
       }
 
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      ul li {
-        background: #fff;
-        display: flex;
-        padding: 1rem;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        border-top: solid 1px lightgray;
-        border-bottom: solid 1px lightgray;
-      }
-
-      ul li .todo-name {
-        flex-grow: 1;
-      }
-
-      ul li.complete {
-        background: none;
-      }
-
-      ul li.complete .todo-name {
-        text-decoration: line-through;
-        opacity: 0.5;
-      }
-
       todo-form {
         width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      todo-card {
         margin-bottom: 0.5rem;
       }
 
@@ -70,25 +46,18 @@ export interface AppState {
           `
         : ''}
 
-      <ul>
+      <section>
         ${state.todos.map((todo, index) => {
           return html`
-            <li class=${todo.isComplete ? 'complete' : ''}>
-              <span class="todo-name">${todo.name}</span>
-
-              ${todo.isComplete
-                ? html`
-                    <button @click=${run('UNDO_COMPLETE', index)}>UNDO</button>
-                  `
-                : html`
-                    <button @click=${run('COMPLETE_TODO', index)}>COMPLETE</button>
-                  `}
-
-              <button @click=${run('REMOVE_TODO', index)}>REMOVE</button>
-            </li>
+            <todo-card
+              .todo=${todo}
+              @remove_todo=${run('REMOVE_TODO', index)}
+              @complete_todo=${run('COMPLETE_TODO', index)}
+              @undo_complete=${run('UNDO_COMPLETE', index)}
+            ></todo-card>
           `;
         })}
-      </ul>
+      </section>
     `;
   }
 })
