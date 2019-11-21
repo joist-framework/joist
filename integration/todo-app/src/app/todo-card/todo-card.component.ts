@@ -51,13 +51,9 @@ export interface TodoCardState {
       <div class="container ${state.todo.isComplete ? 'complete' : ''}">
         <span class="todo-name">${state.todo.name}</span>
 
-        ${state.todo.isComplete
-          ? html`
-              <button @click=${run('UNDO_COMPLETE')}>UNDO</button>
-            `
-          : html`
-              <button @click=${run('COMPLETE_TODO')}>COMPLETE</button>
-            `}
+        <button @click=${run(state.todo.isComplete ? 'UNDO_COMPLETE' : 'COMPLETE_TODO')}>
+          ${state.todo.isComplete ? 'UNDO' : 'COMPLETE'}
+        </button>
 
         <button @click=${run('REMOVE_TODO')}>REMOVE</button>
       </div>
