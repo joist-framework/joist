@@ -41,10 +41,7 @@ export interface TodoFormState {
   }
 })
 export class TodoFormComponent {
-  constructor(
-    @StateRef() private state: State<TodoFormState>,
-    @ElRef() private elRef: HTMLElement
-  ) {}
+  constructor(@StateRef private state: State<TodoFormState>, @ElRef private elRef: HTMLElement) {}
 
   @Handle('FORM_SUBMIT') onFormSubmit(e: Event) {
     e.preventDefault();

@@ -59,8 +59,8 @@ export class SelectBandColorComponent implements OnPropChanges, SelectBandColorS
   @Prop() bands: ResistorBand[] = [];
 
   constructor(
-    @ElRef() private elRef: HTMLElement,
-    @StateRef() private state: State<SelectBandColorState>
+    @ElRef private elRef: HTMLElement,
+    @StateRef private state: State<SelectBandColorState>
   ) {}
 
   onPropChanges() {

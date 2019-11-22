@@ -26,10 +26,8 @@ export interface HackerNewsItemFull extends HackerNewsItem {
   comments: HackerNewsItemComment[];
 }
 
-export function HackerNewsRef() {
-  return function(c: any, p: string, i: number) {
-    Inject(HackerNewsService)(c, p, i);
-  };
+export function HackerNewsRef(c: any, p: string, i: number) {
+  Inject(HackerNewsService)(c, p, i);
 }
 
 @Service()

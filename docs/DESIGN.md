@@ -3,6 +3,7 @@
 This document outlines the overall design for lit-kit
 
 ### Small and opinionated
+
 - Small: ~5kb Hello World ~6kb Todo App
 - there should only be one way to do things (unless there is an obvious exception)
 - Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
@@ -19,7 +20,7 @@ type ElementInstance<C, S> = HTMLElement & {
 
   // The actual instance of the component defined by the user
   componentInstance: ComponentInstance<C>;
-  
+
   // metadata used to create the element
   componentMetadata: Metadata<S>;
 
@@ -43,7 +44,7 @@ type ElementInstance<C, S> = HTMLElement & {
   }
 })
 class AppComponent implements OnInit {
-  constructor(@StateRef() private state: State<number>) {}
+  constructor(@StateRef private state: State<number>) {}
 
   onInit() {
     setInterval(() => {
@@ -102,7 +103,7 @@ function template(state: number, run: TemplateEvent): TemplateResult {
   template,
 })
 class AppComponent implements OnInit {
-  constructor(@StateRef() private state: State<number>) {}
+  constructor(@StateRef private state: State<number>) {}
 
   onInit() {
     setInterval(() => {

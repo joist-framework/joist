@@ -6,7 +6,7 @@ describe('HackerNewsService', () => {
     const injector = new Injector();
 
     class MyTestService {
-      constructor(@HackerNewsRef() public hackerNews: HackerNewsService) {}
+      constructor(@HackerNewsRef public hackerNews: HackerNewsService) {}
     }
 
     expect(injector.get(MyTestService).hackerNews).toBe(injector.get(HackerNewsService));

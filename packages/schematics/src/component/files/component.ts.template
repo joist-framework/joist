@@ -20,5 +20,5 @@ export interface <%= classify(name) %>State {}
   }
 })
 export class <%= classify(name) %>Component {
-  constructor(@StateRef() _state: State<<%= classify(name) %>State>) {}
+  constructor(@StateRef _state: State<<%= classify(name) %>State>) {}
 }

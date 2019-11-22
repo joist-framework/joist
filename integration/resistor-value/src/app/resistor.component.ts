@@ -86,7 +86,7 @@ import { ResistorBand } from './resistor.service';
 export class ResistorComponent implements OnPropChanges {
   @Prop() bands: ResistorBand[] = [];
 
-  constructor(@StateRef() private state: State<ResistorBand[]>) {}
+  constructor(@StateRef private state: State<ResistorBand[]>) {}
 
   onPropChanges() {
     this.state.setValue(this.bands);

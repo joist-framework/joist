@@ -113,8 +113,8 @@ export interface AppState {
 })
 export class AppComponent implements OnInit {
   constructor(
-    @StateRef() private state: State<AppState>,
-    @HackerNewsRef() private hackerNews: HackerNewsService
+    @StateRef private state: State<AppState>,
+    @HackerNewsRef private hackerNews: HackerNewsService
   ) {}
 
   onInit(): void {

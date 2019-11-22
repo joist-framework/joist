@@ -5,10 +5,8 @@ export class Todo {
   constructor(public readonly name: string, public readonly isComplete: boolean) {}
 }
 
-export function TodoRef() {
-  return function(c: any, p: string, i: number) {
-    Inject(TodoService)(c, p, i);
-  };
+export function TodoRef(c: any, p: string, i: number) {
+  Inject(TodoService)(c, p, i);
 }
 
 @Service()

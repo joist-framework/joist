@@ -11,7 +11,7 @@ describe('ElRef', () => {
     template: () => html``
   })
   class MyComponent {
-    constructor(@ElRef() public elRef: HTMLElement) {}
+    constructor(@ElRef public elRef: HTMLElement) {}
   }
 
   it('should provide an instance of the Custom Element', () => {

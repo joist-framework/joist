@@ -91,8 +91,8 @@ export class SelectBandCountComponent implements OnPropChanges, SelectBandCountS
   @Prop() selectedBands: ResistorBand[] = [];
 
   constructor(
-    @ElRef() private elRef: HTMLElement,
-    @StateRef() private state: State<SelectBandCountState>
+    @ElRef private elRef: HTMLElement,
+    @StateRef private state: State<SelectBandCountState>
   ) {}
 
   onPropChanges() {

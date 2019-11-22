@@ -84,7 +84,7 @@ class AppComponent {}
 ### Component State
 
 A component template can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef()`
+A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef`
 
 ```TS
 import { Component, StateRef, State, OnInit } from '@lit-kit/component';
@@ -98,7 +98,7 @@ import { html } from 'lit-html';
   }
 })
 class AppComponent implements OnInit {
-  constructor(@StateRef() private state: State<number>) {}
+  constructor(@StateRef private state: State<number>) {}
 
   onInit() {
     setInterval(() => {
@@ -127,7 +127,7 @@ import { html } from 'lit-html';
 class AppTitleComponent implements OnPropChanges {
   @Prop() title: string = '';
 
-  constructor(@StateRef() private state: State<string>) {}
+  constructor(@StateRef private state: State<string>) {}
 
   onPropChanges(_prop: string, _oldVal: any, newValue: any) {
     this.state.setValue(newVal);
@@ -158,7 +158,7 @@ import { html } from 'lit-html';
   }
 })
 class AppComponent {
-  constructor(@StateRef() private state: State<number>) {}
+  constructor(@StateRef private state: State<number>) {}
 
   @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setValue(this.state.value + 1);
@@ -173,7 +173,7 @@ class AppComponent {
 ### Dispatching Events
 
 To emit custom events from a component you will need to access the acutal custom element instance.
-This can be accessed via the `@ElRef()` decorator.
+This can be accessed via the `@ElRef` decorator.
 
 ```TS
 import { Component, StateRef, State, Handle, ElRef } from '@lit-kit/component';
@@ -194,8 +194,8 @@ import { html } from 'lit-html';
 })
 class AppComponent {
   constructor(
-    @StateRef() private state: State<number>,
-    @ElRef() private elRef: HTMLElement
+    @StateRef private state: State<number>,
+    @ElRef private elRef: HTMLElement
   ) {}
 
   @Handle('INCREMENT') onIncrement() {
@@ -231,7 +231,7 @@ interface AppState {
   template(state) { ... }
 })
 class AppComponent implements OnInit {
-  constructor(@StateRef() private state: State<AppState>) {}
+  constructor(@StateRef private state: State<AppState>) {}
 
   onInit() {
     this.state.setValue({ data: [], loading: true });
