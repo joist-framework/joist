@@ -84,8 +84,8 @@ export class CommentsDrawerComponent implements OnPropChanges {
   @Prop() comments: HackerNewsItemComment[] = [];
 
   constructor(
-    @StateRef() private state: State<CommentsDrawerState>,
-    @ElRef() private elRef: HTMLElement
+    @StateRef private state: State<CommentsDrawerState>,
+    @ElRef private elRef: HTMLElement
   ) {}
 
   onPropChanges() {

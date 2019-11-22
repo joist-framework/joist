@@ -22,10 +22,8 @@ export interface ResistorBand {
   tolerance?: number;
 }
 
-export function ResistorRef() {
-  return function(c: any, p: string, i: number) {
-    Inject(ResistorService)(c, p, i);
-  };
+export function ResistorRef(c: any, p: string, i: number) {
+  Inject(ResistorService)(c, p, i);
 }
 
 @Service()

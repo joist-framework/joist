@@ -116,8 +116,8 @@ export interface AppState {
 })
 export class AppComponent implements OnInit {
   constructor(
-    @ResistorRef() private resistor: ResistorService,
-    @StateRef() private state: State<AppState>
+    @ResistorRef private resistor: ResistorService,
+    @StateRef private state: State<AppState>
   ) {}
 
   onInit() {

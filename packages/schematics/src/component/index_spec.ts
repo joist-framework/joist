@@ -49,7 +49,7 @@ describe('new-component', () => {
     });
 
     it('should provide component state', () => {
-      expect(content.includes('constructor(@StateRef() _state: State<HelloWorldState>) {}')).toBe(
+      expect(content.includes('constructor(@StateRef _state: State<HelloWorldState>) {}')).toBe(
         true
       );
     });

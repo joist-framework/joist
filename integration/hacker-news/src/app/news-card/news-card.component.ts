@@ -65,7 +65,7 @@ export type NewsCardState = HackerNewsItem | null;
 export class NewsCardComponent implements OnPropChanges {
   @Prop() newsItem: NewsCardState = null;
 
-  constructor(@StateRef() private state: State<NewsCardState>) {}
+  constructor(@StateRef private state: State<NewsCardState>) {}
 
   onPropChanges() {
     this.state.setValue(this.newsItem);

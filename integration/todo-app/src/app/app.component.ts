@@ -63,8 +63,8 @@ export interface AppState {
 })
 export class AppComponent implements OnInit {
   constructor(
-    @StateRef() private componentState: State<AppState>,
-    @TodoRef() private todo: TodoService
+    @StateRef private componentState: State<AppState>,
+    @TodoRef private todo: TodoService
   ) {}
 
   onInit(): void {

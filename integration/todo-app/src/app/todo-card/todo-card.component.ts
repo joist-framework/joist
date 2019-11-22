@@ -63,10 +63,7 @@ export interface TodoCardState {
 export class TodoCardComponent implements OnPropChanges {
   @Prop() todo?: Todo;
 
-  constructor(
-    @StateRef() private state: State<TodoCardState>,
-    @ElRef() private elRef: HTMLElement
-  ) {}
+  constructor(@StateRef private state: State<TodoCardState>, @ElRef private elRef: HTMLElement) {}
 
   onPropChanges() {
     this.state.setValue({ todo: this.todo });
