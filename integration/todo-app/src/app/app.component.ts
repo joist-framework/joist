@@ -58,6 +58,15 @@ export interface AppState {
           `;
         })}
       </section>
+
+      <lit-router-outlet
+        .routes=${[
+          {
+            path: '/',
+            load: () => import('./todo-card/./todo-card.component').then(m => m.TodoCardComponent)
+          }
+        ]}
+      ></lit-router-outlet>
     `;
   }
 })
