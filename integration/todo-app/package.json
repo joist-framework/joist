@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-examples/todo-app",
-  "version": "1.0.0-beta.18",
+  "version": "1.0.0-beta.19",
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
