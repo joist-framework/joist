@@ -10,14 +10,13 @@ import { Lifecycle } from './lifecycle';
 
 export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
 
-export type ElementInstance<C, S> = HTMLElement &
-  Lifecycle & {
-    componentInjector: Injector;
-    componentInstance: ComponentInstance<C>;
-    componentMetadata: Metadata<S>;
-    componentState: State<S>;
-    [key: string]: any;
-  };
+export type ElementInstance<C, S> = HTMLElement & {
+  componentInjector: Injector;
+  componentInstance: ComponentInstance<C>;
+  componentMetadata: Metadata<S>;
+  componentState: State<S>;
+  [key: string]: any;
+};
 
 /**
  * Map custom element properties to component instance properties.
