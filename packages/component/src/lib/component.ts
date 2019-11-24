@@ -83,6 +83,14 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       constructor() {
         super();
 
+        if ('useShadowDom' in config) {
+          if (config.useShadowDom) {
+            this.attachShadow({ mode: 'open' });
+          }
+        } else {
+          this.attachShadow({ mode: 'open' });
+        }
+
         mapComponentProperties(this);
 
         if (this.componentInstance.onInit) {
@@ -91,12 +99,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public connectedCallback() {
-        const base =
-          'useShadowDom' in config
-            ? config.useShadowDom
-              ? this.attachShadow({ mode: 'open' })
-              : this
-            : this.attachShadow({ mode: 'open' });
+        const base = this.shadowRoot || this;
 
         if ((window as any).ShadyCSS) {
           (window as any).ShadyCSS.styleElement(this);
