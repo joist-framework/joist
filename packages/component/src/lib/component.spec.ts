@@ -90,6 +90,9 @@ describe('Component', () => {
       }
 
       const el = createComponent<MyComponent3, void>(MyComponent3);
+
+      el.connectedCallback();
+
       const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
 
       button.click();
@@ -113,6 +116,43 @@ describe('Component', () => {
       const el = createComponent<MyComponent4, void>(MyComponent4);
 
       expect(el.componentInjector.get(TestToken)).toBe('Hello World');
+    });
+  });
+
+  describe('shadowDom', () => {
+    it('should use shadow dom by default', () => {
+      @Component({
+        tag: 'component-shadow-dom',
+        defaultState: {},
+        template() {
+          return html``;
+        }
+      })
+      class MyComponent {}
+
+      const el = createComponent<MyComponent, void>(MyComponent);
+
+      el.connectedCallback();
+
+      expect(el.shadowRoot).toBeDefined();
+    });
+
+    it('should not use shadow dom if specified', () => {
+      @Component({
+        tag: 'component-shadow-dom-2',
+        defaultState: {},
+        template() {
+          return html``;
+        },
+        useShadowDom: false
+      })
+      class MyComponent {}
+
+      const el = createComponent<MyComponent, void>(MyComponent);
+
+      el.connectedCallback();
+
+      expect(el.shadowRoot).toBeNull();
     });
   });
 });

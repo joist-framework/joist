@@ -39,7 +39,7 @@ module.exports = {
   },
   performance: {
     hints: 'error',
-    maxEntrypointSize: 14000
+    maxEntrypointSize: 15000
   },
   optimization: {
     minimizer: [new TerserPlugin({ terserOptions: { output: { comments: false } } })]
