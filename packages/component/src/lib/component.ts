@@ -10,13 +10,14 @@ import { Lifecycle } from './lifecycle';
 
 export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
 
-export type ElementInstance<C, S> = {
-  componentInjector: Injector;
-  componentInstance: ComponentInstance<C>;
-  componentMetadata: Metadata<S>;
-  componentState: State<S>;
-  [key: string]: any;
-} & HTMLElement;
+export type ElementInstance<C, S> = HTMLElement &
+  Lifecycle & {
+    componentInjector: Injector;
+    componentInstance: ComponentInstance<C>;
+    componentMetadata: Metadata<S>;
+    componentState: State<S>;
+    [key: string]: any;
+  };
 
 /**
  * Map custom element properties to component instance properties.
@@ -83,14 +84,31 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       constructor() {
         super();
 
-        const shadow = this.attachShadow({ mode: 'open' });
+        mapComponentProperties(this);
+
+        if (this.componentInstance.onInit) {
+          this.componentInstance.onInit();
+        }
+      }
+
+      public connectedCallback() {
+        const base =
+          'useShadowDom' in config
+            ? config.useShadowDom
+              ? this.attachShadow({ mode: 'open' })
+              : this
+            : this.attachShadow({ mode: 'open' });
+
+        if ((window as any).ShadyCSS) {
+          (window as any).ShadyCSS.styleElement(this);
+        }
+
+        const renderer = this.componentInjector.get(Renderer);
         const run = (eventName: string, payload: unknown) => (e: Event) => {
           if (eventName in this.componentMetadata.handlers) {
             this.componentMetadata.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
-
-        const renderer = this.componentInjector.get(Renderer);
 
         const componentRender = (state: T, styles: string) => {
           renderer.render(
@@ -101,7 +119,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
 
               ${config.template(state, run)}
             `,
-            shadow,
+            base,
             { scopeName: this.tagName.toLowerCase(), eventContext: this }
           );
         };
@@ -111,18 +129,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         this.componentState.onChange(state => {
           componentRender(state, stylesString);
         });
-
-        mapComponentProperties(this);
-
-        if (this.componentInstance.onInit) {
-          this.componentInstance.onInit();
-        }
-      }
-
-      public connectedCallback() {
-        if ((window as any).ShadyCSS) {
-          (window as any).ShadyCSS.styleElement(this);
-        }
 
         if (this.componentInstance.connectedCallback) {
           this.componentInstance.connectedCallback();

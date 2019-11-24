@@ -9,6 +9,7 @@ export interface ComponentConfig<T> {
   tag: string;
   template: TemplateDef<T>;
   defaultState: T;
+  useShadowDom?: boolean;
   styles?: string[];
   observedAttributes?: string[];
   providers?: Provider<any>[];
