@@ -1,7 +1,3 @@
-export interface OnInit {
-  onInit(): void;
-}
-
 export interface OnPropChanges {
   onPropChanges(prop: string, oldVal: any, newVal: any): void;
 }
@@ -19,7 +15,6 @@ export interface OnAttributeChanged {
 }
 
 export type Lifecycle = Partial<OnPropChanges> &
-  Partial<OnInit> &
   Partial<OnConnected> &
   Partial<OnDisconnected> &
   Partial<OnAttributeChanged>;

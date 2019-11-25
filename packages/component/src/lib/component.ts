@@ -92,10 +92,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         }
 
         mapComponentProperties(this);
-
-        if (this.componentInstance.onInit) {
-          this.componentInstance.onInit();
-        }
       }
 
       public connectedCallback() {
@@ -126,7 +122,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           );
         };
 
-        componentRender(config.defaultState, stylesString);
+        componentRender(this.componentState.value, stylesString);
 
         this.componentState.onChange(state => {
           componentRender(state, stylesString);

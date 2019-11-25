@@ -1,6 +1,6 @@
 import './loader/loader.component';
 
-import { Component, StateRef, State, OnInit, Handle } from '@lit-kit/component';
+import { Component, StateRef, State, Handle } from '@lit-kit/component';
 import { html } from 'lit-html';
 import { until } from 'lit-html/directives/until';
 
@@ -111,13 +111,15 @@ export interface AppState {
     `;
   }
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(
     @StateRef private state: State<AppState>,
     @HackerNewsRef private hackerNews: HackerNewsService
-  ) {}
+  ) {
+    this.init();
+  }
 
-  onInit(): void {
+  init(): void {
     this.state.setValue({ ...this.state.value, loadingNews: true });
 
     const state: Promise<AppState> = this.hackerNews

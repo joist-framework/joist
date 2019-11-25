@@ -49,19 +49,19 @@ describe('Component', () => {
         `;
       }
     })
-    class MyComponent2 {
+    class MyComponent {
       @Prop() foo: string = 'Hello World';
     }
 
     it('should use the value from the componentInstance when getting a property value from the custom element', () => {
-      const el = createComponent<MyComponent2, void>(MyComponent2);
+      const el = createComponent<MyComponent, void>(MyComponent);
 
       expect(el.componentInstance.foo).toBe('Hello World');
       expect(el.foo).toBe('Hello World');
     });
 
     it('should set componentInstance props when they are set on the custom element', () => {
-      const el = createComponent<MyComponent2, void>(MyComponent2);
+      const el = createComponent<MyComponent, void>(MyComponent);
 
       el.foo = 'Hello World - 2';
 
@@ -74,13 +74,14 @@ describe('Component', () => {
       @Component({
         tag: 'component-test-3',
         defaultState: {},
+        useShadowDom: false,
         template(_, run) {
           return html`
             <button @click=${run('TEST_RUN', 'Hello World')}>click</button>
           `;
         }
       })
-      class MyComponent3 {
+      class MyComponent {
         @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
           expect(e instanceof Event).toBe(true);
           expect(payload).toBe('Hello World');
@@ -89,11 +90,11 @@ describe('Component', () => {
         }
       }
 
-      const el = createComponent<MyComponent3, void>(MyComponent3);
+      const el = createComponent<MyComponent, void>(MyComponent);
 
       el.connectedCallback();
 
-      const button = el.shadowRoot!.querySelector('button') as HTMLButtonElement;
+      const button = el.querySelector('button') as HTMLButtonElement;
 
       button.click();
     });
@@ -111,9 +112,9 @@ describe('Component', () => {
         },
         providers: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }]
       })
-      class MyComponent4 {}
+      class MyComponent {}
 
-      const el = createComponent<MyComponent4, void>(MyComponent4);
+      const el = createComponent<MyComponent, void>(MyComponent);
 
       expect(el.componentInjector.get(TestToken)).toBe('Hello World');
     });

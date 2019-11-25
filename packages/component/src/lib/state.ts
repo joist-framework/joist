@@ -1,6 +1,6 @@
 import { Inject, ProviderToken } from '@lit-kit/di';
 
-abstract class StateBase<T> {
+export class State<T> {
   private currentState: T;
   private listeners: Array<(state: T) => void> = [];
 
@@ -28,8 +28,6 @@ abstract class StateBase<T> {
     };
   }
 }
-
-export class State<T> extends StateBase<T> {}
 
 export function StateRef(c: ProviderToken<any>, k: string, i: number) {
   Inject(State)(c, k, i);
