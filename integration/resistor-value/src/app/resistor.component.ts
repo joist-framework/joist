@@ -5,7 +5,7 @@ import { ResistorBand } from './resistor.service';
 
 @Component<ResistorBand[]>({
   tag: 'resistor-value',
-  defaultState: [],
+  initialState: [],
   styles: [
     `
       :host {

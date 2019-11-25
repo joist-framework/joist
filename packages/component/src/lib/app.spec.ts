@@ -26,7 +26,7 @@ describe('app', () => {
 
     @Component({
       tag: 'my-component',
-      defaultState: {},
+      initialState: {},
       template() {
         return html``;
       }

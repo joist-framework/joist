@@ -8,8 +8,8 @@ export class State<T> {
     return this.currentState;
   }
 
-  constructor(defaultState: T) {
-    this.currentState = defaultState;
+  constructor(initialState: T) {
+    this.currentState = initialState;
   }
 
   setValue(state: T | Promise<T>): Promise<void> {

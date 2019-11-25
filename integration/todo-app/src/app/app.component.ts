@@ -12,7 +12,7 @@ export interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: { todos: [] },
+  initialState: { todos: [] },
   styles: [
     `
       :host {

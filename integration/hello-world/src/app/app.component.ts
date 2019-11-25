@@ -7,7 +7,7 @@ export interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: { title: 'Hello World' },
+  initialState: { title: 'Hello World' },
   template(state, _run) {
     return html`
       <h1>${state.title}</h1>

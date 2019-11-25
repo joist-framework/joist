@@ -39,7 +39,7 @@ import { html } from 'lit-html';
 
 @Component<string>({
   tag: 'app-root',
-  defaultState: 'Hello World',
+  initialState: 'Hello World',
   template(state) {
     return html`<h1>${state}</h1>`
   }
@@ -58,7 +58,7 @@ import { html } from 'lit-html';
 
 @Component<string>({
   tag: 'app-root',
-  defaultState: 'Hello World',
+  initialState: 'Hello World',
   styles: [
     `
       :host {
@@ -92,7 +92,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   tag: 'app-root',
-  defaultState: 0,
+  initialState: 0,
   template(state) {
     return html`<h1>${state}</h1>`
   }
@@ -119,7 +119,7 @@ import { html } from 'lit-html';
 
 @Component<string>({
   tag: 'app-title',
-  defaultState: '',
+  initialState: '',
   template(state) {
     return html`<h1>${state}</h1>`
   }
@@ -146,7 +146,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   tag: 'app-root',
-  defaultState: 0,
+  initialState: 0,
   template(state, run) {
     return html`
       <button @click=${run('DECREMENT')}>Decrement</button>
@@ -181,7 +181,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   tag: 'app-root',
-  defaultState: 0,
+  initialState: 0,
   template(state, run) {
     return html`
       <button @click=${run('DECREMENT')}>Decrement</button>
@@ -227,7 +227,7 @@ interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: { loading: false, data: [] },
+  initialState: { loading: false, data: [] },
   template(state) { ... }
 })
 class AppComponent {

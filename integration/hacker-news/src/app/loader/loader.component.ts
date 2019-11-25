@@ -3,7 +3,7 @@ import { html } from 'lit-html';
 
 @Component({
   tag: 'app-loader',
-  defaultState: null,
+  initialState: null,
   styles: [
     `
       :host {

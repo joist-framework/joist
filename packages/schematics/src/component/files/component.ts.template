@@ -5,7 +5,7 @@ export interface <%= classify(name) %>State {}
 
 @Component<<%= classify(name) %>State>({
   tag: '<%= name %>',
-  defaultState: {},
+  initialState: {},
   styles: [
     `
       :host {

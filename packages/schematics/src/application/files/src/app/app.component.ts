@@ -7,7 +7,7 @@ export interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: { title: '<%= name %>' },
+  initialState: { title: '<%= name %>' },
   styles: [
     `
       :host {

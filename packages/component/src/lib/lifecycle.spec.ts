@@ -8,7 +8,7 @@ describe('Lifecycle', () => {
   describe('OnPropChanges', () => {
     @Component({
       tag: 'prop-changes',
-      defaultState: {},
+      initialState: {},
       template: () => html``
     })
     class MyComponent {

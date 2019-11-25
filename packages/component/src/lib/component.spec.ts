@@ -11,7 +11,7 @@ describe('Component', () => {
   describe('creation', () => {
     @Component({
       tag: 'component-test-1',
-      defaultState: undefined,
+      initialState: undefined,
       template() {
         return html`
           <h1>Hello World</h1>
@@ -42,7 +42,7 @@ describe('Component', () => {
   describe('props', () => {
     @Component({
       tag: 'component-test-2',
-      defaultState: undefined,
+      initialState: undefined,
       template() {
         return html`
           <h1>Hello World</h1>
@@ -73,7 +73,7 @@ describe('Component', () => {
     it('should call a function if the trigger is mapped to a class method', done => {
       @Component({
         tag: 'component-test-3',
-        defaultState: {},
+        initialState: {},
         useShadowDom: false,
         template(_, run) {
           return html`
@@ -106,7 +106,7 @@ describe('Component', () => {
 
       @Component({
         tag: 'component-test-4',
-        defaultState: {},
+        initialState: {},
         template() {
           return html``;
         },
@@ -124,7 +124,7 @@ describe('Component', () => {
     it('should use shadow dom by default', () => {
       @Component({
         tag: 'component-shadow-dom',
-        defaultState: {},
+        initialState: {},
         template() {
           return html``;
         }
@@ -141,7 +141,7 @@ describe('Component', () => {
     it('should not use shadow dom if specified', () => {
       @Component({
         tag: 'component-shadow-dom-2',
-        defaultState: {},
+        initialState: {},
         template() {
           return html``;
         },

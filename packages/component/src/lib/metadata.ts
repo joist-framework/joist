@@ -8,7 +8,7 @@ export type TemplateDef<T> = (state: T, run: TemplateEvent) => TemplateResult | 
 export interface ComponentConfig<T> {
   tag: string;
   template: TemplateDef<T>;
-  defaultState: T;
+  initialState: T;
   useShadowDom?: boolean;
   styles?: string[];
   observedAttributes?: string[];
