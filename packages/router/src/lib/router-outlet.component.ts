@@ -1,11 +1,11 @@
 import {
   Component,
   Prop,
-  OnPropChanges,
   StateRef,
   State,
   createComponent,
-  ElementInstance
+  ElementInstance,
+  OnConnected
 } from '@lit-kit/component';
 import { ClassProviderToken } from '@lit-kit/di';
 import page from 'page';
@@ -32,25 +32,25 @@ export interface RouterOutletState {
     return state.activeComponent || '';
   }
 })
-export class RouterOutletComponent implements OnPropChanges {
+export class RouterOutletComponent implements OnConnected {
   @Prop() routes: Route[] = [];
 
   constructor(@StateRef private state: State<RouterOutletState>) {}
 
-  onPropChanges() {
+  connectedCallback() {
     this.routes.forEach(route => {
       page(route.path, (_ctx, next) => {
         if ('component' in route) {
-          const currentComponent = createComponent(route.component);
+          const activeComponent = createComponent(route.component);
 
-          this.state.setValue({ activeComponent: currentComponent });
+          this.state.setValue({ activeComponent });
 
           next();
         } else if ('loadComponent' in route) {
           route.loadComponent().then(component => {
-            const currentComponent = createComponent(component);
+            const activeComponent = createComponent(component);
 
-            this.state.setValue({ activeComponent: currentComponent });
+            this.state.setValue({ activeComponent });
 
             next();
           });

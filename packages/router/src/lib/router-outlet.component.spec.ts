@@ -26,6 +26,7 @@ describe('RouterOutletComponent', () => {
         <lit-router-outlet
           .routes=${[
             { path: '/test', component: RoutedComponent },
+            { path: '/test/*', component: RoutedComponent },
             {
               path: '/test-promise',
               loadComponent: () => Promise.resolve(RoutedComponent)
@@ -36,9 +37,8 @@ describe('RouterOutletComponent', () => {
     }
   })
   class RouterTestComponent {}
-
-  it('should generate the component that matches the path', done => {
-    history.pushState({}, '', '/test');
+  it('should generate the component that matches the child', done => {
+    history.pushState({}, '', '/test/foo');
 
     const el = createComponent<RouterTestComponent, void>(RouterTestComponent);
 
