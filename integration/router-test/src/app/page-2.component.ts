@@ -1,5 +1,3 @@
-import '@lit-kit/router/lib/lib/router-outlet.component';
-
 import { Component } from '@lit-kit/component';
 import { html } from 'lit-html';
 
