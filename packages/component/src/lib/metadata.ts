@@ -11,7 +11,7 @@ export type TemplateDef<T> = (
 export interface ComponentConfig<T> {
   tag: string;
   template: TemplateDef<T>;
-  defaultState: T;
+  initialState: T;
   useShadowDom?: boolean;
   styles?: string[];
   observedAttributes?: string[];

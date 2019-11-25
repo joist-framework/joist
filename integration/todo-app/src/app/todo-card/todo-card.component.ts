@@ -9,7 +9,7 @@ export interface TodoCardState {
 
 @Component<TodoCardState>({
   tag: 'todo-card',
-  defaultState: {},
+  initialState: {},
   styles: [
     `
       :host {

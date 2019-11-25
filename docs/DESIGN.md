@@ -38,7 +38,7 @@ type ElementInstance<C, S> = HTMLElement & {
 ```TS
 @Component<number>({
   tag: 'app-root',
-  defaultState: 0,
+  initialState: 0,
   template(state) {
     return html`<h1>${state}</h1>`
   }
@@ -99,7 +99,7 @@ function template(state: number, run: TemplateEvent): TemplateResult {
 
 @Component<number>({
   tag: 'app-root',
-  defaultState: 0,
+  initialState: 0,
   template,
 })
 class AppComponent {

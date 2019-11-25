@@ -18,7 +18,7 @@ export interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: {
+  initialState: {
     bandLimit: 0,
     bands: [],
     selectedBands: [],

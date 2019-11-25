@@ -7,7 +7,7 @@ export type NewsCardState = HackerNewsItem | null;
 
 @Component<NewsCardState>({
   tag: 'news-card',
-  defaultState: null,
+  initialState: null,
   styles: [
     `
       :host {

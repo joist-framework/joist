@@ -10,7 +10,7 @@ interface SelectBandCountState {
 
 @Component<SelectBandCountState>({
   tag: 'select-band-count',
-  defaultState: { bandLimit: 0, selectedBands: [] },
+  initialState: { bandLimit: 0, selectedBands: [] },
   styles: [
     `
       :host {

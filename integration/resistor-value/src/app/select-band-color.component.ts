@@ -9,7 +9,7 @@ export interface SelectBandColorState {
 
 @Component<SelectBandColorState>({
   tag: 'select-band-color',
-  defaultState: { bands: [] },
+  initialState: { bands: [] },
   styles: [
     `
       :host {

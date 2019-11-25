@@ -7,7 +7,7 @@ export interface TodoFormState {
 
 @Component<TodoFormState>({
   tag: 'todo-form',
-  defaultState: { todo: '' },
+  initialState: { todo: '' },
   styles: [
     `
       :host {

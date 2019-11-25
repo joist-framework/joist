@@ -9,7 +9,7 @@ export interface CommentsDrawerState {
 
 @Component<CommentsDrawerState>({
   tag: 'comments-drawer',
-  defaultState: { comments: [] },
+  initialState: { comments: [] },
   styles: [
     `
       :host {

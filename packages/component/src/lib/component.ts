@@ -68,7 +68,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         {
           providers: componentProviders.concat([
             { provide: ElRefToken, useFactory: () => this, deps: [] },
-            { provide: State, useFactory: () => new State(config.defaultState), deps: [] }
+            { provide: State, useFactory: () => new State(config.initialState), deps: [] }
           ])
         },
         getApplicationRef()

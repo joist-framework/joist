@@ -20,7 +20,7 @@ export interface AppState {
 
 @Component<AppState>({
   tag: 'app-root',
-  defaultState: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
+  initialState: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
   styles: [
     `
       :host {
