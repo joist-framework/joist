@@ -3,7 +3,10 @@ import { TemplateResult } from 'lit-html';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
 
-export type TemplateDef<T> = (state: T, run: TemplateEvent) => TemplateResult | string;
+export type TemplateDef<T> = (
+  state: T,
+  run: TemplateEvent
+) => TemplateResult | string | HTMLElement;
 
 export interface ComponentConfig<T> {
   tag: string;
@@ -12,7 +15,7 @@ export interface ComponentConfig<T> {
   useShadowDom?: boolean;
   styles?: string[];
   observedAttributes?: string[];
-  providers?: Provider<any>[];
+  use?: Provider<any>[];
 }
 
 export class Metadata<T> {

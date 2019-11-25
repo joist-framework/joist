@@ -17,6 +17,7 @@
   "dependencies": {
     "@lit-kit/component": "file:packages/component",
     "@lit-kit/di": "file:packages/di",
+    "@lit-kit/router": "file:packages/router",
     "@lit-kit/schematics": "file:packages/schematics"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@commitlint/config-conventional": "8.2.0",
     "@types/jasmine": "3.5.0",
     "@types/node": "8.10.59",
+    "@types/page": "^1.8.0",
     "clean-webpack-plugin": "3.0.0",
     "compression-webpack-plugin": "3.0.0",
     "copy-webpack-plugin": "5.0.5",
