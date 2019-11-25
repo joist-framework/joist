@@ -7,7 +7,8 @@ import { RouterOutletComponent, RouterOutletState } from './router-outlet.compon
 describe('RouterOutletComponent', () => {
   @Component({
     tag: 'routed-component',
-    defaultState: {},
+    initialState: {},
+    useShadowDom: false,
     template() {
       return html`
         <h1>Hello World</h1>
@@ -18,7 +19,8 @@ describe('RouterOutletComponent', () => {
 
   @Component({
     tag: 'router-test',
-    defaultState: {},
+    initialState: {},
+    useShadowDom: false,
     template() {
       return html`
         <lit-router-outlet
@@ -39,13 +41,18 @@ describe('RouterOutletComponent', () => {
     history.pushState({}, '', '/test');
 
     const el = createComponent<RouterTestComponent, void>(RouterTestComponent);
-    const outlet = el.shadowRoot!.querySelector('lit-router-outlet') as ElementInstance<
+
+    document.body.appendChild(el);
+
+    const outlet = el.querySelector('lit-router-outlet') as ElementInstance<
       RouterOutletComponent,
       RouterOutletState
     >;
 
     outlet.componentInjector.get<State<RouterOutletState>>(State).onChange(state => {
-      expect(state.currentComponent!.tagName.toLowerCase()).toEqual('routed-component');
+      expect(state.activeComponent!.tagName.toLowerCase()).toEqual('routed-component');
+
+      document.body.removeChild(el);
 
       done();
     });
@@ -55,13 +62,18 @@ describe('RouterOutletComponent', () => {
     history.pushState({}, '', '/test-promise');
 
     const el = createComponent<RouterTestComponent, void>(RouterTestComponent);
-    const outlet = el.shadowRoot!.querySelector('lit-router-outlet') as ElementInstance<
+
+    document.body.appendChild(el);
+
+    const outlet = el.querySelector('lit-router-outlet') as ElementInstance<
       RouterOutletComponent,
       RouterOutletState
     >;
 
     outlet.componentInjector.get<State<RouterOutletState>>(State).onChange(state => {
-      expect(state.currentComponent!.tagName.toLowerCase()).toEqual('routed-component');
+      expect(state.activeComponent!.tagName.toLowerCase()).toEqual('routed-component');
+
+      document.body.removeChild(el);
 
       done();
     });

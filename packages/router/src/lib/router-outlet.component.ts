@@ -4,8 +4,8 @@ import {
   OnPropChanges,
   StateRef,
   State,
-  ElementInstance,
-  createComponent
+  createComponent,
+  ElementInstance
 } from '@lit-kit/component';
 import { ClassProviderToken } from '@lit-kit/di';
 import page from 'page';
@@ -21,14 +21,15 @@ export type Route =
     };
 
 export interface RouterOutletState {
-  currentComponent?: ElementInstance<any, any>;
+  activeComponent: ElementInstance<any, any> | null;
 }
 
 @Component<RouterOutletState>({
   tag: 'lit-router-outlet',
-  defaultState: {},
+  initialState: { activeComponent: null },
+  useShadowDom: false,
   template(state) {
-    return state.currentComponent || '';
+    return state.activeComponent || '';
   }
 })
 export class RouterOutletComponent implements OnPropChanges {
@@ -42,14 +43,14 @@ export class RouterOutletComponent implements OnPropChanges {
         if ('component' in route) {
           const currentComponent = createComponent(route.component);
 
-          this.state.setValue({ currentComponent });
+          this.state.setValue({ activeComponent: currentComponent });
 
           next();
         } else if ('loadComponent' in route) {
           route.loadComponent().then(component => {
             const currentComponent = createComponent(component);
 
-            this.state.setValue({ currentComponent });
+            this.state.setValue({ activeComponent: currentComponent });
 
             next();
           });
