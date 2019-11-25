@@ -47,9 +47,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
-    historyApiFallback: {
-      index: 'src/index.html'
-    }
+    historyApiFallback: true
   },
   optimization: {
     minimizer: [new TerserPlugin({ terserOptions: { output: { comments: false } } })]
