@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-examples/hello-world-rollup",
-  "version": "1.0.0-beta.21",
+  "version": "1.0.0-beta.22",
   "description": "Hello World",
   "private": true,
   "scripts": {
