@@ -97,10 +97,10 @@ import { html } from 'lit-html';
     return html`<h1>${state}</h1>`
   }
 })
-class AppComponent implements OnInit {
+class AppComponent {
   constructor(@StateRef private state: State<number>) {}
 
-  onInit() {
+  connectedCallback() {
     setInterval(() => {
       this.state.setValue(this.state.value + 1);
     }, 1000);
@@ -230,10 +230,10 @@ interface AppState {
   defaultState: { loading: false, data: [] },
   template(state) { ... }
 })
-class AppComponent implements OnInit {
+class AppComponent {
   constructor(@StateRef private state: State<AppState>) {}
 
-  onInit() {
+  connectedCallback() {
     this.state.setValue({ data: [], loading: true });
 
     const data = fetch('/data').then(res => res.json()).then(data => ({ loading: false, data }));
