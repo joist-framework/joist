@@ -1,7 +1,7 @@
 import './todo-form/todo-form.component';
 import './todo-card/todo-card.component';
 
-import { Component, StateRef, State, OnInit, Handle } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, OnConnected } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { TodoRef, TodoService, Todo } from './todo.service';
@@ -61,13 +61,13 @@ export interface AppState {
     `;
   }
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnConnected {
   constructor(
     @StateRef private componentState: State<AppState>,
     @TodoRef private todo: TodoService
   ) {}
 
-  onInit(): void {
+  connectedCallback(): void {
     this.componentState.setValue({ todos: this.todo.todos.value });
 
     this.todo.todos.onChange(todos => {

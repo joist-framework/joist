@@ -2,7 +2,7 @@ import './select-band-count.component';
 import './resistor.component';
 import './select-band-color.component';
 
-import { Component, StateRef, State, Handle, OnInit } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, OnConnected } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { ResistorService, ResistorRef, ResistorBand } from './resistor.service';
@@ -114,13 +114,13 @@ export interface AppState {
     `;
   }
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnConnected {
   constructor(
     @ResistorRef private resistor: ResistorService,
     @StateRef private state: State<AppState>
   ) {}
 
-  onInit() {
+  connectedCallback() {
     const bands = this.resistor.getResistorBands();
 
     this.state.setValue({ ...this.state.value, bands });

@@ -11,7 +11,6 @@ export {
   OnAttributeChanged,
   OnConnected,
   OnDisconnected,
-  OnInit,
   OnPropChanges,
   Lifecycle
 } from './lib/lifecycle';

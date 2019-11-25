@@ -43,10 +43,10 @@ type ElementInstance<C, S> = HTMLElement & {
     return html`<h1>${state}</h1>`
   }
 })
-class AppComponent implements OnInit {
+class AppComponent {
   constructor(@StateRef private state: State<number>) {}
 
-  onInit() {
+  connectedCallback() {
     setInterval(() => {
       this.state.setValue(this.state.value + 1);
     }, 1000);
@@ -102,10 +102,10 @@ function template(state: number, run: TemplateEvent): TemplateResult {
   defaultState: 0,
   template,
 })
-class AppComponent implements OnInit {
+class AppComponent {
   constructor(@StateRef private state: State<number>) {}
 
-  onInit() {
+  connectedCallback() {
     setInterval(() => {
       this.state.setValue(this.state.value + 1);
     }, 1000);
