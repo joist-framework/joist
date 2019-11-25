@@ -110,7 +110,7 @@ describe('Component', () => {
         template() {
           return html``;
         },
-        providers: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }]
+        use: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }]
       })
       class MyComponent {}
 

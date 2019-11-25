@@ -14,6 +14,6 @@ export class ShadyRenderer implements Renderer {
   }
 }
 
-export function useShadyRenderer(): Provider<Renderer> {
+export function withShadyRenderer(): Provider<Renderer> {
   return { provide: Renderer, useClass: ShadyRenderer };
 }

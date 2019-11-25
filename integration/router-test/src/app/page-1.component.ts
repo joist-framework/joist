@@ -1,15 +1,12 @@
-import '@lit-kit/router/lib/lib/router-outlet.component';
-
 import { Component } from '@lit-kit/component';
+import { RouterState, withRoutes } from '@lit-kit/router';
 import { html } from 'lit-html';
-import { Page2Component } from './page-2.component';
-import { Route } from '@lit-kit/router/lib/lib/router-outlet.component';
 
-export interface AppState {
+import { Page2Component } from './page-2.component';
+
+export interface AppState extends RouterState {
   title: string;
 }
-
-const routes: Route[] = [{ path: '/test/foo', component: Page2Component }];
 
 @Component<AppState>({
   tag: 'page-1-component',
@@ -18,8 +15,9 @@ const routes: Route[] = [{ path: '/test/foo', component: Page2Component }];
     return html`
       <h2>${state.title}</h2>
 
-      <lit-router-outlet .routes=${routes}></lit-router-outlet>
+      ${state.activeComponent}
     `;
-  }
+  },
+  use: [withRoutes([{ path: '/foo/bar', component: Page2Component }])]
 })
 export class Page1Component {}

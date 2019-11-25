@@ -1,1 +1,1 @@
-export * from './lib/router-outlet.component';
+export * from './lib/router';

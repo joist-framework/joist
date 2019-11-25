@@ -15,7 +15,7 @@ export interface ComponentConfig<T> {
   useShadowDom?: boolean;
   styles?: string[];
   observedAttributes?: string[];
-  providers?: Provider<any>[];
+  use?: Provider<any>[];
 }
 
 export class Metadata<T> {

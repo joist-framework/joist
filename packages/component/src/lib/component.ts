@@ -53,7 +53,7 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
   const stylesString = config.styles ? config.styles.join('') : '';
-  const componentProviders = config.providers || [];
+  const componentProviders = config.use || [];
 
   return function(componentDef: ClassProviderToken<any>) {
     type ComponentDef = typeof componentDef;
@@ -69,7 +69,8 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           providers: componentProviders.concat([
             { provide: ElRefToken, useFactory: () => this, deps: [] },
             { provide: State, useFactory: () => new State(config.initialState), deps: [] }
-          ])
+          ]),
+          bootstrap: componentProviders.map(p => p.provide)
         },
         getApplicationRef()
       );
