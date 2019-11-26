@@ -5,7 +5,7 @@ import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
 import { getApplicationRef } from './app';
-import { getMetadataRef, ComponentConfig, Metadata } from './metadata';
+import { getMetadataRef, ComponentConfig, Metadata, TemplateEvent } from './metadata';
 import { Lifecycle } from './lifecycle';
 
 export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
@@ -103,13 +103,15 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         }
 
         const renderer = this.componentInjector.get(Renderer);
-        const run = (eventName: string, payload: unknown) => (e: Event) => {
+
+        const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
           if (eventName in this.componentMetadata.handlers) {
             this.componentMetadata.handlers[eventName].call(this.componentInstance, e, payload);
           }
         };
 
         const renderOptions = { scopeName: this.tagName.toLowerCase(), eventContext: this };
+
         const componentRender = (state: T, styles: string) => {
           renderer.render(
             html`
