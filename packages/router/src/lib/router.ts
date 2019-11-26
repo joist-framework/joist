@@ -43,7 +43,7 @@ export class Router {
         if ('component' in route) {
           const activeComponent = createComponent(route.component);
 
-          state.setValue({ ...state.value, activeComponent });
+          state.patchValue({ activeComponent });
           routeCtx.setValue(ctx);
 
           next();
@@ -51,7 +51,7 @@ export class Router {
           route.loadComponent().then(component => {
             const activeComponent = createComponent(component);
 
-            state.setValue({ ...state.value, activeComponent });
+            state.patchValue({ activeComponent });
             routeCtx.setValue(ctx);
 
             next();
