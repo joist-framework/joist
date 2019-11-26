@@ -109,6 +109,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           }
         };
 
+        const renderOptions = { scopeName: this.tagName.toLowerCase(), eventContext: this };
         const componentRender = (state: T, styles: string) => {
           renderer.render(
             html`
@@ -119,7 +120,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
               ${config.template(state, run)}
             `,
             base,
-            { scopeName: this.tagName.toLowerCase(), eventContext: this }
+            renderOptions
           );
         };
 
