@@ -37,31 +37,41 @@ export function RouterRef(c: any, p: string, i: number) {
 export class Router {
   static routerInitialized: boolean = false;
 
-  static registerRoutes(routes: Route[], state: State<RouterState>, routeCtx: RouteCtx) {
-    routes.forEach(route => {
-      page(route.path, (ctx, next) => {
-        if ('component' in route) {
-          const activeComponent = createComponent(route.component);
+  static registeredPaths = new Map<string, boolean>();
+
+  static registerRoute(route: Route, state: State<RouterState>, routeCtx: RouteCtx) {
+    page(route.path, (ctx, next) => {
+      if ('component' in route) {
+        const activeComponent = createComponent(route.component);
+
+        state.patchValue({ activeComponent });
+        routeCtx.setValue(ctx);
+
+        next();
+      } else if ('loadComponent' in route) {
+        route.loadComponent().then(component => {
+          const activeComponent = createComponent(component);
 
           state.patchValue({ activeComponent });
           routeCtx.setValue(ctx);
 
           next();
-        } else if ('loadComponent' in route) {
-          route.loadComponent().then(component => {
-            const activeComponent = createComponent(component);
+        });
+      } else if ('redirectTo' in route) {
+        page(route.path, route.redirectTo);
 
-            state.patchValue({ activeComponent });
-            routeCtx.setValue(ctx);
+        next();
+      }
+    });
+  }
 
-            next();
-          });
-        } else if ('redirectTo' in route) {
-          page(route.path, route.redirectTo);
+  static registerRoutes(routes: Route[], state: State<RouterState>, routeCtx: RouteCtx) {
+    routes.forEach(route => {
+      if (!Router.registeredPaths.has(route.path)) {
+        Router.registeredPaths.set(route.path, true);
 
-          next();
-        }
-      });
+        Router.registerRoute(route, state, routeCtx);
+      }
     });
   }
 
