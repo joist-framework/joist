@@ -1,4 +1,4 @@
-# Router
+# @lit-kit/router
 
 A simple router using page.js as the base
 
