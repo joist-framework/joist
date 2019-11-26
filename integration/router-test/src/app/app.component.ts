@@ -1,5 +1,5 @@
 import { Component } from '@lit-kit/component';
-import { RouterState, withRoutes, RouteCtxRef, RouteCtx } from '@lit-kit/router';
+import { RouterState, withRoutes } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page1Component } from './page-1.component';
@@ -29,10 +29,4 @@ export interface AppState extends RouterState {
     ])
   ]
 })
-export class AppComponent {
-  constructor(@RouteCtxRef private route: RouteCtx) {
-    console.log(this.route.value);
-
-    this.route.onChange(console.log);
-  }
-}
+export class AppComponent {}

@@ -1,5 +1,5 @@
 import { Component } from '@lit-kit/component';
-import { RouterState, withRoutes, RouteCtxRef, RouteCtx } from '@lit-kit/router';
+import { RouterState, withRoutes, OnRouteInit, RouteCtx } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page2Component } from './page-2.component';
@@ -11,19 +11,22 @@ export interface AppState extends RouterState {
 @Component<AppState>({
   tag: 'page-1-component',
   initialState: { title: 'Page1Component Works!' },
-  template(state, _run) {
+  template(state) {
     return html`
       <h2>${state.title}</h2>
 
       ${state.activeComponent}
     `;
   },
-  use: [withRoutes([{ path: '/foo/bar', component: Page2Component }])]
+  use: [
+    withRoutes([
+      { path: '/foo/bar', component: Page2Component },
+      { path: '/foo/bar/:id', component: Page2Component }
+    ])
+  ]
 })
-export class Page1Component {
-  constructor(@RouteCtxRef private route: RouteCtx) {
-    console.log(this.route.value);
-
-    this.route.onChange(console.log);
+export class Page1Component implements OnRouteInit {
+  onRouteInit(ctx: RouteCtx) {
+    console.log(ctx);
   }
 }

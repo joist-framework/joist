@@ -1,5 +1,5 @@
 import { State, createComponent, ElementInstance } from '@lit-kit/component';
-import { Inject, Provider, ClassProviderToken } from '@lit-kit/di';
+import { Provider, ClassProviderToken } from '@lit-kit/di';
 import page from 'page';
 
 export type Route =
@@ -20,18 +20,10 @@ export interface RouterState {
   activeComponent?: ElementInstance<any, any>;
 }
 
-export function RouteCtxRef(c: any, p: string, i: number) {
-  Inject(RouteCtx)(c, p, i);
-}
+export type RouteCtx = PageJS.Context;
 
-export class RouteCtx extends State<PageJS.Context | null> {
-  constructor() {
-    super(null);
-  }
-}
-
-export function RouterRef(c: any, p: string, i: number) {
-  Inject(Router)(c, p, i);
+export interface OnRouteInit {
+  onRouteInit(ctx: RouteCtx): void;
 }
 
 export class Router {
@@ -39,13 +31,16 @@ export class Router {
 
   static registeredPaths = new Map<string, boolean>();
 
-  static registerRoute(route: Route, state: State<RouterState>, routeCtx: RouteCtx) {
+  static registerRoute(route: Route, state: State<RouterState>) {
     page(route.path, (ctx, next) => {
       if ('component' in route) {
         const activeComponent = createComponent(route.component);
 
         state.patchValue({ activeComponent });
-        routeCtx.setValue(ctx);
+
+        if (activeComponent.componentInstance.onRouteInit) {
+          activeComponent.componentInstance.onRouteInit(ctx);
+        }
 
         next();
       } else if ('loadComponent' in route) {
@@ -53,7 +48,10 @@ export class Router {
           const activeComponent = createComponent(component);
 
           state.patchValue({ activeComponent });
-          routeCtx.setValue(ctx);
+
+          if (activeComponent.componentInstance.onRouteInit) {
+            activeComponent.componentInstance.onRouteInit(ctx);
+          }
 
           next();
         });
@@ -65,18 +63,18 @@ export class Router {
     });
   }
 
-  static registerRoutes(routes: Route[], state: State<RouterState>, routeCtx: RouteCtx) {
+  static registerRoutes(routes: Route[], state: State<RouterState>) {
     routes.forEach(route => {
       if (!Router.registeredPaths.has(route.path)) {
         Router.registeredPaths.set(route.path, true);
 
-        Router.registerRoute(route, state, routeCtx);
+        Router.registerRoute(route, state);
       }
     });
   }
 
-  constructor(routes: Route[], state: State<RouterState>, routeCtx: RouteCtx) {
-    Router.registerRoutes(routes, state, routeCtx);
+  constructor(routes: Route[], state: State<RouterState>) {
+    Router.registerRoutes(routes, state);
 
     if (!Router.routerInitialized) {
       Router.routerInitialized = true;
@@ -89,9 +87,9 @@ export class Router {
 export function withRoutes(routes: Route[]): Provider<any> {
   return {
     provide: Router,
-    useFactory: (state: State<RouterState>, ctx: RouteCtx) => {
-      return new Router(routes, state, ctx);
+    useFactory: (state: State<RouterState>) => {
+      return new Router(routes, state);
     },
-    deps: [State, RouteCtx]
+    deps: [State]
   };
 }
