@@ -31,7 +31,7 @@ export interface AppState extends RouterState {
         <h1>${state.title}</h1>
       </header>
 
-      <section
+      <section>
         // the "outlet" is just a property that is available via a property on the state object
         ${state.activeComponent}
       </section>
