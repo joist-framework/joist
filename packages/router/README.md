@@ -32,7 +32,7 @@ export interface AppState extends RouterState {
       </header>
 
       <section>
-        // the "outlet" is just a property that is available on the state object
+        <!-- the "outlet" is just a property that is available on the state object -->
         ${state.activeComponent}
       </section>
 
