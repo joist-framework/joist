@@ -19,3 +19,4 @@ A set of packages that leverage lit-html to help you write applications with web
 | [todo-app](integration/todo-app)             | Todo app                                                          |
 | [hacker-news](integration/hacker-news)       | Hacker news PWA                                                   |
 | [resistor-value](integration/resistor-value) | PWA for calculating the value of resistors from their color bands |
+| [router-test](integration/router-test)       | small routing example                                             |
