@@ -12,7 +12,7 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router
 
 ```TS
 import { Component } from '@lit-kit/component';
-import { RouterState, withRoutes, RouterRef, Router } from '@lit-kit/router';
+import { RouterState, withRoutes } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page1Component } from './page-1.component';
@@ -46,9 +46,5 @@ export interface AppState extends RouterState {
     ])
   ]
 })
-export class AppComponent {
-  constructor(@RouterRef private router: Router) {
-    this.router.init();
-  }
-}
+export class AppComponent {}
 ```
