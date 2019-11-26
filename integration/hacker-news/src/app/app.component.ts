@@ -1,6 +1,6 @@
 import './loader/loader.component';
 
-import { Component, StateRef, State, Handle } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, OnConnected } from '@lit-kit/component';
 import { html } from 'lit-html';
 import { until } from 'lit-html/directives/until';
 
@@ -77,6 +77,8 @@ export interface AppState {
     `
   ],
   template(state, run) {
+    console.log(state);
+
     return html`
       ${state.loadingNews || state.loadingCurrentNewsItem
         ? html`
@@ -111,34 +113,29 @@ export interface AppState {
     `;
   }
 })
-export class AppComponent {
+export class AppComponent implements OnConnected {
   constructor(
     @StateRef private state: State<AppState>,
     @HackerNewsRef private hackerNews: HackerNewsService
-  ) {
-    this.init();
-  }
+  ) {}
 
-  init(): void {
-    this.state.setValue({ ...this.state.value, loadingNews: true });
+  connectedCallback(): void {
+    this.state.patchValue({ loadingNews: true });
 
-    const state: Promise<AppState> = this.hackerNews
-      .getNews()
-      .then(news => ({ ...this.state.value, news, loadingNews: false }));
+    const state = this.hackerNews.getNews().then(news => ({ news, loadingNews: false }));
 
-    this.state.setValue(state);
+    this.state.patchValue(state);
   }
 
   @Handle('CARD_CLICKED') onCardClicked(_: Event, news: HackerNewsItemFull): void {
-    this.state.setValue({ ...this.state.value, loadingCurrentNewsItem: true });
+    this.state.patchValue({ loadingCurrentNewsItem: true });
 
-    const state: Promise<AppState> = this.hackerNews.getNewsItem(news.id).then(currentNewsItem => ({
-      ...this.state.value,
+    const state = this.hackerNews.getNewsItem(news.id).then(currentNewsItem => ({
       currentNewsItem,
       loadingCurrentNewsItem: false
     }));
 
-    this.state.setValue(
+    this.state.patchValue(
       Promise.all([state, import('./comments-drawer/comments-drawer.component')]).then(
         res => res[0]
       )
@@ -146,6 +143,6 @@ export class AppComponent {
   }
 
   @Handle('CLOSE_DRAWER') onCloseDrawer(_: CustomEvent): void {
-    this.state.setValue({ ...this.state.value, currentNewsItem: undefined });
+    this.state.patchValue({ currentNewsItem: undefined });
   }
 }

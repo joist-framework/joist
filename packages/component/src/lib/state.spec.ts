@@ -30,4 +30,28 @@ describe('state', () => {
 
     state.setValue(Promise.resolve(state.value + ' World'));
   });
+
+  it('should correctly apply a partial patch', done => {
+    const state = new State({ title: 'Hello World', foo: true });
+
+    state.onChange(state => {
+      expect(state.foo).toBe(false);
+
+      done();
+    });
+
+    state.patchValue({ foo: false });
+  });
+
+  it('should correctly apply a partial patch when state is a promise', done => {
+    const state = new State({ title: 'Hello World', foo: true });
+
+    state.onChange(state => {
+      expect(state.foo).toBe(false);
+
+      done();
+    });
+
+    state.patchValue(Promise.resolve({ foo: false }));
+  });
 });

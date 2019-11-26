@@ -20,6 +20,16 @@ export class State<T> {
     });
   }
 
+  patchValue(state: Partial<T> | Promise<Partial<T>>) {
+    return Promise.resolve(state).then(res => {
+      try {
+        this.setValue({ ...this.value, ...res });
+      } catch (err) {
+        throw new Error(`cannot patch state that is of type ${typeof state}`);
+      }
+    });
+  }
+
   onChange(cb: (state: T) => void) {
     this.listeners.push(cb);
 

@@ -123,14 +123,13 @@ export class AppComponent implements OnConnected {
   connectedCallback() {
     const bands = this.resistor.getResistorBands();
 
-    this.state.setValue({ ...this.state.value, bands });
+    this.state.patchValue({ bands });
   }
 
   @Handle('BAND_COUNT_SELECTED') onBandCountSelected(e: CustomEvent<number>): void {
     const bandLimit = e.detail;
 
-    this.state.setValue({
-      ...this.state.value,
+    this.state.patchValue({
       selectedBands: [],
       resistorValue: undefined,
       bandLimit,
@@ -146,8 +145,7 @@ export class AppComponent implements OnConnected {
 
     const selectedBands = [...this.state.value.selectedBands, e.detail];
 
-    this.state.setValue({
-      ...this.state.value,
+    this.state.patchValue({
       selectedBands,
       availableBands: this.getAvailableBands(selectedBands, this.state.value.bandLimit),
       resistorValue: this.resistor.getResistorValue(selectedBands, this.state.value.bandLimit)
