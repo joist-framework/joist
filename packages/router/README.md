@@ -5,7 +5,7 @@ A simple router using page.js as the base
 #### Installation:
 
 ```BASH
-npm i @lit-kit/component @lit-kit/di @lit-kit/router
+npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 ```
 
 #### Example:
