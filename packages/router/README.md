@@ -42,7 +42,12 @@ export interface AppState extends RouterState {
   // Define your routes.
   use: [
     withRoutes([
+      // Use when there are potention chid paths under /foo
       { path: '/foo*', component: Page1Component },
+      
+      // lazy load routes
+      { path: '/bar', loadComponent: () => import('page-2.component').then(m => m.Page2Component) },
+      
       { path: '/', redirectTo: '/foo' }
     ])
   ]
