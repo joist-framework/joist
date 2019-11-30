@@ -1,6 +1,0 @@
-node_modules
-dist
-src/**/*.js
-.firebase
-.DS_Store
-stats.json

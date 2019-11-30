@@ -1,7 +1,7 @@
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const plugins = [
@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  devtool: 'eval-source-map',
   entry: {
     main: './src/main.ts'
   },

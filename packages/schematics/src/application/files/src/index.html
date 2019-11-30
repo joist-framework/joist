@@ -15,43 +15,7 @@
   </head>
 
   <body>
-    <style>
-      :root {
-        --color-primary: rgb(255, 102, 0);
-        --color-secondary: rgb(246, 246, 239);
-        --header-height: 50px;
-      }
-
-      html,
-      body {
-        background: var(--color-secondary);
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-      }
-
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      }
-
-      header {
-        align-items: center;
-        background: var(--color-primary);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.23);
-        color: #fff;
-        display: flex;
-        height: var(--header-height);
-        padding: 0 1rem;
-        font-size: 1.5rem;
-        position: relative;
-        z-index: 1000;
-      }
-    </style>
-
-    <header><%= name %></header>
+    <script src="main.bundle.js"></script>
 
     <app-root></app-root>
   </body>

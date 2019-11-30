@@ -5,11 +5,12 @@ import { RouterRef, Router } from '../router';
 
 export interface RouterLinkState {
   path: string;
+  active: boolean;
 }
 
 @Component<RouterLinkState>({
   tag: 'router-link',
-  initialState: { path: '' },
+  initialState: { path: '', active: false },
   styles: [
     `
       a {
@@ -31,7 +32,7 @@ export class RouterLinkComponent implements OnPropChanges {
   constructor(@StateRef private state: State<RouterLinkState>, @RouterRef private router: Router) {}
 
   onPropChanges() {
-    this.state.setValue({ path: this.path });
+    this.state.patchValue({ path: this.path });
   }
 
   @Handle('LINK_CLICKED') onLinkClicked(e: Event) {
