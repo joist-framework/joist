@@ -1,6 +1,5 @@
 import { Component } from '@lit-kit/component';
 import { html } from 'lit-html';
-import { OnRouteInit, RouteCtx } from '@lit-kit/router';
 
 export interface AppState {
   title: string;
@@ -15,8 +14,4 @@ export interface AppState {
     `;
   }
 })
-export class Page2Component implements OnRouteInit {
-  onRouteInit(ctx: RouteCtx) {
-    console.log(ctx);
-  }
-}
+export class Page2Component {}

@@ -1,10 +1,14 @@
+import '@lit-kit/router';
+
 import { Component } from '@lit-kit/component';
-import { RouterState, withRoutes } from '@lit-kit/router';
+import { Route } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page1Component } from './page-1.component';
 
-export interface AppState extends RouterState {
+const routes: Route[] = [{ path: '/foo', component: () => Page1Component }];
+
+export interface AppState {
   title: string;
 }
 
@@ -17,16 +21,14 @@ export interface AppState extends RouterState {
         <h1>${state.title}</h1>
       </header>
 
-      ${state.activeComponent}
+      <router-link .path=${'/'}>HOME</router-link>
+      <router-link .path=${'/foo'}>FOO</router-link>
+      <router-link .path=${'/foo/bar'}>BAR</router-link>
+
+      <router-outlet .routes=${routes}></router-outlet>
 
       <footer>The Footer</footer>
     `;
-  },
-  use: [
-    withRoutes([
-      { path: '/foo*', component: Page1Component },
-      { path: '/', redirectTo: '/foo' }
-    ])
-  ]
+  }
 })
 export class AppComponent {}
