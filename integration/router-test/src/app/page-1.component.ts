@@ -1,10 +1,12 @@
 import { Component } from '@lit-kit/component';
-import { RouterState, withRoutes, OnRouteInit, RouteCtx } from '@lit-kit/router';
+import { Route } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page2Component } from './page-2.component';
 
-export interface AppState extends RouterState {
+const routes: Route[] = [{ path: '/foo/bar', component: () => Page2Component }];
+
+export interface AppState {
   title: string;
 }
 
@@ -15,18 +17,8 @@ export interface AppState extends RouterState {
     return html`
       <h2>${state.title}</h2>
 
-      ${state.activeComponent}
+      <router-outlet .routes=${routes}></router-outlet>
     `;
-  },
-  use: [
-    withRoutes([
-      { path: '/foo/bar', component: Page2Component },
-      { path: '/foo/bar/:id', component: Page2Component }
-    ])
-  ]
-})
-export class Page1Component implements OnRouteInit {
-  onRouteInit(ctx: RouteCtx) {
-    console.log(ctx);
   }
-}
+})
+export class Page1Component {}

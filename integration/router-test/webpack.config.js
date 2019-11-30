@@ -1,12 +1,12 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const plugins = [
   new CleanWebpackPlugin(),
-  new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'src/index.html') })
+  new CopyPlugin([{ from: './src/index.html', to: './index.html' }])
 ];
 
 const performance = {};
@@ -19,6 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
+  devtool: 'eval-source-map',
   entry: {
     main: './src/main.ts'
   },

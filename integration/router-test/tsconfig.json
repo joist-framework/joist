@@ -5,6 +5,7 @@
     "module": "esnext",
     "types": ["node"],
     "typeRoots": [],
-    "declaration": false
+    "declaration": false,
+    "sourceMap": true
   }
 }

@@ -1,95 +1,79 @@
-import { State, createComponent, ElementInstance } from '@lit-kit/component';
-import { Provider, ClassProviderToken } from '@lit-kit/di';
-import page from 'page';
+import { ClassProviderToken, Inject, Service } from '@lit-kit/di';
 
-export type Route =
-  | {
-      path: string;
-      component: ClassProviderToken<any>;
-    }
-  | {
-      path: string;
-      loadComponent: () => Promise<ClassProviderToken<any>>;
-    }
-  | {
-      path: string;
-      redirectTo: string;
-    };
+export type Path = string | RegExp;
 
-export interface RouterState {
-  activeComponent?: ElementInstance<any, any>;
+export interface Route {
+  path: Path;
+  component: () => ClassProviderToken<any> | Promise<ClassProviderToken<any>>;
 }
 
-export type RouteCtx = PageJS.Context;
-
-export interface OnRouteInit {
-  onRouteInit(ctx: RouteCtx): void;
+export function RouterRef(c: any, k: string, i: number) {
+  Inject(Router)(c, k, i);
 }
 
+@Service()
 export class Router {
-  static routerInitialized: boolean = false;
+  private listeners: Function[] = [];
 
-  static registeredPaths = new Map<string, boolean>();
+  root: string = '/';
 
-  static registerRoute(route: Route, state: State<RouterState>) {
-    page(route.path, (ctx, next) => {
-      if ('component' in route) {
-        const activeComponent = createComponent(route.component);
-
-        state.patchValue({ activeComponent });
-
-        if (activeComponent.componentInstance.onRouteInit) {
-          activeComponent.componentInstance.onRouteInit(ctx);
-        }
-
-        next();
-      } else if ('loadComponent' in route) {
-        route.loadComponent().then(component => {
-          const activeComponent = createComponent(component);
-
-          state.patchValue({ activeComponent });
-
-          if (activeComponent.componentInstance.onRouteInit) {
-            activeComponent.componentInstance.onRouteInit(ctx);
-          }
-
-          next();
-        });
-      } else if ('redirectTo' in route) {
-        page(route.path, route.redirectTo);
-
-        next();
-      }
+  constructor() {
+    window.addEventListener('popstate', () => {
+      this.notifyListeners();
     });
   }
 
-  static registerRoutes(routes: Route[], state: State<RouterState>) {
-    routes.forEach(route => {
-      if (!Router.registeredPaths.has(route.path)) {
-        Router.registeredPaths.set(route.path, true);
+  getFragment() {
+    let fragment = '';
 
-        Router.registerRoute(route, state);
-      }
-    });
+    fragment = this.clearSlashes(decodeURI(location.pathname));
+    fragment = this.root !== '/' ? fragment.replace(this.root, '') : fragment;
+
+    return this.clearSlashes(fragment);
   }
 
-  constructor(routes: Route[], state: State<RouterState>) {
-    Router.registerRoutes(routes, state);
+  resolve(routes: Route[]): Route | null {
+    var fragment = this.getFragment();
 
-    if (!Router.routerInitialized) {
-      Router.routerInitialized = true;
+    console.log(fragment);
 
-      page();
+    for (let i = 0; i < routes.length; i++) {
+      const path = this.clearSlashes(routes[i].path);
+      const match = fragment.match(path);
+
+      if (match) {
+        match.shift();
+
+        return routes[i];
+      }
     }
-  }
-}
 
-export function withRoutes(routes: Route[]): Provider<any> {
-  return {
-    provide: Router,
-    useFactory: (state: State<RouterState>) => {
-      return new Router(routes, state);
-    },
-    deps: [State]
-  };
+    return null;
+  }
+
+  navigate(path: string) {
+    history.pushState(null, '', this.root + this.clearSlashes(path));
+
+    this.notifyListeners();
+  }
+
+  listen(cb: Function) {
+    this.listeners.push(cb);
+
+    return () => {
+      const index = this.listeners.indexOf(cb);
+
+      this.listeners.splice(index, 1);
+    };
+  }
+
+  private notifyListeners() {
+    this.listeners.forEach(cb => {
+      cb();
+    });
+  }
+
+  private clearSlashes(path: Path) {
+    return path.toString().replace(/^\/|\/$/g, '');
+  }
 }
