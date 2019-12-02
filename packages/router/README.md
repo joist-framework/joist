@@ -29,8 +29,7 @@ const routes: Route[] = [
   { path: '/parent/child', component: () => Child }
 ]
 
-// Your component state should extend RouterState
-export interface AppState extends RouterState {
+export interface AppState {
   title: string;
 }
 
