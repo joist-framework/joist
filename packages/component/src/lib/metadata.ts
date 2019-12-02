@@ -6,7 +6,7 @@ export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) =>
 export type TemplateDef<T> = (
   state: T,
   run: TemplateEvent
-) => TemplateResult | string | HTMLElement;
+) => TemplateResult | string | HTMLElement | undefined | null;
 
 export interface ComponentConfig<T> {
   tag: string;

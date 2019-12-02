@@ -1,4 +1,5 @@
 import { ClassProviderToken, Inject, Service } from '@lit-kit/di';
+import { State } from '@lit-kit/component';
 import { Match } from 'path-to-regexp';
 
 export type Path = string | RegExp;
@@ -8,13 +9,14 @@ export interface Route {
   component: () => ClassProviderToken<any> | Promise<ClassProviderToken<any>>;
 }
 
-export function RouterRef(c: any, k: string, i: number) {
-  Inject(Router)(c, k, i);
+export function RouteCtxRef(c: any, k: string, i: number) {
+  Inject(RouteCtx)(c, k, i);
 }
 
-export interface ResolvedRoute {
-  match: Match<object>;
-  route: Route;
+export class RouteCtx extends State<Match<object> | null> {}
+
+export function RouterRef(c: any, k: string, i: number) {
+  Inject(Router)(c, k, i);
 }
 
 @Service()

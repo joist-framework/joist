@@ -1,5 +1,5 @@
-import { Component } from '@lit-kit/component';
-import { Route } from '@lit-kit/router';
+import { Component, OnConnected } from '@lit-kit/component';
+import { Route, RouteCtxRef, RouteCtx } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page2Component } from './page-2.component';
@@ -21,4 +21,10 @@ export interface AppState {
     `;
   }
 })
-export class Page1Component {}
+export class Page1Component implements OnConnected {
+  constructor(@RouteCtxRef private route: RouteCtx) {}
+
+  connectedCallback() {
+    console.log(this.route.value);
+  }
+}
