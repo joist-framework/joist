@@ -42,11 +42,8 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link>
-        <a href="/foo"></a>
-      </router-link>
-
-      <router-link .path=${'/bar'}></router-link>
+      <router-link .path=${'/foo'}>Go To Foo</router-link>
+      <router-link .path=${'/bar'}>Go To Bar</router-link>
 
       <section>
         <router-outlet .routes=${routes}></router-outlet>
