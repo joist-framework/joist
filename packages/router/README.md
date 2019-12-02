@@ -13,7 +13,7 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 ```TS
 import '@lit-kit/router'
 
-import { Route } from '@lit-kit/router';
+import { Route, RouteCtxRef, RouteCtx } from '@lit-kit/router';
 
 const routes: Route[] = [
   // Eager component route
@@ -53,5 +53,15 @@ export interface AppState {
     `;
   }
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(@RouteCtxRef private route: RouteCtx) {}
+
+  connectedCallback() {
+    console.log(this.route.value);
+
+    this.route.onChanges(ctx => {
+      console.log(ctx);
+    })
+  }
+}
 ```
