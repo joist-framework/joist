@@ -21,7 +21,7 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link .path=${'/'}>HOME</router-link>
+      <router-link .path=${'/'}></router-link>
       <router-link .path=${'/foo'}>FOO</router-link>
       <router-link .path=${'/foo/bar'}>BAR</router-link>
 

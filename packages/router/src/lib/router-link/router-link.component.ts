@@ -1,46 +1,38 @@
-import { Component, StateRef, State, Prop, OnPropChanges, Handle } from '@lit-kit/component';
-import { html } from 'lit-html';
+import { Component, StateRef, State, Prop, OnPropChanges, ElRef } from '@lit-kit/component';
 
 import { RouterRef, Router } from '../router';
 
-export interface RouterLinkState {
-  path: string;
-  active: boolean;
-}
+export type RouterLinkState = HTMLAnchorElement | null;
 
 @Component<RouterLinkState>({
   tag: 'router-link',
-  initialState: { path: '', active: false },
-  styles: [
-    `
-      a {
-        display: inherit;
-        height: inherit;
-        width: inherit;
-      }
-    `
-  ],
-  template(state, run) {
-    return html`
-      <a .href=${state.path} @click=${run('LINK_CLICKED')}>
-        <slot></slot>
-      </a>
-    `;
+  initialState: null,
+  useShadowDom: false,
+  template(state) {
+    return state || '';
   }
 })
 export class RouterLinkComponent implements OnPropChanges {
   @Prop() path: string = '';
 
-  constructor(@StateRef private state: State<RouterLinkState>, @RouterRef private router: Router) {}
+  constructor(
+    @StateRef private state: State<RouterLinkState>,
+    @RouterRef private router: Router,
+    @ElRef private elRef: HTMLElement
+  ) {}
 
   onPropChanges() {
-    this.state.patchValue({ path: this.path });
-  }
+    const anchor = document.createElement('a');
 
-  @Handle('LINK_CLICKED') onLinkClicked(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    anchor.href = this.path;
+    anchor.innerHTML = this.elRef.innerHTML;
 
-    this.router.navigate(this.path);
+    anchor.onclick = e => {
+      e.preventDefault();
+
+      this.router.navigate(this.path);
+    };
+
+    this.state.setValue(anchor);
   }
 }

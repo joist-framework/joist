@@ -42,7 +42,10 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link .path=${'/foo'}></router-link>
+      <router-link>
+        <a href="/foo"></a>
+      </router-link>
+
       <router-link .path=${'/bar'}></router-link>
 
       <section>
