@@ -55,13 +55,15 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
     this.check();
   }
 
-  private check() {
+  private check(): Promise<void> {
     const fragment = this.router.getFragment();
 
+    let route: Route | null = null;
     let matcher: MatchFunction | null = null;
     let match: Match<object> | null = null;
 
     for (let i = 0; i < this.matchers.length; i++) {
+      route = this.routes[i];
       matcher = this.matchers[i];
       match = matcher(fragment);
 
@@ -70,9 +72,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
       }
     }
 
-    if (matcher && match) {
-      const route = this.routes[this.matchers.indexOf(matcher)];
-
+    if (route && matcher && match) {
       return this.resolve(route, match);
     }
 
@@ -96,7 +96,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
           .then(() => activeComponent);
       })
       .then(activeComponent => {
-        this.state.setValue({ activeComponent });
+        return this.state.setValue({ activeComponent });
       });
   }
 }
