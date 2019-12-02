@@ -10,6 +10,7 @@ import {
 } from '@lit-kit/component';
 
 import { Route, RouterRef, Router } from '../router';
+import { MatchFunction, match } from 'path-to-regexp';
 
 export interface RouterOutletState {
   activeComponent?: ElementInstance<any, any>;
@@ -25,6 +26,8 @@ export interface RouterOutletState {
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];
+
+  private matchers: MatchFunction<object>[] = [];
 
   private removeListener?: Function;
 
@@ -46,18 +49,25 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
   }
 
   onPropChanges() {
+    this.matchers = this.routes.map(route =>
+      match(this.router.normalize(route.path), { decode: decodeURIComponent })
+    );
+
     this.check();
   }
 
   private check() {
-    const activeRoute = this.router.resolve(this.routes);
+    const fragment = this.router.getFragment();
+    const resolved = this.matchers.find(matcher => matcher(fragment));
 
-    if (activeRoute) {
-      const state = Promise.resolve(activeRoute.component()).then(c => ({
-        activeComponent: createComponent(c)
-      }));
+    if (resolved) {
+      const route = this.routes[this.matchers.indexOf(resolved)];
 
-      this.state.setValue(state);
+      Promise.resolve(route.component()).then(c => {
+        const activeComponent = createComponent(c);
+
+        this.state.setValue({ activeComponent });
+      });
     } else {
       this.state.setValue({ activeComponent: undefined });
     }

@@ -1,4 +1,5 @@
 import { ClassProviderToken, Inject, Service } from '@lit-kit/di';
+import { Match } from 'path-to-regexp';
 
 export type Path = string | RegExp;
 
@@ -9,6 +10,11 @@ export interface Route {
 
 export function RouterRef(c: any, k: string, i: number) {
   Inject(Router)(c, k, i);
+}
+
+export interface ResolvedRoute {
+  match: Match<object>;
+  route: Route;
 }
 
 @Service()
@@ -26,30 +32,10 @@ export class Router {
   getFragment() {
     let fragment = '';
 
-    fragment = this.normalize(decodeURI(location.pathname));
+    fragment = this.normalize(location.pathname);
     fragment = this.root !== '/' ? fragment.replace(this.root, '') : fragment;
 
     return this.normalize(fragment);
-  }
-
-  resolve(routes: Route[]): Route | null {
-    var fragment = this.getFragment();
-
-    for (let i = 0; i < routes.length; i++) {
-      const match = this.pathMatches(fragment, this.normalize(routes[i].path));
-
-      if (match) {
-        match.shift();
-
-        return routes[i];
-      }
-    }
-
-    return null;
-  }
-
-  pathMatches(fragment: string, path: string) {
-    return fragment.match(this.normalize(path));
   }
 
   navigate(path: string) {

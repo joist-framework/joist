@@ -15,6 +15,8 @@ export interface RouterLinkState {
     `
       a {
         display: inherit;
+        height: inherit;
+        width: inherit;
       }
     `
   ],

@@ -13,15 +13,20 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 ```TS
 import '@lit-kit/router'
 
-import { Component } from '@lit-kit/component';
 import { Route } from '@lit-kit/router';
-import { html } from 'lit-html';
-
-import { Page1Component } from './page-1.component';
 
 const routes: Route[] = [
+  // Eager component route
   { path: '/foo', component: () => Page1Component },
-  { path: '/bar', component: () => import('page-2.component').then(m => m.Page2Component) }
+
+  // Lazy component route
+  { path: '/bar', component: () => import('page-2.component').then(m => m.Page2Component) },
+
+  // Child Paths
+  { path: '/parent(.*)', component: () => Parent }
+
+  // this would be in the child component outlet
+  { path: '/parent/child', component: () => Child }
 ]
 
 // Your component state should extend RouterState

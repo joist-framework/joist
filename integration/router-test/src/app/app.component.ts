@@ -6,7 +6,7 @@ import { html } from 'lit-html';
 
 import { Page1Component } from './page-1.component';
 
-const routes: Route[] = [{ path: '/foo', component: () => Page1Component }];
+const routes: Route[] = [{ path: '/foo(.*)', component: () => Page1Component }];
 
 export interface AppState {
   title: string;
