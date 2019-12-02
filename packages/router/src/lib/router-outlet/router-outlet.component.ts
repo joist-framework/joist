@@ -80,23 +80,19 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
   }
 
   private resolve(route: Route, ctx: Match<object>) {
-    return Promise.resolve(route.component())
-      .then(LitComponent => {
-        let activeComponent = this.state.value.activeComponent;
+    return Promise.resolve(route.component()).then(LitComponent => {
+      let activeComponent = this.state.value.activeComponent;
 
-        // only create a new instance of the component if the router-outlet is empty
-        // or if the current activeComponent is NOT the same as the one being resolved
-        if (!activeComponent || !(activeComponent.componentInstance instanceof LitComponent)) {
-          activeComponent = createComponent(LitComponent);
-        }
+      // only create a new instance of the component if the router-outlet is empty
+      // or if the current activeComponent is NOT the same as the one being resolved
+      if (!activeComponent || !(activeComponent.componentInstance instanceof LitComponent)) {
+        activeComponent = createComponent(LitComponent);
+      }
 
-        return activeComponent.componentInjector
-          .get(RouteCtx)
-          .setValue(ctx)
-          .then(() => activeComponent);
-      })
-      .then(activeComponent => {
-        return this.state.setValue({ activeComponent });
-      });
+      return activeComponent.componentInjector
+        .get(RouteCtx)
+        .setValue(ctx)
+        .then(() => this.state.setValue({ activeComponent }));
+    });
   }
 }
