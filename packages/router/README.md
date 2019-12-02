@@ -24,8 +24,7 @@ const routes: Route[] = [
   { path: '/bar', component: () => import('page-2.component').then(m => m.Page2Component) }
 ]
 
-// Your component state should extend RouterState
-export interface AppState extends RouterState {
+export interface AppState {
   title: string;
 }
 
