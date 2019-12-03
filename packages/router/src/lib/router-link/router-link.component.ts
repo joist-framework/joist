@@ -13,11 +13,11 @@ import { RouterRef, Router } from '../router';
 
 export type RouterLinkState = HTMLAnchorElement | null;
 
-export class RouterLinkActiveOptions {
+export class ActiveOptions {
   pathMatch: 'full' | 'startsWith' = 'startsWith';
   className: string = 'active';
 
-  constructor(seed?: Partial<RouterLinkActiveOptions>) {
+  constructor(seed?: Partial<ActiveOptions>) {
     Object.assign(this, seed);
   }
 }
@@ -30,7 +30,7 @@ export class RouterLinkActiveOptions {
 })
 export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';
-  @Prop() activeOptions: RouterLinkActiveOptions = new RouterLinkActiveOptions();
+  @Prop() activeOptions: ActiveOptions = new ActiveOptions();
 
   private normalizedPath: string = '';
   private removeListener?: Function;

@@ -13,7 +13,7 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 ```TS
 import '@lit-kit/router'
 
-import { Route, RouteCtxRef, RouteCtx, RouterLinkActiveOptions } from '@lit-kit/router';
+import { Route, RouteCtxRef, RouteCtx, ActiveOptions } from '@lit-kit/router';
 
 const routes: Route[] = [
   // Eager component route
@@ -42,10 +42,10 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link .path=${'/'} .activeOptions=${new RouterLinkActiveOptions({ pathMatch: 'full' })}>
+      <router-link .path=${'/'} .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
         Go To Foo
       </router-link>
-      
+
       <router-link .path=${'/bar'}>Go To Bar</router-link>
 
       <section>
