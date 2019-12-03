@@ -113,13 +113,17 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         const renderOptions = { scopeName: this.tagName.toLowerCase(), eventContext: this };
 
         const componentRender = (state: T, styles: string) => {
+          const renderedStyles = styles
+            ? html`
+                <style>
+                  ${styles}
+                </style>
+              `
+            : '';
+
           renderer.render(
             html`
-              <style>
-                ${styles}
-              </style>
-
-              ${config.template(state, run)}
+              ${renderedStyles} ${config.template(state, run)}
             `,
             base,
             renderOptions

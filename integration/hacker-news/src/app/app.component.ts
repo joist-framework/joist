@@ -77,8 +77,6 @@ export interface AppState {
     `
   ],
   template(state, run) {
-    console.log(state);
-
     return html`
       ${state.loadingNews || state.loadingCurrentNewsItem
         ? html`

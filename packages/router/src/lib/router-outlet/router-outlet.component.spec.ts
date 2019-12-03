@@ -23,6 +23,7 @@ describe('RouterOutletComponent', () => {
 
   afterEach(() => {
     document.body.removeChild(el);
+    history.replaceState(null, '', '');
   });
 
   it('should render the correct initial route', done => {
