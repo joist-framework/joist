@@ -53,6 +53,13 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
   const stylesString = config.styles ? config.styles.join('') : '';
+  const styles = stylesString
+    ? html`
+        <style>
+          ${stylesString}
+        </style>
+      `
+    : '';
   const componentProviders = config.use || [];
 
   return function(componentDef: ClassProviderToken<any>) {
@@ -112,28 +119,20 @@ export function Component<T = any>(config: ComponentConfig<T>) {
 
         const renderOptions = { scopeName: this.tagName.toLowerCase(), eventContext: this };
 
-        const componentRender = (state: T, styles: string) => {
-          const renderedStyles = styles
-            ? html`
-                <style>
-                  ${styles}
-                </style>
-              `
-            : '';
-
+        const componentRender = (state: T) => {
           renderer.render(
             html`
-              ${renderedStyles} ${config.template(state, run)}
+              ${styles} ${config.template(state, run)}
             `,
             base,
             renderOptions
           );
         };
 
-        componentRender(this.componentState.value, stylesString);
+        componentRender(this.componentState.value);
 
         this.componentState.onChange(state => {
-          componentRender(state, stylesString);
+          componentRender(state);
         });
 
         if (this.componentInstance.connectedCallback) {
