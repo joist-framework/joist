@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/component",
-  "version": "1.0.0-beta.29",
+  "version": "1.0.0-beta.30",
   "main": "lib/public_api.js",
   "files": [
     "lib/**/*"
@@ -35,7 +35,7 @@
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
-    "@lit-kit/di": "^1.0.0-beta.29"
+    "@lit-kit/di": "^1.0.0-beta.30"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
