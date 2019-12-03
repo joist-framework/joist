@@ -8,7 +8,7 @@ import {
   OnConnected,
   OnDisconnected
 } from '@lit-kit/component';
-import { MatchFunction, match, Match } from 'path-to-regexp';
+import { MatchFunction, Match } from 'path-to-regexp';
 
 import { Route, Router, RouterRef, RouteCtx } from '../router';
 
@@ -48,9 +48,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
   }
 
   onPropChanges() {
-    this.matchers = this.routes.map(route =>
-      match(this.router.normalize(route.path), { decode: decodeURIComponent })
-    );
+    this.matchers = this.routes.map(route => this.router.match(route.path));
 
     this.check();
   }

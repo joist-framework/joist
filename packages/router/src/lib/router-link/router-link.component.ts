@@ -1,4 +1,13 @@
-import { Component, StateRef, State, Prop, OnPropChanges, ElRef } from '@lit-kit/component';
+import {
+  Component,
+  StateRef,
+  State,
+  Prop,
+  OnPropChanges,
+  ElRef,
+  OnConnected,
+  OnDisconnected
+} from '@lit-kit/component';
 
 import { RouterRef, Router } from '../router';
 
@@ -12,8 +21,13 @@ export type RouterLinkState = HTMLAnchorElement | null;
     return state || '';
   }
 })
-export class RouterLinkComponent implements OnPropChanges {
+export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';
+  @Prop() activeClass: string = 'active';
+
+  private normalizedPath: string = '';
+
+  private removeListener?: Function;
 
   constructor(
     @StateRef private state: State<RouterLinkState>,
@@ -21,7 +35,21 @@ export class RouterLinkComponent implements OnPropChanges {
     @ElRef private elRef: HTMLElement
   ) {}
 
+  connectedCallback() {
+    this.removeListener = this.router.listen(() => {
+      this.setActiveClass();
+    });
+  }
+
+  disconnectedCallback() {
+    if (this.removeListener) {
+      this.removeListener();
+    }
+  }
+
   onPropChanges() {
+    this.normalizedPath = this.router.normalize(this.path);
+
     const anchor = document.createElement('a');
 
     anchor.href = this.path;
@@ -33,6 +61,20 @@ export class RouterLinkComponent implements OnPropChanges {
       this.router.navigate(this.path);
     };
 
+    this.setActiveClass();
+
     this.state.setValue(anchor);
+  }
+
+  private setActiveClass() {
+    const fragment = this.router.getFragment();
+
+    if (fragment === '' && this.normalizedPath === '') {
+      this.elRef.classList.add(this.activeClass);
+    } else if (this.normalizedPath !== '' && fragment.startsWith(this.normalizedPath)) {
+      this.elRef.classList.add(this.activeClass);
+    } else {
+      this.elRef.classList.remove(this.activeClass);
+    }
   }
 }

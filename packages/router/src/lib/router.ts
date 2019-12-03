@@ -1,8 +1,6 @@
 import { ClassProviderToken, Inject, Service } from '@lit-kit/di';
 import { State } from '@lit-kit/component';
-import { Match } from 'path-to-regexp';
-
-export type Path = string | RegExp;
+import { Match, match, Path } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
@@ -54,6 +52,10 @@ export class Router {
 
       this.listeners.splice(index, 1);
     };
+  }
+
+  match(path: Path) {
+    return match(this.normalize(path), { decode: decodeURIComponent });
   }
 
   normalize(path: Path) {
