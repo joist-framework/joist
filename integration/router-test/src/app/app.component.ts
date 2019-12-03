@@ -1,7 +1,7 @@
 import '@lit-kit/router';
 
 import { Component } from '@lit-kit/component';
-import { Route, RouterLinkActiveOptions } from '@lit-kit/router';
+import { Route, RouterLinkActiveOptions as RLO } from '@lit-kit/router';
 import { html } from 'lit-html';
 
 import { Page1Component } from './page-1.component';
@@ -21,13 +21,7 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link
-        .path=${'/'}
-        .activeOptions=${new RouterLinkActiveOptions({ pathMatch: 'full' })}
-      >
-        HOME
-      </router-link>
-
+      <router-link .path=${'/'} .activeOptions=${new RLO({ pathMatch: 'full' })}>HOME</router-link>
       <router-link .path=${'/foo'}>FOO</router-link>
       <router-link .path=${'/foo/bar'}>BAR</router-link>
 
