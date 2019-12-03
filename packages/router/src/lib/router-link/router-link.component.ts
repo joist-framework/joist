@@ -74,8 +74,8 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
 
   private setActiveClass() {
     const fragment = this.router.getFragment();
-    const className = this.activeOptions.className || 'active';
-    const pathMatch = this.activeOptions.pathMatch || 'startsWith';
+    const className = this.activeOptions.className;
+    const pathMatch = this.activeOptions.pathMatch;
 
     if (pathMatch === 'full') {
       if (fragment === this.normalizedPath) {
