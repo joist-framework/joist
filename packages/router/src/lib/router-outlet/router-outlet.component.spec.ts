@@ -33,7 +33,7 @@ describe('RouterOutletComponent', () => {
     const state: State<RouterOutletState> = el.componentInjector.get(State);
 
     const removeListener = state.onChange(val => {
-      expect(val.activeComponent!.tagName).toBe('C-1');
+      expect(val!.tagName).toBe('C-1');
 
       removeListener();
       done();

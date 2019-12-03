@@ -12,17 +12,13 @@ import { MatchFunction, Match } from 'path-to-regexp';
 
 import { Route, Router, RouterRef, RouteCtx } from '../router';
 
-export interface RouterOutletState {
-  activeComponent?: ElementInstance<any, any>;
-}
+export type RouterOutletState = ElementInstance<any, any> | null;
 
 @Component<RouterOutletState>({
   tag: 'router-outlet',
-  initialState: {},
+  initialState: null,
   useShadowDom: false,
-  template(state) {
-    return state.activeComponent;
-  }
+  template: state => state
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];
@@ -74,12 +70,12 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
       return this.resolve(route, match);
     }
 
-    return this.state.setValue({ activeComponent: undefined });
+    return this.state.setValue(null);
   }
 
   private resolve(route: Route, ctx: Match<object>) {
     return Promise.resolve(route.component()).then(LitComponent => {
-      let activeComponent = this.state.value.activeComponent;
+      let activeComponent = this.state.value;
 
       // only create a new instance of the component if the router-outlet is empty
       // or if the current activeComponent is NOT the same as the one being resolved
@@ -90,7 +86,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
       return activeComponent.componentInjector
         .get(RouteCtx)
         .setValue(ctx)
-        .then(() => this.state.setValue({ activeComponent }));
+        .then(() => this.state.setValue(activeComponent));
     });
   }
 }
