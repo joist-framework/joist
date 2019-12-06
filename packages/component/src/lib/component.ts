@@ -1,5 +1,5 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
-import { html } from 'lit-html';
+import { html, TemplateResult } from 'lit-html';
 
 import { Renderer } from './renderer';
 import { State } from './state';
@@ -42,6 +42,46 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
       },
       get: () => instance[prop]
     });
+  }
+}
+
+/**
+ * Renders a component and listens for state updates
+ */
+function connectComponent<T>(element: ElementInstance<any, any>, styles: TemplateResult | '') {
+  if ((window as any).ShadyCSS) {
+    (window as any).ShadyCSS.styleElement(element);
+  }
+
+  const base = element.shadowRoot || element;
+  const config = element.componentMetadata.config as ComponentConfig<any>;
+  const renderer = element.componentInjector.get(Renderer);
+  const renderOptions = { scopeName: element.tagName.toLowerCase(), eventContext: element };
+
+  const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
+    if (eventName in element.componentMetadata.handlers) {
+      element.componentMetadata.handlers[eventName].call(element.componentInstance, e, payload);
+    }
+  };
+
+  const componentRender = (state: T) => {
+    renderer.render(
+      html`
+        ${styles} ${config.template(state, run)}
+      `,
+      base,
+      renderOptions
+    );
+  };
+
+  componentRender(element.componentState.value);
+
+  element.componentState.onChange(state => {
+    componentRender(state);
+  });
+
+  if (element.componentInstance.connectedCallback) {
+    element.componentInstance.connectedCallback();
   }
 }
 
@@ -103,41 +143,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public connectedCallback() {
-        const base = this.shadowRoot || this;
-
-        if ((window as any).ShadyCSS) {
-          (window as any).ShadyCSS.styleElement(this);
-        }
-
-        const renderer = this.componentInjector.get(Renderer);
-
-        const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
-          if (eventName in this.componentMetadata.handlers) {
-            this.componentMetadata.handlers[eventName].call(this.componentInstance, e, payload);
-          }
-        };
-
-        const renderOptions = { scopeName: this.tagName.toLowerCase(), eventContext: this };
-
-        const componentRender = (state: T) => {
-          renderer.render(
-            html`
-              ${styles} ${config.template(state, run)}
-            `,
-            base,
-            renderOptions
-          );
-        };
-
-        componentRender(this.componentState.value);
-
-        this.componentState.onChange(state => {
-          componentRender(state);
-        });
-
-        if (this.componentInstance.connectedCallback) {
-          this.componentInstance.connectedCallback();
-        }
+        connectComponent(this, styles);
       }
 
       public disconnectedCallback() {
