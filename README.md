@@ -8,7 +8,7 @@ A set of packages that leverage lit-html to help you write applications with web
 | ------------------------------------------ | -------------------------------------------------------------- |
 | [@lit-kit/component](packages/component)   | Create Web Components                                          |
 | [@lit-kit/di](packages/di)                 | IOC container                                                  |
-| [@lit-kit/router](packages/router)         | simple page.js based router                                    |
+| [@lit-kit/router](packages/router)         | simple router                                    |
 | [@lit-kit/schematics](packages/schematics) | Schematics for generating components and creating applications |
 
 ### Example
