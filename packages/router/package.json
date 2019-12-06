@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/router",
-  "version": "1.0.0-beta.30",
+  "version": "1.0.0-beta.31",
   "main": "lib/public_api.js",
   "files": [
     "lib/**/*"
@@ -38,8 +38,8 @@
     "path-to-regexp": "^6.1.0"
   },
   "devDependencies": {
-    "@lit-kit/component": "^1.0.0-beta.30",
-    "@lit-kit/di": "^1.0.0-beta.30"
+    "@lit-kit/component": "^1.0.0-beta.31",
+    "@lit-kit/di": "^1.0.0-beta.31"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
