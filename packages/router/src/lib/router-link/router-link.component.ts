@@ -54,25 +54,25 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
   }
 
   onPropChanges(key: string) {
-    this.normalizedPath = this.router.normalize(this.path);
-
-    const anchor = this.state.value || document.createElement('a');
-
     if (key === 'path') {
+      this.normalizedPath = this.router.normalize(this.path);
+
+      const anchor = this.state.value || document.createElement('a');
+
       anchor.href = this.path;
       anchor.onclick = e => {
         e.preventDefault();
 
         this.router.navigate(this.path);
       };
+
+      if (!this.state.value) {
+        anchor.innerHTML = this.elRef.innerHTML;
+        this.state.setValue(anchor);
+      }
     }
 
     this.setActiveClass();
-
-    if (!this.state.value) {
-      anchor.innerHTML = this.elRef.innerHTML;
-      this.state.setValue(anchor);
-    }
   }
 
   private setActiveClass() {
