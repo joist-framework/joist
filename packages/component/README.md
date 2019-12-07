@@ -87,7 +87,7 @@ A component template can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef`
 
 ```TS
-import { Component, StateRef, State, OnInit } from '@lit-kit/component';
+import { Component, StateRef, State } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
