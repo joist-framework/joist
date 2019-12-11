@@ -100,6 +100,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         </style>
       `
     : '';
+
   const componentProviders = config.use || [];
 
   return function(componentDef: ClassProviderToken<any>) {
