@@ -243,6 +243,43 @@ class AppComponent {
 }
 ```
 
+### Reducer State
+
+You can optionally use reducers to manage your state.
+Using the lit kit dependency injector you can use whatver sort of state management you would like.
+
+```TS
+import { Component, StateRef, State } from '@lit-kit/component';
+import { withReducer, ReducerStateRef, ReducerStateRef } from '@lit-kit/component/lib/reducer'
+
+@Component<number>({
+  tag: 'app-counter',
+  initialState: 0,
+  template: state => state.toString(),
+  use: [
+    withReducer<number>((action, state) => {
+      switch (action.type) {
+        case 'INCREMENT': return state + 1;
+        case 'DECREMENT': return state - 1;
+      }
+
+      return state;
+    })
+  ]
+})
+class AppComponent {
+  constructor(@ReducerStateRef public state: ReducerState<number>) {}
+
+  increment() {
+    return this.state.dispatch({ type: 'INCREMENT' });
+  }
+
+  decrement() {
+    return this.state.dispatch({ type: 'DECREMENT' });
+  }
+}
+```
+
 ### Testing
 
 Testing can be handled in a couple of ways. The most straight forward way is to use the available "createComponent" function. All that createComponent does is grab the metadata from a component class and run document.createElement.
