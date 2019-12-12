@@ -246,7 +246,7 @@ Using the lit kit dependency injector you can use whatever sort of state managem
 
 ```TS
 import { Component, StateRef, State } from '@lit-kit/component';
-import { withReducer, ReducerStateRef, ReducerStateRef } from '@lit-kit/component/lib/reducer'
+import { withReducer, ReducerStateRef, ReducerState } from '@lit-kit/component/lib/reducer'
 
 @Component<number>({
   tag: 'app-counter',
