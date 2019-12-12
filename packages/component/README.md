@@ -246,7 +246,7 @@ class AppComponent {
 ### Reducer State
 
 You can optionally use reducers to manage your state.
-Using the lit kit dependency injector you can use whatver sort of state management you would like.
+Using the lit kit dependency injector you can use whatever sort of state management you would like.
 
 ```TS
 import { Component, StateRef, State } from '@lit-kit/component';
