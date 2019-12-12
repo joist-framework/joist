@@ -29,7 +29,7 @@
     "@types/node": "8.10.59",
     "clean-webpack-plugin": "3.0.0",
     "compression-webpack-plugin": "3.0.1",
-    "copy-webpack-plugin": "5.1.0",
+    "copy-webpack-plugin": "5.1.1",
     "html-webpack-plugin": "3.2.0",
     "husky": "3.1.0",
     "jasmine": "3.5.0",
