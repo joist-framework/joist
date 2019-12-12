@@ -27,6 +27,7 @@
     "@commitlint/config-conventional": "8.2.0",
     "@types/jasmine": "3.5.0",
     "@types/node": "8.10.59",
+    "@webcomponents/webcomponentsjs": "^2.4.0",
     "clean-webpack-plugin": "3.0.0",
     "compression-webpack-plugin": "3.0.1",
     "copy-webpack-plugin": "5.1.1",
