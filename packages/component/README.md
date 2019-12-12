@@ -88,14 +88,11 @@ A component's state can be accessed and updated via it's `State` instance which 
 
 ```TS
 import { Component, StateRef, State } from '@lit-kit/component';
-import { html } from 'lit-html';
 
 @Component<number>({
   tag: 'app-root',
   initialState: 0,
-  template(state) {
-    return html`<h1>${state}</h1>`
-  }
+  template: state => state.toString()
 })
 class AppComponent {
   constructor(@StateRef private state: State<number>) {}
@@ -218,7 +215,6 @@ Component state can be set asynchronously.
 
 ```TS
 import { Component, StateRef, State } from '@lit-kit/component';
-import { html } from 'lit-html';
 
 interface AppState {
   loading: boolean;
@@ -228,7 +224,7 @@ interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { loading: false, data: [] },
-  template(state) { ... }
+  template: state => JSON.stringify(state)
 })
 class AppComponent {
   constructor(@StateRef private state: State<AppState>) {}
