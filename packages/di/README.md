@@ -88,14 +88,14 @@ class FooService {
 ```TS
 import { Injector, Inject } from '@lit-kit/di';
 
+function FooRef(c: any, k: string, i: number) {
+  Inject(FooService)(c, k, i)
+}
+
 class FooService {
   sayHello() {
     return 'Hello From FooService';
   }
-}
-
-function FooRef(c: any, k: string, i: number) {
-  Inject(FooService)(c, k, i)
 }
 
 class BarService {
