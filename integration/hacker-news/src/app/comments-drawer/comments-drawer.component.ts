@@ -10,6 +10,7 @@ export interface CommentsDrawerState {
 @Component<CommentsDrawerState>({
   tag: 'comments-drawer',
   initialState: { comments: [] },
+  useShadowDom: true,
   styles: [
     `
       :host {

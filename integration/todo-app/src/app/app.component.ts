@@ -13,6 +13,7 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { todos: [] },
+  useShadowDom: true,
   styles: [
     `
       :host {

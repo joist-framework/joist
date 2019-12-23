@@ -8,6 +8,7 @@ export interface TodoFormState {
 @Component<TodoFormState>({
   tag: 'todo-form',
   initialState: { todo: '' },
+  useShadowDom: true,
   styles: [
     `
       :host {
