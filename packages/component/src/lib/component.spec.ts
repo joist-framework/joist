@@ -121,7 +121,7 @@ describe('Component', () => {
   });
 
   describe('shadowDom', () => {
-    it('should use shadow dom by default', () => {
+    it('should NOT use shadow dom by default', () => {
       @Component({
         tag: 'component-shadow-dom',
         initialState: {},
@@ -135,7 +135,7 @@ describe('Component', () => {
 
       el.connectedCallback();
 
-      expect(el.shadowRoot).toBeDefined();
+      expect(el.shadowRoot).toBeNull();
     });
 
     it('should not use shadow dom if specified', () => {
@@ -145,7 +145,7 @@ describe('Component', () => {
         template() {
           return html``;
         },
-        useShadowDom: false
+        useShadowDom: true
       })
       class MyComponent {}
 
@@ -153,7 +153,7 @@ describe('Component', () => {
 
       el.connectedCallback();
 
-      expect(el.shadowRoot).toBeNull();
+      expect(el.shadowRoot).toBeDefined();
     });
   });
 });

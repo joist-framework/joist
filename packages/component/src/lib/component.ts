@@ -134,8 +134,6 @@ export function Component<T = any>(config: ComponentConfig<T>) {
 
         if (config.useShadowDom) {
           this.attachShadow({ mode: 'open' });
-        } else {
-          this.attachShadow({ mode: 'open' });
         }
 
         mapComponentProperties(this);
