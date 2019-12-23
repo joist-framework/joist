@@ -21,6 +21,7 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
+  useShadowDom: true,
   styles: [
     `
       :host {

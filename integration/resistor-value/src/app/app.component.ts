@@ -25,6 +25,7 @@ export interface AppState {
     availableBands: [],
     displayColors: false
   },
+  useShadowDom: true,
   styles: [
     `
       <style > select-band-color {

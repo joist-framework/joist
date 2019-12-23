@@ -4,6 +4,7 @@ import { html } from 'lit-html';
 @Component({
   tag: 'app-loader',
   initialState: null,
+  useShadowDom: true,
   styles: [
     `
       :host {

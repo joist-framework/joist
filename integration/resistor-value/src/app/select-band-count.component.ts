@@ -11,6 +11,7 @@ interface SelectBandCountState {
 @Component<SelectBandCountState>({
   tag: 'select-band-count',
   initialState: { bandLimit: 0, selectedBands: [] },
+  useShadowDom: true,
   styles: [
     `
       :host {

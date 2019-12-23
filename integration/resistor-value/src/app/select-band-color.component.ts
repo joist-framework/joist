@@ -10,6 +10,7 @@ export interface SelectBandColorState {
 @Component<SelectBandColorState>({
   tag: 'select-band-color',
   initialState: { bands: [] },
+  useShadowDom: true,
   styles: [
     `
       :host {

@@ -8,6 +8,7 @@ export type NewsCardState = HackerNewsItem | null;
 @Component<NewsCardState>({
   tag: 'news-card',
   initialState: null,
+  useShadowDom: true,
   styles: [
     `
       :host {

@@ -10,6 +10,7 @@ export interface TodoCardState {
 @Component<TodoCardState>({
   tag: 'todo-card',
   initialState: {},
+  useShadowDom: true,
   styles: [
     `
       :host {

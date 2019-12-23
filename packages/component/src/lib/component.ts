@@ -132,11 +132,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       constructor() {
         super();
 
-        if ('useShadowDom' in config) {
-          if (config.useShadowDom) {
-            this.attachShadow({ mode: 'open' });
-          }
-        } else {
+        if (config.useShadowDom) {
           this.attachShadow({ mode: 'open' });
         }
 
