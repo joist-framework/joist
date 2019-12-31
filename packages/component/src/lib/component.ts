@@ -108,6 +108,10 @@ function connectComponent<T>(
  * This means work like calculating initial styles only needs to be done once.
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
+  if (config.styles && !config.useShadowDom) {
+    throw new Error('Inline Styles cannot be used without ShadowDom. Set "useShadowDom" to true');
+  }
+
   const componentProviders = config.use || [];
   const styleString = config.styles ? config.styles.join('') : '';
   const componentStyleSheet = HAS_CONSTRUCTABLE_STYLESHEETS

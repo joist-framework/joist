@@ -49,8 +49,9 @@ class AppComponent {}
 
 ### Component Styles
 
-Styles can either be placed inline in the template function or as a list in the "styles" array.
-If you want to use a css preprocessor look at things like webpacks scss-loader
+When using ShadowDom, styles can either be placed in the "styles" array.
+Scoped styles CANNOT but used if not using shadow dom.
+If you want to use a css preprocessor look at things like webpacks scss-loader.
 
 ```TS
 import { Component } from '@lit-kit/component';
@@ -59,6 +60,7 @@ import { html } from 'lit-html';
 @Component<string>({
   tag: 'app-root',
   initialState: 'Hello World',
+  useShadowDom: true,
   styles: [
     `
       :host {
@@ -68,12 +70,6 @@ import { html } from 'lit-html';
   ],
   template(state) {
     return html`
-      <style>
-        h1 {
-          font-weight: thin;
-        }
-      </style>
-
       <h1>${state}</h1>
     `
   }
