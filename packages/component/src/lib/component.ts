@@ -144,10 +144,12 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         super();
 
         if (config.useShadowDom) {
-          const shadow = this.attachShadow({ mode: 'open' });
+          const shadow = (this.attachShadow({ mode: 'open' }) as unknown) as ShadowRoot & {
+            adoptedStyleSheets: CSSStyleSheet[];
+          };
 
-          if (HAS_CONSTRUCTABLE_STYLESHEETS) {
-            (shadow as any).adoptedStyleSheets = [componentStyleSheet];
+          if (HAS_CONSTRUCTABLE_STYLESHEETS && componentStyleSheet) {
+            shadow.adoptedStyleSheets = [componentStyleSheet];
           }
         }
 
