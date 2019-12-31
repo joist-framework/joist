@@ -2,16 +2,16 @@ import { Injector, Provider } from '@lit-kit/di';
 
 let ROOT_INJECTOR: Injector | undefined;
 
-export function bootstrapApplication(providers: Provider<any>[] = []): Injector {
+export function bootstrapEnvironment(providers: Provider<any>[] = []): Injector {
   ROOT_INJECTOR = new Injector({ providers });
 
   return ROOT_INJECTOR;
 }
 
-export function getApplicationRef(): Injector | undefined {
+export function getEnvironmentRef(): Injector | undefined {
   return ROOT_INJECTOR;
 }
 
-export function clearApplication(): void {
+export function clearEnvironment(): void {
   ROOT_INJECTOR = undefined;
 }
