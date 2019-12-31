@@ -1,5 +1,5 @@
 import { Injector, ClassProviderToken } from '@lit-kit/di';
-import { html, TemplateResult } from 'lit-html';
+import { html } from 'lit-html';
 
 import { Renderer } from './renderer';
 import { State } from './state';
@@ -17,6 +17,14 @@ export type ElementInstance<C, S> = HTMLElement & {
   componentState: State<S>;
   [key: string]: any;
 };
+
+type ModernStylesheet = {
+  new (): CSSStyleSheet;
+  replaceSync(css: string): void;
+  replace(css: string): Promise<void>;
+} & CSSStyleSheet;
+
+const HAS_CONSTRUCTABLE_STYLESHEETS = 'adoptedStyleSheets' in document;
 
 /**
  * Map custom element properties to component instance properties.
@@ -45,44 +53,60 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
   }
 }
 
-/**
- * Renders a component and listens for state updates
- */
-function connectComponent<T>(element: ElementInstance<any, any>, styles: TemplateResult | '') {
-  if ((window as any).ShadyCSS) {
-    (window as any).ShadyCSS.styleElement(element);
+function connectComponent<T>(
+  el: ElementInstance<any, T>,
+  styleSheet: ModernStylesheet | null,
+  styleString?: string
+) {
+  if (styleString && styleSheet && styleSheet.cssRules.length === 0) {
+    styleSheet.replaceSync(styleString);
   }
 
-  const base = element.shadowRoot || element;
-  const config = element.componentMetadata.config as ComponentConfig<any>;
-  const renderer = element.componentInjector.get(Renderer);
-  const renderOptions = { scopeName: element.tagName.toLowerCase(), eventContext: element };
+  if ((window as any).ShadyCSS) {
+    (window as any).ShadyCSS.styleElement(el);
+  }
+
+  const base = el.shadowRoot || el;
+  const renderer = el.componentInjector.get(Renderer);
+  const config = el.componentMetadata.config as ComponentConfig<T>;
+  const renderOptions = { scopeName: el.tagName.toLowerCase(), eventContext: el };
 
   const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
-    if (eventName in element.componentMetadata.handlers) {
-      element.componentMetadata.handlers[eventName].call(element.componentInstance, e, payload);
+    if (eventName in el.componentMetadata.handlers) {
+      el.componentMetadata.handlers[eventName].call(el.componentInstance, e, payload);
     }
   };
 
-  const componentRender = (state: T) => {
-    renderer.render(
-      html`
-        ${styles} ${config.template(state, run)}
-      `,
-      base,
-      renderOptions
-    );
-  };
+  const componentRender: (state: T) => void =
+    styleSheet || !config.useShadowDom
+      ? (state: T) => {
+          renderer.render(
+            html`
+              ${config.template(state, run)}
+            `,
+            base,
+            renderOptions
+          );
+        }
+      : (state: T) => {
+          renderer.render(
+            html`
+              <style>
+                ${styleString}
+              </style>
 
-  componentRender(element.componentState.value);
+              ${config.template(state, run)}
+            `,
+            base,
+            renderOptions
+          );
+        };
 
-  element.componentState.onChange(state => {
+  componentRender(el.componentState.value);
+
+  el.componentState.onChange(state => {
     componentRender(state);
   });
-
-  if (element.componentInstance.connectedCallback) {
-    element.componentInstance.connectedCallback();
-  }
 }
 
 /**
@@ -92,16 +116,11 @@ function connectComponent<T>(element: ElementInstance<any, any>, styles: Templat
  * This means work like calculating initial styles only needs to be done once.
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
-  const stylesString = config.styles ? config.styles.join('') : '';
-  const styles = stylesString
-    ? html`
-        <style>
-          ${stylesString}
-        </style>
-      `
-    : '';
-
   const componentProviders = config.use || [];
+  const styleString = config.styles ? config.styles.join('') : '';
+  const componentStyleSheet = HAS_CONSTRUCTABLE_STYLESHEETS
+    ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
+    : null;
 
   return function(componentDef: ClassProviderToken<any>) {
     type ComponentDef = typeof componentDef;
@@ -133,14 +152,22 @@ export function Component<T = any>(config: ComponentConfig<T>) {
         super();
 
         if (config.useShadowDom) {
-          this.attachShadow({ mode: 'open' });
+          const shadow = this.attachShadow({ mode: 'open' });
+
+          if (HAS_CONSTRUCTABLE_STYLESHEETS) {
+            (shadow as any).adoptedStyleSheets = [componentStyleSheet];
+          }
         }
 
         mapComponentProperties(this);
       }
 
       public connectedCallback() {
-        connectComponent(this, styles);
+        connectComponent(this, componentStyleSheet, styleString);
+
+        if (this.componentInstance.connectedCallback) {
+          this.componentInstance.connectedCallback();
+        }
       }
 
       public disconnectedCallback() {

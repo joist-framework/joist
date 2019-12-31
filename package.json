@@ -12,7 +12,8 @@
     "url": "https://github.com/deebloo/lit-kit/issues"
   },
   "scripts": {
-    "install": "lerna run build --scope @lit-kit/*"
+    "install": "npm run build-libs",
+    "build-libs": "lerna run build --scope @lit-kit/*"
   },
   "dependencies": {
     "@lit-kit/component": "file:packages/component",
