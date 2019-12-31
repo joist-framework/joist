@@ -77,30 +77,22 @@ function connectComponent<T>(
     }
   };
 
-  const componentRender: (state: T) => void =
+  const componentTemplate =
     styleSheet || !config.useShadowDom
-      ? (state: T) => {
-          renderer.render(
-            html`
-              ${config.template(state, run)}
-            `,
-            base,
-            renderOptions
-          );
-        }
-      : (state: T) => {
-          renderer.render(
-            html`
-              <style>
-                ${styleString}
-              </style>
+      ? (state: T) => html`
+          ${config.template(state, run)}
+        `
+      : (state: T) => html`
+          <style>
+            ${styleString}
+          </style>
 
-              ${config.template(state, run)}
-            `,
-            base,
-            renderOptions
-          );
-        };
+          ${config.template(state, run)}
+        `;
+
+  const componentRender = (state: T) => {
+    renderer.render(componentTemplate(state), base, renderOptions);
+  };
 
   componentRender(el.componentState.value);
 
