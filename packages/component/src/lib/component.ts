@@ -55,6 +55,7 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
 
 function connectComponent<T>(
   el: ElementInstance<any, T>,
+  instanceCount: number,
   styleSheet: ModernStylesheet | null,
   styleString?: string
 ) {
@@ -76,6 +77,14 @@ function connectComponent<T>(
       el.componentMetadata.handlers[eventName].call(el.componentInstance, e, payload);
     }
   };
+
+  if (styleString && !config.useShadowDom && instanceCount === 1) {
+    const sheet = document.createElement('style');
+    sheet.id = el.tagName;
+    sheet.appendChild(document.createTextNode(styleString));
+
+    document.head.appendChild(sheet);
+  }
 
   const componentTemplate =
     styleSheet || !config.useShadowDom
@@ -108,15 +117,13 @@ function connectComponent<T>(
  * This means work like calculating initial styles only needs to be done once.
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
-  if (config.styles && !config.useShadowDom) {
-    throw new Error('Inline Styles cannot be used without ShadowDom. Set "useShadowDom" to true');
-  }
-
   const componentProviders = config.use || [];
   const styleString = config.styles ? config.styles.join('') : '';
   const componentStyleSheet = HAS_CONSTRUCTABLE_STYLESHEETS
     ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
     : null;
+
+  let instanceCount = 0;
 
   return function(componentDef: ClassProviderToken<any>) {
     type ComponentDef = typeof componentDef;
@@ -161,7 +168,9 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public connectedCallback() {
-        connectComponent(this, componentStyleSheet, styleString);
+        instanceCount++;
+
+        connectComponent(this, instanceCount, componentStyleSheet, styleString);
 
         if (this.componentInstance.connectedCallback) {
           this.componentInstance.connectedCallback();
@@ -169,6 +178,16 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public disconnectedCallback() {
+        instanceCount--;
+
+        if (instanceCount <= 0) {
+          const styleEl = document.getElementById(this.tagName);
+
+          if (styleEl) {
+            document.head.removeChild(styleEl);
+          }
+        }
+
         if (this.componentInstance.disconnectedCallback) {
           this.componentInstance.disconnectedCallback();
         }
