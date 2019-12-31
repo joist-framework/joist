@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-examples/resistor-value",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "PWA for calculating resistor values",
   "private": true,
   "scripts": {
