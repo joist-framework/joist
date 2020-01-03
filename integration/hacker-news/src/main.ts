@@ -1,8 +1,8 @@
 import './app/app.component';
 
-import { bootstrapApplication } from '@lit-kit/component';
+import { bootstrapEnvironment } from '@lit-kit/component';
 
-bootstrapApplication(); // only needed if you want singleton providers
+bootstrapEnvironment(); // only needed if you want singleton providers
 
 if (process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('/service-worker.js').then(

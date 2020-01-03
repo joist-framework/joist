@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
-import { getApplicationRef } from './app';
+import { getEnvironmentRef } from './environment';
 import { getMetadataRef, ComponentConfig, Metadata, TemplateEvent } from './metadata';
 import { Lifecycle } from './lifecycle';
 
@@ -55,7 +55,6 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
 
 function connectComponent<T>(
   el: ElementInstance<any, T>,
-  instanceCount: number,
   styleSheet: ModernStylesheet | null,
   styleString?: string
 ) {
@@ -77,14 +76,6 @@ function connectComponent<T>(
       el.componentMetadata.handlers[eventName].call(el.componentInstance, e, payload);
     }
   };
-
-  if (styleString && !config.useShadowDom && instanceCount === 1) {
-    const sheet = document.createElement('style');
-    sheet.id = el.tagName;
-    sheet.appendChild(document.createTextNode(styleString));
-
-    document.head.appendChild(sheet);
-  }
 
   const componentTemplate =
     styleSheet || !config.useShadowDom
@@ -118,10 +109,16 @@ function connectComponent<T>(
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
   const componentProviders = config.use || [];
+
   const styleString = config.styles ? config.styles.join('') : '';
-  const componentStyleSheet = HAS_CONSTRUCTABLE_STYLESHEETS
-    ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
-    : null;
+
+  const componentStyleSheet =
+    HAS_CONSTRUCTABLE_STYLESHEETS && config.useShadowDom && styleString
+      ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
+      : null;
+
+  const globalStyleSheet =
+    !config.useShadowDom && styleString ? document.createElement('style') : null;
 
   let instanceCount = 0;
 
@@ -142,7 +139,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           ]),
           bootstrap: componentProviders.map(p => p.provide)
         },
-        getApplicationRef()
+        getEnvironmentRef()
       );
 
       public componentMetadata: Metadata<T> = componentMetaData;
@@ -159,7 +156,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
             adoptedStyleSheets: CSSStyleSheet[];
           };
 
-          if (HAS_CONSTRUCTABLE_STYLESHEETS && componentStyleSheet) {
+          if (componentStyleSheet) {
             shadow.adoptedStyleSheets = [componentStyleSheet];
           }
         }
@@ -170,7 +167,15 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       public connectedCallback() {
         instanceCount++;
 
-        connectComponent(this, instanceCount, componentStyleSheet, styleString);
+        // if there is a global stylesheet and it is the first one
+        if (globalStyleSheet && instanceCount === 1) {
+          globalStyleSheet.id = this.tagName;
+          globalStyleSheet.appendChild(document.createTextNode(styleString));
+
+          document.head.appendChild(globalStyleSheet);
+        }
+
+        connectComponent(this, componentStyleSheet, styleString);
 
         if (this.componentInstance.connectedCallback) {
           this.componentInstance.connectedCallback();
@@ -180,12 +185,8 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       public disconnectedCallback() {
         instanceCount--;
 
-        if (instanceCount <= 0) {
-          const styleEl = document.getElementById(this.tagName);
-
-          if (styleEl) {
-            document.head.removeChild(styleEl);
-          }
+        if (instanceCount <= 0 && globalStyleSheet) {
+          document.head.removeChild(globalStyleSheet);
         }
 
         if (this.componentInstance.disconnectedCallback) {
