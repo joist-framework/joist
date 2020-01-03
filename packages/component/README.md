@@ -173,7 +173,7 @@ You can either:
 2. Inject the element reference with the @ElRef decorator
 
 ```TS
-import { Component, State, Handle, ElRef } from '@lit-kit/component';
+import { Component, Handle, ElRef } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
