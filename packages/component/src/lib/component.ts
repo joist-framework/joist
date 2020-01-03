@@ -77,17 +77,21 @@ function connectComponent<T>(
     }
   };
 
+  const dispatch = (eventName: string, detail: unknown) => () => {
+    el.dispatchEvent(new CustomEvent(eventName, { detail }));
+  };
+
   const componentTemplate =
     styleSheet || !config.useShadowDom
       ? (state: T) => html`
-          ${config.template(state, run)}
+          ${config.template(state, run, dispatch)}
         `
       : (state: T) => html`
           <style>
             ${styleString}
           </style>
 
-          ${config.template(state, run)}
+          ${config.template(state, run, dispatch)}
         `;
 
   const componentRender = (state: T) => {
