@@ -5,7 +5,7 @@ export class Metadata {
   provideInRoot: boolean = false;
 }
 
-const METADATA_KEY = '__LIT_KIT_PROVIDER_METADATA__';
+const METADATA_KEY = 'litKitProvider';
 
 export const getMetadataRef = (provider: ProviderToken<any>): Metadata => {
   const metadata = provider[METADATA_KEY];

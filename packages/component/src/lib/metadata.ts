@@ -25,7 +25,7 @@ export class Metadata<T> {
   config?: ComponentConfig<T>;
 }
 
-const METADATA_KEY = '__LIT_KIT_COMPONENT_METADATA__';
+const METADATA_KEY = 'litKitComponentDef';
 
 export function getMetadataRef<T>(provider: ProviderToken<any>): Metadata<T> {
   const metadata = provider[METADATA_KEY];
