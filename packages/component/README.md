@@ -166,19 +166,22 @@ class AppComponent {
 
 ### Dispatching Events
 
-To emit custom events from a component you will need to access the acutal custom element instance.
-This can be accessed via the `@ElRef` decorator.
+There are two ways to dispatch events from a component.
+You can either:
+
+1. Use the dispatch method passed to your template function
+2. Inject the element reference with the @ElRef decorator
 
 ```TS
-import { Component, StateRef, State, Handle, ElRef } from '@lit-kit/component';
+import { Component, State, Handle, ElRef } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
   tag: 'app-root',
   initialState: 0,
-  template(state, run) {
+  template(state, run, dispatch) {
     return html`
-      <button @click=${run('DECREMENT')}>Decrement</button>
+      <button @click=${dispatch('DECREMENT')}>Decrement</button>
 
       ${state}
 
@@ -187,21 +190,10 @@ import { html } from 'lit-html';
   }
 })
 class AppComponent {
-  constructor(
-    @StateRef private state: State<number>,
-    @ElRef private elRef: HTMLElement
-  ) {}
-
-  @Handle('INCREMENT') onIncrement() {
-    this.state.setValue(this.state.value + 1);
-
-    this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
-  }
+  constructor(@ElRef private elRef: HTMLElement) {}
 
   @Handle('DECREMENT') onDecrement() {
-    this.state.setValue(this.state.value - 1);
-
-    this.elRef.dispatchEvent(new CustomEvent('count_changed', { detail: this.state.value }));
+    this.elRef.dispatchEvent(new CustomEvent('INCREMENT'));
   }
 }
 ```
