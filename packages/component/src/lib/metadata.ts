@@ -5,7 +5,8 @@ export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) =>
 
 export type TemplateDef<T> = (
   state: T,
-  run: TemplateEvent
+  run: TemplateEvent,
+  dispatch: (eventName: string, detail?: any) => () => void
 ) => TemplateResult | string | HTMLElement | undefined | null;
 
 export interface ComponentConfig<T> {

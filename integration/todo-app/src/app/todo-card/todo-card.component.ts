@@ -1,4 +1,4 @@
-import { Component, StateRef, State, ElRef, Handle, Prop, OnPropChanges } from '@lit-kit/component';
+import { Component, StateRef, State, Prop, OnPropChanges } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { Todo } from '../todo.service';
@@ -43,7 +43,7 @@ export interface TodoCardState {
       }
     `
   ],
-  template(state, run) {
+  template(state, _, dispatch) {
     if (!state.todo) {
       return '';
     }
@@ -52,11 +52,11 @@ export interface TodoCardState {
       <div class="container ${state.todo.isComplete ? 'complete' : ''}">
         <span class="todo-name">${state.todo.name}</span>
 
-        <button @click=${run(state.todo.isComplete ? 'UNDO_COMPLETE' : 'COMPLETE_TODO')}>
+        <button @click=${dispatch(state.todo.isComplete ? 'undo_complete' : 'complete_todo')}>
           ${state.todo.isComplete ? 'UNDO' : 'COMPLETE'}
         </button>
 
-        <button @click=${run('REMOVE_TODO')}>REMOVE</button>
+        <button @click=${dispatch('remove_todo')}>REMOVE</button>
       </div>
     `;
   }
@@ -64,21 +64,9 @@ export interface TodoCardState {
 export class TodoCardComponent implements OnPropChanges {
   @Prop() todo?: Todo;
 
-  constructor(@StateRef private state: State<TodoCardState>, @ElRef private elRef: HTMLElement) {}
+  constructor(@StateRef private state: State<TodoCardState>) {}
 
   onPropChanges() {
     this.state.setValue({ todo: this.todo });
-  }
-
-  @Handle('REMOVE_TODO') onRemoveTodo(): void {
-    this.elRef.dispatchEvent(new CustomEvent('remove_todo'));
-  }
-
-  @Handle('COMPLETE_TODO') onCompleteTodo(): void {
-    this.elRef.dispatchEvent(new CustomEvent('complete_todo'));
-  }
-
-  @Handle('UNDO_COMPLETE') onUndoComplete(): void {
-    this.elRef.dispatchEvent(new CustomEvent('undo_complete'));
   }
 }
