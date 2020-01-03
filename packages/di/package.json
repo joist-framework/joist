@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/di",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "main": "out-node/public_api.js",
   "browser": "out-browser/public_api.js",
   "files": [
