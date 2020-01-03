@@ -24,8 +24,8 @@
   "devDependencies": {
     "@angular-devkit/core": "8.3.21",
     "@angular-devkit/schematics": "8.3.21",
-    "@commitlint/cli": "8.2.0",
-    "@commitlint/config-conventional": "8.2.0",
+    "@commitlint/cli": "8.3.3",
+    "@commitlint/config-conventional": "8.3.3",
     "@types/jasmine": "3.5.0",
     "@types/node": "8.10.59",
     "@webcomponents/webcomponentsjs": "2.4.0",
