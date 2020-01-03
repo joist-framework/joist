@@ -24,7 +24,7 @@ bootstrapEnvironment()
 If you need to support older browsers (IE11) you will need to use the web components polyfills and enable shady css rendering.
 
 ```TS
-import { bootstrapEnvironment, Renderer } from '@lit-kit/component';
+import { bootstrapEnvironment } from '@lit-kit/component';
 import { withShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
 
 bootstrapEnvironment([withShadyRenderer()]);
@@ -50,9 +50,9 @@ class AppComponent {}
 
 ### Component Styles
 
-When using ShadowDom, styles can either be placed in the "styles" array.
-Scoped styles CANNOT but used if not using shadow dom.
-If you want to use a css preprocessor look at things like webpacks scss-loader.
+Styles can either be placed in the "styles" array.
+Scoped styles are enabled when using shadow dom.
+If you want to use a css preprocessor look at things like webpack's scss-loader.
 
 ```TS
 import { Component } from '@lit-kit/component';
