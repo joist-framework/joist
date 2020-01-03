@@ -1,23 +1,23 @@
 import { Injector, Service, Inject } from '@lit-kit/di';
 
-import { bootstrapApplication, getApplicationRef, clearApplication } from './app';
+import { bootstrapEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
 import { Component } from './component';
 import { html } from 'lit-html';
 import { createComponent } from './create-component';
 
-describe('app', () => {
+describe('environment', () => {
   afterEach(() => {
-    clearApplication();
+    clearEnvironment();
   });
 
   it('should be null by default', () => {
-    expect(getApplicationRef()).toBe(undefined);
+    expect(getEnvironmentRef()).toBe(undefined);
   });
 
   it('should create a global Injector instance', () => {
-    bootstrapApplication();
+    bootstrapEnvironment();
 
-    expect(getApplicationRef() instanceof Injector).toBe(true);
+    expect(getEnvironmentRef() instanceof Injector).toBe(true);
   });
 
   it('should use the root injector when creating components', () => {
@@ -35,10 +35,10 @@ describe('app', () => {
       constructor(@Inject(MyService) public myService: MyService) {}
     }
 
-    bootstrapApplication();
+    bootstrapEnvironment();
 
     const el = createComponent(MyComponent);
 
-    expect(el.componentInstance.myService).toBe(getApplicationRef()!.get(MyService));
+    expect(el.componentInstance.myService).toBe(getEnvironmentRef()!.get(MyService));
   });
 });

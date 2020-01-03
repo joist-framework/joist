@@ -1,5 +1,5 @@
 import './app/app.component';
 
-import { bootstrapApplication } from '@lit-kit/component';
+import { bootstrapEnvironment } from '@lit-kit/component';
 
-bootstrapApplication();
+bootstrapEnvironment();

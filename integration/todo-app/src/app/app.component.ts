@@ -13,23 +13,23 @@ export interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { todos: [] },
-  useShadowDom: true,
+  useShadowDom: false,
   styles: [
     `
-      :host {
+      app-root {
         display: block;
       }
 
-      todo-form {
+      app-root todo-form {
         width: 100%;
         margin-bottom: 0.5rem;
       }
 
-      todo-card {
+      app-root todo-card {
         margin-bottom: 0.5rem;
       }
 
-      .placeholder {
+      app-root .placeholder {
         font-size: 1.5rem;
         text-align: center;
         padding: 1rem 0;

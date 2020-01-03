@@ -83,7 +83,7 @@ class AppComponent {
   constructor(@Inject(AppService) app: AppService) {}
 }
 
-bootstrapApplication(); // create global root injector for global singletons
+bootstrapEnvironment(); // create global root injector for global singletons
 ```
 
 ### Template function should be pure functions and are able to be tested independently of the component

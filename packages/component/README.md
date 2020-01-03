@@ -8,14 +8,15 @@ Create web components using [lit-html](https://lit-html.polymer-project.org/)
 npm i @lit-kit/component @lit-kit/di lit-html
 ```
 
-### Bootstrap Application
+### Bootstrap Environment
 
-If you plan on using lit-kit to create an application you will probably want to use services. To make sure you have singletons you need to bootstrap.
+If you plan on using lit-kit to create an application you will probably want to use services.
+To make sure you have singletons you need to bootstrap.
 
 ```TS
-import { bootstrapApplication } from '@lit-kit/component';
+import { bootstrapEnvironment } from '@lit-kit/component';
 
-bootstrapApplication()
+bootstrapEnvironment()
 ```
 
 ### Bootstrap Shady Application
@@ -23,10 +24,10 @@ bootstrapApplication()
 If you need to support older browsers (IE11) you will need to use the web components polyfills and enable shady css rendering.
 
 ```TS
-import { bootstrapApplication, Renderer } from '@lit-kit/component';
+import { bootstrapEnvironment } from '@lit-kit/component';
 import { withShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
 
-bootstrapApplication([withShadyRenderer()]);
+bootstrapEnvironment([withShadyRenderer()]);
 ```
 
 ### Component
@@ -49,9 +50,9 @@ class AppComponent {}
 
 ### Component Styles
 
-When using ShadowDom, styles can either be placed in the "styles" array.
-Scoped styles CANNOT but used if not using shadow dom.
-If you want to use a css preprocessor look at things like webpacks scss-loader.
+Styles can either be placed in the "styles" array.
+Scoped styles are enabled when using shadow dom.
+If you want to use a css preprocessor look at things like webpack's scss-loader.
 
 ```TS
 import { Component } from '@lit-kit/component';

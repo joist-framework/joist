@@ -4,7 +4,7 @@ import { html } from 'lit-html';
 import { Renderer } from './renderer';
 import { State } from './state';
 import { ElRefToken } from './el-ref';
-import { getApplicationRef } from './app';
+import { getEnvironmentRef } from './environment';
 import { getMetadataRef, ComponentConfig, Metadata, TemplateEvent } from './metadata';
 import { Lifecycle } from './lifecycle';
 
@@ -108,15 +108,19 @@ function connectComponent<T>(
  * This means work like calculating initial styles only needs to be done once.
  */
 export function Component<T = any>(config: ComponentConfig<T>) {
-  if (config.styles && !config.useShadowDom) {
-    throw new Error('Inline Styles cannot be used without ShadowDom. Set "useShadowDom" to true');
-  }
-
   const componentProviders = config.use || [];
+
   const styleString = config.styles ? config.styles.join('') : '';
-  const componentStyleSheet = HAS_CONSTRUCTABLE_STYLESHEETS
-    ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
-    : null;
+
+  const componentStyleSheet =
+    HAS_CONSTRUCTABLE_STYLESHEETS && config.useShadowDom && styleString
+      ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
+      : null;
+
+  const globalStyleSheet =
+    !config.useShadowDom && styleString ? document.createElement('style') : null;
+
+  let instanceCount = 0;
 
   return function(componentDef: ClassProviderToken<any>) {
     type ComponentDef = typeof componentDef;
@@ -135,7 +139,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
           ]),
           bootstrap: componentProviders.map(p => p.provide)
         },
-        getApplicationRef()
+        getEnvironmentRef()
       );
 
       public componentMetadata: Metadata<T> = componentMetaData;
@@ -152,7 +156,7 @@ export function Component<T = any>(config: ComponentConfig<T>) {
             adoptedStyleSheets: CSSStyleSheet[];
           };
 
-          if (HAS_CONSTRUCTABLE_STYLESHEETS && componentStyleSheet) {
+          if (componentStyleSheet) {
             shadow.adoptedStyleSheets = [componentStyleSheet];
           }
         }
@@ -161,6 +165,16 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public connectedCallback() {
+        instanceCount++;
+
+        // if there is a global stylesheet and it is the first one
+        if (globalStyleSheet && instanceCount === 1) {
+          globalStyleSheet.id = this.tagName;
+          globalStyleSheet.appendChild(document.createTextNode(styleString));
+
+          document.head.appendChild(globalStyleSheet);
+        }
+
         connectComponent(this, componentStyleSheet, styleString);
 
         if (this.componentInstance.connectedCallback) {
@@ -169,6 +183,12 @@ export function Component<T = any>(config: ComponentConfig<T>) {
       }
 
       public disconnectedCallback() {
+        instanceCount--;
+
+        if (instanceCount <= 0 && globalStyleSheet) {
+          document.head.removeChild(globalStyleSheet);
+        }
+
         if (this.componentInstance.disconnectedCallback) {
           this.componentInstance.disconnectedCallback();
         }
