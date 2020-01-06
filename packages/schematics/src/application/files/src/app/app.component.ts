@@ -10,7 +10,7 @@ export interface AppState {
   initialState: { title: '<%= name %>' },
   styles: [
     `
-      :host {
+      app-root {
         display: block;
       }
 
@@ -19,7 +19,7 @@ export interface AppState {
       }
     `
   ],
-  template(state, _run) {
+  template(state, _run, _dispatch) {
     return html`
       <h1>${state.title}</h1>
     `;
