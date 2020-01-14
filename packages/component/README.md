@@ -19,19 +19,6 @@ import { bootstrapEnvironment } from '@lit-kit/component';
 bootstrapEnvironment()
 ```
 
-### Bootstrap Shady Application
-
-If you need to support older browsers (IE11) you will need to use the web components polyfills and enable shady css rendering.
-
-```TS
-import '@webcomponents/webcomponentsjs/webcomponents-bundle.js'
-
-import { bootstrapEnvironment } from '@lit-kit/component';
-import { withShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
-
-bootstrapEnvironment([withShadyRenderer()]);
-```
-
 ### Component
 
 Components are created via the "Component" decorator and a custom element is defined.
@@ -337,4 +324,21 @@ describe('AppComponent', () => {
     expect(el).toBeTruthy();
   });
 });
+```
+
+### Legacy Browser support (IE11)
+
+If you need to support IE11 you will need to use the web components polyfills and enable shady css rendering.
+
+```BASH
+npm i @webcomponents/webcomponentsjs
+```
+
+```TS
+import '@webcomponents/webcomponentsjs/webcomponents-bundle.js'
+
+import { bootstrapEnvironment } from '@lit-kit/component';
+import { withShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
+
+bootstrapEnvironment([withShadyRenderer()]);
 ```
