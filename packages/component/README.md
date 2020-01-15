@@ -182,7 +182,7 @@ class AppComponent {
   constructor(@ElRef private elRef: HTMLElement) {}
 
   @Handle('DECREMENT') onDecrement() {
-    this.elRef.dispatchEvent(new CustomEvent('INCREMENT'));
+    this.elRef.dispatchEvent(new CustomEvent('DECREMENT'));
   }
 }
 ```
