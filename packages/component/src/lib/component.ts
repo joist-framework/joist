@@ -124,6 +124,9 @@ export function Component<T = any>(config: ComponentConfig<T>) {
   const globalStyleSheet =
     !config.useShadowDom && styleString ? document.createElement('style') : null;
 
+  /**
+   * Counter that keeps track of how many of a given instance are attached to the dom
+   */
   let instanceCount = 0;
 
   return function(componentDef: ClassProviderToken<any>) {
