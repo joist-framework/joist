@@ -285,7 +285,7 @@ describe('AppComponent', () => {
 If you want to test your component code without creating an instance of an HTMLElement you can manually create instances yourself.
 
 ```TS
-import { createComponent, ElementInstance, State } from '@lit-kit/component';
+import { createComponent, State } from '@lit-kit/component';
 
 import { AppComponent, AppState } from './app.component';
 
@@ -293,7 +293,7 @@ describe('AppComponent', () => {
   let component: AppComponent;
 
   beforeEach(() => {
-    component = new AppComponent(new State({}));
+    component = new AppComponent(new State(null));
   });
 
   it('should work', () => {
