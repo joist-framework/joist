@@ -22,8 +22,8 @@
     "@lit-kit/schematics": "file:packages/schematics"
   },
   "devDependencies": {
-    "@angular-devkit/core": "9.0.4",
-    "@angular-devkit/schematics": "9.0.4",
+    "@angular-devkit/core": "9.0.6",
+    "@angular-devkit/schematics": "9.0.6",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@types/jasmine": "3.5.8",
