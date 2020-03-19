@@ -54,7 +54,7 @@
     "webpack": "4.42.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.2",
-    "workbox-webpack-plugin": "5.0.0"
+    "workbox-webpack-plugin": "5.1.0"
   },
   "lint-staged": {
     "*.{js,ts,json,css,md,html}": [
