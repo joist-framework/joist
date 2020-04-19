@@ -10,24 +10,21 @@ export type TemplateDef<T> = (
 ) => TemplateResult | string | HTMLElement | undefined | null;
 
 export interface ComponentConfig<T> {
-  tag: string;
   template: TemplateDef<T>;
-  initialState: T;
+  initialState?: T;
   useShadowDom?: boolean;
-  styles?: string[];
   observedAttributes?: string[];
   use?: Provider<any>[];
 }
 
-export class Metadata<T> {
+export class Metadata {
   handlers: { [key: string]: Function } = {};
   props: string[] = [];
-  config?: ComponentConfig<T>;
 }
 
 const METADATA_KEY = 'litKitComponentDef';
 
-export function getMetadataRef<T>(provider: ProviderToken<any>): Metadata<T> {
+export function getMetadataRef(provider: ProviderToken<any>): Metadata {
   const metadata = provider[METADATA_KEY];
 
   if (!metadata) {

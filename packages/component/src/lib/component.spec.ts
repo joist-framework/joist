@@ -1,67 +1,58 @@
 import { Injector } from '@lit-kit/di';
 import { html } from 'lit-html';
 
-import { Component } from './component';
+import { defineComponent, ElementInstance } from './component';
 import { State } from './state';
 import { Prop } from './prop';
-import { createComponent } from './create-component';
 import { Handle } from './handle';
 
 describe('Component', () => {
   describe('creation', () => {
-    @Component({
-      tag: 'component-test-1',
-      initialState: undefined,
-      template() {
-        return html`
-          <h1>Hello World</h1>
-        `;
-      }
-    })
-    class MyComponent1 {}
+    class MyComponent {}
+
+    const MyElement = defineComponent({
+      template: () => html`<h1>Hello World</h1>`
+    }, MyComponent);
+
+    customElements.define('create-1', MyElement);
 
     it('should create a componentInjector property', () => {
-      const el = createComponent<MyComponent1, void>(MyComponent1);
+      const el = document.createElement('create-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInjector instanceof Injector).toBe(true);
     });
 
     it('should create a componentInstance property', () => {
-      const el = createComponent<MyComponent1, void>(MyComponent1);
+      const el = document.createElement('create-1') as ElementInstance<MyComponent>;
 
-      expect(el.componentInstance instanceof MyComponent1).toBe(true);
+      expect(el.componentInstance instanceof MyComponent).toBe(true);
     });
 
     it('should create a componentState property', () => {
-      const el = createComponent<MyComponent1, void>(MyComponent1);
+      const el = document.createElement('create-1') as ElementInstance<MyComponent>;
 
       expect(el.componentState instanceof State).toBe(true);
     });
   });
 
   describe('props', () => {
-    @Component({
-      tag: 'component-test-2',
-      initialState: undefined,
-      template() {
-        return html`
-          <h1>Hello World</h1>
-        `;
-      }
-    })
     class MyComponent {
       @Prop() foo: string = 'Hello World';
     }
 
+    customElements.define('props-1', defineComponent({
+      template: () => html`<h1>Hello World</h1>`
+    }, MyComponent));
+
     it('should use the value from the componentInstance when getting a property value from the custom element', () => {
-      const el = createComponent<MyComponent, void>(MyComponent);
+      const el = document.createElement('props-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInstance.foo).toBe('Hello World');
       expect(el.foo).toBe('Hello World');
     });
 
     it('should set componentInstance props when they are set on the custom element', () => {
-      const el = createComponent<MyComponent, void>(MyComponent);
+      const el = document.createElement('props-1') as ElementInstance<MyComponent>;
 
       el.foo = 'Hello World - 2';
 
@@ -71,16 +62,6 @@ describe('Component', () => {
 
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', done => {
-      @Component({
-        tag: 'component-test-3',
-        initialState: {},
-        useShadowDom: false,
-        template(_, run) {
-          return html`
-            <button @click=${run('TEST_RUN', 'Hello World')}>click</button>
-          `;
-        }
-      })
       class MyComponent {
         @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
           expect(e instanceof Event).toBe(true);
@@ -90,7 +71,16 @@ describe('Component', () => {
         }
       }
 
-      const el = createComponent<MyComponent, void>(MyComponent);
+      customElements.define('handlers-1', defineComponent({
+        useShadowDom: false,
+        template(_, run) {
+          return html`
+            <button @click=${run('TEST_RUN', 'Hello World')}>click</button>
+          `;
+        }
+      }, MyComponent));
+
+      const el = document.createElement('handlers-1') as ElementInstance<any>;
 
       el.connectedCallback();
 
@@ -104,17 +94,12 @@ describe('Component', () => {
     it('should allow component specific services to be provided', () => {
       class TestToken {}
 
-      @Component({
-        tag: 'component-test-4',
-        initialState: {},
-        template() {
-          return html``;
-        },
+      customElements.define('providers-1', defineComponent({
+        template: () => void 0,
         use: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }]
-      })
-      class MyComponent {}
+      }, class {}));
 
-      const el = createComponent<MyComponent, void>(MyComponent);
+      const el = document.createElement('providers-1') as ElementInstance<any>;
 
       expect(el.componentInjector.get(TestToken)).toBe('Hello World');
     });
@@ -122,34 +107,24 @@ describe('Component', () => {
 
   describe('shadowDom', () => {
     it('should NOT use shadow dom by default', () => {
-      @Component({
-        tag: 'component-shadow-dom',
-        initialState: {},
-        template() {
-          return html``;
-        }
-      })
-      class MyComponent {}
+      customElements.define('shadowdom-1', defineComponent({
+        template: () => html``
+      }, class {}));
 
-      const el = createComponent<MyComponent, void>(MyComponent);
+      const el = document.createElement('shadowdom-1') as ElementInstance<any>;
 
       el.connectedCallback();
 
       expect(el.shadowRoot).toBeNull();
     });
 
-    it('should not use shadow dom if specified', () => {
-      @Component({
-        tag: 'component-shadow-dom-2',
-        initialState: {},
-        template() {
-          return html``;
-        },
-        useShadowDom: true
-      })
-      class MyComponent {}
+    it('should use shadow dom if specified', () => {
+      customElements.define('shadowdom-2', defineComponent({
+        useShadowDom: true,
+        template: () => html``
+      }, class {}));
 
-      const el = createComponent<MyComponent, void>(MyComponent);
+      const el = document.createElement('shadowdom-2') as ElementInstance<any>;
 
       el.connectedCallback();
 

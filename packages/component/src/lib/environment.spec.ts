@@ -1,9 +1,8 @@
 import { Injector, Service, Inject } from '@lit-kit/di';
 
 import { bootstrapEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
-import { Component } from './component';
+import { defineComponent, ElementInstance } from './component';
 import { html } from 'lit-html';
-import { createComponent } from './create-component';
 
 describe('environment', () => {
   afterEach(() => {
@@ -24,20 +23,20 @@ describe('environment', () => {
     @Service()
     class MyService {}
 
-    @Component({
-      tag: 'my-component',
-      initialState: {},
-      template() {
-        return html``;
-      }
-    })
     class MyComponent {
       constructor(@Inject(MyService) public myService: MyService) {}
     }
 
+    customElements.define('environment-1', defineComponent({
+      template() {
+        return html``;
+      }
+    }, MyComponent));
+
+
     bootstrapEnvironment();
 
-    const el = createComponent(MyComponent);
+    const el = document.createElement('environment-1') as ElementInstance<any>;
 
     expect(el.componentInstance.myService).toBe(getEnvironmentRef()!.get(MyService));
   });

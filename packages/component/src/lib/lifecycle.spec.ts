@@ -1,23 +1,22 @@
 import { html } from 'lit-html';
 
-import { Component } from './component';
-import { createComponent } from './create-component';
+import { defineComponent, ElementInstance } from './component';
 import { Prop } from './prop';
 
 describe('Lifecycle', () => {
   describe('OnPropChanges', () => {
-    @Component({
-      tag: 'prop-changes',
-      initialState: {},
-      template: () => html``
-    })
     class MyComponent {
       @Prop() stringProp: string = '';
-      @Prop() objectProp: object = {};
+      @Prop() objectProp: object = {};   
     }
 
+    customElements.define('prop-changes-1', defineComponent({
+      initialState: {},
+      template: () => html``
+    }, MyComponent));
+
     it('should have correct oldValue and newValue for a primative', done => {
-      const el = createComponent(MyComponent);
+      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent>
 
       el.componentInstance.onPropChanges = (key: string, oldValue: any, newValue: any) => {
         expect(key).toBe('stringProp');
@@ -31,7 +30,7 @@ describe('Lifecycle', () => {
     });
 
     it('should have correct oldValue and newValue for an object', done => {
-      const el = createComponent(MyComponent);
+      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent>
 
       el.componentInstance.onPropChanges = (key: string, oldValue: any, newValue: any) => {
         expect(key).toBe('objectProp');

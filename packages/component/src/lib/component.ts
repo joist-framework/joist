@@ -10,27 +10,18 @@ import { Lifecycle } from './lifecycle';
 
 export type ComponentInstance<T> = T & Lifecycle & { [key: string]: any };
 
-export type ElementInstance<C, S> = HTMLElement & {
+export type ElementInstance<T> = HTMLElement & {
   componentInjector: Injector;
-  componentInstance: ComponentInstance<C>;
-  componentMetadata: Metadata<S>;
-  componentState: State<S>;
+  componentInstance: ComponentInstance<T>;
+  componentMetadata: Metadata;
   [key: string]: any;
 };
-
-type ModernStylesheet = {
-  new (): CSSStyleSheet;
-  replaceSync(css: string): void;
-  replace(css: string): Promise<void>;
-} & CSSStyleSheet;
-
-const HAS_CONSTRUCTABLE_STYLESHEETS = 'adoptedStyleSheets' in document;
 
 /**
  * Map custom element properties to component instance properties.
  * Only maps properties that are decorated with the @Prop() decorator
  */
-function mapComponentProperties<T>(el: ElementInstance<any, T>) {
+function mapComponentProperties(el: ElementInstance<any>) {
   const metadata = el.componentMetadata;
   const instance = el.componentInstance;
   const length = metadata.props.length;
@@ -53,22 +44,13 @@ function mapComponentProperties<T>(el: ElementInstance<any, T>) {
   }
 }
 
-function connectComponent<T>(
-  el: ElementInstance<any, T>,
-  styleSheet: ModernStylesheet | null,
-  styleString?: string
-) {
-  if (styleString && styleSheet && styleSheet.cssRules.length === 0) {
-    styleSheet.replaceSync(styleString);
-  }
-
+function connectComponent<T>(el: ElementInstance<T>, config: ComponentConfig<T>) {
   if ((window as any).ShadyCSS) {
     (window as any).ShadyCSS.styleElement(el);
   }
 
   const base = el.shadowRoot || el;
   const renderer = el.componentInjector.get(Renderer);
-  const config = el.componentMetadata.config as ComponentConfig<T>;
   const renderOptions = { scopeName: el.tagName.toLowerCase(), eventContext: el };
 
   const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
@@ -81,133 +63,68 @@ function connectComponent<T>(
     el.dispatchEvent(new CustomEvent(eventName, { detail }));
   };
 
-  const componentTemplate =
-    styleSheet || !config.useShadowDom
-      ? (state: T) => html`
-          ${config.template(state, run, dispatch)}
-        `
-      : (state: T) => html`
-          <style>
-            ${styleString}
-          </style>
-
-          ${config.template(state, run, dispatch)}
-        `;
-
   const componentRender = (state: T) => {
-    renderer.render(componentTemplate(state), base, renderOptions);
+    renderer.render(html`${config.template(state, run, dispatch)}`, base, renderOptions);
   };
 
   componentRender(el.componentState.value);
 
-  el.componentState.onChange(state => {
+  el.componentInjector.get(State).onChange(state => {
     componentRender(state);
   });
 }
 
-/**
- * Decorates a class with metadata and defines how a custom element is created.
- *
- * NOTE: since the decorator function is only run once per class type do as much preparation work outside of the custom element itself.
- * This means work like calculating initial styles only needs to be done once.
- */
-export function Component<T = any>(config: ComponentConfig<T>) {
+export function defineComponent<T>(config: ComponentConfig<T>, componentDef: ClassProviderToken<any>) {
   const componentProviders = config.use || [];
+  
+  return class extends HTMLElement implements ElementInstance<T> {
+    static observedAttributes = config.observedAttributes;
 
-  const styleString = config.styles ? config.styles.join('') : '';
+    public componentInjector = new Injector(
+      {
+        providers: componentProviders.concat([
+          { provide: ElRefToken, useFactory: () => this, deps: [] },
+          { provide: State, useFactory: () => new State(config.initialState), deps: [] }
+        ]),
+        bootstrap: componentProviders.map(p => p.provide)
+      },
+      getEnvironmentRef()
+    );
 
-  const componentStyleSheet =
-    HAS_CONSTRUCTABLE_STYLESHEETS && config.useShadowDom && styleString
-      ? ((new CSSStyleSheet() as unknown) as ModernStylesheet)
-      : null;
+    public componentMetadata: Metadata = getMetadataRef(componentDef);
+    public componentState: State<T> = this.componentInjector.get(State);
+    public componentInstance: ComponentInstance<T> = this.componentInjector.create(
+      componentDef
+    );
 
-  const globalStyleSheet =
-    !config.useShadowDom && styleString ? document.createElement('style') : null;
+    constructor() {
+      super();
 
-  /**
-   * Counter that keeps track of how many of a given instance are attached to the dom
-   */
-  let instanceCount = 0;
-
-  return function(componentDef: ClassProviderToken<any>) {
-    type ComponentDef = typeof componentDef;
-
-    const componentMetaData = getMetadataRef<T>(componentDef);
-    componentMetaData.config = config;
-
-    class LitKitElement extends HTMLElement implements ElementInstance<ComponentDef, T> {
-      static observedAttributes = config.observedAttributes;
-
-      public componentInjector = new Injector(
-        {
-          providers: componentProviders.concat([
-            { provide: ElRefToken, useFactory: () => this, deps: [] },
-            { provide: State, useFactory: () => new State(config.initialState), deps: [] }
-          ]),
-          bootstrap: componentProviders.map(p => p.provide)
-        },
-        getEnvironmentRef()
-      );
-
-      public componentMetadata: Metadata<T> = componentMetaData;
-      public componentState: State<T> = this.componentInjector.get(State);
-      public componentInstance: ComponentInstance<ComponentDef> = this.componentInjector.create(
-        componentDef
-      );
-
-      constructor() {
-        super();
-
-        if (config.useShadowDom) {
-          const shadow = (this.attachShadow({ mode: 'open' }) as unknown) as ShadowRoot & {
-            adoptedStyleSheets: CSSStyleSheet[];
-          };
-
-          if (componentStyleSheet) {
-            shadow.adoptedStyleSheets = [componentStyleSheet];
-          }
-        }
-
-        mapComponentProperties(this);
+      if (config.useShadowDom) {
+        this.attachShadow({ mode: 'open' })
       }
 
-      public connectedCallback() {
-        instanceCount++;
+      mapComponentProperties(this);
+    }
 
-        // if there is a global stylesheet and it is the first one
-        if (globalStyleSheet && instanceCount === 1) {
-          globalStyleSheet.id = this.tagName;
-          globalStyleSheet.appendChild(document.createTextNode(styleString));
+    public connectedCallback() {
+      connectComponent(this, config);
 
-          document.head.appendChild(globalStyleSheet);
-        }
-
-        connectComponent(this, componentStyleSheet, styleString);
-
-        if (this.componentInstance.connectedCallback) {
-          this.componentInstance.connectedCallback();
-        }
-      }
-
-      public disconnectedCallback() {
-        instanceCount--;
-
-        if (instanceCount <= 0 && globalStyleSheet) {
-          document.head.removeChild(globalStyleSheet);
-        }
-
-        if (this.componentInstance.disconnectedCallback) {
-          this.componentInstance.disconnectedCallback();
-        }
-      }
-
-      public attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
-        if (this.componentInstance.attributeChangedCallback) {
-          this.componentInstance.attributeChangedCallback(attrName, oldVal, newVal);
-        }
+      if (this.componentInstance.connectedCallback) {
+        this.componentInstance.connectedCallback();
       }
     }
 
-    customElements.define(config.tag, LitKitElement);
-  };
-}
+    public disconnectedCallback() {
+      if (this.componentInstance.disconnectedCallback) {
+        this.componentInstance.disconnectedCallback();
+      }
+    }
+
+    public attributeChangedCallback(attrName: string, oldVal: string, newVal: string) {
+      if (this.componentInstance.attributeChangedCallback) {
+        this.componentInstance.attributeChangedCallback(attrName, oldVal, newVal);
+      }
+    }
+  }
+};

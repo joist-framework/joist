@@ -1,10 +1,20 @@
-import { Component } from './lib/component';
-import { createComponent } from './lib/create-component';
+import { defineComponent, ElementInstance } from './lib/component';
 import { withReducer, ReducerState, ReducerStateRef } from './reducer';
 
 describe('Reducer', () => {
-  @Component({
-    tag: 'reducer-test-1',
+  class MyComponent {
+    constructor(@ReducerStateRef public state: ReducerState<number>) {}
+
+    increment() {
+      return this.state.dispatch({ type: 'INCREMENT' });
+    }
+
+    decrement() {
+      return this.state.dispatch({ type: 'DECREMENT' });
+    }
+  }
+
+  customElements.define('reducer-test-1', defineComponent({
     initialState: 0,
     template: state => state.toString(),
     use: [
@@ -20,21 +30,11 @@ describe('Reducer', () => {
         return state;
       })
     ]
-  })
-  class MyComponent {
-    constructor(@ReducerStateRef public state: ReducerState<number>) {}
+  }, MyComponent))
 
-    increment() {
-      return this.state.dispatch({ type: 'INCREMENT' });
-    }
-
-    decrement() {
-      return this.state.dispatch({ type: 'DECREMENT' });
-    }
-  }
 
   it('should increment the state by 1', done => {
-    const el = createComponent<MyComponent, number>(MyComponent);
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
     const component = el.componentInstance;
 
     component.increment().then(() => {
@@ -45,7 +45,7 @@ describe('Reducer', () => {
   });
 
   it('should decrement the state by 1', done => {
-    const el = createComponent<MyComponent, number>(MyComponent);
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
     const component = el.componentInstance;
 
     component.decrement().then(() => {
