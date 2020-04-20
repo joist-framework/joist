@@ -85,8 +85,6 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
       if (componentDef.useShadowDom) {
         this.attachShadow({ mode: 'open' });
       }
-
-      // mapComponentProperties(this);
     }
 
     public connectedCallback() {
@@ -110,9 +108,14 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
     }
   };
 
-  const length = componentMetadata.props.length;
-
-  for (let i = 0; i < length; i++) {
+  /**s
+   * Map custom element properties to component instance properties.
+   * Only maps properties that are decorated with the @Prop() decorator.
+   *
+   * NOTE: This kind of seems like code smell.
+   * It is well tested so attempt to refactor
+   */
+  for (let i = 0; i < componentMetadata.props.length; i++) {
     const prop = componentMetadata.props[i];
 
     Object.defineProperty(LitKitElement.prototype, prop, {
