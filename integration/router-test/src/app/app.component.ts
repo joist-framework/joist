@@ -1,5 +1,3 @@
-import '@lit-kit/router';
-
 import './page-1.component';
 
 import { Component, defineElement } from '@lit-kit/component';

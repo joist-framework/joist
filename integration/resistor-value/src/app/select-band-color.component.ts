@@ -1,4 +1,13 @@
-import { Component, ElRef, Handle, Prop, StateRef, State, OnPropChanges } from '@lit-kit/component';
+import {
+  Component,
+  ElRef,
+  Handle,
+  Prop,
+  StateRef,
+  State,
+  OnPropChanges,
+  defineElement,
+} from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -8,43 +17,41 @@ export interface SelectBandColorState {
 }
 
 @Component<SelectBandColorState>({
-  tag: 'select-band-color',
   initialState: { bands: [] },
   useShadowDom: true,
-  styles: [
-    `
-      :host {
-        display: block;
-        position: relative;
-        padding: 0.5rem 0;
-        background: #fff;
-        box-shadow: 0 -7px 6px rgba(0, 0, 0, 0.05);
-        overflow-y: auto;
-      }
-
-      button {
-        align-items: center;
-        background: none;
-        font-size: 1rem;
-        display: flex;
-        padding: 0.5rem 1rem;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-      }
-
-      .color-block {
-        border-radius: 10px;
-        height: 2rem;
-        width: 5rem;
-        display: inline-block;
-        margin-right: 1rem;
-      }
-    `
-  ],
   template(state, run) {
     return html`
-      ${state.bands.map(band => {
+      <style>
+        :host {
+          display: block;
+          position: relative;
+          padding: 0.5rem 0;
+          background: #fff;
+          box-shadow: 0 -7px 6px rgba(0, 0, 0, 0.05);
+          overflow-y: auto;
+        }
+
+        button {
+          align-items: center;
+          background: none;
+          font-size: 1rem;
+          display: flex;
+          padding: 0.5rem 1rem;
+          border: none;
+          width: 100%;
+          cursor: pointer;
+        }
+
+        .color-block {
+          border-radius: 10px;
+          height: 2rem;
+          width: 5rem;
+          display: inline-block;
+          margin-right: 1rem;
+        }
+      </style>
+
+      ${state.bands.map((band) => {
         return html`
           <button @click=${run('BAND_SELECTED', band)}>
             <div class="color-block" .style="background: ${band.color}"></div>
@@ -54,7 +61,7 @@ export interface SelectBandColorState {
         `;
       })}
     `;
-  }
+  },
 })
 export class SelectBandColorComponent implements OnPropChanges, SelectBandColorState {
   @Prop() bands: ResistorBand[] = [];
@@ -72,3 +79,5 @@ export class SelectBandColorComponent implements OnPropChanges, SelectBandColorS
     this.elRef.dispatchEvent(new CustomEvent('band_selected', { detail }));
   }
 }
+
+customElements.define('select-band-color', defineElement(SelectBandColorComponent));

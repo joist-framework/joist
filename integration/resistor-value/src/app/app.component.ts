@@ -2,7 +2,7 @@ import './select-band-count.component';
 import './resistor.component';
 import './select-band-color.component';
 
-import { Component, StateRef, State, Handle, OnConnected } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, OnConnected, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { ResistorService, ResistorRef, ResistorBand } from './resistor.service';
@@ -17,86 +17,78 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  tag: 'app-root',
   initialState: {
     bandLimit: 0,
     bands: [],
     selectedBands: [],
     availableBands: [],
-    displayColors: false
+    displayColors: false,
   },
   useShadowDom: true,
-  styles: [
-    `
-      <style > select-band-color {
-        position: absolute;
-        top: 20rem;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      resistor-value {
-        margin: 1.3rem 0;
-      }
-
-      select-band-count {
-        margin: 0 1rem;
-      }
-
-      .value {
-        text-align: center;
-        font-size: 2rem;
-      }
-
-      .slide-up {
-        animation: slide-up 0.2s;
-        transform: translateY(0);
-        display: block;
-      }
-
-      .slide-down {
-        animation: slide-down 0.2s;
-        transform: translateY(150%);
-      }
-
-      @keyframes slide-up {
-        0% {
-          transform: translateY(100%);
-        }
-
-        100% {
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes slide-down {
-        0% {
-          display: block;
-          transform: translateY(0);
-        }
-
-        100% {
-          display: none;
-          transform: translateY(100%);
-        }
-      }
-    `
-  ],
   template(state, run) {
     return html`
+      <style>
+        select-band-color {
+          position: absolute;
+          top: 20rem;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+
+        resistor-value {
+          margin: 1.3rem 0;
+        }
+
+        select-band-count {
+          margin: 0 1rem;
+        }
+
+        .value {
+          text-align: center;
+          font-size: 2rem;
+        }
+
+        .slide-up {
+          animation: slide-up 0.2s;
+          transform: translateY(0);
+          display: block;
+        }
+
+        .slide-down {
+          animation: slide-down 0.2s;
+          transform: translateY(150%);
+        }
+
+        @keyframes slide-up {
+          0% {
+            transform: translateY(100%);
+          }
+
+          100% {
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slide-down {
+          0% {
+            display: block;
+            transform: translateY(0);
+          }
+
+          100% {
+            display: none;
+            transform: translateY(100%);
+          }
+        }
+      </style>
+
       <div class="value">
         ${state.displayColors
           ? state.selectedBands.length < state.bandLimit
-            ? html`
-                <span>${state.selectedBands.length}/${state.bandLimit} Bands</span>
-              `
-            : html`
-                <span>${state.resistorValue} &#8486;</span>
-              `
-          : html`
-              <span>Select Resistor Bands</span>
-            `}
+            ? html` <span>${state.selectedBands.length}/${state.bandLimit} Bands</span> `
+            : html` <span>${state.resistorValue} &#8486;</span> `
+          : html` <span>Select Resistor Bands</span> `}
       </div>
 
       <resistor-value .bands=${state.selectedBands}></resistor-value>
@@ -113,7 +105,7 @@ export interface AppState {
         @band_selected=${run('BAND_SELECTED')}
       ></select-band-color>
     `;
-  }
+  },
 })
 export class AppComponent implements OnConnected {
   constructor(
@@ -135,7 +127,7 @@ export class AppComponent implements OnConnected {
       resistorValue: undefined,
       bandLimit,
       displayColors: bandLimit > 0,
-      availableBands: this.getAvailableBands([], bandLimit)
+      availableBands: this.getAvailableBands([], bandLimit),
     });
   }
 
@@ -149,7 +141,7 @@ export class AppComponent implements OnConnected {
     this.state.patchValue({
       selectedBands,
       availableBands: this.getAvailableBands(selectedBands, this.state.value.bandLimit),
-      resistorValue: this.resistor.getResistorValue(selectedBands, this.state.value.bandLimit)
+      resistorValue: this.resistor.getResistorValue(selectedBands, this.state.value.bandLimit),
     });
   }
 
@@ -163,3 +155,5 @@ export class AppComponent implements OnConnected {
     return this.resistor.getValueBands();
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
