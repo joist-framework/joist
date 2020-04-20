@@ -4,7 +4,6 @@ import { html } from 'lit-html';
 export interface <%= classify(name) %>State {}
 
 @Component<<%= classify(name) %>State>({
-  tag: '<%= name %>',
   initialState: {},
   styles: [],
   template(_state, _run, _dispatch) {
@@ -16,3 +15,5 @@ export interface <%= classify(name) %>State {}
 export class <%= classify(name) %>Component {
   constructor(@StateRef _state: State<<%= classify(name) %>State>) {}
 }
+
+customElements.define('<%= name %>', defineElement(<%= classify(name) %>Component));

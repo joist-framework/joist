@@ -1,9 +1,9 @@
 import { ProviderToken } from '@lit-kit/di';
 
-import { getMetadataRef } from './metadata';
+import { getComponentMetadataRef } from './metadata';
 
 export function Prop() {
-  return function(instance: { constructor: ProviderToken<any> }, key: string) {
-    getMetadataRef(instance.constructor).props.push(key);
+  return function (instance: { constructor: ProviderToken<any> }, key: string) {
+    getComponentMetadataRef(instance.constructor).props.push(key);
   };
 }

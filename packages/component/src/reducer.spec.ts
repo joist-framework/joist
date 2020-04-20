@@ -1,7 +1,26 @@
-import { defineComponent, ElementInstance } from './lib/component';
+import { defineElement, ElementInstance } from './lib/define_element';
 import { withReducer, ReducerState, ReducerStateRef } from './reducer';
+import { html } from 'lit-html';
+import { Component } from './lib/component';
 
 describe('Reducer', () => {
+  @Component({
+    initialState: 0,
+    template: (state) => html` ${state} `,
+    use: [
+      withReducer<number>((action, state) => {
+        switch (action.type) {
+          case 'INCREMENT':
+            return state + 1;
+
+          case 'DECREMENT':
+            return state - 1;
+        }
+
+        return state;
+      }),
+    ],
+  })
   class MyComponent {
     constructor(@ReducerStateRef public state: ReducerState<number>) {}
 
@@ -14,27 +33,10 @@ describe('Reducer', () => {
     }
   }
 
-  customElements.define('reducer-test-1', defineComponent({
-    initialState: 0,
-    template: state => state.toString(),
-    use: [
-      withReducer<number>((action, state) => {
-        switch (action.type) {
-          case 'INCREMENT':
-            return state + 1;
+  customElements.define('reducer-test-1', defineElement(MyComponent));
 
-          case 'DECREMENT':
-            return state - 1;
-        }
-
-        return state;
-      })
-    ]
-  }, MyComponent))
-
-
-  it('should increment the state by 1', done => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
+  it('should increment the state by 1', (done) => {
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent, number>;
     const component = el.componentInstance;
 
     component.increment().then(() => {
@@ -44,8 +46,8 @@ describe('Reducer', () => {
     });
   });
 
-  it('should decrement the state by 1', done => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
+  it('should decrement the state by 1', (done) => {
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent, number>;
     const component = el.componentInstance;
 
     component.decrement().then(() => {

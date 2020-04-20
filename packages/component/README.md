@@ -24,47 +24,18 @@ bootstrapEnvironment()
 Components are created via the "Component" decorator and a custom element is defined.
 
 ```TS
-import { Component } from '@lit-kit/component';
+import { Component, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
-  tag: 'app-root',
   initialState: 'Hello World',
   template(state) {
     return html`<h1>${state}</h1>`
   }
 })
 class AppComponent {}
-```
 
-### Component Styles
-
-Styles can either be placed in the "styles" array.
-Scoped styles are enabled when using shadow dom.
-If you want to use a css preprocessor look at things like webpack's scss-loader.
-
-```TS
-import { Component } from '@lit-kit/component';
-import { html } from 'lit-html';
-
-@Component<string>({
-  tag: 'app-root',
-  initialState: 'Hello World',
-  useShadowDom: true,
-  styles: [
-    `
-      :host {
-        display: block;
-      }
-    `
-  ],
-  template(state) {
-    return html`
-      <h1>${state}</h1>
-    `
-  }
-})
-class AppComponent {}
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Component State
@@ -73,12 +44,14 @@ A component template can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef`
 
 ```TS
-import { Component, StateRef, State } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@lit-kit/component';
+import { html } from 'lit-html';
 
 @Component<number>({
-  tag: 'app-root',
   initialState: 0,
-  template: state => state.toString()
+  template(state) {
+    return html`${state}`
+  }
 })
 class AppComponent {
   constructor(@StateRef private state: State<number>) {}
@@ -89,6 +62,8 @@ class AppComponent {
     }, 1000);
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Component Props
@@ -97,11 +72,10 @@ Component props are defined via the `@Prop()` decorator. This creates a property
 Prop changes to not trigger template updates. Use custom setters or `onPropChanges` to set new state and update the template.
 
 ```TS
-import { Component, StateRef, State, Prop, OnPropChanges } from '@lit-kit/component';
+import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<string>({
-  tag: 'app-title',
   initialState: '',
   template(state) {
     return html`<h1>${state}</h1>`
@@ -116,6 +90,9 @@ class AppTitleComponent implements OnPropChanges {
     this.state.setValue(newVal);
   }
 }
+
+customElements.define('app-title', defineElement(AppTitleComponent));
+
 ```
 
 ### Component Handlers
@@ -124,11 +101,10 @@ In order to trigger methods in a component you can use the `run` function that i
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
 
 ```TS
-import { Component, StateRef, State, Handle } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
-  tag: 'app-root',
   initialState: 0,
   template(state, run) {
     return html`
@@ -151,6 +127,8 @@ class AppComponent {
     this.state.setValue(this.state.value - 1);
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Dispatching Events
@@ -162,11 +140,10 @@ You can either:
 2. Inject the element reference with the @ElRef decorator
 
 ```TS
-import { Component, Handle, ElRef } from '@lit-kit/component';
+import { Component, Handle, ElRef, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 @Component<number>({
-  tag: 'app-root',
   initialState: 0,
   template(state, run, dispatch) {
     return html`
@@ -185,6 +162,8 @@ class AppComponent {
     this.elRef.dispatchEvent(new CustomEvent('DECREMENT'));
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Async State
@@ -192,7 +171,7 @@ class AppComponent {
 Component state can be set asynchronously.
 
 ```TS
-import { Component, StateRef, State } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@lit-kit/component';
 
 interface AppState {
   loading: boolean;
@@ -202,7 +181,7 @@ interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { loading: false, data: [] },
-  template: state => JSON.stringify(state)
+  template: state => html`${JSON.stringify(state)}`
 })
 class AppComponent {
   constructor(@StateRef private state: State<AppState>) {}
@@ -215,6 +194,8 @@ class AppComponent {
     this.state.setValue(data);
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Reducer State
@@ -223,11 +204,10 @@ You can optionally use reducers to manage your state.
 Using the lit kit dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { Component, StateRef, State } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@lit-kit/component';
 import { withReducer, ReducerStateRef, ReducerState } from '@lit-kit/component/lib/reducer'
 
 @Component({
-  tag: 'app-counter',
   initialState: 0,
   template: state => state.toString(),
   use: [
@@ -252,63 +232,23 @@ class AppComponent {
     return this.state.dispatch({ type: 'DECREMENT' });
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Testing
 
-Testing can be handled in a couple of ways. The most straight forward way is to use the available "createComponent" function. All that createComponent does is grab the metadata from a component class and run document.createElement.
+Testing can be handled in a couple of ways. The most straight forward way is to define your element in your test and use document.createElement.
 
 ```TS
-import { createComponent, ElementInstance } from '@lit-kit/component';
+import { defineElement } from '@lit-kit/component';
 
-import { AppComponent, AppState } from './app.component';
-
-describe('AppComponent', () => {
-  let el: ElementInstance<AppComponent, AppState>;
-
-  beforeEach(() => {
-    el = createComponent(AppComponent);
-
-    document.body.appendChild(el);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(el);
-  }))
-
-  it('should work', () => {
-    expect(el).toBeTruthy();
-  });
-});
-```
-
-If you want to test your component code without creating an instance of an HTMLElement you can manually create instances yourself.
-
-```TS
-import { createComponent, State } from '@lit-kit/component';
-
-import { AppComponent, AppState } from './app.component';
-
-describe('AppComponent', () => {
-  let component: AppComponent;
-
-  beforeEach(() => {
-    component = new AppComponent(new State(null));
-  });
-
-  it('should work', () => {
-    expect(component).toBeTruthy();
-  });
-});
-```
-
-And of course you can manually create the element yourself
-
-```TS
-import './app.component';
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   let el: HTMLElement;
+
+  customElements.define('test-app-component-1', defineElement(AppComponent));
 
   beforeEach(() => {
     el = document.createElement('app-root');
@@ -326,6 +266,26 @@ describe('AppComponent', () => {
 });
 ```
 
+LitKit has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
+This means you can manually create instances of your component and run them in Node.
+
+```TS
+import { AppComponent, AppState } from './app.component';
+
+describe('AppComponent', () => {
+  let component: AppComponent;
+
+  beforeEach(() => {
+    component = new AppComponent(new State(null));
+  });
+
+  it('should work', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+```
+
 ### Legacy Browser support (IE11)
 
 If you need to support IE11 you will need to use the web components polyfills and enable shady css rendering.
@@ -338,7 +298,7 @@ npm i @webcomponents/webcomponentsjs
 import '@webcomponents/webcomponentsjs/webcomponents-bundle.js'
 
 import { bootstrapEnvironment } from '@lit-kit/component';
-import { withShadyRenderer } from '@lit-kit/component/lib/shady-renderer';
+import { withShadyRenderer } from '@lit-kit/component/lib/shady_renderer';
 
 bootstrapEnvironment([withShadyRenderer()]);
 ```

@@ -1,10 +1,10 @@
-import { ClassProviderToken, Inject, Service } from '@lit-kit/di';
+import { Inject, Service } from '@lit-kit/di';
 import { State } from '@lit-kit/component';
 import { Match, match, Path } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
-  component: () => ClassProviderToken<any> | Promise<ClassProviderToken<any>>;
+  component: () => HTMLElement;
 }
 
 export function RouteCtxRef(c: any, k: string, i: number) {
@@ -63,7 +63,7 @@ export class Router {
   }
 
   private notifyListeners() {
-    this.listeners.forEach(cb => {
+    this.listeners.forEach((cb) => {
       cb();
     });
   }

@@ -6,10 +6,11 @@ import {
   OnPropChanges,
   ElRef,
   OnConnected,
-  OnDisconnected
+  OnDisconnected,
 } from '@lit-kit/component';
 
 import { RouterRef, Router } from '../router';
+import { html } from 'lit-html';
 
 export type RouterLinkState = HTMLAnchorElement | null;
 
@@ -23,10 +24,9 @@ export class ActiveOptions {
 }
 
 @Component<RouterLinkState>({
-  tag: 'router-link',
   initialState: null,
   useShadowDom: false,
-  template: state => state
+  template: (state) => html` ${state} `,
 })
 export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';
@@ -60,7 +60,7 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
       const anchor = this.state.value || document.createElement('a');
 
       anchor.href = this.path;
-      anchor.onclick = e => {
+      anchor.onclick = (e) => {
         e.preventDefault();
 
         this.router.navigate(this.path);

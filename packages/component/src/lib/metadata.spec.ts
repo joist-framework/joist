@@ -1,11 +1,11 @@
-import { getMetadataRef, Metadata } from './metadata';
+import { getComponentMetadataRef, ComponentMetadata } from './metadata';
 
 describe('Metadata', () => {
   class A {}
 
   it('should add default metadata', () => {
-    const metadata = getMetadataRef(A);
+    const metadata = getComponentMetadataRef(A);
 
-    expect(metadata).toEqual(new Metadata());
+    expect(metadata).toEqual(new ComponentMetadata());
   });
 });

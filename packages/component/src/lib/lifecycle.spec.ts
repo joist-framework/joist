@@ -1,22 +1,24 @@
 import { html } from 'lit-html';
 
-import { defineComponent, ElementInstance } from './component';
+import { defineElement, ElementInstance } from './define_element';
 import { Prop } from './prop';
+import { Component } from './component';
 
 describe('Lifecycle', () => {
   describe('OnPropChanges', () => {
+    @Component({
+      initialState: {},
+      template: () => html``,
+    })
     class MyComponent {
       @Prop() stringProp: string = '';
-      @Prop() objectProp: object = {};   
+      @Prop() objectProp: object = {};
     }
 
-    customElements.define('prop-changes-1', defineComponent({
-      initialState: {},
-      template: () => html``
-    }, MyComponent));
+    customElements.define('prop-changes-1', defineElement(MyComponent));
 
-    it('should have correct oldValue and newValue for a primative', done => {
-      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent>
+    it('should have correct oldValue and newValue for a primative', (done) => {
+      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent, any>;
 
       el.componentInstance.onPropChanges = (key: string, oldValue: any, newValue: any) => {
         expect(key).toBe('stringProp');
@@ -29,8 +31,8 @@ describe('Lifecycle', () => {
       el.stringProp = 'Hello World';
     });
 
-    it('should have correct oldValue and newValue for an object', done => {
-      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent>
+    it('should have correct oldValue and newValue for an object', (done) => {
+      const el = document.createElement('prop-changes-1') as ElementInstance<MyComponent, any>;
 
       el.componentInstance.onPropChanges = (key: string, oldValue: any, newValue: any) => {
         expect(key).toBe('objectProp');

@@ -12,7 +12,7 @@ describe('new-component', () => {
 
     expect(tree.files.sort()).toEqual([
       '/src/app/hello-world/hello-world.component.spec.ts',
-      '/src/app/hello-world/hello-world.component.ts'
+      '/src/app/hello-world/hello-world.component.ts',
     ]);
   });
 
@@ -40,8 +40,12 @@ describe('new-component', () => {
       expect(content.includes('@Component<HelloWorldState>({')).toBe(true);
     });
 
-    it('should have the correct tag name', () => {
-      expect(content.includes(`tag: 'hello-world',`)).toBe(true);
+    it('should correctly define the custom element', () => {
+      expect(
+        content.includes(
+          `customElements.define('hello-world', defineElement(HelloWorldComponent));`
+        )
+      ).toBe(true);
     });
 
     it('should create the correct component class', () => {
