@@ -21,11 +21,11 @@ type ElementInstance<C, S> = HTMLElement & {
   // The actual instance of the component defined by the user
   componentInstance: ComponentInstance<C>;
 
-  // metadata used to create the element
+  // metadata used when the component is running
   componentMetadata: Metadata<S>;
 
-  // the components state container. Is the only way to update the component template
-  componentState: State<S>;
+  // the component definition. Lays out things like the template and state
+  componentDef: ComponentDef<State>;
 };
 ```
 
@@ -37,7 +37,6 @@ type ElementInstance<C, S> = HTMLElement & {
 
 ```TS
 @Component<number>({
-  tag: 'app-root',
   initialState: 0,
   template(state) {
     return html`<h1>${state}</h1>`
@@ -52,6 +51,8 @@ class AppComponent {
     }, 1000);
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Properties for the custom element are stored to the component instance with the component instance being the source of truth.
