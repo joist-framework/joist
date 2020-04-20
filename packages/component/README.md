@@ -209,7 +209,7 @@ import { withReducer, ReducerStateRef, ReducerState } from '@lit-kit/component/l
 
 @Component({
   initialState: 0,
-  template: state => state.toString(),
+  template: state => html`<h1>${state}</h1>`
   use: [
     withReducer<number>((action, state) => {
       switch (action.type) {
