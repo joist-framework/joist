@@ -6,7 +6,7 @@ describe('<%= classify(name) %>Component', () => {
   let el: ElementInstance<<%= classify(name) %>Component, <%= classify(name) %>State>;
 
   beforeEach(() => {
-    el = createComponent(<%= classify(name) %>Component);
+    el = document.createElement('<%= name %>') as ElementInstance<<%= classify(name) %>Component, <%= classify(name) %>State>;
     
     document.body.appendChild(el);
   });
