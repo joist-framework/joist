@@ -1,19 +1,20 @@
 import '@lit-kit/router';
 
-import { Component } from '@lit-kit/component';
+import './page-1.component';
+
+import { Component, defineElement } from '@lit-kit/component';
 import { Route, ActiveOptions } from '@lit-kit/router';
 import { html } from 'lit-html';
 
-import { Page1Component } from './page-1.component';
-
-const routes: Route[] = [{ path: '/foo(.*)', component: () => Page1Component }];
+const routes: Route[] = [
+  { path: '/foo(.*)', component: () => document.createElement('page-1-component') },
+];
 
 export interface AppState {
   title: string;
 }
 
 @Component<AppState>({
-  tag: 'app-root',
   initialState: { title: 'Hello World' },
   template(state) {
     return html`
@@ -31,6 +32,8 @@ export interface AppState {
 
       <footer>The Footer</footer>
     `;
-  }
+  },
 })
-export class AppComponent {}
+class AppComponent {}
+
+customElements.define('app-root', defineElement(AppComponent));

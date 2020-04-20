@@ -1,4 +1,4 @@
-import { Component } from '@lit-kit/component';
+import { Component, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 export interface AppState {
@@ -6,12 +6,11 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  tag: 'page-2-component',
   initialState: { title: 'Page2Component Works!' },
   template(state) {
-    return html`
-      <h3>${state.title}</h3>
-    `;
-  }
+    return html` <h3>${state.title}</h3> `;
+  },
 })
-export class Page2Component {}
+class Page2Component {}
+
+customElements.define('page-2-component', defineElement(Page2Component));
