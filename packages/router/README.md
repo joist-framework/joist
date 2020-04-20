@@ -11,22 +11,20 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 #### Example:
 
 ```TS
-import '@lit-kit/router'
-
-import { Route, RouteCtxRef, RouteCtx, ActiveOptions } from '@lit-kit/router';
+import { Route, RouteCtxRef, RouteCtx, ActiveOptions, defineElement } from '@lit-kit/router';
 
 const routes: Route[] = [
   // Eager component route
-  { path: '/', component: () => Page1Component },
+  { path: '/', component: () => document.createElement('page-1') },
 
   // Lazy component route
-  { path: '/bar', component: () => import('page-2.component').then(m => m.Page2Component) },
+  { path: '/bar', component: () => import('page-2.component').then(() => document.createElement('page-2')) },
 
   // Child Paths
-  { path: '/parent(.*)', component: () => Parent }
+  { path: '/parent(.*)', component: () => document.createElement('parent-component')  }
 
   // this would be in the child component outlet
-  { path: '/parent/child', component: () => Child }
+  { path: '/parent/child', component: () => document.createElement('child-component')  }
 ]
 
 export interface AppState {
@@ -34,7 +32,6 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  tag: 'app-root',
   initialState: { title: 'Hello World' },
   template(state) {
     return html`
@@ -67,4 +64,6 @@ export class AppComponent {
     })
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
 ```

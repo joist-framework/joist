@@ -21,7 +21,7 @@ bootstrapEnvironment()
 
 ### Component
 
-Components are created via the "Component" decorator and a custom element is defined.
+Components are created via the "Component" decorator and defining a custom element.
 
 ```TS
 import { Component, defineElement } from '@lit-kit/component';
@@ -97,7 +97,7 @@ customElements.define('app-title', defineElement(AppTitleComponent));
 
 ### Component Handlers
 
-In order to trigger methods in a component you can use the `run` function that is provided the the template function.
+In order to trigger methods in a component you can use the `run` function that is provided by the template function.
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
 
 ```TS
@@ -267,7 +267,7 @@ describe('AppComponent', () => {
 ```
 
 LitKit has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
-This means you can manually create instances of your component and run them in Node.
+This means you can manually create instances of your component and test them independently of lit-kit
 
 ```TS
 import { AppComponent, AppState } from './app.component';
@@ -283,7 +283,6 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
 ```
 
 ### Legacy Browser support (IE11)
