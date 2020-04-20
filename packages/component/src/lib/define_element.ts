@@ -23,33 +23,6 @@ export type ElementInstance<Component, State> = HTMLElement & {
   [key: string]: any;
 };
 
-/**s
- * Map custom element properties to component instance properties.
- * Only maps properties that are decorated with the @Prop() decorator.
- */
-function mapComponentProperties(el: ElementInstance<any, any>) {
-  const metadata = el.componentMetadata;
-  const instance = el.componentInstance;
-  const length = metadata.props.length;
-
-  for (let i = 0; i < length; i++) {
-    const prop = metadata.props[i];
-
-    Object.defineProperty(el, prop, {
-      set: (newValue) => {
-        const oldValue = instance[prop];
-
-        instance[prop] = newValue;
-
-        if (instance.onPropChanges) {
-          instance.onPropChanges(prop, oldValue, newValue);
-        }
-      },
-      get: () => instance[prop],
-    });
-  }
-}
-
 function connectComponent<Component, State>(el: ElementInstance<Component, State>) {
   if ((window as any).ShadyCSS) {
     (window as any).ShadyCSS.styleElement(el);
@@ -82,13 +55,14 @@ function connectComponent<Component, State>(el: ElementInstance<Component, State
 
 export function defineElement<T>(component: ClassProviderToken<any>) {
   const componentDef = getComponentDef<T>(component);
+  const componentMetadata = getComponentMetadataRef(component);
   const componentProviders = componentDef.use || [];
 
-  return class extends HTMLElement implements ElementInstance<any, T> {
+  const LitKitElement = class extends HTMLElement implements ElementInstance<any, T> {
     static observedAttributes = componentDef.observedAttributes;
 
     public componentDef: ComponentDef<T> = componentDef;
-    public componentMetadata: ComponentMetadata = getComponentMetadataRef(component);
+    public componentMetadata: ComponentMetadata = componentMetadata;
 
     public componentInjector = new Injector(
       {
@@ -112,7 +86,7 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
         this.attachShadow({ mode: 'open' });
       }
 
-      mapComponentProperties(this);
+      // mapComponentProperties(this);
     }
 
     public connectedCallback() {
@@ -135,4 +109,31 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
       }
     }
   };
+
+  const length = componentMetadata.props.length;
+
+  for (let i = 0; i < length; i++) {
+    const prop = componentMetadata.props[i];
+
+    Object.defineProperty(LitKitElement.prototype, prop, {
+      set(newValue) {
+        const self = this as ElementInstance<any, any>;
+        const instance = self.componentInstance;
+        const oldValue = instance[prop];
+
+        instance[prop] = newValue;
+
+        if (instance.onPropChanges) {
+          instance.onPropChanges(prop, oldValue, newValue);
+        }
+      },
+      get() {
+        const self = this as ElementInstance<any, any>;
+
+        return self.componentInstance[prop];
+      },
+    });
+  }
+
+  return LitKitElement;
 }
