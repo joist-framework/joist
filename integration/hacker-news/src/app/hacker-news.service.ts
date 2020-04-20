@@ -33,10 +33,10 @@ export function HackerNewsRef(c: any, p: string, i: number) {
 @Service()
 export class HackerNewsService {
   getNews(): Promise<HackerNewsItem[]> {
-    return fetch('https://api.hackerwebapp.com/news').then(res => res.json());
+    return fetch('https://api.hackerwebapp.com/news').then((res) => res.json());
   }
 
   getNewsItem(id: number): Promise<HackerNewsItemFull> {
-    return fetch(`https://api.hackerwebapp.com/item/${id}`).then(res => res.json());
+    return fetch(`https://api.hackerwebapp.com/item/${id}`).then((res) => res.json());
   }
 }

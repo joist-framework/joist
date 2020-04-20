@@ -10,22 +10,15 @@ This document outlines the overall design for lit-kit
 
 ### All that is needed to create an element is to call `document.createElement`;
 
-- The custom element class holds ALL of the information needed to render and update a component.
-- It does this by attaching all important information onto properties on the element itself in what is defined as an `ElementInstance`
+- The custom element will have properties for the componentInjector and the componentInstance
 
 ```TS
-type ElementInstance<C, S> = HTMLElement & {
+type ElementInstance<C> = HTMLElement & {
   // The injector available to the commponent. Is passed the parent injector if it exists
   componentInjector: Injector;
 
   // The actual instance of the component defined by the user
   componentInstance: ComponentInstance<C>;
-
-  // metadata used when the component is running
-  componentMetadata: Metadata<S>;
-
-  // the component definition. Lays out things like the template and state
-  componentDef: ComponentDef<State>;
 };
 ```
 
@@ -58,7 +51,7 @@ customElements.define('app-root', defineElement(AppComponent));
 ### Properties for the custom element are stored to the component instance with the component instance being the source of truth.
 
 ```TS
-const el: ElementInstance<C, S>;
+const el: ElementInstance<C>;
 
 el.foo = 'hello world';
 

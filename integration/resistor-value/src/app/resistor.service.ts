@@ -12,7 +12,7 @@ export enum ResistorBandColor {
   Grey = 'grey',
   White = 'white',
   Gold = 'gold',
-  Silver = 'silver'
+  Silver = 'silver',
 }
 
 export interface ResistorBand {
@@ -32,67 +32,67 @@ export class ResistorService {
     {
       color: ResistorBandColor.Black,
       value: 0,
-      multiplier: 1
+      multiplier: 1,
     },
     {
       color: ResistorBandColor.Brown,
       value: 1,
       multiplier: 10,
-      tolerance: 1
+      tolerance: 1,
     },
     {
       color: ResistorBandColor.Red,
       value: 2,
       multiplier: 100,
-      tolerance: 2
+      tolerance: 2,
     },
     {
       color: ResistorBandColor.Organge,
       value: 3,
-      multiplier: 1000
+      multiplier: 1000,
     },
     {
       color: ResistorBandColor.Yellow,
       value: 4,
-      multiplier: 10000
+      multiplier: 10000,
     },
     {
       color: ResistorBandColor.Green,
       value: 5,
       multiplier: 100000,
-      tolerance: 0.5
+      tolerance: 0.5,
     },
     {
       color: ResistorBandColor.Blue,
       value: 6,
       multiplier: 1000000,
-      tolerance: 0.25
+      tolerance: 0.25,
     },
     {
       color: ResistorBandColor.Violet,
       value: 7,
       multiplier: 10000000,
-      tolerance: 0.1
+      tolerance: 0.1,
     },
     {
       color: ResistorBandColor.Grey,
       value: 8,
-      tolerance: 0.05
+      tolerance: 0.05,
     },
     {
       color: ResistorBandColor.White,
-      value: 9
+      value: 9,
     },
     {
       color: ResistorBandColor.Gold,
       multiplier: 0.1,
-      tolerance: 5
+      tolerance: 5,
     },
     {
       color: ResistorBandColor.Silver,
       multiplier: 0.01,
-      tolerance: 10
-    }
+      tolerance: 10,
+    },
   ];
 
   getResistorBands(): ResistorBand[] {
@@ -100,15 +100,15 @@ export class ResistorService {
   }
 
   getValueBands() {
-    return this.bands.filter(b => typeof b.value !== 'undefined');
+    return this.bands.filter((b) => typeof b.value !== 'undefined');
   }
 
   getMultiplierBands() {
-    return this.bands.filter(b => !!b.multiplier);
+    return this.bands.filter((b) => !!b.multiplier);
   }
 
   getToleranceBands() {
-    return this.bands.filter(b => !!b.tolerance);
+    return this.bands.filter((b) => !!b.tolerance);
   }
 
   getResistorValue(bands: ResistorBand[], bandLimit: number): string {

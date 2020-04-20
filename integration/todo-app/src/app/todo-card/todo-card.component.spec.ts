@@ -1,12 +1,12 @@
 import { ElementInstance } from '@lit-kit/component';
 
-import { TodoCardComponent, TodoCardState } from './todo-card.component';
+import { TodoCardComponent } from './todo-card.component';
 
 describe('TodoCardComponent', () => {
-  let el: ElementInstance<TodoCardComponent, TodoCardState>;
+  let el: ElementInstance<TodoCardComponent>;
 
   beforeEach(() => {
-    el = document.createElement('todo-card') as ElementInstance<TodoCardComponent, TodoCardState>;
+    el = document.createElement('todo-card') as ElementInstance<TodoCardComponent>;
 
     document.body.appendChild(el);
   });

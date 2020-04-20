@@ -13,15 +13,15 @@ export class State<T> {
   }
 
   setValue(state: T | Promise<T>): Promise<void> {
-    return Promise.resolve(state).then(res => {
+    return Promise.resolve(state).then((res) => {
       this.currentState = res;
 
-      this.listeners.forEach(cb => cb(this.value));
+      this.listeners.forEach((cb) => cb(this.value));
     });
   }
 
   patchValue(state: Partial<T> | Promise<Partial<T>>) {
-    return Promise.resolve(state).then(res => {
+    return Promise.resolve(state).then((res) => {
       try {
         this.setValue({ ...this.value, ...res });
       } catch (err) {
@@ -34,7 +34,7 @@ export class State<T> {
     this.listeners.push(cb);
 
     return () => {
-      this.listeners = this.listeners.filter(currentCb => currentCb !== cb);
+      this.listeners = this.listeners.filter((currentCb) => currentCb !== cb);
     };
   }
 }

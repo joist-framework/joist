@@ -5,7 +5,7 @@ import { RouterOutletComponent, RouterOutletState } from './router_outlet.compon
 import { Route } from '../router';
 
 describe('RouterOutletComponent', () => {
-  let el: ElementInstance<RouterOutletComponent, RouterOutletState>;
+  let el: ElementInstance<RouterOutletComponent>;
 
   @Component({ template: () => html`` })
   class One {}
@@ -14,10 +14,7 @@ describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', defineElement(RouterOutletComponent));
 
   beforeEach(() => {
-    el = document.createElement('router-outlet') as ElementInstance<
-      RouterOutletComponent,
-      RouterOutletState
-    >;
+    el = document.createElement('router-outlet') as ElementInstance<RouterOutletComponent>;
 
     document.body.appendChild(el);
   });

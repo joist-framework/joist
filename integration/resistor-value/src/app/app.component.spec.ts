@@ -1,12 +1,12 @@
 import { ElementInstance } from '@lit-kit/component';
 
-import { AppComponent, AppState } from './app.component';
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  let el: ElementInstance<AppComponent, AppState>;
+  let el: ElementInstance<AppComponent>;
 
   beforeEach(() => {
-    el = document.createElement('app-root') as ElementInstance<AppComponent, AppState>;
+    el = document.createElement('app-root') as ElementInstance<AppComponent>;
   });
 
   it('should work', () => {

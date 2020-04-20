@@ -7,23 +7,25 @@ import { getEnvironmentRef } from './environment';
 import { Lifecycle } from './lifecycle';
 import {
   getComponentMetadataRef,
-  ComponentDef,
-  ComponentMetadata,
   TemplateEvent,
   getComponentDef,
+  ComponentMetadata,
+  ComponentDef,
 } from './metadata';
 
 export type ComponentInstance<T> = T & Lifecycle;
 
-export type ElementInstance<Component, State> = HTMLElement & {
+export type ElementInstance<Component> = HTMLElement & {
   componentInjector: Injector;
   componentInstance: ComponentInstance<Component>;
-  componentMetadata: ComponentMetadata;
-  componentDef: ComponentDef<State>;
   [key: string]: any;
 };
 
-function connectComponent<Component, State>(el: ElementInstance<Component, State>) {
+function connectComponent<Component, State>(
+  el: ElementInstance<Component>,
+  componentMetadata: ComponentMetadata,
+  componentDef: ComponentDef<any>
+) {
   if ((window as any).ShadyCSS) {
     (window as any).ShadyCSS.styleElement(el);
   }
@@ -33,8 +35,8 @@ function connectComponent<Component, State>(el: ElementInstance<Component, State
   const renderOptions = { scopeName: el.tagName.toLowerCase(), eventContext: el };
 
   const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
-    if (eventName in el.componentMetadata.handlers) {
-      el.componentMetadata.handlers[eventName].call(el.componentInstance, e, payload);
+    if (eventName in componentMetadata.handlers) {
+      componentMetadata.handlers[eventName].call(el.componentInstance, e, payload);
     }
   };
 
@@ -43,7 +45,7 @@ function connectComponent<Component, State>(el: ElementInstance<Component, State
   };
 
   const componentRender = (state: State) => {
-    renderer.render(el.componentDef.template(state, run, dispatch), base, renderOptions);
+    renderer.render(componentDef.template(state, run, dispatch), base, renderOptions);
   };
 
   componentRender(el.componentInjector.get(State).value);
@@ -58,11 +60,8 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
   const componentMetadata = getComponentMetadataRef(component);
   const componentProviders = componentDef.use || [];
 
-  const LitKitElement = class extends HTMLElement implements ElementInstance<any, T> {
+  const LitKitElement = class extends HTMLElement implements ElementInstance<any> {
     static observedAttributes = componentDef.observedAttributes;
-
-    public componentDef: ComponentDef<T> = componentDef;
-    public componentMetadata: ComponentMetadata = componentMetadata;
 
     public componentInjector = new Injector(
       {
@@ -88,7 +87,7 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
     }
 
     public connectedCallback() {
-      connectComponent(this);
+      connectComponent(this, componentMetadata, componentDef);
 
       if (this.componentInstance.connectedCallback) {
         this.componentInstance.connectedCallback();
@@ -120,7 +119,7 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
 
     Object.defineProperty(LitKitElement.prototype, prop, {
       set(newValue) {
-        const self = this as ElementInstance<any, any>;
+        const self = this as ElementInstance<any>;
         const instance = self.componentInstance;
         const oldValue = instance[prop];
 
@@ -131,7 +130,7 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
         }
       },
       get() {
-        const self = this as ElementInstance<any, any>;
+        const self = this as ElementInstance<any>;
 
         return self.componentInstance[prop];
       },

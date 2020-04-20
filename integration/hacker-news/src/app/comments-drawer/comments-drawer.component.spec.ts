@@ -1,15 +1,12 @@
 import { ElementInstance } from '@lit-kit/component';
 
-import { CommentsDrawerState, CommentsDrawerComponent } from './comments-drawer.component';
+import { CommentsDrawerComponent } from './comments-drawer.component';
 
 describe('LoaderComponent', () => {
-  let el: ElementInstance<CommentsDrawerComponent, CommentsDrawerState>;
+  let el: ElementInstance<CommentsDrawerComponent>;
 
   beforeEach(() => {
-    el = document.createElement('app-loader') as ElementInstance<
-      CommentsDrawerComponent,
-      CommentsDrawerState
-    >;
+    el = document.createElement('app-loader') as ElementInstance<CommentsDrawerComponent>;
   });
 
   it('should work', () => {

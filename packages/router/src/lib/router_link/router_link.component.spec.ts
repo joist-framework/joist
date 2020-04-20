@@ -1,10 +1,10 @@
 import { defineElement, ElementInstance, Component, State } from '@lit-kit/component';
 import { html } from 'lit-html';
 
-import { RouterLinkComponent, RouterLinkState } from './router_link.component';
+import { RouterLinkComponent } from './router_link.component';
 
 describe('RouterLinkComponent', () => {
-  let el: ElementInstance<TestBed, void>;
+  let el: ElementInstance<TestBed>;
 
   @Component({
     template: () => html`<router-link .path=${'/foo'}>Hello World</router-link>`,
@@ -15,7 +15,7 @@ describe('RouterLinkComponent', () => {
   customElements.define('routerlink-test', defineElement(TestBed));
 
   function init() {
-    el = document.createElement('routerlink-test') as ElementInstance<TestBed, void>;
+    el = document.createElement('routerlink-test') as ElementInstance<TestBed>;
 
     document.body.appendChild(el);
   }
@@ -30,7 +30,7 @@ describe('RouterLinkComponent', () => {
 
     const routerLinks = el.querySelectorAll('router-link');
 
-    const first = routerLinks[0] as ElementInstance<RouterLinkComponent, RouterLinkState>;
+    const first = routerLinks[0] as ElementInstance<RouterLinkComponent>;
 
     first.componentInjector.get(State).onChange(() => {
       const anchor = first.querySelector('a') as HTMLAnchorElement;
@@ -48,7 +48,7 @@ describe('RouterLinkComponent', () => {
     init();
 
     const routerLinks = el.querySelectorAll('router-link');
-    const first = routerLinks[0] as ElementInstance<RouterLinkComponent, RouterLinkState>;
+    const first = routerLinks[0] as ElementInstance<RouterLinkComponent>;
 
     first.componentInjector.get(State).onChange(() => {
       expect(first.classList.contains('active')).toBeTrue();

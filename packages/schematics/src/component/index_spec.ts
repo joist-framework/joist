@@ -80,13 +80,11 @@ describe('new-component', () => {
     });
 
     it('should create an element instance', () => {
-      expect(
-        content.includes(`let el: ElementInstance<HelloWorldComponent, HelloWorldState>;`)
-      ).toBe(true);
+      expect(content.includes(`let el: ElementInstance<HelloWorldComponent>;`)).toBe(true);
 
       expect(
         content.includes(
-          `el = document.createElement('hello-world') as ElementInstance<HelloWorldComponent, HelloWorldState>;`
+          `el = document.createElement('hello-world') as ElementInstance<HelloWorldComponent>;`
         )
       ).toBe(true);
     });

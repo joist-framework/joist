@@ -2,13 +2,13 @@ import './todo-form.component';
 
 import { ElementInstance } from '@lit-kit/component';
 
-import { TodoFormComponent, TodoFormState } from './todo-form.component';
+import { TodoFormComponent } from './todo-form.component';
 
 fdescribe('TodoFormComponent', () => {
-  let el: ElementInstance<TodoFormComponent, TodoFormState>;
+  let el: ElementInstance<TodoFormComponent>;
 
   beforeEach(() => {
-    el = document.createElement('todo-form') as ElementInstance<TodoFormComponent, TodoFormState>;
+    el = document.createElement('todo-form') as ElementInstance<TodoFormComponent>;
 
     document.body.appendChild(el);
   });

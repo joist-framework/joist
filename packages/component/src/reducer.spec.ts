@@ -36,7 +36,7 @@ describe('Reducer', () => {
   customElements.define('reducer-test-1', defineElement(MyComponent));
 
   it('should increment the state by 1', (done) => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent, number>;
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
     const component = el.componentInstance;
 
     component.increment().then(() => {
@@ -47,7 +47,7 @@ describe('Reducer', () => {
   });
 
   it('should decrement the state by 1', (done) => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent, number>;
+    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
     const component = el.componentInstance;
 
     component.decrement().then(() => {

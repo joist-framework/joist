@@ -2,7 +2,6 @@ import { Injector } from '@lit-kit/di';
 import { html } from 'lit-html';
 
 import { defineElement, ElementInstance } from './define_element';
-import { State } from './state';
 import { Prop } from './prop';
 import { Handle } from './handle';
 import { Component } from './component';
@@ -17,21 +16,15 @@ describe('Component', () => {
     customElements.define('create-1', defineElement(MyComponent));
 
     it('should create a componentInjector property', () => {
-      const el = document.createElement('create-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('create-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInjector instanceof Injector).toBe(true);
     });
 
     it('should create a componentInstance property', () => {
-      const el = document.createElement('create-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('create-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInstance instanceof MyComponent).toBe(true);
-    });
-
-    it('should create a componentState property', () => {
-      const el = document.createElement('create-1') as ElementInstance<MyComponent, void>;
-
-      expect(el.componentState instanceof State).toBe(true);
     });
   });
 
@@ -46,14 +39,14 @@ describe('Component', () => {
     customElements.define('props-1', defineElement(MyComponent));
 
     it('should use the value from the componentInstance when getting a property value from the custom element', () => {
-      const el = document.createElement('props-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('props-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInstance.foo).toBe('Hello World');
       expect(el.foo).toBe('Hello World');
     });
 
     it('should set componentInstance props when they are set on the custom element', () => {
-      const el = document.createElement('props-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('props-1') as ElementInstance<MyComponent>;
 
       el.foo = 'Hello World - 2';
 
@@ -79,7 +72,7 @@ describe('Component', () => {
 
       customElements.define('handlers-1', defineElement(MyComponent));
 
-      const el = document.createElement('handlers-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('handlers-1') as ElementInstance<MyComponent>;
 
       el.connectedCallback();
 
@@ -101,7 +94,7 @@ describe('Component', () => {
 
       customElements.define('providers-1', defineElement(MyComponent));
 
-      const el = document.createElement('providers-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('providers-1') as ElementInstance<MyComponent>;
 
       expect(el.componentInjector.get(TestToken)).toBe('Hello World');
     });
@@ -116,7 +109,7 @@ describe('Component', () => {
 
       customElements.define('shadowdom-1', defineElement(MyComponent));
 
-      const el = document.createElement('shadowdom-1') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('shadowdom-1') as ElementInstance<MyComponent>;
 
       el.connectedCallback();
 
@@ -132,7 +125,7 @@ describe('Component', () => {
 
       customElements.define('shadowdom-2', defineElement(MyComponent));
 
-      const el = document.createElement('shadowdom-2') as ElementInstance<MyComponent, void>;
+      const el = document.createElement('shadowdom-2') as ElementInstance<MyComponent>;
 
       el.connectedCallback();
 

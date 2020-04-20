@@ -3,10 +3,10 @@ import { createComponent, ElementInstance } from '@lit-kit/component';
 import { <%= classify(name) %>Component, <%= classify(name) %>State } from './<%= name %>.component';
 
 describe('<%= classify(name) %>Component', () => {
-  let el: ElementInstance<<%= classify(name) %>Component, <%= classify(name) %>State>;
+  let el: ElementInstance<<%= classify(name) %>Component>;
 
   beforeEach(() => {
-    el = document.createElement('<%= name %>') as ElementInstance<<%= classify(name) %>Component, <%= classify(name) %>State>;
+    el = document.createElement('<%= name %>') as ElementInstance<<%= classify(name) %>Component>;
     
     document.body.appendChild(el);
   });

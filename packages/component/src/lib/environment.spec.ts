@@ -35,7 +35,7 @@ describe('environment', () => {
 
     bootstrapEnvironment();
 
-    const el = document.createElement('environment-1') as ElementInstance<any, any>;
+    const el = document.createElement('environment-1') as ElementInstance<any>;
 
     expect(el.componentInstance.myService).toBe(getEnvironmentRef()!.get(MyService));
   });

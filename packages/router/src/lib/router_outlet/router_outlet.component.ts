@@ -87,7 +87,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
       }
 
       if ('componentInjector' in activeComponent) {
-        const litKitComponent = activeComponent as ElementInstance<any, any>;
+        const litKitComponent = activeComponent as ElementInstance<any>;
 
         return litKitComponent.componentInjector
           .get(RouteCtx)

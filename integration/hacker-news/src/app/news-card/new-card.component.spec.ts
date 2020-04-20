@@ -1,12 +1,12 @@
 import { ElementInstance } from '@lit-kit/component';
 
-import { NewsCardComponent, NewsCardState } from './news-card.component';
+import { NewsCardComponent } from './news-card.component';
 
 describe('AppComponent', () => {
-  let el: ElementInstance<NewsCardComponent, NewsCardState>;
+  let el: ElementInstance<NewsCardComponent>;
 
   beforeEach(() => {
-    el = document.createElement('app-root') as ElementInstance<NewsCardComponent, NewsCardState>;
+    el = document.createElement('app-root') as ElementInstance<NewsCardComponent>;
   });
 
   it('should work', () => {

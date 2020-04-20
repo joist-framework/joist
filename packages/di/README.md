@@ -54,8 +54,8 @@ class BarService {
 // Override FooService with an alternate implementation
 const app = new Injector({
   providers: [
-    { 
-      provide: FooService, 
+    {
+      provide: FooService,
       useClass: class extends FooService {
         sayHello() {
           return 'IT HAS BEEN OVERRIDEN'

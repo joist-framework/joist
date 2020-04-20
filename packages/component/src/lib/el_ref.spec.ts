@@ -13,7 +13,7 @@ describe('ElRef', () => {
   customElements.define('el-ref-1', defineElement(MyComponent));
 
   it('should provide an instance of the Custom Element', () => {
-    const el = document.createElement('el-ref-1') as ElementInstance<MyComponent, void>;
+    const el = document.createElement('el-ref-1') as ElementInstance<MyComponent>;
 
     expect(el.componentInstance.elRef).toBe(el);
   });
