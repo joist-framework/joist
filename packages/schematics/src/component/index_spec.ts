@@ -84,7 +84,11 @@ describe('new-component', () => {
         content.includes(`let el: ElementInstance<HelloWorldComponent, HelloWorldState>;`)
       ).toBe(true);
 
-      expect(content.includes(`el = createComponent(HelloWorldComponent);`)).toBe(true);
+      expect(
+        content.includes(
+          `el = document.createElement('hello-world') as ElementInstance<HelloWorldComponent, HelloWorldState>;`
+        )
+      ).toBe(true);
     });
   });
 });
