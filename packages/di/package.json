@@ -29,8 +29,8 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "ts-node ../../node_modules/jasmine/bin/jasmine src/lib/*.spec.ts",
-    "build:browser": "../../node_modules/.bin/tsc --outDir out-module --module esnext",
-    "build:node": "../../node_modules/.bin/tsc --outDir out-common --module commonjs",
+    "build:module": "../../node_modules/.bin/tsc --outDir out-module --module esnext",
+    "build:common": "../../node_modules/.bin/tsc --outDir out-common --module commonjs",
     "build": "npm run build:browser && npm run build:node"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
