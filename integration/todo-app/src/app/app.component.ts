@@ -1,7 +1,7 @@
 import './todo-form/todo-form.component';
 import './todo-card/todo-card.component';
 
-import { Component, StateRef, State, Handle, OnConnected } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, OnConnected, defineElement } from '@lit-kit/component';
 import { html } from 'lit-html';
 
 import { TodoRef, TodoService, Todo } from './todo.service';
@@ -11,40 +11,36 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  tag: 'app-root',
   initialState: { todos: [] },
   useShadowDom: false,
-  styles: [
-    `
-      app-root {
-        display: block;
-      }
-
-      app-root todo-form {
-        width: 100%;
-        margin-bottom: 0.5rem;
-      }
-
-      app-root todo-card {
-        margin-bottom: 0.5rem;
-      }
-
-      app-root .placeholder {
-        font-size: 1.5rem;
-        text-align: center;
-        padding: 1rem 0;
-        color: gray;
-      }
-    `
-  ],
   template(state, run) {
     return html`
+      <style>
+        app-root {
+          display: block;
+        }
+
+        app-root todo-form {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+
+        app-root todo-card {
+          margin-bottom: 0.5rem;
+        }
+
+        app-root .placeholder {
+          font-size: 1.5rem;
+          text-align: center;
+          padding: 1rem 0;
+          color: gray;
+        }
+      </style>
+
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
       ${!state.todos.length
-        ? html`
-            <div class="placeholder">Looks Like Everything is Done!</div>
-          `
+        ? html` <div class="placeholder">Looks Like Everything is Done!</div> `
         : ''}
 
       <section>
@@ -60,7 +56,7 @@ export interface AppState {
         })}
       </section>
     `;
-  }
+  },
 })
 export class AppComponent implements OnConnected {
   constructor(
@@ -71,7 +67,7 @@ export class AppComponent implements OnConnected {
   connectedCallback(): void {
     this.componentState.setValue({ todos: this.todo.todos.value });
 
-    this.todo.todos.onChange(todos => {
+    this.todo.todos.onChange((todos) => {
       this.componentState.setValue({ todos });
     });
   }
@@ -92,3 +88,5 @@ export class AppComponent implements OnConnected {
     this.todo.markTodoAsComplete(payload, false);
   }
 }
+
+customElements.define('app-root', defineElement(AppComponent));
