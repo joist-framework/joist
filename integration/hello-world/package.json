@@ -16,6 +16,6 @@
   "dependencies": {
     "@lit-kit/component": "file:../../packages/component",
     "@lit-kit/di": "file:../../packages/di",
-    "lit-html": "1.1.2"
+    "lit-html": "1.2.1"
   }
 }
