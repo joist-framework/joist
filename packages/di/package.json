@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit/di",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "main": "out-common/public_api.js",
   "module": "out-module/public_api.js",
   "files": [
