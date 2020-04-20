@@ -108,7 +108,7 @@ export function defineElement<T>(component: ClassProviderToken<any>) {
     }
   };
 
-  /**s
+  /**
    * Map custom element properties to component instance properties.
    * Only maps properties that are decorated with the @Prop() decorator.
    *
