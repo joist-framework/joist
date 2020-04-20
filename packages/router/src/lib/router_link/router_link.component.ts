@@ -7,6 +7,7 @@ import {
   ElRef,
   OnConnected,
   OnDisconnected,
+  defineElement,
 } from '@lit-kit/component';
 
 import { RouterRef, Router } from '../router';
@@ -93,3 +94,5 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
     }
   }
 }
+
+export const RouterLinkElement = defineElement(RouterLinkComponent);

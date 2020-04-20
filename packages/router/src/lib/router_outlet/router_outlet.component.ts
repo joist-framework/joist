@@ -6,6 +6,7 @@ import {
   OnConnected,
   OnDisconnected,
   ElementInstance,
+  defineElement,
 } from '@lit-kit/component';
 import { html } from 'lit-html';
 import { MatchFunction, Match } from 'path-to-regexp';
@@ -98,3 +99,5 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
     });
   }
 }
+
+export const RouterOutletElement = defineElement(RouterOutletComponent);
