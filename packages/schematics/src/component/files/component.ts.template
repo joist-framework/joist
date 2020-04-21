@@ -5,8 +5,7 @@ export interface <%= classify(name) %>State {}
 
 @Component<<%= classify(name) %>State>({
   initialState: {},
-  styles: [],
-  template(_state, _run, _dispatch) {
+  template({ state }) {
     return html`
       <%= name %> Worked!
     `;

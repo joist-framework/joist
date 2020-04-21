@@ -13,7 +13,7 @@ export interface AppState {
 @Component<AppState>({
   initialState: { todos: [] },
   useShadowDom: false,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <style>
         app-root {

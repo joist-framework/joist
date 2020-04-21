@@ -19,7 +19,7 @@ export interface CommentsDrawerState {
 @Component<CommentsDrawerState>({
   initialState: { comments: [] },
   useShadowDom: true,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <style>
         :host {

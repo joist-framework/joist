@@ -20,7 +20,7 @@ interface SelectBandCountState {
 @Component<SelectBandCountState>({
   initialState: { bandLimit: 0, selectedBands: [] },
   useShadowDom: true,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <style>
         :host {

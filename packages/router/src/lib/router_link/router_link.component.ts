@@ -27,7 +27,7 @@ export class ActiveOptions {
 @Component<RouterLinkState>({
   initialState: null,
   useShadowDom: false,
-  template: (state) => html` ${state} `,
+  template: ({ state }) => html`${state}`,
 })
 export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';

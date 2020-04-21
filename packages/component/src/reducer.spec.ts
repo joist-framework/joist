@@ -6,7 +6,7 @@ import { Component } from './lib/component';
 describe('Reducer', () => {
   @Component({
     initialState: 0,
-    template: (state) => html` ${state} `,
+    template: ({ state }) => html` ${state} `,
     use: [
       withReducer<number>((action, state) => {
         switch (action.type) {

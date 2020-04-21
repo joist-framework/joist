@@ -31,7 +31,7 @@ type ElementInstance<C> = HTMLElement & {
 ```TS
 @Component<number>({
   initialState: 0,
-  template(state) {
+  template({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
@@ -87,7 +87,7 @@ bootstrapEnvironment(); // create global root injector for global singletons
 
 ```TS
 
-function template(state: number, run: TemplateEvent): TemplateResult {
+function template(ctx: TemplateCtx<number>): TemplateResult {
   return html`<h1>${state}</h1>`
 }
 

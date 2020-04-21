@@ -25,7 +25,7 @@ export interface AppState {
     displayColors: false,
   },
   useShadowDom: true,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <style>
         select-band-color {

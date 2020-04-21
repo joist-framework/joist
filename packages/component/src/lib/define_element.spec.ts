@@ -57,7 +57,7 @@ describe('defineElement', () => {
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', (done) => {
       @Component({
-        template(_, run) {
+        template({ run }) {
           return html` <button @click=${run('TEST_RUN', 'Hello World')}>click</button> `;
         },
       })
@@ -73,6 +73,35 @@ describe('defineElement', () => {
       customElements.define('handlers-1', defineElement(MyComponent));
 
       const el = document.createElement('handlers-1') as ElementInstance<MyComponent>;
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+    });
+  });
+
+  describe('dispatch', () => {
+    it('should dispatch and event using Ctx.dispatch', (done) => {
+      @Component({
+        template({ dispatch }) {
+          return html` <button @click=${dispatch('TEST_DISPATCH', 'Hello World')}>click</button> `;
+        },
+      })
+      class MyComponent {}
+
+      customElements.define('dispatch1-1', defineElement(MyComponent));
+
+      const el = document.createElement('dispatch1-1') as ElementInstance<MyComponent>;
+
+      el.addEventListener('TEST_DISPATCH', (e) => {
+        const event = e as CustomEvent<string>;
+
+        expect(event.detail).toBe('Hello World');
+
+        done();
+      });
 
       el.connectedCallback();
 

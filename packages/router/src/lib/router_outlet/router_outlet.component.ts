@@ -18,7 +18,7 @@ export type RouterOutletState = (HTMLElement & { [key: string]: any }) | null;
 @Component<RouterOutletState>({
   initialState: null,
   useShadowDom: false,
-  template: (state) => html`${state}`,
+  template: ({ state }) => html`${state}`,
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];

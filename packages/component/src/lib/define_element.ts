@@ -45,7 +45,7 @@ function connectComponent<Component, State>(
   };
 
   const componentRender = (state: State) => {
-    renderer.render(componentDef.template(state, run, dispatch), base, renderOptions);
+    renderer.render(componentDef.template({ state, run, dispatch }), base, renderOptions);
   };
 
   componentRender(el.componentInjector.get(State).value);

@@ -6,11 +6,13 @@ export const COMPONENT_DEF_KEY = 'litKitComponentDef';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
 
-export type TemplateDef<T> = (
-  state: T,
-  run: TemplateEvent,
-  dispatch: (eventName: string, detail?: any) => () => void
-) => TemplateResult;
+export interface TemplateCtx<T> {
+  state: T;
+  run: TemplateEvent;
+  dispatch: (eventName: string, detail?: any) => () => void;
+}
+
+export type TemplateDef<T> = (ctx: TemplateCtx<T>) => TemplateResult;
 
 export interface ComponentDef<T> {
   template: TemplateDef<T>;

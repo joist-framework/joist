@@ -49,7 +49,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   initialState: 0,
-  template(state) {
+  template({ state }) {
     return html`${state}`
   }
 })
@@ -77,7 +77,7 @@ import { html } from 'lit-html';
 
 @Component<string>({
   initialState: '',
-  template(state) {
+  template({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
@@ -106,7 +106,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   initialState: 0,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <button @click=${run('DECREMENT')}>Decrement</button>
 
@@ -145,7 +145,7 @@ import { html } from 'lit-html';
 
 @Component<number>({
   initialState: 0,
-  template(state, run, dispatch) {
+  template({ state, run, dispatch }) {
     return html`
       <button @click=${dispatch('DECREMENT')}>Decrement</button>
 
@@ -181,7 +181,7 @@ interface AppState {
 @Component<AppState>({
   tag: 'app-root',
   initialState: { loading: false, data: [] },
-  template: state => html`${JSON.stringify(state)}`
+  template: ({ state }) => html`${JSON.stringify(state)}`
 })
 class AppComponent {
   constructor(@StateRef private state: State<AppState>) {}
@@ -209,7 +209,7 @@ import { withReducer, ReducerStateRef, ReducerState } from '@lit-kit/component/l
 
 @Component({
   initialState: 0,
-  template: state => html`<h1>${state}</h1>`
+  template: ({ state }) => html`<h1>${state}</h1>`
   use: [
     withReducer<number>((action, state) => {
       switch (action.type) {

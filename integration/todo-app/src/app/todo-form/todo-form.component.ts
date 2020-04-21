@@ -8,7 +8,7 @@ export interface TodoFormState {
 @Component<TodoFormState>({
   initialState: { todo: '' },
   useShadowDom: true,
-  template(state, run) {
+  template({ state, run }) {
     return html`
       <form @submit=${run('FORM_SUBMIT')}>
         <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state.todo} />

@@ -6,7 +6,7 @@ import { ResistorBand } from './resistor.service';
 @Component<ResistorBand[]>({
   initialState: [],
   useShadowDom: true,
-  template(state) {
+  template({ state }) {
     return html`
       <style>
         :host {

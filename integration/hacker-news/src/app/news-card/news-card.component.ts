@@ -8,7 +8,7 @@ export type NewsCardState = HackerNewsItem | null;
 @Component<NewsCardState>({
   initialState: null,
   useShadowDom: true,
-  template(state, _run) {
+  template({ state }) {
     if (!state) {
       return html``;
     }
