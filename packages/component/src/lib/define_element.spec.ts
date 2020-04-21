@@ -6,7 +6,7 @@ import { Prop } from './prop';
 import { Handle } from './handle';
 import { Component } from './component';
 
-describe('Component', () => {
+describe('defineElement', () => {
   describe('creation', () => {
     @Component({
       template: () => html` <h1>Hello World</h1> `,
