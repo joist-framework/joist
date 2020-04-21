@@ -31,8 +31,8 @@
     "build": "../../node_modules/.bin/tsc --outDir lib --module es2015"
   },
   "peerDependencies": {
-    "@lit-kit/component": "^1.0.0",
-    "@lit-kit/di": "^1.0.0"
+    "@lit-kit/component": "^2.0.0",
+    "@lit-kit/di": "^2.0.0"
   },
   "dependencies": {
     "path-to-regexp": "^6.1.0"
