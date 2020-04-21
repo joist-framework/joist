@@ -29,7 +29,7 @@ import { html } from 'lit-html';
 
 @Component<string>({
   initialState: 'Hello World',
-  template(state) {
+  template({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
