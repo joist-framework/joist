@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-examples/hacker-news",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0",
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
