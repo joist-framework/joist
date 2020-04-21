@@ -251,7 +251,7 @@ describe('AppComponent', () => {
   customElements.define('test-app-component-1', defineElement(AppComponent));
 
   beforeEach(() => {
-    el = document.createElement('app-root');
+    el = document.createElement('test-app-component-1');
 
     document.body.appendChild(el);
   });
