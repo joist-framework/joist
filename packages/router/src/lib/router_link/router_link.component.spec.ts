@@ -35,6 +35,8 @@ describe('RouterLinkComponent', () => {
     first.componentInjector.get(State).onChange(() => {
       const anchor = first.querySelector('a') as HTMLAnchorElement;
 
+      console.log(anchor);
+
       expect(anchor).toBeTruthy();
       expect(anchor.innerHTML).toBe('Hello World');
 

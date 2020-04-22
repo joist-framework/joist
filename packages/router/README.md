@@ -11,7 +11,10 @@ npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
 #### Example:
 
 ```TS
-import { Route, RouteCtxRef, RouteCtx, ActiveOptions, defineElement } from '@lit-kit/router';
+import { Component, registerElement } from '@lit-kit/component';
+import { Route, RouteCtxRef, RouteCtx, ActiveOptions, registerRouterElements } from '@lit-kit/router';
+
+registerRouterElements();
 
 const routes: Route[] = [
   // Eager component route
@@ -32,13 +35,8 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { title: 'Hello World' },
   template(state) {
     return html`
-      <header>
-        <h1>${state.title}</h1>
-      </header>
-
       <router-link .path=${'/'} .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
         Go To Foo
       </router-link>
