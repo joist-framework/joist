@@ -4,8 +4,8 @@
   "main": "out-common/public_api.js",
   "module": "out-module/public_api.js",
   "files": [
-    "out-browser/**/*",
-    "out-node/**/*"
+    "out-common/**/*",
+    "out-browser/**/*"
   ],
   "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
