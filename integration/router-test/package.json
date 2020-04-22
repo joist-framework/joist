@@ -1,6 +1,6 @@
 {
   "name": "@lit-kit-examples/router-test",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Hello World",
   "private": true,
   "scripts": {
