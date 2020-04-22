@@ -5,7 +5,7 @@
   "module": "out-module/public_api.js",
   "files": [
     "out-common/**/*",
-    "out-browser/**/*"
+    "out-module/**/*"
   ],
   "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
