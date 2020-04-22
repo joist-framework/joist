@@ -1,6 +1,6 @@
 # @lit-kit/component
 
-This package lets you create web components using [lit-html](https://lit-html.polymer-project.org/). Broadly speaking a "lit-kit" component acts as the state manager for your custom elements. They control the data and the view.
+This package lets you create web components using [lit-html](https://lit-html.polymer-project.org/). Broadly speaking a "lit-kit" component acts as the state manager for your custom element meaing that it controls the data and the view.
 
 ### Installation
 
