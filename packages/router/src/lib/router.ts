@@ -4,7 +4,7 @@ import { Match, match, Path } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
-  component: () => HTMLElement;
+  component: () => HTMLElement | Promise<HTMLElement>;
 }
 
 export function RouteCtxRef(c: any, k: string, i: number) {
