@@ -92,7 +92,6 @@ function template(ctx: TemplateCtx<number>): TemplateResult {
 }
 
 @Component<number>({
-  tag: 'app-root',
   initialState: 0,
   template,
 })
