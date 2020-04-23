@@ -15,7 +15,6 @@ This document outlines the overall design for lit-kit
 ```TS
 class MyElement extends HTMLElement {
  litKitProviders: ProviderMetadata = {
-   providedInRoot: false,
    deps: []
  }
  
