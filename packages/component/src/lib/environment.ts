@@ -9,7 +9,11 @@ export function bootstrapEnvironment(providers: Provider<any>[] = []): Injector 
 }
 
 export function getEnvironmentRef(): Injector | undefined {
-  return ROOT_INJECTOR;
+  if (ROOT_INJECTOR) {
+    return ROOT_INJECTOR;
+  }
+
+  return bootstrapEnvironment();
 }
 
 export function clearEnvironment(): void {

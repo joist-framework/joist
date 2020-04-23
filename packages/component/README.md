@@ -8,17 +8,6 @@ This package lets you create web components using [lit-html](https://lit-html.po
 npm i @lit-kit/component @lit-kit/di lit-html
 ```
 
-### Bootstrap Environment
-
-If you plan on using lit-kit to create an application you will probably want to use services.
-To make sure you have singletons you need to bootstrap.
-
-```TS
-import { bootstrapEnvironment } from '@lit-kit/component';
-
-bootstrapEnvironment()
-```
-
 ### Component
 
 Components are created via the "Component" decorator and defining a custom element.
@@ -283,6 +272,17 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+```
+
+### Manually Bootstrap Environment
+
+If you need to override some provider globally you will need to manually bootstrap the environment.
+See next sections for an example.
+
+```TS
+import { bootstrapEnvironment } from '@lit-kit/component';
+
+bootstrapEnvironment()
 ```
 
 ### Legacy Browser support (IE11)

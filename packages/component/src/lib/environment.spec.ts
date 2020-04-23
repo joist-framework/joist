@@ -10,10 +10,6 @@ describe('environment', () => {
     clearEnvironment();
   });
 
-  it('should be null by default', () => {
-    expect(getEnvironmentRef()).toBe(undefined);
-  });
-
   it('should create a global Injector instance', () => {
     bootstrapEnvironment();
 
