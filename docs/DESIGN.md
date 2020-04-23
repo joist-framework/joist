@@ -10,16 +10,33 @@ This document outlines the overall design for lit-kit
 
 ### All that is needed to create an element is to call `document.createElement`;
 
-- The custom element will have properties for the componentInjector and the componentInstance
+- The custom element will have properties for the componentInjector and the componentInstance. A lit-kit created element looks something like this if done by hand.
 
 ```TS
-type ElementInstance<C> = HTMLElement & {
-  // The injector available to the commponent. Is passed the parent injector if it exists
-  componentInjector: Injector;
+class MyElement extends HTMLElement {
+ litKitProviders: ProviderMetadata = {
+   providedInRoot: false,
+   deps: []
+ }
+ 
+ litKitComponentDef: ComponentDef = {
+   template: () => html`<h1>Hello World</h1>`
+ }
+ 
+ liKitComponentMetadataRef = {
+  handlers: { [key: string]: Function } = {};
+  props: string[] = [];
+}
 
-  // The actual instance of the component defined by the user
-  componentInstance: ComponentInstance<C>;
-};
+componentInjector = new Injector({
+  providers: [
+    { provide: ElRefToken, useFactory: () => this, deps: [] },
+    { provide: State, useFactory: () => new State(componentDef.initialState), deps: [] },
+   ]
+ });
+ 
+ componentInstance: T = this.componentInjector.create(MyComponent)
+}
 ```
 
 ### There is ONE SINGLE WAY to update the view.
