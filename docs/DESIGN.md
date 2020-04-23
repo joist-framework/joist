@@ -24,11 +24,11 @@ class MyElement extends HTMLElement {
  }
  
  liKitComponentMetadataRef = {
-  handlers: { [key: string]: Function } = {};
-  props: string[] = [];
-}
+   handlers: { [key: string]: Function } = {};
+   props: string[] = [];
+ }
 
-componentInjector = new Injector({
+ componentInjector = new Injector({
   providers: [
     { provide: ElRefToken, useFactory: () => this, deps: [] },
     { provide: State, useFactory: () => new State(componentDef.initialState), deps: [] },
