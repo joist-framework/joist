@@ -8,7 +8,7 @@ export function bootstrapEnvironment(providers: Provider<any>[] = []): Injector 
   return ROOT_INJECTOR;
 }
 
-export function getEnvironmentRef(): Injector | undefined {
+export function getEnvironmentRef(): Injector {
   if (ROOT_INJECTOR) {
     return ROOT_INJECTOR;
   }
