@@ -31,7 +31,7 @@ class MyElement extends HTMLElement {
  componentInjector = new Injector({
   providers: [
     { provide: ElRefToken, useFactory: () => this, deps: [] },
-    { provide: State, useFactory: () => new State(componentDef.initialState), deps: [] },
+    { provide: State, useFactory: () => new State(this.litKitComponentDef.initialState), deps: [] },
    ]
  });
  
