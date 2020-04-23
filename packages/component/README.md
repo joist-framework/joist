@@ -168,7 +168,6 @@ interface AppState {
 }
 
 @Component<AppState>({
-  tag: 'app-root',
   initialState: { loading: false, data: [] },
   template: ({ state }) => html`${JSON.stringify(state)}`
 })
