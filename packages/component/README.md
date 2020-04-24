@@ -186,6 +186,26 @@ class AppComponent {
 customElements.define('app-root', defineElement(AppComponent));
 ```
 
+### Extending native elements
+By default lit-kit extends HTMLElement but there are times when you want to extend another native element,
+
+```TS
+import { Component, StateRef, State, defineElement } from '@lit-kit/component';
+
+
+@Component({
+  initialState: 'Hello World',
+  template: ({ state }) => html`<h1>${state}</h1>`
+})
+class CustomAnchor { }
+
+customElements.define(
+  'custom-anchor', 
+  defineElement(CustomAnchor, { extends: HTMLAnchorElement }),
+  { extends: 'a' }
+);
+```
+
 ### Reducer State
 
 You can optionally use reducers to manage your state.
@@ -223,6 +243,7 @@ class AppComponent {
 
 customElements.define('app-root', defineElement(AppComponent));
 ```
+
 
 ### Testing
 
