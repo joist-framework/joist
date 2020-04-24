@@ -6,7 +6,7 @@ import { ElRefToken } from './el_ref';
 import { getEnvironmentRef } from './environment';
 import { Lifecycle } from './lifecycle';
 import {
-  getComponentMetadataRef,
+  getComponentMetadata,
   TemplateEvent,
   getComponentDef,
   ComponentMetadata,
@@ -55,12 +55,19 @@ function connectComponent<Component, State>(
   });
 }
 
-export function defineElement<T>(component: ClassProviderToken<any>) {
+export interface DefineElementOptions {
+  extends: typeof HTMLElement;
+}
+
+export function defineElement<T>(
+  component: ClassProviderToken<any>,
+  options: DefineElementOptions = { extends: HTMLElement }
+) {
   const componentDef = getComponentDef<T>(component);
-  const componentMetadata = getComponentMetadataRef(component);
+  const componentMetadata = getComponentMetadata(component);
   const componentProviders = componentDef.use || [];
 
-  const LitKitElement = class extends HTMLElement implements ElementInstance<any> {
+  const LitKitElement = class extends options.extends implements ElementInstance<any> {
     static observedAttributes = componentDef.observedAttributes;
 
     public componentInjector = new Injector(

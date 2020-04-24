@@ -13,28 +13,31 @@ This document outlines the overall design for lit-kit
 - The custom element will have properties for the componentInjector and the componentInstance. A lit-kit created element looks something like this if done by hand.
 
 ```TS
-class MyElement extends HTMLElement {
- litKitProviders: ProviderMetadata = {
-   deps: []
- }
- 
- litKitComponentDef: ComponentDef = {
-   template: () => html`<h1>Hello World</h1>`
- }
- 
- liKitComponentMetadataRef = {
-   handlers: { [key: string]: Function } = {};
-   props: string[] = [];
- }
 
- componentInjector = new Injector({
-  providers: [
-    { provide: ElRefToken, useFactory: () => this, deps: [] },
-    { provide: State, useFactory: () => new State(this.litKitComponentDef.initialState), deps: [] },
-   ]
- });
- 
- componentInstance: T = this.componentInjector.create(MyComponent)
+class MyComponent {
+  static litKitComponentDef = {
+    template: () => html`<h1>Hello World</h1>`
+  }
+
+  static litKitComponentMetadata = {
+    props: string[] = []
+    handlers: { [key: string]: Function } = {}
+  }
+
+  static litKitProvider = {
+    deps: []
+  }
+}
+
+class MyElement extends HTMLElement {
+  componentInjector = new Injector({
+    providers: [
+      { provide: ElRefToken, useFactory: () => this, deps: [] },
+      { provide: State, useFactory: () => new State(MyComponent.initialState), deps: [] },
+    ]
+  });
+
+  componentInstance: T = this.componentInjector.create(MyComponent)
 }
 ```
 

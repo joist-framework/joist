@@ -161,4 +161,30 @@ describe('defineElement', () => {
       expect(el.shadowRoot).toBeDefined();
     });
   });
+
+  describe('built ins', () => {
+    it('should extend a built in element', () => {
+      let elementCreated = false;
+
+      @Component({
+        template: () => html`<h1>Hello World</h1>`,
+      })
+      class MyComponent {
+        constructor() {
+          elementCreated = true;
+        }
+      }
+
+      customElements.define(
+        'built-ins-1',
+        defineElement(MyComponent, { extends: HTMLInputElement }),
+        { extends: 'input' }
+      );
+
+      const el = document.createElement('input', { is: 'built-ins-1' });
+
+      expect(el instanceof HTMLInputElement).toBe(true);
+      expect(elementCreated).toBe(true);
+    });
+  });
 });

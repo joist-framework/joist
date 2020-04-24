@@ -1,7 +1,7 @@
 import { ProviderToken, Provider } from '@lit-kit/di';
 import { TemplateResult } from 'lit-html';
 
-export const COMPONENT_METADATA_KEY = 'litKitComponentMetadataRef';
+export const COMPONENT_METADATA_KEY = 'litKitComponentMetadata';
 export const COMPONENT_DEF_KEY = 'litKitComponentDef';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
@@ -27,7 +27,7 @@ export class ComponentMetadata {
   props: string[] = [];
 }
 
-export function getComponentMetadataRef(provider: ProviderToken<any>): ComponentMetadata {
+export function getComponentMetadata(provider: ProviderToken<any>): ComponentMetadata {
   const metadata = provider[COMPONENT_METADATA_KEY];
 
   if (!metadata) {

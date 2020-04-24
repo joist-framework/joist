@@ -1,5 +1,5 @@
 import { Prop } from './prop';
-import { getComponentMetadataRef } from './metadata';
+import { getComponentMetadata } from './metadata';
 
 describe('Props', () => {
   class MyComponent {
@@ -8,7 +8,7 @@ describe('Props', () => {
   }
 
   it('should add property keys to metadata', () => {
-    const metadata = getComponentMetadataRef(MyComponent);
+    const metadata = getComponentMetadata(MyComponent);
 
     expect(metadata.props).toEqual(['foo', 'bar']);
   });
