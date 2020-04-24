@@ -18,7 +18,7 @@ export class Injector {
 
   constructor(private opts: InjectorOptions = {}, private parent?: Injector) {
     if (this.opts.bootstrap) {
-      this.opts.bootstrap.forEach(provider => this.get(provider));
+      this.opts.bootstrap.forEach((provider) => this.get(provider));
     }
   }
 
@@ -26,11 +26,13 @@ export class Injector {
    * recursively check if a singleton instance is available for a provider
    */
   has(token: ProviderToken<any>): boolean {
-    if (this.parent) {
+    if (this.providerMap.has(token)) {
+      return true;
+    } else if (this.parent) {
       return this.parent.has(token);
     }
 
-    return this.providerMap.has(token);
+    return false;
   }
 
   /**
@@ -51,7 +53,7 @@ export class Injector {
   create<T>(P: ClassProviderToken<T>): T {
     const metaData = getMetadataRef(P);
 
-    return metaData ? new P(...metaData.deps.map(dep => this.get(dep))) : new P();
+    return metaData ? new P(...metaData.deps.map((dep) => this.get(dep))) : new P();
   }
 
   private resolve<T>(token: ProviderToken<T>): T {
@@ -83,7 +85,10 @@ export class Injector {
   }
 
   private createFromFactory<T>(token: FactoryProvider<T>) {
-    return token.useFactory.apply(token, token.deps.map(token => this.get(token)));
+    return token.useFactory.apply(
+      token,
+      token.deps.map((token) => this.get(token))
+    );
   }
 
   private findProvider(token: ProviderToken<any>): Provider<any> | null {
@@ -91,6 +96,6 @@ export class Injector {
       return null;
     }
 
-    return this.opts.providers.find(provider => provider.provide === token) || null;
+    return this.opts.providers.find((provider) => provider.provide === token) || null;
   }
 }
