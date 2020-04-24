@@ -16,7 +16,8 @@ This document outlines the overall design for lit-kit
 
 class MyComponent {
   static litKitComponentDef = {
-    template: () => html`<h1>Hello World</h1>`
+    initialState = 'Hello World'
+    template: ({ state }) => html`<h1>${state}</h1>`
   };
 
   static litKitComponentMetadata = {
@@ -33,7 +34,7 @@ class MyElement extends HTMLElement {
   componentInjector = new Injector({
     providers: [
       { provide: ElRefToken, useFactory: () => this, deps: [] },
-      { provide: State, useFactory: () => new State(MyComponent.initialState), deps: [] },
+      { provide: State, useFactory: () => new State(MyComponent.litKitComponentDef.initialState), deps: [] },
     ]
   });
 
