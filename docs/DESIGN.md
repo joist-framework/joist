@@ -17,16 +17,16 @@ This document outlines the overall design for lit-kit
 class MyComponent {
   static litKitComponentDef = {
     template: () => html`<h1>Hello World</h1>`
-  }
+  };
 
   static litKitComponentMetadata = {
     props: string[] = []
     handlers: { [key: string]: Function } = {}
-  }
+  };
 
-  static litKitProvider = {
+  static litKitProviderDef = {
     deps: []
-  }
+  };
 }
 
 class MyElement extends HTMLElement {
