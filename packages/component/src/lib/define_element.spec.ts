@@ -52,6 +52,18 @@ describe('defineElement', () => {
 
       expect(el.componentInstance.foo).toBe('Hello World - 2');
     });
+
+    it('should call onPropChanges', (done) => {
+      const el = document.createElement('props-1') as ElementInstance<MyComponent>;
+
+      el.componentInstance.onPropChanges = () => {
+        expect(el.componentInstance.foo).toBe('Hello World');
+
+        done();
+      };
+
+      el.foo = 'Hello World';
+    });
   });
 
   describe('handlers', () => {
