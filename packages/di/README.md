@@ -5,13 +5,13 @@ Dependency Injection in ~800 bytes
 #### Installation:
 
 ```BASH
-npm i @lit-kit/di
+npm i @joist/di
 ```
 
 #### Example:
 
 ```TS
-import { Injector, Inject } from '@lit-kit/di';
+import { Injector, Inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -35,7 +35,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 #### Override A Service:
 
 ```TS
-import { Injector, Inject } from '@lit-kit/di';
+import { Injector, Inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -73,7 +73,7 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 If you have nested injectors and you still want singleton instances decorator your services with `@Service()`
 
 ```TS
-import { Service } from '@lit-kit/di';
+import { Service } from '@joist/di';
 
 @Service()
 class FooService {
@@ -86,7 +86,7 @@ class FooService {
 #### Inject services with custom decorators:
 
 ```TS
-import { Injector, Inject } from '@lit-kit/di';
+import { Injector, Inject } from '@joist/di';
 
 function FooRef(c: any, k: string, i: number) {
   Inject(FooService)(c, k, i)

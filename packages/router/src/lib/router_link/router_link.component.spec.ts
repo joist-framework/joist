@@ -1,5 +1,4 @@
-import { defineElement, ElementInstance, Component, State } from '@lit-kit/component';
-import { html } from 'lit-html';
+import { defineElement, ElementInstance, Component, State } from '@joist/component';
 
 import { RouterLinkComponent } from './router_link.component';
 
@@ -7,7 +6,14 @@ describe('RouterLinkComponent', () => {
   let el: ElementInstance<TestBed>;
 
   @Component({
-    template: () => html`<router-link .path=${'/foo'}>Hello World</router-link>`,
+    template() {
+      const el = document.createElement('router-link') as ElementInstance<any>;
+
+      el.innerHTML = 'Hello World';
+      el.path = '/foo';
+
+      return el;
+    },
   })
   class TestBed {}
 

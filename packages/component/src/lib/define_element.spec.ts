@@ -1,4 +1,5 @@
-import { Injector } from '@lit-kit/di';
+import { withLitHtml } from '@joist/component/lit_html';
+import { Injector } from '@joist/di';
 import { html } from 'lit-html';
 
 import { defineElement, ElementInstance } from './define_element';
@@ -8,9 +9,7 @@ import { Component } from './component';
 
 describe('defineElement', () => {
   describe('creation', () => {
-    @Component({
-      template: () => html` <h1>Hello World</h1> `,
-    })
+    @Component({ template: () => '' })
     class MyComponent {}
 
     customElements.define('create-1', defineElement(MyComponent));
@@ -29,9 +28,7 @@ describe('defineElement', () => {
   });
 
   describe('props', () => {
-    @Component({
-      template: () => html` <h1>Hello World</h1> `,
-    })
+    @Component({ template: () => '' })
     class MyComponent {
       @Prop() foo: string = 'Hello World';
     }
@@ -72,6 +69,7 @@ describe('defineElement', () => {
         template({ run }) {
           return html` <button @click=${run('TEST_RUN', 'Hello World')}>click</button> `;
         },
+        use: [withLitHtml()],
       })
       class MyComponent {
         @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
@@ -98,8 +96,9 @@ describe('defineElement', () => {
     it('should dispatch and event using Ctx.dispatch', (done) => {
       @Component({
         template({ dispatch }) {
-          return html` <button @click=${dispatch('TEST_DISPATCH', 'Hello World')}>click</button> `;
+          return html`<button @click=${dispatch('TEST_DISPATCH', 'Hello World')}>click</button>`;
         },
+        use: [withLitHtml()],
       })
       class MyComponent {}
 
@@ -128,7 +127,7 @@ describe('defineElement', () => {
       class TestToken {}
 
       @Component({
-        template: () => html``,
+        template: () => '',
         use: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }],
       })
       class MyComponent {}
@@ -143,9 +142,7 @@ describe('defineElement', () => {
 
   describe('shadowDom', () => {
     it('should NOT use shadow dom by default', () => {
-      @Component({
-        template: () => html``,
-      })
+      @Component({ template: () => 'Hello World' })
       class MyComponent {}
 
       customElements.define('shadowdom-1', defineElement(MyComponent));
@@ -159,7 +156,7 @@ describe('defineElement', () => {
 
     it('should use shadow dom if specified', () => {
       @Component({
-        template: () => html``,
+        template: () => 'Hello World',
         useShadowDom: true,
       })
       class MyComponent {}
@@ -176,16 +173,8 @@ describe('defineElement', () => {
 
   describe('built ins', () => {
     it('should extend a built in element', () => {
-      let elementCreated = false;
-
-      @Component({
-        template: () => html`<h1>Hello World</h1>`,
-      })
-      class MyComponent {
-        constructor() {
-          elementCreated = true;
-        }
-      }
+      @Component({ template: () => 'Hello World' })
+      class MyComponent {}
 
       customElements.define(
         'built-ins-1',
@@ -196,7 +185,7 @@ describe('defineElement', () => {
       const el = document.createElement('input', { is: 'built-ins-1' });
 
       expect(el instanceof HTMLInputElement).toBe(true);
-      expect(elementCreated).toBe(true);
+      expect('componentInstance' in el).toBe(true);
     });
   });
 });

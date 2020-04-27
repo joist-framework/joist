@@ -7,7 +7,7 @@ import {
   State,
   OnPropChanges,
   defineElement,
-} from '@lit-kit/component';
+} from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';

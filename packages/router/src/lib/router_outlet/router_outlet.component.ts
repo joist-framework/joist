@@ -7,7 +7,7 @@ import {
   OnDisconnected,
   ElementInstance,
   defineElement,
-} from '@lit-kit/component';
+} from '@joist/component';
 import { MatchFunction, Match } from 'path-to-regexp';
 
 import { Route, Router, RouterRef, RouteCtx } from '../router';

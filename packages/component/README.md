@@ -1,11 +1,20 @@
-# @lit-kit/component
+# @joist/component
 
-This package lets you create web components using [lit-html](https://lit-html.polymer-project.org/). Broadly speaking a "lit-kit" component acts as the state manager for your custom element meaing that it controls the data and the view.
+This package lets you create web components using [lit-html](https://lit-html.polymer-project.org/). Broadly speaking a "joist" component acts as the state manager for your custom element meaing that it controls the data and the view.
 
 ### Installation
 
 ```BASH
-npm i @lit-kit/component @lit-kit/di lit-html
+npm i @joist/component @joist/di lit-html
+```
+
+```TS
+// main.ts
+
+import { bootstrapEnvironment } from '@joist/component';
+import { withLitHtml } from '@joist/component/lit_html';
+
+bootstrapEnvironment([withLitHtml()]);
 ```
 
 ### Component
@@ -13,7 +22,7 @@ npm i @lit-kit/component @lit-kit/di lit-html
 Components are created via the "Component" decorator and defining a custom element.
 
 ```TS
-import { Component, defineElement } from '@lit-kit/component';
+import { Component, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -33,7 +42,7 @@ A component template can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef`
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -61,7 +70,7 @@ Component props are defined via the `@Prop()` decorator. This creates a property
 Prop changes to not trigger template updates. Use custom setters or `onPropChanges` to set new state and update the template.
 
 ```TS
-import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<string>({
@@ -90,7 +99,7 @@ In order to trigger methods in a component you can use the `run` function that i
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
 
 ```TS
-import { Component, StateRef, State, Handle, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, Handle, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -129,7 +138,7 @@ You can either:
 2. Inject the element reference with the @ElRef decorator
 
 ```TS
-import { Component, Handle, ElRef, defineElement } from '@lit-kit/component';
+import { Component, Handle, ElRef, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -160,7 +169,7 @@ customElements.define('app-root', defineElement(AppComponent));
 Component state can be set asynchronously.
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@joist/component';
 
 interface AppState {
   loading: boolean;
@@ -187,10 +196,11 @@ customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Extending native elements
-By default lit-kit extends HTMLElement but there are times when you want to extend another native element,
+
+By default joist extends HTMLElement but there are times when you want to extend another native element,
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, defineElement } from '@joist/component';
 
 
 @Component({
@@ -200,7 +210,7 @@ import { Component, StateRef, State, defineElement } from '@lit-kit/component';
 class CustomAnchor { }
 
 customElements.define(
-  'custom-anchor', 
+  'custom-anchor',
   defineElement(CustomAnchor, { extends: HTMLAnchorElement }),
   { extends: 'a' }
 );
@@ -212,8 +222,8 @@ You can optionally use reducers to manage your state.
 Using the lit kit dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@lit-kit/component';
-import { withReducer, ReducerStateRef, ReducerState } from '@lit-kit/component/lib/reducer'
+import { Component, StateRef, State, defineElement } from '@joist/component';
+import { withReducer, ReducerStateRef, ReducerState } from '@joist/component/lib/reducer'
 
 @Component({
   initialState: 0,
@@ -244,13 +254,12 @@ class AppComponent {
 customElements.define('app-root', defineElement(AppComponent));
 ```
 
-
 ### Testing
 
 Testing can be handled in a couple of ways. The most straight forward way is to define your element in your test and use document.createElement.
 
 ```TS
-import { defineElement } from '@lit-kit/component';
+import { defineElement } from '@joist/component';
 
 import { AppComponent } from './app.component';
 
@@ -276,7 +285,7 @@ describe('AppComponent', () => {
 ```
 
 LitKit has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
-This means you can manually create instances of your component and test them independently of lit-kit
+This means you can manually create instances of your component and test them independently of joist
 
 ```TS
 import { AppComponent, AppState } from './app.component';
@@ -292,32 +301,4 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-```
-
-### Manually Bootstrap Environment
-
-If you need to override some provider globally you will need to manually bootstrap the environment.
-See next sections for an example.
-
-```TS
-import { bootstrapEnvironment } from '@lit-kit/component';
-
-bootstrapEnvironment()
-```
-
-### Legacy Browser support (IE11)
-
-If you need to support IE11 you will need to use the web components polyfills and enable shady css rendering.
-
-```BASH
-npm i @webcomponents/webcomponentsjs
-```
-
-```TS
-import '@webcomponents/webcomponentsjs/webcomponents-bundle.js'
-
-import { bootstrapEnvironment } from '@lit-kit/component';
-import { withShadyRenderer } from '@lit-kit/component/lib/shady_renderer';
-
-bootstrapEnvironment([withShadyRenderer()]);
 ```

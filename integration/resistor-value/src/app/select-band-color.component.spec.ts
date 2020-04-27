@@ -1,4 +1,4 @@
-import { ElementInstance } from '@lit-kit/component';
+import { ElementInstance } from '@joist/component';
 
 import { SelectBandColorComponent } from './select-band-color.component';
 

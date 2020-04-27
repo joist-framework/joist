@@ -1,7 +1,8 @@
-import { defineElement, ElementInstance } from './lib/define_element';
-import { withReducer, ReducerState, ReducerStateRef } from './reducer';
 import { html } from 'lit-html';
-import { Component } from './lib/component';
+
+import { withReducer, ReducerState, ReducerStateRef } from './reducer';
+import { defineElement, ElementInstance } from '../src/lib/define_element';
+import { Component } from '../src/lib/component';
 
 describe('Reducer', () => {
   @Component({

@@ -1,5 +1,9 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*"],
-  "exclode": ["node_modules"]
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es2015",
+    "outDir": "target"
+  },
+  "include": ["src", "lit_html", "addons"]
 }

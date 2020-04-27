@@ -1,4 +1,4 @@
-import { Component, StateRef, State, ElRef, Handle, defineElement } from '@lit-kit/component';
+import { Component, StateRef, State, ElRef, Handle, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 export interface TodoFormState {

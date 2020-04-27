@@ -1,4 +1,4 @@
-import { Service, Inject } from '@lit-kit/di';
+import { Service, Inject } from '@joist/di';
 
 export function <%= classify(name) %>Ref()(c: any, p: string, i: number) {
   Inject(<%= classify(name) %>Service)(c, p, i);

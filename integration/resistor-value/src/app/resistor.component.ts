@@ -1,4 +1,4 @@
-import { Component, Prop, StateRef, State, OnPropChanges, defineElement } from '@lit-kit/component';
+import { Component, Prop, StateRef, State, OnPropChanges, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';

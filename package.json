@@ -1,25 +1,25 @@
 {
-  "name": "lit-kit",
+  "name": "joist",
   "version": "0.0.0",
   "description": "A set of packages that leverage lit-html to help you write applications with web components",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/lit-kit.git"
+    "url": "git+https://github.com/deebloo/joist.git"
   },
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/lit-kit/issues"
+    "url": "https://github.com/deebloo/joist/issues"
   },
   "scripts": {
     "install": "npm run build-libs",
-    "build-libs": "lerna run build --scope @lit-kit/*"
+    "build-libs": "lerna run build --scope @joist/*"
   },
   "dependencies": {
-    "@lit-kit/component": "file:packages/component",
-    "@lit-kit/di": "file:packages/di",
-    "@lit-kit/router": "file:packages/router",
-    "@lit-kit/schematics": "file:packages/schematics"
+    "@joist/component": "file:packages/component",
+    "@joist/di": "file:packages/di",
+    "@joist/router": "file:packages/router",
+    "@joist/schematics": "file:packages/schematics"
   },
   "devDependencies": {
     "@angular-devkit/core": "9.1.1",
@@ -49,6 +49,7 @@
     "puppeteer": "2.1.1",
     "ts-loader": "7.0.1",
     "ts-node": "8.9.1",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typescript": "3.8.3",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",

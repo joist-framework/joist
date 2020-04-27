@@ -1,5 +1,5 @@
-import { Inject, Service } from '@lit-kit/di';
-import { State } from '@lit-kit/component';
+import { Inject, Service } from '@joist/di';
+import { State } from '@joist/component';
 import { Match, match, Path } from 'path-to-regexp';
 
 export interface Route {

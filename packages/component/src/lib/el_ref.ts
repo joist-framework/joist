@@ -1,4 +1,4 @@
-import { ProviderToken, Inject } from '@lit-kit/di';
+import { ProviderToken, Inject } from '@joist/di';
 
 export abstract class ElRefToken {}
 

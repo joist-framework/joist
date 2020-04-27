@@ -1,5 +1,5 @@
 {
-  "name": "@lit-kit/di",
+  "name": "@joist/di",
   "version": "2.1.3",
   "main": "out-common/public_api.js",
   "module": "out-module/public_api.js",
@@ -11,7 +11,7 @@
   "description": "Dependency Injection in ~800 bytes",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/lit-kit.git"
+    "url": "git+https://github.com/deebloo/joist.git"
   },
   "keywords": [
     "TypeScript",
@@ -21,7 +21,7 @@
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/lit-kit/issues"
+    "url": "https://github.com/deebloo/joist/issues"
   },
   "publishConfig": {
     "access": "public"

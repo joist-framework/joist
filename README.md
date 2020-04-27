@@ -1,15 +1,15 @@
 <img src="images/logo.png" data-canonical-src="images/logo.png" />
 
-[![Actions Status](https://github.com/deebloo/lit-kit/workflows/CI/badge.svg)](https://github.com/deebloo/lit-kit/actions)
+[![Actions Status](https://github.com/deebloo/joist/workflows/CI/badge.svg)](https://github.com/deebloo/joist/actions)
 
 A set of packages that leverage lit-html to help you write applications and components
 
-| Package                                    | Description                                                    |
-| ------------------------------------------ | -------------------------------------------------------------- |
-| [@lit-kit/component](packages/component)   | Create Web Components                                          |
-| [@lit-kit/di](packages/di)                 | IOC container                                                  |
-| [@lit-kit/router](packages/router)         | simple router                                                  |
-| [@lit-kit/schematics](packages/schematics) | Schematics for generating components and creating applications |
+| Package                                  | Description                                                    |
+| ---------------------------------------- | -------------------------------------------------------------- |
+| [@joist/component](packages/component)   | Create Web Components                                          |
+| [@joist/di](packages/di)                 | IOC container                                                  |
+| [@joist/router](packages/router)         | simple router                                                  |
+| [@joist/schematics](packages/schematics) | Schematics for generating components and creating applications |
 
 ### Example
 

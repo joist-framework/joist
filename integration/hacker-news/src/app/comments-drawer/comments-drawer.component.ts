@@ -7,7 +7,7 @@ import {
   Handle,
   ElRef,
   defineElement,
-} from '@lit-kit/component';
+} from '@joist/component';
 import { html } from 'lit-html';
 
 import { HackerNewsItemComment } from '../hacker-news.service';

@@ -1,4 +1,4 @@
-import { ClassProviderToken } from '@lit-kit/di';
+import { ClassProviderToken } from '@joist/di';
 
 import { ComponentDef, COMPONENT_DEF_KEY } from './metadata';
 

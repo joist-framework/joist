@@ -1,5 +1,5 @@
 {
-  "name": "@lit-kit-examples/todo-app",
+  "name": "@joist-examples/todo-app",
   "version": "2.1.3",
   "description": "Hacker News PWA",
   "private": true,
@@ -10,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/lit-kit.git"
+    "url": "git+https://github.com/deebloo/joist.git"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lit-kit/component": "file:../../packages/component",
-    "@lit-kit/di": "file:../../packages/di",
+    "@joist/component": "file:../../packages/component",
+    "@joist/di": "file:../../packages/di",
     "lit-html": "1.2.1"
   }
 }

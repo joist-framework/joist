@@ -1,7 +1,7 @@
 import './page-2.component';
 
-import { Component, defineElement } from '@lit-kit/component';
-import { Route } from '@lit-kit/router';
+import { Component, defineElement } from '@joist/component';
+import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
 const routes: Route[] = [

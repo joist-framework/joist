@@ -16,10 +16,10 @@ jobs:
         run: npm ci
 
       - name: Lib Tests
-        run: npx lerna run test --scope @lit-kit/*
+        run: npx lerna run test --scope @joist/*
 
       - name: Integration Tests
-        run: npx lerna run test --scope @lit-kit-examples/*
+        run: npx lerna run test --scope @joist-examples/*
 
       - name: Build Integrations
-        run: npx lerna run build --scope @lit-kit-examples/*
+        run: npx lerna run build --scope @joist-examples/*

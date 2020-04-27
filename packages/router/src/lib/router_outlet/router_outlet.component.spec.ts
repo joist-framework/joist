@@ -1,4 +1,4 @@
-import { ElementInstance, Component, State, defineElement } from '@lit-kit/component';
+import { ElementInstance, Component, State, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 import { RouterOutletComponent, RouterOutletState } from './router_outlet.component';

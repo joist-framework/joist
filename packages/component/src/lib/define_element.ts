@@ -1,4 +1,4 @@
-import { Injector, ClassProviderToken } from '@lit-kit/di';
+import { Injector, ClassProviderToken } from '@joist/di';
 
 import { Renderer } from './renderer';
 import { State } from './state';

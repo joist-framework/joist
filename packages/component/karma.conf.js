@@ -1,3 +1,5 @@
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function (config) {
@@ -19,7 +21,10 @@ module.exports = function (config) {
       module: {
         rules: [{ test: /\.ts?$/, use: 'ts-loader', exclude: /node_modules/ }],
       },
-      resolve: { extensions: ['.ts', '.js'] },
+      resolve: {
+        extensions: ['.ts', '.js'],
+        plugins: [new TsconfigPathsPlugin({ configFile: '../../tsconfig.json' })],
+      },
     },
     reporters: ['spec'],
     port: 9876,

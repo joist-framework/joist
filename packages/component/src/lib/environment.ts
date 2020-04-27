@@ -1,4 +1,4 @@
-import { Injector, Provider } from '@lit-kit/di';
+import { Injector, Provider } from '@joist/di';
 
 let ROOT_INJECTOR: Injector | undefined;
 

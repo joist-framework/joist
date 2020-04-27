@@ -1,11 +1,11 @@
 {
-  "name": "lit-kit Hacker News PwA",
-  "short_name": "lit-kit-hn",
+  "name": "joist Hacker News PwA",
+  "short_name": "joist-hn",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ff6600",
   "background_color": "#fff",
-  "description": "Web Components PWA build with lit-kit",
+  "description": "Web Components PWA build with joist",
   "icons": [
     {
       "src": "assets/icons/icon-48.png",

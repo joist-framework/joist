@@ -1,6 +1,6 @@
 import './todo-form.component';
 
-import { ElementInstance } from '@lit-kit/component';
+import { ElementInstance } from '@joist/component';
 
 import { TodoFormComponent } from './todo-form.component';
 

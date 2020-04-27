@@ -1,6 +1,6 @@
 # Design
 
-This document outlines the overall design for lit-kit
+This document outlines the overall design for joist
 
 ### Small and opinionated
 
@@ -10,7 +10,7 @@ This document outlines the overall design for lit-kit
 
 ### All that is needed to create an element is to call `document.createElement`;
 
-- The custom element will have properties for the componentInjector and the componentInstance. A lit-kit created element looks something like this if done by hand.
+- The custom element will have properties for the componentInjector and the componentInstance. A joist created element looks something like this if done by hand.
 
 ```TS
 

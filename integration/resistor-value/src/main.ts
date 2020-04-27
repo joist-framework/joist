@@ -1,5 +1,10 @@
 import './app/app.component';
 
+import { bootstrapEnvironment } from '@joist/component';
+import { withLitHtml } from '@joist/component/lit_html';
+
+bootstrapEnvironment([withLitHtml()]);
+
 if (process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('/service-worker.js').then(
     function (registration) {

@@ -8,7 +8,7 @@ import {
   OnConnected,
   OnDisconnected,
   defineElement,
-} from '@lit-kit/component';
+} from '@joist/component';
 
 import { RouterRef, Router } from '../router';
 

@@ -1,4 +1,4 @@
-import { ProviderToken } from '@lit-kit/di';
+import { ProviderToken } from '@joist/di';
 
 import { getComponentMetadata } from './metadata';
 

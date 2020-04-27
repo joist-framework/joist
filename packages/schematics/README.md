@@ -3,23 +3,23 @@
 A collection of schematics for generating components and applications
 
 ```BASH
-npm i -g @angular-devkit/schematics-cli @lit-kit/schematics
+npm i -g @angular-devkit/schematics-cli @joist/schematics
 ```
 
 ### Generate App
 
 ```bash
-schematics @lit-kit/schematics:application
+schematics @joist/schematics:application
 ```
 
 ### Generate Component
 
 ```bash
-schematics @lit-kit/schematics:component
+schematics @joist/schematics:component
 ```
 
 ### Generate Service
 
 ```bash
-schematics @lit-kit/schematics:service
+schematics @joist/schematics:service
 ```

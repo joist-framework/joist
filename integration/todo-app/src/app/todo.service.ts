@@ -1,5 +1,5 @@
-import { Service, Inject } from '@lit-kit/di';
-import { State } from '@lit-kit/component';
+import { Service, Inject } from '@joist/di';
+import { State } from '@joist/component';
 
 export class Todo {
   constructor(public readonly name: string, public readonly isComplete: boolean) {}

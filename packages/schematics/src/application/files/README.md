@@ -1,5 +1,5 @@
-# lit-kit hacker news
+# joist hacker news
 
-Another Hacker news PWA build with [lit-kit](https://github.com/deebloo/lit-kit)
+Another Hacker news PWA build with [joist](https://github.com/deebloo/joist)
 
-https://lit-kit-hn.web.app/
+https://joist-hn.web.app/

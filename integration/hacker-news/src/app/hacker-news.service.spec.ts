@@ -1,4 +1,4 @@
-import { Injector } from '@lit-kit/di';
+import { Injector } from '@joist/di';
 import { HackerNewsRef, HackerNewsService } from './hacker-news.service';
 
 describe('HackerNewsService', () => {

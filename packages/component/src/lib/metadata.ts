@@ -1,4 +1,4 @@
-import { ProviderToken, Provider } from '@lit-kit/di';
+import { ProviderToken, Provider } from '@joist/di';
 
 export const COMPONENT_METADATA_KEY = 'litKitComponentMetadata';
 export const COMPONENT_DEF_KEY = 'litKitComponentDef';

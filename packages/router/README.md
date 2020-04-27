@@ -1,18 +1,18 @@
-# @lit-kit/router
+# @joist/router
 
 A simple router
 
 #### Installation:
 
 ```BASH
-npm i @lit-kit/component @lit-kit/di @lit-kit/router lit-html
+npm i @joist/component @joist/di @joist/router lit-html
 ```
 
 #### Example:
 
 ```TS
-import { Component, registerElement } from '@lit-kit/component';
-import { Route, RouteCtxRef, RouteCtx, ActiveOptions, registerRouterElements } from '@lit-kit/router';
+import { Component, registerElement } from '@joist/component';
+import { Route, RouteCtxRef, RouteCtx, ActiveOptions, registerRouterElements } from '@joist/router';
 
 registerRouterElements();
 

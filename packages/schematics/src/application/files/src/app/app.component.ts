@@ -1,4 +1,4 @@
-import { Component, defineElement } from '@lit-kit/component';
+import { Component, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 export interface AppState {

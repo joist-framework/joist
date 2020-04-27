@@ -1,7 +1,7 @@
-import { bootstrapEnvironment } from '@lit-kit/component';
-import { withLitHtml } from '@lit-kit/component/lib/lit_html';
-
 import './app/app.component';
+
+import { bootstrapEnvironment } from '@joist/component';
+import { withLitHtml } from '@joist/component/lit_html';
 
 bootstrapEnvironment([withLitHtml()]);
 

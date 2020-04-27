@@ -1,4 +1,4 @@
-import { Injector, Service, Inject } from '@lit-kit/di';
+import { Injector, Service, Inject } from '@joist/di';
 import { html } from 'lit-html';
 
 import { bootstrapEnvironment, getEnvironmentRef, clearEnvironment } from './environment';

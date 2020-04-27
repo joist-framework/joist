@@ -1,4 +1,4 @@
-import { Service } from '@lit-kit/di';
+import { Service } from '@joist/di';
 
 @Service()
 export abstract class Renderer {
@@ -7,6 +7,12 @@ export abstract class Renderer {
       container.removeChild(container.lastChild);
     }
 
-    container.appendChild(result);
+    if (result) {
+      if (result instanceof HTMLElement) {
+        container.appendChild(result);
+      } else if (typeof result === 'string') {
+        container.appendChild(document.createTextNode(result));
+      }
+    }
   }
 }

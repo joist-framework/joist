@@ -1,4 +1,4 @@
-import { Service, Inject } from '@lit-kit/di';
+import { Service, Inject } from '@joist/di';
 
 export interface HackerNewsItem {
   id: number;

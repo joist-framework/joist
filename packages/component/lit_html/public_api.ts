@@ -1,7 +1,6 @@
-import { Provider } from '@lit-kit/di';
+import { Renderer } from '@joist/component';
+import { Provider } from '@joist/di';
 import { render, RenderOptions } from 'lit-html';
-
-import { Renderer } from './lib/renderer';
 
 export class LitHtmlRenderer extends Renderer {
   render<TemplateResult>(

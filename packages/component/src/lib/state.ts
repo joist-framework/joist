@@ -1,4 +1,4 @@
-import { Inject, ProviderToken } from '@lit-kit/di';
+import { Inject, ProviderToken } from '@joist/di';
 
 export class State<T> {
   private currentState: T;
