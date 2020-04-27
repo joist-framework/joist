@@ -1,6 +1,4 @@
-import { withLitHtml } from '@joist/component/lit_html';
 import { Injector } from '@joist/di';
-import { html } from 'lit-html';
 
 import { defineElement, ElementInstance } from './define_element';
 import { Prop } from './prop';
@@ -67,9 +65,12 @@ describe('defineElement', () => {
     it('should call a function if the trigger is mapped to a class method', (done) => {
       @Component({
         template({ run }) {
-          return html` <button @click=${run('TEST_RUN', 'Hello World')}>click</button> `;
+          const el = document.createElement('button');
+
+          el.onclick = run('TEST_RUN', 'Hello World');
+
+          return el;
         },
-        use: [withLitHtml()],
       })
       class MyComponent {
         @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
@@ -96,9 +97,12 @@ describe('defineElement', () => {
     it('should dispatch and event using Ctx.dispatch', (done) => {
       @Component({
         template({ dispatch }) {
-          return html`<button @click=${dispatch('TEST_DISPATCH', 'Hello World')}>click</button>`;
+          const el = document.createElement('button');
+
+          el.onclick = dispatch('TEST_DISPATCH', 'Hello World');
+
+          return el;
         },
-        use: [withLitHtml()],
       })
       class MyComponent {}
 
