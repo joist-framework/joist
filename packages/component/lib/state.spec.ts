@@ -7,10 +7,10 @@ describe('state', () => {
     expect(state.value).toBe('Hello');
   });
 
-  it('should correctly run the callback when there is a state change', done => {
+  it('should correctly run the callback when there is a state change', (done) => {
     const state = new State<string>('Hello');
 
-    state.onChange(state => {
+    state.onChange((state) => {
       expect(state).toBe('Hello World');
 
       done();
@@ -19,10 +19,10 @@ describe('state', () => {
     state.setValue(state.value + ' World');
   });
 
-  it('should set state when state change returns a promise', done => {
+  it('should set state when state change returns a promise', (done) => {
     const state = new State<string>('Hello');
 
-    state.onChange(state => {
+    state.onChange((state) => {
       expect(state).toBe('Hello World');
 
       done();
@@ -31,10 +31,10 @@ describe('state', () => {
     state.setValue(Promise.resolve(state.value + ' World'));
   });
 
-  it('should correctly apply a partial patch', done => {
+  it('should correctly apply a partial patch', (done) => {
     const state = new State({ title: 'Hello World', foo: true });
 
-    state.onChange(state => {
+    state.onChange((state) => {
       expect(state.foo).toBe(false);
 
       done();
@@ -43,10 +43,10 @@ describe('state', () => {
     state.patchValue({ foo: false });
   });
 
-  it('should correctly apply a partial patch when state is a promise', done => {
+  it('should correctly apply a partial patch when state is a promise', (done) => {
     const state = new State({ title: 'Hello World', foo: true });
 
-    state.onChange(state => {
+    state.onChange((state) => {
       expect(state.foo).toBe(false);
 
       done();

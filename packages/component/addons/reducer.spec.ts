@@ -1,13 +1,11 @@
-import { html } from 'lit-html';
+import { defineElement, ElementInstance, Component } from '@joist/component';
 
 import { withReducer, ReducerState, ReducerStateRef } from './reducer';
-import { defineElement, ElementInstance } from '../src/lib/define_element';
-import { Component } from '../src/lib/component';
 
 describe('Reducer', () => {
   @Component({
     initialState: 0,
-    template: ({ state }) => html` ${state} `,
+    template: ({ state }) => state.toString(),
     use: [
       withReducer<number>((action, state) => {
         switch (action.type) {

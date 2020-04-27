@@ -1,9 +1,9 @@
 {
   "name": "@joist/component",
   "version": "2.1.3",
-  "main": "target/src/public_api.js",
+  "main": "target/public_api.js",
   "files": [
-    "lib",
+    "target",
     "lit_html",
     "addons"
   ],
@@ -30,7 +30,7 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "karma start",
-    "build": "../../node_modules/.bin/tsc"
+    "build": "../../node_modules/.bin/tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
     "@joist/di": "^2.0.0"

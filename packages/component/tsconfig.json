@@ -5,5 +5,6 @@
     "target": "es2015",
     "outDir": "target"
   },
+  "files": ["test.ts", "public_api.ts"],
   "include": ["src", "lit_html", "addons"]
 }

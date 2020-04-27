@@ -14,7 +14,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "paths": {
-      "@joist/component": ["./packages/component/src/public_api.ts"],
+      "@joist/component": ["./packages/component/public_api.ts"],
       "@joist/component/addons": ["./packages/component/addons/public_api.ts"],
       "@joist/component/lit_html": ["./packages/component/lit_html/public_api.ts"]
     }

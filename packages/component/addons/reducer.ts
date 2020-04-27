@@ -1,6 +1,5 @@
+import { State } from '@joist/component';
 import { Provider, Inject } from '@joist/di';
-
-import { State } from '../src/lib/state';
 
 export type Reducer<T> = (action: Action, state: T) => T;
 

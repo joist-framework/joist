@@ -12,9 +12,9 @@ module.exports = function (config) {
       require('karma-spec-reporter'),
       require('karma-webpack'),
     ],
-    files: ['src/test.ts'],
+    files: ['test.ts'],
     preprocessors: {
-      'src/test.ts': ['webpack'],
+      'test.ts': ['webpack'],
     },
     webpack: {
       mode: 'development',
