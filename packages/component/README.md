@@ -16,9 +16,8 @@ import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
 @Component<string>({
-  initialState: 'Hello World',
-  template({ state }) {
-    return html`<h1>${state}</h1>`
+  template() {
+    return html`<h1>Hello World</h1>`
   },
   providers: [litHtml()]
 })
