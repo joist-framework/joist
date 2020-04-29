@@ -8,9 +8,25 @@ Broadly speaking a "joist" component acts as the state manager for your custom e
 npm i @joist/component @joist/di lit-html
 ```
 
+If bootstrapping one component
 ```TS
 // main.ts
 
+import { Component } from '@joist/component';
+import { litHtml } from '@joist/component/lit-html';
+
+@Component<string>({
+  initialState: 'Hello World',
+  template({ state }) {
+    return html`<h1>${state}</h1>`
+  },
+  providers: [litHtml()]
+})
+class AppComponent {}
+```
+
+If bootstrapping an entire application
+```TS
 import { bootstrapEnvironment } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
