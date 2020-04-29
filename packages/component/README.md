@@ -1,6 +1,6 @@
 # @joist/component
 
-This package lets you create web components using [lit-html](https://lit-html.polymer-project.org/). Broadly speaking a "joist" component acts as the state manager for your custom element meaing that it controls the data and the view.
+Broadly speaking a "joist" component acts as the state manager for your custom element meaing that it controls the data and the view. The examples in this doc will be using lit-html but any view library can be used.
 
 ### Installation
 
