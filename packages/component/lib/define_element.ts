@@ -21,10 +21,6 @@ function connectComponent<Component, State>(
   el: ElementInstance<Component>,
   componentDef: ComponentDef<any>
 ) {
-  if ((window as any).ShadyCSS) {
-    (window as any).ShadyCSS.styleElement(el);
-  }
-
   const handlers = getComponentHandlers(el.componentInstance.constructor);
 
   const base = el.shadowRoot || el;
