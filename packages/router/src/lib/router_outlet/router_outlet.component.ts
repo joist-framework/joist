@@ -12,12 +12,14 @@ import { MatchFunction, Match } from 'path-to-regexp';
 
 import { Route, Router, RouterRef, RouteCtx } from '../router';
 
-export type RouterOutletState = (HTMLElement & { [key: string]: any }) | null;
+export interface RouterOutletState {
+  element?: HTMLElement & { [key: string]: any };
+  activeRoute?: Route;
+}
 
 @Component<RouterOutletState>({
-  initialState: null,
-  useShadowDom: false,
-  template: (ctx) => ctx.state,
+  initialState: {},
+  template: (ctx) => ctx.state.element,
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];
@@ -66,33 +68,26 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
     }
 
     if (route && matcher && match) {
-      return this.resolve(route, match);
-    }
-
-    return this.state.setValue(null);
-  }
-
-  private resolve(route: Route, ctx: Match<object>) {
-    return Promise.resolve(route.component()).then((element) => {
-      let activeComponent = this.state.value;
-
-      // only create a new instance of the component if the router-outlet is empty
-      // or if the current activeComponent is NOT the same as the one being resolved
-      if (
-        !activeComponent ||
-        !(activeComponent.tagName.toUpperCase() === element.tagName.toUpperCase())
-      ) {
-        activeComponent = element;
+      if (!this.state.value.activeRoute || this.state.value.activeRoute.path !== route.path) {
+        return this.resolve(route, match);
       }
 
+      return Promise.resolve(void 0);
+    }
+
+    return this.state.setValue({});
+  }
+
+  private resolve(activeRoute: Route, ctx: Match<object>) {
+    return Promise.resolve(activeRoute.component()).then((element) => {
       // Only set route context if the HTMLElement has a lit kit injector attached
-      if ('componentInjector' in activeComponent) {
-        const litKitComponent = activeComponent as ElementInstance<any>;
+      if ('componentInjector' in element) {
+        const litKitComponent = element as ElementInstance<any>;
 
         return litKitComponent.componentInjector
           .get(RouteCtx)
           .setValue(ctx)
-          .then(() => this.state.setValue(activeComponent));
+          .then(() => this.state.setValue({ element, activeRoute }));
       }
 
       return Promise.resolve();

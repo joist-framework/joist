@@ -7,7 +7,7 @@ import { Route } from '../router';
 describe('RouterOutletComponent', () => {
   let el: ElementInstance<RouterOutletComponent>;
 
-  @Component({ template: () => html`` })
+  @Component({ template: () => 'HELLO WORLD' })
   class One {}
 
   customElements.define('router-outlet-component-1', defineElement(One));
@@ -34,7 +34,7 @@ describe('RouterOutletComponent', () => {
     const state: State<RouterOutletState> = el.componentInjector.get(State);
 
     const removeListener = state.onChange((val) => {
-      expect(val!.tagName).toBe('ROUTER-OUTLET-COMPONENT-1');
+      expect(val.element!.tagName).toBe('ROUTER-OUTLET-COMPONENT-1');
 
       removeListener();
       done();
