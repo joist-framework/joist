@@ -1,7 +1,7 @@
 import { ProviderToken, Provider } from '@joist/di';
 
-export const COMPONENT_METADATA_KEY = 'litKitComponentMetadata';
-export const COMPONENT_DEF_KEY = 'litKitComponentDef';
+export const COMPONENT_METADATA_KEY = 'joistComponentMetadata';
+export const COMPONENT_DEF_KEY = 'joistComponentDef';
 
 export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
 
@@ -18,7 +18,7 @@ export interface ComponentDef<T> {
   initialState?: T;
   useShadowDom?: boolean;
   observedAttributes?: string[];
-  use?: Provider<any>[];
+  providers?: Provider<any>[];
 }
 
 export class ComponentMetadata {

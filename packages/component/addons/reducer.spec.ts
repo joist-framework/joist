@@ -6,7 +6,7 @@ describe('Reducer', () => {
   @Component({
     initialState: 0,
     template: ({ state }) => state.toString(),
-    use: [
+    providers: [
       withReducer<number>((action, state) => {
         switch (action.type) {
           case 'INCREMENT':

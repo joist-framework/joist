@@ -11,7 +11,7 @@ const plugins = [
 ];
 
 module.exports = {
-  mode: 'production',
+  mode: process.env.NODE_ENV || 'development',
   entry: {
     main: './src/main.ts',
   },
@@ -32,9 +32,12 @@ module.exports = {
     chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  devServer: {
+    historyApiFallback: true,
+  },
   performance: {
     hints: 'error',
-    maxEntrypointSize: 7000,
+    maxEntrypointSize: 15000,
   },
   optimization: {
     minimizer: [new TerserPlugin({ terserOptions: { output: { comments: false } } })],

@@ -1,4 +1,5 @@
 import { Component, defineElement } from '@joist/component';
+import { withLitHtml } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 export interface AppState {
@@ -6,9 +7,10 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  use: [withLitHtml()],
   initialState: { title: 'Hello World' },
   template({ state }) {
-    return html` <h1>${state.title}</h1> `;
+    return html`<h1>${state.title}</h1>`;
   },
 })
 export class AppComponent {}

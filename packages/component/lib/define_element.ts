@@ -65,7 +65,7 @@ export function defineElement<T>(
 ) {
   const componentDef = getComponentDef<T>(component);
   const componentMetadata = getComponentMetadata(component);
-  const componentProviders = componentDef.use || [];
+  const componentProviders = componentDef.providers || [];
 
   const LitKitElement = class extends options.extends implements ElementInstance<any> {
     static observedAttributes = componentDef.observedAttributes;

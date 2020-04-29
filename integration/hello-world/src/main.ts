@@ -1,6 +1,19 @@
-import './app/app.component';
+import { Component, defineElement } from '@joist/component';
 
-import { bootstrapEnvironment } from '@joist/component';
-import { withLitHtml } from '@joist/component/lit_html';
+export interface AppState {
+  title: string;
+}
 
-bootstrapEnvironment([withLitHtml()]);
+@Component<AppState>({
+  initialState: { title: 'Hello World' },
+  template({ state }) {
+    const el = document.createElement('title');
+
+    el.innerHTML = state.title;
+
+    return el;
+  },
+})
+export class AppComponent {}
+
+customElements.define('app-root', defineElement(AppComponent));

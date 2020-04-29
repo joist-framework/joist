@@ -3,8 +3,13 @@
   "compilerOptions": {
     "module": "es2015",
     "target": "es2015",
-    "outDir": "target"
+    "outDir": "target",
+    "baseUrl": "./",
+    "paths": {
+      "@joist/component": ["public_api.ts"],
+      "lit-html": ["../../node_modules/lit-html/lit-html"]
+    }
   },
   "files": ["test.ts", "public_api.ts"],
-  "include": ["src", "lit_html", "addons"]
+  "include": ["src", "lit-html", "addons"]
 }

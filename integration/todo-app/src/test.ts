@@ -1,5 +1,5 @@
 import { bootstrapEnvironment } from '@joist/component';
-import { withLitHtml } from '@joist/component/lit_html';
+import { withLitHtml } from '@joist/component/lit-html';
 
 bootstrapEnvironment([withLitHtml()]);
 

@@ -8,7 +8,7 @@ describe('lit-html', () => {
     template() {
       return html`<h1>Hello World</h1>`;
     },
-    use: [withLitHtml()],
+    providers: [withLitHtml()],
   })
   class MyComponent {}
 

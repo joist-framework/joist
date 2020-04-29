@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "files": ["public_api.ts"],
-  "include": ["src", "lit_html", "addons"],
+  "include": ["src", "lit-html", "addons"],
   "exclude": ["**/*.spec.ts"]
 }
