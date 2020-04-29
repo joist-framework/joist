@@ -1,15 +1,18 @@
-import { Prop } from './prop';
-import { getComponentMetadata } from './metadata';
+import { getComponentProps, Prop } from './prop';
 
 describe('Props', () => {
-  class MyComponent {
-    @Prop() foo?: string;
-    @Prop() bar?: string;
-  }
+  it('should return an empy array by default', () => {
+    class MyComponent {}
 
-  it('should add property keys to metadata', () => {
-    const metadata = getComponentMetadata(MyComponent);
+    expect(getComponentProps(MyComponent)).toEqual([]);
+  });
 
-    expect(metadata.props).toEqual(['foo', 'bar']);
+  it('should add methods to the handlers map', () => {
+    class MyComponent {
+      @Prop() foo!: string;
+      @Prop() bar!: string;
+    }
+
+    expect(getComponentProps(MyComponent)).toEqual(['foo', 'bar']);
   });
 });

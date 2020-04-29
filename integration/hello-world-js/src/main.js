@@ -12,10 +12,12 @@ const AppElement = defineElement(
     },
   })(
     class {
-      static get joistProvider() {
-        return {
-          deps: [State],
-        };
+      static get props() {
+        return [];
+      }
+
+      static get deps() {
+        return [State];
       }
 
       constructor(state) {

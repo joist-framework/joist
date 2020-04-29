@@ -4,9 +4,8 @@ export { State, StateRef } from './lib/state';
 export { Prop } from './lib/prop';
 export { ElRef } from './lib/el_ref';
 export { Handle } from './lib/handle';
-export { TemplateDef, TemplateEvent } from './lib/metadata';
 export { Renderer } from './lib/renderer';
-export { Component } from './lib/component';
+export { Component, ComponentDef, TemplateEvent, TemplateCtx, TemplateDef } from './lib/component';
 export {
   OnAttributeChanged,
   OnConnected,

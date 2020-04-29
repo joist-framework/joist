@@ -1,16 +1,21 @@
-import { getMetadataRef } from './metadata';
-import { Inject } from './inject';
+import { Inject, getProviderDeps } from './inject';
 
 describe('Inject', () => {
   class A {}
   class B {}
   class C {
-    constructor(@Inject(A) _a: A, @Inject(B) _b: B) {}
+    constructor(@Inject(A) public a: A, @Inject(B) public b: B) {}
   }
 
-  it('should add deps to metadata', () => {
-    const metadata = getMetadataRef(C);
+  it('should return an empty array by default', () => {
+    const deps = getProviderDeps(A);
 
-    expect(metadata.deps).toEqual([A, B]);
+    expect(deps).toEqual([]);
+  });
+
+  it('should add deps to metadata', () => {
+    const deps = getProviderDeps(C);
+
+    expect(deps).toEqual([A, B]);
   });
 });

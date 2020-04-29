@@ -1,8 +1,11 @@
 import { ProviderToken } from './provider';
-import { getMetadataRef } from './metadata';
+
+export function isProvidedInRoot(provider: ProviderToken<any>) {
+  return provider.provideInRoot || false;
+}
 
 export function Service() {
   return function (provider: ProviderToken<any>) {
-    getMetadataRef(provider).provideInRoot = true;
+    provider.provideInRoot = true;
   };
 }

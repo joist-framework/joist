@@ -1,15 +1,18 @@
-import { Handle } from './handle';
-import { getComponentMetadata } from './metadata';
+import { Handle, getComponentHandlers } from './handle';
 
 describe('Handle', () => {
-  class MyComponent {
-    @Handle('FOO') onFoo() {}
-    @Handle('BAR') onBar() {}
-  }
+  it('should return an empy object by default', () => {
+    class MyComponent {}
+
+    expect(getComponentHandlers(MyComponent)).toEqual({});
+  });
 
   it('should add methods to the handlers map', () => {
-    const metadata = getComponentMetadata(MyComponent);
+    class MyComponent {
+      @Handle('FOO') onFoo() {}
+      @Handle('BAR') onBar() {}
+    }
 
-    expect(Object.keys(metadata.handlers)).toEqual(['FOO', 'BAR']);
+    expect(Object.keys(getComponentHandlers(MyComponent))).toEqual(['FOO', 'BAR']);
   });
 });

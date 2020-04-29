@@ -1,10 +1,7 @@
-import { html } from 'lit-html';
-
-import { getComponentDef } from './metadata';
-import { Component } from './component';
+import { Component, getComponentDef } from './component';
 
 describe('Component', () => {
-  const def = { template: () => html`` };
+  const def = {};
 
   @Component(def)
   class MyComponent {}
