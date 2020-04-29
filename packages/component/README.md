@@ -297,7 +297,7 @@ describe('AppComponent', () => {
 });
 ```
 
-LitKit has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
+Joist has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
 This means you can manually create instances of your component and test them independently of joist
 
 ```TS
