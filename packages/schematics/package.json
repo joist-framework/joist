@@ -1,6 +1,6 @@
 {
   "name": "@joist/schematics",
-  "version": "2.1.3",
+  "version": "1.0.0-alpha.0",
   "description": "A blank schematics",
   "files": [
     "src/**/*",
