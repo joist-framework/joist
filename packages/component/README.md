@@ -232,11 +232,11 @@ customElements.define(
 ### Reducer State
 
 You can optionally use reducers to manage your state.
-Using the lit kit dependency injector you can use whatever sort of state management you would like.
+Using the joist dependency injector you can use whatever sort of state management you would like.
 
 ```TS
 import { Component, StateRef, State, defineElement } from '@joist/component';
-import { reducer, ReducerStateRef, ReducerState } from '@joist/component/lib/reducer'
+import { reducer, ReducerStateRef, ReducerState } from '@joist/addons'
 
 @Component({
   initialState: 0,
