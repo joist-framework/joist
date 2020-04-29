@@ -10,8 +10,6 @@ npm i @joist/component @joist/di lit-html
 
 If bootstrapping one component
 ```TS
-// main.ts
-
 import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
