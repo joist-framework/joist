@@ -1,7 +1,7 @@
 import { bootstrapEnvironment } from '@joist/component';
-import { withLitHtml } from '@joist/component/lit-html';
+import { litHtml } from '@joist/component/lit-html';
 
-bootstrapEnvironment([withLitHtml()]);
+bootstrapEnvironment([litHtml()]);
 
 // Then we find all the tests.
 const context = (require as any).context('./', true, /\.spec\.ts$/);

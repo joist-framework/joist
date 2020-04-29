@@ -28,7 +28,7 @@ export class ReducerState<T> {
   }
 }
 
-export function withReducer<T>(reducer: Reducer<T>): Provider<ReducerState<T>> {
+export function reducer<T>(reducer: Reducer<T>): Provider<ReducerState<T>> {
   return {
     provide: ReducerState,
     useFactory: (state) => new ReducerState<T>(reducer, state),

@@ -1,13 +1,13 @@
 import { defineElement, ElementInstance, Component } from '@joist/component';
 
-import { withReducer, ReducerState, ReducerStateRef } from './reducer';
+import { reducer, ReducerState, ReducerStateRef } from './reducer';
 
 describe('Reducer', () => {
   @Component({
     initialState: 0,
     template: ({ state }) => state.toString(),
     providers: [
-      withReducer<number>((action, state) => {
+      reducer<number>((action, state) => {
         switch (action.type) {
           case 'INCREMENT':
             return state + 1;

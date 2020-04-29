@@ -132,7 +132,7 @@ describe('defineElement', () => {
 
       @Component({
         template: () => '',
-        use: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }],
+        providers: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }],
       })
       class MyComponent {}
 

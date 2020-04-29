@@ -12,9 +12,9 @@ npm i @joist/component @joist/di lit-html
 // main.ts
 
 import { bootstrapEnvironment } from '@joist/component';
-import { withLitHtml } from '@joist/component/lit-html';
+import { litHtml } from '@joist/component/lit-html';
 
-bootstrapEnvironment([withLitHtml()]);
+bootstrapEnvironment([litHtml()]);
 ```
 
 ### Component
@@ -223,13 +223,13 @@ Using the lit kit dependency injector you can use whatever sort of state managem
 
 ```TS
 import { Component, StateRef, State, defineElement } from '@joist/component';
-import { withReducer, ReducerStateRef, ReducerState } from '@joist/component/lib/reducer'
+import { reducer, ReducerStateRef, ReducerState } from '@joist/component/lib/reducer'
 
 @Component({
   initialState: 0,
   template: ({ state }) => html`<h1>${state}</h1>`
-  use: [
-    withReducer<number>((action, state) => {
+  providers: [
+    reducer<number>((action, state) => {
       switch (action.type) {
         case 'INCREMENT': return state + 1;
         case 'DECREMENT': return state - 1;

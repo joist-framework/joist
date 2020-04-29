@@ -1,14 +1,14 @@
 import { Component, defineElement, ElementInstance } from '@joist/component';
 import { html } from 'lit-html';
 
-import { withLitHtml } from './lit_html_renderer';
+import { litHtml } from './lit_html_renderer';
 
 describe('lit-html', () => {
   @Component({
     template() {
       return html`<h1>Hello World</h1>`;
     },
-    providers: [withLitHtml()],
+    providers: [litHtml()],
   })
   class MyComponent {}
 

@@ -12,6 +12,6 @@ export class LitHtmlRenderer extends Renderer {
   }
 }
 
-export function withLitHtml(): Provider<Renderer> {
+export function litHtml(): Provider<Renderer> {
   return { provide: Renderer, useClass: LitHtmlRenderer };
 }

@@ -1,1 +1,1 @@
-export { withLitHtml, LitHtmlRenderer } from './lit_html_renderer';
+export { litHtml, LitHtmlRenderer } from './lit_html_renderer';
