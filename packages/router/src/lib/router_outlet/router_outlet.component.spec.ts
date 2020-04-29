@@ -1,5 +1,4 @@
 import { ElementInstance, Component, State, defineElement } from '@joist/component';
-import { html } from 'lit-html';
 
 import { RouterOutletComponent, RouterOutletState } from './router_outlet.component';
 import { Route } from '../router';
