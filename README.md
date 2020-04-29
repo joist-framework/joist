@@ -1,6 +1,6 @@
 [![Actions Status](https://github.com/deebloo/joist/workflows/CI/badge.svg)](https://github.com/deebloo/joist/actions)
 
-<img src="images/logo.png" data-canonical-src="images/logo.png" />
+<img style="height: 200px" src="images/logo.png" data-canonical-src="images/logo.png" />
 
 A set of packages that leverage lit-html to help you write applications and components
 
