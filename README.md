@@ -2,7 +2,7 @@
 
 <img height="250" src="images/logo.png" data-canonical-src="images/logo.png" />
 
-A set of packages that leverage lit-html to help you write applications and components
+A small (~2kb) library to help with the creation of web components and web component based applications. Support for [lit-html](https://lit-html.polymer-project.org/) is baked but can work with whatever view library you like. 
 
 | Package                                  | Description                                                    |
 | ---------------------------------------- | -------------------------------------------------------------- |
