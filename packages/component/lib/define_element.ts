@@ -17,19 +17,16 @@ export type ElementInstance<Component> = HTMLElement & {
   [key: string]: any;
 };
 
-function connectComponent<Component, State>(
-  el: ElementInstance<Component>,
-  componentDef: ComponentDef<any>
-) {
+function connectComponent<State>(el: ElementInstance<any>, componentDef: ComponentDef<any>) {
   const handlers = getComponentHandlers(el.componentInstance.constructor);
 
-  const base = el.shadowRoot || el;
   const renderer = el.componentInjector.get(Renderer);
-  const renderOptions = { scopeName: el.tagName.toLowerCase(), eventContext: el };
 
   const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
     if (eventName in handlers) {
-      handlers[eventName].call(el.componentInstance, e, payload);
+      handlers[eventName].forEach((methodName) => {
+        el.componentInstance[methodName].call(el.componentInstance, e, payload);
+      });
     }
   };
 
@@ -39,7 +36,7 @@ function connectComponent<Component, State>(
 
   const componentRender = (state: State) => {
     if (componentDef.template) {
-      renderer.render(componentDef.template({ state, run, dispatch }), base, renderOptions);
+      renderer.render(componentDef.template({ state, run, dispatch }), el.shadowRoot || el);
     }
   };
 

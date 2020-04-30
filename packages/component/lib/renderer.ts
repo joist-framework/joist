@@ -2,7 +2,7 @@ import { Service } from '@joist/di';
 
 @Service()
 export abstract class Renderer {
-  render<O>(result: any, container: Element | DocumentFragment, _options: O): void {
+  render(result: any, container: Element | DocumentFragment): void {
     if (container.lastChild) {
       container.removeChild(container.lastChild);
     }

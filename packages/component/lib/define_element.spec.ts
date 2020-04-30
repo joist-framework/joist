@@ -91,6 +91,49 @@ describe('defineElement', () => {
 
       button.click();
     });
+
+    it('should handle multiple functions', (done) => {
+      let doneCounter = 0;
+
+      @Component({
+        template({ run }) {
+          const el = document.createElement('button');
+
+          el.onclick = run('TEST_RUN', 'Hello World');
+
+          return el;
+        },
+      })
+      class MyComponent {
+        @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
+          expect(e instanceof Event).toBe(true);
+          expect(payload).toBe('Hello World');
+
+          doneCounter++;
+        }
+
+        @Handle('TEST_RUN') onTestRun2(e: Event, payload: string) {
+          expect(e instanceof Event).toBe(true);
+          expect(payload).toBe('Hello World');
+
+          doneCounter++;
+
+          expect(doneCounter).toBe(2);
+
+          done();
+        }
+      }
+
+      customElements.define('handlers-2', defineElement(MyComponent));
+
+      const el = document.createElement('handlers-2') as ElementInstance<MyComponent>;
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+    });
   });
 
   describe('dispatch', () => {

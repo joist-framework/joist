@@ -33,7 +33,7 @@
     "build": "../../node_modules/.bin/tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
-    "@joist/di": "^2.0.0"
+    "@joist/di": "^1.0.0"
   },
   "optionalPeerDependencies": {
     "lit-html": "^1.1.2"

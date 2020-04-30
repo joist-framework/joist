@@ -2,15 +2,16 @@ import { ProviderToken } from '@joist/di';
 
 export const COMPONENT_HANDLERS_KEY = 'handlers';
 
-export function getComponentHandlers(provider: ProviderToken<any>): Record<string, Function> {
+export function getComponentHandlers(provider: ProviderToken<any>): Record<string, string[]> {
   return provider[COMPONENT_HANDLERS_KEY] || {};
 }
 
 export function Handle(action: string) {
   return function (instance: { constructor: ProviderToken<any>; [key: string]: any }, key: string) {
-    instance.constructor[COMPONENT_HANDLERS_KEY] =
-      instance.constructor[COMPONENT_HANDLERS_KEY] || {};
+    const provider = instance.constructor;
 
-    instance.constructor[COMPONENT_HANDLERS_KEY][action] = instance[key];
+    provider[COMPONENT_HANDLERS_KEY] = provider[COMPONENT_HANDLERS_KEY] || {};
+    provider[COMPONENT_HANDLERS_KEY][action] = provider[COMPONENT_HANDLERS_KEY][action] || [];
+    provider[COMPONENT_HANDLERS_KEY][action].push(key);
   };
 }
