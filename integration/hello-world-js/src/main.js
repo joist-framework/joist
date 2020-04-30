@@ -11,7 +11,7 @@ const AppElement = defineElement(
 
       const button = document.createElement('button');
       button.innerHTML = 'Click Me!';
-      button.addEventListener('click', run('TEST_HANDER'));
+      button.addEventListener('click', run('TEST_HANDLER'));
 
       div.append(title, button);
 
@@ -29,7 +29,7 @@ const AppElement = defineElement(
 
       static get handlers() {
         return {
-          TEST_HANDER: ['foo', 'bar'],
+          TEST_HANDLER: ['foo', 'bar'],
         };
       }
 
