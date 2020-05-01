@@ -7,7 +7,7 @@ export interface AppState {
 @Component<AppState>({
   initialState: { title: 'Hello World' },
   template({ state }) {
-    const el = document.createElement('title');
+    const el = document.createElement('h1');
 
     el.innerHTML = state.title;
 

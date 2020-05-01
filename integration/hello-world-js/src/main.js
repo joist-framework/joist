@@ -18,7 +18,7 @@ const AppElement = defineElement(
       return div;
     },
   })(
-    class {
+    class AppComponent {
       static get props() {
         return [];
       }

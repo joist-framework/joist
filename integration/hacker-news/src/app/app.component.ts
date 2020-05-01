@@ -88,7 +88,7 @@ export interface AppState {
                   <news-card .newsItem=${news} @click=${run('CARD_CLICKED', news)}></news-card>
                 `
             ),
-            html` <div class="placeholder-card"></div> `
+            html`<div class="placeholder-card"></div>`
           )
         )}
       </div>

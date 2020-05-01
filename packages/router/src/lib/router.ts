@@ -1,6 +1,6 @@
 import { Inject, Service } from '@joist/di';
 import { State } from '@joist/component';
-import { Match, match, Path } from 'path-to-regexp';
+import { match, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
@@ -11,7 +11,7 @@ export function RouteCtxRef(c: any, k: string, i: number) {
   Inject(RouteCtx)(c, k, i);
 }
 
-export class RouteCtx extends State<Match<object> | null> {}
+export class RouteCtx extends State<MatchResult<any>> {}
 
 export function RouterRef(c: any, k: string, i: number) {
   Inject(Router)(c, k, i);

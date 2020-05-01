@@ -8,7 +8,7 @@ import {
   ElementInstance,
   defineElement,
 } from '@joist/component';
-import { MatchFunction, Match } from 'path-to-regexp';
+import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
 import { Route, Router, RouterRef, RouteCtx } from '../router';
 
@@ -78,7 +78,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
     return this.state.setValue({});
   }
 
-  private resolve(activeRoute: Route, ctx: Match<object>) {
+  private resolve(activeRoute: Route, ctx: MatchResult<object>) {
     return Promise.resolve(activeRoute.component()).then((element) => {
       // Only set route context if the HTMLElement has a lit kit injector attached
       if ('componentInjector' in element) {
