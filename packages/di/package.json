@@ -1,6 +1,6 @@
 {
   "name": "@joist/di",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "main": "out-common/public_api.js",
   "module": "out-module/public_api.js",
   "files": [
