@@ -1,65 +1,69 @@
-import { defineElement, ElementInstance, Component, State } from '@joist/component';
+import { defineElement, ElementInstance, Component } from '@joist/component';
 
 import { RouterLinkComponent } from './router_link.component';
 
 describe('RouterLinkComponent', () => {
-  let el: ElementInstance<TestBed>;
-
-  @Component({
-    template() {
-      const el = document.createElement('router-link') as ElementInstance<any>;
-
-      el.innerHTML = 'Hello World';
-      el.path = '/foo';
-
-      return el;
-    },
-  })
-  class TestBed {}
-
   customElements.define('router-link', defineElement(RouterLinkComponent));
-  customElements.define('routerlink-test', defineElement(TestBed));
 
-  function init() {
-    el = document.createElement('routerlink-test') as ElementInstance<TestBed>;
-
-    document.body.appendChild(el);
-  }
+  let el: HTMLElement;
 
   afterEach(() => {
-    document.body.removeChild(el);
     history.replaceState(null, '', '');
+    document.body.removeChild(el);
   });
 
-  it('should create an anchor tag with the correct path and content', (done) => {
-    init();
+  it('should mark the router outlet with the default active class if the path matches', () => {
+    @Component({
+      template() {
+        const el = document.createElement('router-link') as ElementInstance<any>;
+        el.path = '/foo';
 
-    const routerLinks = el.querySelectorAll('router-link');
+        return el;
+      },
+    })
+    class TestBed {}
 
-    const first = routerLinks[0] as ElementInstance<RouterLinkComponent>;
+    customElements.define('routerlink-test-1', defineElement(TestBed));
 
-    first.componentInjector.get(State).onChange(() => {
-      const anchor = first.querySelector('a') as HTMLAnchorElement;
-
-      expect(anchor).toBeTruthy();
-      expect(anchor.innerHTML).toBe('Hello World');
-
-      done();
-    });
-  });
-
-  it('should mark the router outlet with the default active class if the path matches', (done) => {
     history.replaceState(null, '', '/foo');
 
-    init();
+    el = document.createElement('routerlink-test-1') as ElementInstance<any>;
 
-    const routerLinks = el.querySelectorAll('router-link');
-    const first = routerLinks[0] as ElementInstance<RouterLinkComponent>;
+    document.body.appendChild(el);
 
-    first.componentInjector.get(State).onChange(() => {
-      expect(first.classList.contains('active')).toBeTrue();
+    const routerLinks = el.querySelector('router-link');
+    const first = routerLinks as ElementInstance<RouterLinkComponent>;
 
-      done();
-    });
+    expect(first.classList.contains('active')).toBeTrue();
+  });
+
+  it('should use the path if the first child is an anchor', () => {
+    @Component({
+      template() {
+        const el = document.createElement('router-link') as ElementInstance<any>;
+
+        const anchor = document.createElement('a');
+        anchor.href = '/bar';
+
+        el.appendChild(anchor);
+
+        return el;
+      },
+    })
+    class TestBed {}
+
+    customElements.define('routerlink-test-2', defineElement(TestBed));
+
+    history.replaceState(null, '', '/bar');
+
+    el = document.createElement('routerlink-test-2') as ElementInstance<any>;
+
+    document.body.appendChild(el);
+
+    const routerLinks = el.querySelector('router-link');
+    const link = routerLinks as ElementInstance<RouterLinkComponent>;
+
+    expect(link.path).toBe('/bar');
+    expect(link.classList.contains('active')).toBeTrue();
   });
 });

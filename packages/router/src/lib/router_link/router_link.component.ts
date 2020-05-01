@@ -1,7 +1,5 @@
 import {
   Component,
-  StateRef,
-  State,
   Prop,
   OnPropChanges,
   ElRef,
@@ -23,10 +21,7 @@ export class ActiveOptions {
   }
 }
 
-@Component<RouterLinkState>({
-  initialState: null,
-  template: (ctx) => ctx.state,
-})
+@Component()
 export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';
   @Prop() activeOptions: ActiveOptions = new ActiveOptions();
@@ -34,16 +29,22 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
   private normalizedPath: string = '';
   private removeListener?: Function;
 
-  constructor(
-    @StateRef private state: State<RouterLinkState>,
-    @RouterRef private router: Router,
-    @ElRef private elRef: HTMLElement
-  ) {}
+  constructor(@RouterRef private router: Router, @ElRef private elRef: HTMLElement) {}
 
   connectedCallback() {
     this.removeListener = this.router.listen(() => {
       this.setActiveClass();
     });
+
+    const child = this.elRef.children[0];
+
+    if (child) {
+      if (child.tagName === 'A') {
+        this.path = (child as HTMLAnchorElement).pathname;
+
+        this.onPropChanges('path');
+      }
+    }
   }
 
   disconnectedCallback() {
@@ -56,19 +57,11 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
     if (key === 'path') {
       this.normalizedPath = this.router.normalize(this.path);
 
-      const anchor = this.state.value || document.createElement('a');
-
-      anchor.href = this.path;
-      anchor.onclick = (e) => {
+      this.elRef.onclick = (e) => {
         e.preventDefault();
 
         this.router.navigate(this.path);
       };
-
-      if (!this.state.value) {
-        anchor.innerHTML = this.elRef.innerHTML;
-        this.state.setValue(anchor);
-      }
     }
 
     this.setActiveClass();

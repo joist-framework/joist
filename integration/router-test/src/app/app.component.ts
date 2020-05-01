@@ -20,11 +20,17 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link .path=${'/'} .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
-        HOME
+      <router-link .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
+        <a href="/">HOME</a>
       </router-link>
-      <router-link .path=${'/foo'}>FOO</router-link>
-      <router-link .path=${'/foo/bar'}>BAR</router-link>
+
+      <router-link>
+        <a href="/foo">FOO</a>
+      </router-link>
+
+      <router-link>
+        <a href="/foo/bar">BAR</a>
+      </router-link>
 
       <router-outlet .routes=${routes}></router-outlet>
 

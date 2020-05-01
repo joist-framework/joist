@@ -26,7 +26,7 @@ export function getComponentDef<T>(provider: ProviderToken<any>): ComponentDef<T
   return provider[COMPONENT_DEF_KEY];
 }
 
-export function Component<T>(componentDef: ComponentDef<T>) {
+export function Component<T>(componentDef: ComponentDef<T> = {}) {
   return function (component: ClassProviderToken<any>) {
     Object.defineProperty(component, COMPONENT_DEF_KEY, {
       get() {
