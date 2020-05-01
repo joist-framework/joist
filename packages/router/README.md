@@ -38,10 +38,12 @@ export interface AppState {
   template(state) {
     return html`
       <router-link .path=${'/'} .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
-        Go To Foo
+                <a href="/bar">Go To Bar</a>
       </router-link>
 
-      <router-link .path=${'/bar'}>Go To Bar</router-link>
+      <router-link>
+        <a href="/bar">Go To Bar</a>
+      </router-link>
 
       <section>
         <router-outlet .routes=${routes}></router-outlet>
