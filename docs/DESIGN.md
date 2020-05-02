@@ -109,7 +109,7 @@ bootstrapEnvironment(); // create global root injector for global singletons
 ```TS
 
 function render(ctx: TemplateCtx<number>): TemplateResult {
-  return html`<h1>${state}</h1>`
+  return html`<h1>${ctx.state}</h1>`
 }
 
 @Component<number>({
