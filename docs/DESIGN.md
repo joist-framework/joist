@@ -4,7 +4,7 @@ This document outlines the overall design for joist
 
 ### Small and opinionated
 
-- Small: ~5kb Hello World ~6kb Todo App
+- Small: ~5kb Hello World (including view lib) ~6kb Todo App
 - there should only be one way to do things (unless there is an obvious exception)
 - Component and Custom Element are Separate. (You should be able to test component code without creating the custom element)
 
@@ -15,18 +15,19 @@ This document outlines the overall design for joist
 ```TS
 
 class MyComponent {
-  static litKitComponentDef = {
-    initialState = 'Hello World'
-    render: ({ state }) => html`<h1>${state}</h1>`
+  static get componentDef() {
+    return {
+      state: 'Hello World'
+      render: ({ state }) => html`<h1>${state}</h1>`
+    }
   };
 
-  static litKitComponentMetadata = {
-    props: string[] = []
-    handlers: { [key: string]: Function } = {}
+  static get props() {
+    return []
   };
 
-  static litKitProviderDef = {
-    deps: []
+  static get deps() {
+    return []
   };
 }
 
@@ -38,7 +39,7 @@ class MyElement extends HTMLElement {
     ]
   });
 
-  componentInstance: T = this.componentInjector.create(MyComponent)
+  componentInstance: T = this.componentInjector.create(MyComponent);
 }
 ```
 
