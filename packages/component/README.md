@@ -15,10 +15,10 @@ import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
 @Component<string>({
+  providers: [litHtml()],
   render() {
     return html`<h1>Hello World</h1>`
-  },
-  providers: [litHtml()]
+  }
 })
 class AppComponent {}
 ```
