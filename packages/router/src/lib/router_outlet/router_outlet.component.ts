@@ -18,8 +18,8 @@ export interface RouterOutletState {
 }
 
 @Component<RouterOutletState>({
-  initialState: {},
-  template: (ctx) => ctx.state.element,
+  state: {},
+  render: (ctx) => ctx.state.element,
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];

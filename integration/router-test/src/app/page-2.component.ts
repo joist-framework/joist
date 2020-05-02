@@ -6,8 +6,8 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { title: 'Page2Component Works!' },
-  template({ state }) {
+  state: { title: 'Page2Component Works!' },
+  render({ state }) {
     return html` <h3>${state.title}</h3> `;
   },
 })

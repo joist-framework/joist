@@ -17,7 +17,7 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: {
+  state: {
     bandLimit: 0,
     bands: [],
     selectedBands: [],
@@ -25,7 +25,7 @@ export interface AppState {
     displayColors: false,
   },
   useShadowDom: true,
-  template({ state, run }) {
+  render({ state, run }) {
     return html`
       <style>
         select-band-color {

@@ -15,8 +15,8 @@ export interface TemplateCtx<T> {
 export type TemplateDef<T> = (ctx: TemplateCtx<T>) => unknown;
 
 export interface ComponentDef<T> {
-  template?: TemplateDef<T>;
-  initialState?: T;
+  render?: TemplateDef<T>;
+  state?: T;
   useShadowDom?: boolean;
   observedAttributes?: string[];
   providers?: Provider<any>[];

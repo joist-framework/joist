@@ -13,8 +13,8 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { title: 'Page1Component Works!' },
-  template({ state }) {
+  state: { title: 'Page1Component Works!' },
+  render({ state }) {
     return html`
       <h2>${state.title}</h2>
 

@@ -20,12 +20,12 @@ export function service(options: ComponentOptions): Rule {
 
         return mergeWith(completedTemplates)(tree, context);
       },
-      tree => {
+      (tree) => {
         tree.rename(`./service.ts.template`, `${path}/${name}.service.ts`);
         tree.rename(`./service.spec.ts.template`, `${path}/${name}.service.spec.ts`);
 
         return tree;
-      }
+      },
     ]);
   };
 }

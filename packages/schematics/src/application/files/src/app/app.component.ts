@@ -6,8 +6,8 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { title: '<%= name %>' },
-  template({ state }) {
+  state: { title: '<%= name %>' },
+  render({ state }) {
     return html` <h1>${state.title}</h1> `;
   },
 })

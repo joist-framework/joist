@@ -4,8 +4,8 @@ import { reducer, ReducerState, ReducerStateRef } from './reducer';
 
 describe('Reducer', () => {
   @Component({
-    initialState: 0,
-    template: ({ state }) => state.toString(),
+    state: 0,
+    render: ({ state }) => state.toString(),
     providers: [
       reducer<number>((action, state) => {
         switch (action.type) {

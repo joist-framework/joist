@@ -4,8 +4,8 @@ import { html } from 'lit-html';
 export interface <%= classify(name) %>State {}
 
 @Component<<%= classify(name) %>State>({
-  initialState: {},
-  template({ state }) {
+  state: {},
+  render({ state }) {
     return html`
       <%= name %> Worked!
     `;

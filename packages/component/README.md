@@ -9,12 +9,13 @@ npm i @joist/component @joist/di lit-html
 ```
 
 If bootstrapping one component
+
 ```TS
 import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
 @Component<string>({
-  template() {
+  render() {
     return html`<h1>Hello World</h1>`
   },
   providers: [litHtml()]
@@ -23,6 +24,7 @@ class AppComponent {}
 ```
 
 If bootstrapping an entire application
+
 ```TS
 import { bootstrapEnvironment } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
@@ -39,8 +41,8 @@ import { Component, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<string>({
-  initialState: 'Hello World',
-  template({ state }) {
+  state: 'Hello World',
+  render({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
@@ -59,8 +61,8 @@ import { Component, StateRef, State, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<number>({
-  initialState: 0,
-  template({ state }) {
+  state: 0,
+  render({ state }) {
     return html`${state}`
   }
 })
@@ -87,8 +89,8 @@ import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '
 import { html } from 'lit-html';
 
 @Component<string>({
-  initialState: '',
-  template({ state }) {
+  state: '',
+  render({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
@@ -116,8 +118,8 @@ import { Component, StateRef, State, Handle, defineElement } from '@joist/compon
 import { html } from 'lit-html';
 
 @Component<number>({
-  initialState: 0,
-  template({ state, run }) {
+  state: 0,
+  render({ state, run }) {
     return html`
       <button @click=${run('DECREMENT')}>Decrement</button>
 
@@ -155,8 +157,8 @@ import { Component, Handle, ElRef, defineElement } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component<number>({
-  initialState: 0,
-  template({ state, run, dispatch }) {
+  state: 0,
+  render({ state, run, dispatch }) {
     return html`
       <button @click=${dispatch('DECREMENT')}>Decrement</button>
 
@@ -190,8 +192,8 @@ interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { loading: false, data: [] },
-  template: ({ state }) => html`${JSON.stringify(state)}`
+  state: { loading: false, data: [] },
+  render: ({ state }) => html`${JSON.stringify(state)}`
 })
 class AppComponent {
   constructor(@StateRef private state: State<AppState>) {}
@@ -217,8 +219,8 @@ import { Component, StateRef, State, defineElement } from '@joist/component';
 
 
 @Component({
-  initialState: 'Hello World',
-  template: ({ state }) => html`<h1>${state}</h1>`
+  state: 'Hello World',
+  render: ({ state }) => html`<h1>${state}</h1>`
 })
 class CustomAnchor { }
 
@@ -239,8 +241,8 @@ import { Component, StateRef, State, defineElement } from '@joist/component';
 import { reducer, ReducerStateRef, ReducerState } from '@joist/addons'
 
 @Component({
-  initialState: 0,
-  template: ({ state }) => html`<h1>${state}</h1>`
+  state: 0,
+  render: ({ state }) => html`<h1>${state}</h1>`
   providers: [
     reducer<number>((action, state) => {
       switch (action.type) {

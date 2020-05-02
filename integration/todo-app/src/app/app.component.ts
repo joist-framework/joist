@@ -11,9 +11,9 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { todos: [] },
+  state: { todos: [] },
   useShadowDom: false,
-  template({ state, run }) {
+  render({ state, run }) {
     return html`
       <style>
         app-root {

@@ -17,7 +17,7 @@ This document outlines the overall design for joist
 class MyComponent {
   static litKitComponentDef = {
     initialState = 'Hello World'
-    template: ({ state }) => html`<h1>${state}</h1>`
+    render: ({ state }) => html`<h1>${state}</h1>`
   };
 
   static litKitComponentMetadata = {
@@ -50,8 +50,8 @@ class MyElement extends HTMLElement {
 
 ```TS
 @Component<number>({
-  initialState: 0,
-  template({ state }) {
+  state: 0,
+  render({ state }) {
     return html`<h1>${state}</h1>`
   }
 })
@@ -107,12 +107,12 @@ bootstrapEnvironment(); // create global root injector for global singletons
 
 ```TS
 
-function template(ctx: TemplateCtx<number>): TemplateResult {
+function render(ctx: TemplateCtx<number>): TemplateResult {
   return html`<h1>${state}</h1>`
 }
 
 @Component<number>({
-  initialState: 0,
+  state: 0,
   template,
 })
 class AppComponent {

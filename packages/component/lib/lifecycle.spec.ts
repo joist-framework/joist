@@ -7,8 +7,8 @@ import { Component } from './component';
 describe('Lifecycle', () => {
   describe('OnPropChanges', () => {
     @Component({
-      initialState: {},
-      template: () => html``,
+      state: {},
+      render: () => html``,
     })
     class MyComponent {
       @Prop() stringProp: string = '';

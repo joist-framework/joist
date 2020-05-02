@@ -35,8 +35,8 @@ function connectComponent<State>(el: ElementInstance<any>, componentDef: Compone
   };
 
   const componentRender = (state: State) => {
-    if (componentDef.template) {
-      renderer.render(componentDef.template({ state, run, dispatch }), el.shadowRoot || el);
+    if (componentDef.render) {
+      renderer.render(componentDef.render({ state, run, dispatch }), el.shadowRoot || el);
     }
   };
 
@@ -65,7 +65,7 @@ export function defineElement<T>(
       {
         providers: componentProviders.concat([
           { provide: ElRefToken, useFactory: () => this, deps: [] },
-          { provide: State, useFactory: () => new State(componentDef.initialState), deps: [] },
+          { provide: State, useFactory: () => new State(componentDef.state), deps: [] },
         ]),
         bootstrap: componentProviders.map((p) => p.provide),
       },

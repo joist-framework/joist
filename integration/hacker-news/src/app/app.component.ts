@@ -19,9 +19,9 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  initialState: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
+  state: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
   useShadowDom: true,
-  template({ state, run }) {
+  render({ state, run }) {
     return html`
       <style>
         :host {

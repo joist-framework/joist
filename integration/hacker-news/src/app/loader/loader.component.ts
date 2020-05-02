@@ -3,7 +3,7 @@ import { html } from 'lit-html';
 
 @Component({
   useShadowDom: true,
-  template() {
+  render() {
     return html`
       <style>
         :host {

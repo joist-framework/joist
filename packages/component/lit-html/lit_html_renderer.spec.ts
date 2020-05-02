@@ -5,7 +5,7 @@ import { litHtml } from './lit_html_renderer';
 
 describe('lit-html', () => {
   @Component({
-    template() {
+    render() {
       return html`<h1>Hello World</h1>`;
     },
     providers: [litHtml()],

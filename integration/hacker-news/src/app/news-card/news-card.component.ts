@@ -6,9 +6,9 @@ import { HackerNewsItem } from '../hacker-news.service';
 export type NewsCardState = HackerNewsItem | null;
 
 @Component<NewsCardState>({
-  initialState: null,
+  state: null,
   useShadowDom: true,
-  template({ state }) {
+  render({ state }) {
     if (!state) {
       return html``;
     }

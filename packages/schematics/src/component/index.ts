@@ -23,12 +23,12 @@ export function component(options: ComponentOptions): Rule {
 
         return mergeWith(completedTemplates)(tree, context);
       },
-      tree => {
+      (tree) => {
         tree.rename(`./component.ts.template`, `${options.name}/${name}.component.ts`);
         tree.rename(`./component.spec.ts.template`, `${options.name}/${name}.component.spec.ts`);
 
         return tree;
-      }
+      },
     ]);
   };
 }

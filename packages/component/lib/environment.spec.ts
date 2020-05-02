@@ -21,7 +21,7 @@ describe('environment', () => {
     class MyService {}
 
     @Component({
-      template: () => html``,
+      render: () => html``,
     })
     class MyComponent {
       constructor(@Inject(MyService) public myService: MyService) {}

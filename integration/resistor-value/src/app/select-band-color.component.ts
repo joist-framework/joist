@@ -17,9 +17,9 @@ export interface SelectBandColorState {
 }
 
 @Component<SelectBandColorState>({
-  initialState: { bands: [] },
+  state: { bands: [] },
   useShadowDom: true,
-  template({ state, run }) {
+  render({ state, run }) {
     return html`
       <style>
         :host {

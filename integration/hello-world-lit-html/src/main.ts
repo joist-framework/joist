@@ -8,8 +8,8 @@ export interface AppState {
 
 @Component<AppState>({
   providers: [litHtml()],
-  initialState: { title: 'Hello World' },
-  template({ state }) {
+  state: { title: 'Hello World' },
+  render({ state }) {
     return html`<h1>${state.title}</h1>`;
   },
 })

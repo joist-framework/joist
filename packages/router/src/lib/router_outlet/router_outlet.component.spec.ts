@@ -6,7 +6,7 @@ import { Route } from '../router';
 describe('RouterOutletComponent', () => {
   let el: ElementInstance<RouterOutletComponent>;
 
-  @Component({ template: () => 'HELLO WORLD' })
+  @Component({ render: () => 'HELLO WORLD' })
   class One {}
 
   customElements.define('router-outlet-component-1', defineElement(One));

@@ -12,12 +12,12 @@ export function application(options: ApplicationOptions): Rule {
         const sourceTemplates = url('./files');
         const completedTemplates = apply(sourceTemplates, [
           template(options),
-          move('.', options.name)
+          move('.', options.name),
         ]);
 
         return mergeWith(completedTemplates)(tree, context);
       },
-      tree => {
+      (tree) => {
         const name = options.name;
 
         tree.rename(`./${name}/.gitignore.template`, `./${name}/.gitignore`);
@@ -30,7 +30,7 @@ export function application(options: ApplicationOptions): Rule {
       },
       (_, context) => {
         context.addTask(new NodePackageInstallTask(options.name));
-      }
+      },
     ]);
   };
 }

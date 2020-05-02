@@ -4,9 +4,9 @@ import { html } from 'lit-html';
 import { ResistorBand } from './resistor.service';
 
 @Component<ResistorBand[]>({
-  initialState: [],
+  state: [],
   useShadowDom: true,
-  template({ state }) {
+  render({ state }) {
     return html`
       <style>
         :host {

@@ -5,7 +5,7 @@ import { ElRef } from './el_ref';
 import { Component } from './component';
 
 describe('ElRef', () => {
-  @Component({ template: () => html`` })
+  @Component({ render: () => html`` })
   class MyComponent {
     constructor(@ElRef public elRef: HTMLElement) {}
   }

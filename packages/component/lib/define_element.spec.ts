@@ -7,7 +7,7 @@ import { Component } from './component';
 
 describe('defineElement', () => {
   describe('creation', () => {
-    @Component({ template: () => '' })
+    @Component({ render: () => '' })
     class MyComponent {}
 
     customElements.define('create-1', defineElement(MyComponent));
@@ -26,7 +26,7 @@ describe('defineElement', () => {
   });
 
   describe('props', () => {
-    @Component({ template: () => '' })
+    @Component({ render: () => '' })
     class MyComponent {
       @Prop() foo: string = 'Hello World';
     }
@@ -64,7 +64,7 @@ describe('defineElement', () => {
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', (done) => {
       @Component({
-        template({ run }) {
+        render({ run }) {
           const el = document.createElement('button');
 
           el.onclick = run('TEST_RUN', 'Hello World');
@@ -96,7 +96,7 @@ describe('defineElement', () => {
       let doneCounter = 0;
 
       @Component({
-        template({ run }) {
+        render({ run }) {
           const el = document.createElement('button');
 
           el.onclick = run('TEST_RUN', 'Hello World');
@@ -139,7 +139,7 @@ describe('defineElement', () => {
   describe('dispatch', () => {
     it('should dispatch and event using Ctx.dispatch', (done) => {
       @Component({
-        template({ dispatch }) {
+        render({ dispatch }) {
           const el = document.createElement('button');
 
           el.onclick = dispatch('TEST_DISPATCH', 'Hello World');
@@ -174,7 +174,7 @@ describe('defineElement', () => {
       class TestToken {}
 
       @Component({
-        template: () => '',
+        render: () => '',
         providers: [{ provide: TestToken, useFactory: () => 'Hello World', deps: [] }],
       })
       class MyComponent {}
@@ -189,7 +189,7 @@ describe('defineElement', () => {
 
   describe('shadowDom', () => {
     it('should NOT use shadow dom by default', () => {
-      @Component({ template: () => 'Hello World' })
+      @Component({ render: () => 'Hello World' })
       class MyComponent {}
 
       customElements.define('shadowdom-1', defineElement(MyComponent));
@@ -203,7 +203,7 @@ describe('defineElement', () => {
 
     it('should use shadow dom if specified', () => {
       @Component({
-        template: () => 'Hello World',
+        render: () => 'Hello World',
         useShadowDom: true,
       })
       class MyComponent {}
@@ -220,7 +220,7 @@ describe('defineElement', () => {
 
   describe('built ins', () => {
     it('should extend a built in element', () => {
-      @Component({ template: () => 'Hello World' })
+      @Component({ render: () => 'Hello World' })
       class MyComponent {}
 
       customElements.define(

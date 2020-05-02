@@ -8,9 +8,9 @@ export interface TodoCardState {
 }
 
 @Component<TodoCardState>({
-  initialState: {},
+  state: {},
   useShadowDom: true,
-  template({ state, dispatch }) {
+  render({ state, dispatch }) {
     if (!state.todo) {
       return html``;
     }

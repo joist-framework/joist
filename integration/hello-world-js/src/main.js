@@ -2,8 +2,8 @@ import { Component, defineElement, State } from '@joist/component';
 
 const AppElement = defineElement(
   Component({
-    initialState: '',
-    template({ state, run }) {
+    state: '',
+    render({ state, run }) {
       const div = document.createElement('div');
 
       const title = document.createElement('h1');
