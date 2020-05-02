@@ -19,15 +19,15 @@ class MyComponent {
     return {
       state: 'Hello World'
       render: ({ state }) => html`<h1>${state}</h1>`
-    }
+    };
   };
 
   static get props() {
-    return []
+    return [];
   };
 
   static get deps() {
-    return []
+    return [];
   };
 }
 
