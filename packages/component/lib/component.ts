@@ -23,7 +23,7 @@ export interface ComponentDef<T> {
 }
 
 export function getComponentDef<T>(provider: ProviderToken<any>): ComponentDef<T> {
-  return provider[COMPONENT_DEF_KEY];
+  return provider[COMPONENT_DEF_KEY] || {};
 }
 
 export function Component<T>(componentDef: ComponentDef<T> = {}) {

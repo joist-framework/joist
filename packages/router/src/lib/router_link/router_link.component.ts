@@ -1,5 +1,4 @@
 import {
-  Component,
   Prop,
   OnPropChanges,
   ElRef,
@@ -21,7 +20,6 @@ export class ActiveOptions {
   }
 }
 
-@Component()
 export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
   @Prop() path: string = '';
   @Prop() activeOptions: ActiveOptions = new ActiveOptions();
@@ -38,12 +36,10 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
 
     const child = this.elRef.children[0];
 
-    if (child) {
-      if (child.tagName === 'A') {
-        this.path = (child as HTMLAnchorElement).pathname;
+    if (child && child instanceof HTMLAnchorElement) {
+      this.path = child.pathname;
 
-        this.onPropChanges('path');
-      }
+      this.onPropChanges('path');
     }
   }
 
