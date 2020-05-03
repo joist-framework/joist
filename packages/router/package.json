@@ -5,7 +5,6 @@
   "files": [
     "lib"
   ],
-  "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
   "repository": {
     "type": "git",

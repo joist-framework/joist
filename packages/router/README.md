@@ -12,9 +12,7 @@ npm i @joist/component @joist/di @joist/router lit-html
 
 ```TS
 import { Component, registerElement } from '@joist/component';
-import { Route, RouteCtxRef, RouteCtx, ActiveOptions, registerRouterElements } from '@joist/router';
-
-registerRouterElements();
+import { Route, RouteCtxRef, RouteCtx, ActiveOptions } from '@joist/router';
 
 const routes: Route[] = [
   // Eager component route
@@ -38,7 +36,7 @@ export interface AppState {
   render(state) {
     return html`
       <router-link .path=${'/'} .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
-                <a href="/bar">Go To Bar</a>
+        <a href="/bar">Go To Bar</a>
       </router-link>
 
       <router-link>
