@@ -5,7 +5,7 @@ A simple router
 #### Installation:
 
 ```BASH
-npm i @joist/di @joist/router
+npm i @joist/di @joist/router @joist/component
 ```
 
 #### Example:
