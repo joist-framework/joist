@@ -14,7 +14,7 @@ If bootstrapping one component
 import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
 
-@Component<string>({
+@Component({
   providers: [litHtml()],
   render() {
     return html`<h1>Hello World</h1>`
