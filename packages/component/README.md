@@ -13,6 +13,7 @@ If bootstrapping one component
 ```TS
 import { Component } from '@joist/component';
 import { litHtml } from '@joist/component/lit-html';
+import { html } from 'lit-html'
 
 @Component({
   providers: [litHtml()],
