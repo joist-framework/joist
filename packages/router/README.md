@@ -35,7 +35,7 @@ export interface AppState {
 @Component<AppState>({
   render(state) {
     return html`
-      <router-link .activeOptions=${{ pathMatch: 'full' }}>
+      <router-link path-match="full">
         <a href="/">Go To Home</a>
       </router-link>
 
