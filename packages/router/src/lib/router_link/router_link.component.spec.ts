@@ -16,7 +16,8 @@ describe('RouterLinkComponent', () => {
     @Component({
       render({ el }) {
         const link = document.createElement('router-link') as ElementInstance<any>;
-        link.path = '/foo';
+
+        link.setAttribute('path', '/foo');
 
         el.append(link);
       },
@@ -63,7 +64,7 @@ describe('RouterLinkComponent', () => {
     const routerLinks = el.querySelector('router-link');
     const link = routerLinks as ElementInstance<RouterLinkComponent>;
 
-    expect(link.path).toBe('/bar');
+    expect(link.componentInstance.path).toBe('/bar');
     expect(link.classList.contains('active')).toBeTrue();
   });
 });

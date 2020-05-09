@@ -1,7 +1,7 @@
 import './page-1.component';
 
 import { defineElement, Component } from '@joist/component';
-import { Route, ActiveOptions } from '@joist/router';
+import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
 const routes: Route[] = [
@@ -20,7 +20,7 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link .activeOptions=${new ActiveOptions({ pathMatch: 'full' })}>
+      <router-link pathMatch="full">
         <a href="/">HOME</a>
       </router-link>
 

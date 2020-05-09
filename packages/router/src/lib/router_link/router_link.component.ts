@@ -1,30 +1,15 @@
-import {
-  Prop,
-  OnPropChanges,
-  ElRef,
-  OnConnected,
-  OnDisconnected,
-  defineElement,
-} from '@joist/component';
+import { ElRef, OnConnected, OnDisconnected, defineElement } from '@joist/component';
 
 import { RouterRef, Router } from '../router';
 
 export type RouterLinkState = HTMLAnchorElement | null;
 
-export class ActiveOptions {
-  pathMatch: 'full' | 'startsWith' = 'startsWith';
-  className: string = 'active';
+export class RouterLinkComponent implements OnConnected, OnDisconnected {
+  path: string = this.elRef.getAttribute('path') || '';
+  pathMatch: string = this.elRef.getAttribute('path-match') || 'startsWith';
+  activeClass: string = this.elRef.getAttribute('active-class') || 'active';
 
-  constructor(seed?: Partial<ActiveOptions>) {
-    Object.assign(this, seed);
-  }
-}
-
-export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDisconnected {
-  @Prop() path: string = '';
-  @Prop() activeOptions: ActiveOptions = new ActiveOptions();
-
-  private normalizedPath: string = '';
+  private normalizedPath: string = this.router.normalize(this.path);
   private removeListener?: Function;
 
   constructor(@RouterRef private router: Router, @ElRef private elRef: HTMLElement) {}
@@ -38,9 +23,20 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
 
     if (child && child instanceof HTMLAnchorElement) {
       this.path = child.pathname;
-
-      this.onPropChanges('path');
+      this.normalizedPath = this.router.normalize(this.path);
     }
+
+    this.elRef.onclick = (e) => {
+      e.preventDefault();
+
+      this.router.navigate(this.normalizedPath);
+    };
+
+    this.setActiveClass();
+  }
+
+  onPropChanges() {
+    this.setActiveClass();
   }
 
   disconnectedCallback() {
@@ -49,34 +45,19 @@ export class RouterLinkComponent implements OnPropChanges, OnConnected, OnDiscon
     }
   }
 
-  onPropChanges(key: string) {
-    if (key === 'path') {
-      this.normalizedPath = this.router.normalize(this.path);
-
-      this.elRef.onclick = (e) => {
-        e.preventDefault();
-
-        this.router.navigate(this.path);
-      };
-    }
-
-    this.setActiveClass();
-  }
-
   private setActiveClass() {
     const fragment = this.router.getFragment();
-    const { className, pathMatch } = this.activeOptions;
 
-    if (pathMatch === 'full') {
+    if (this.pathMatch === 'full') {
       if (fragment === this.normalizedPath) {
-        this.elRef.classList.add(className);
+        this.elRef.classList.add(this.activeClass);
       } else {
-        this.elRef.classList.remove(className);
+        this.elRef.classList.remove(this.activeClass);
       }
     } else if (fragment.startsWith(this.normalizedPath)) {
-      this.elRef.classList.add(className);
+      this.elRef.classList.add(this.activeClass);
     } else {
-      this.elRef.classList.remove(className);
+      this.elRef.classList.remove(this.activeClass);
     }
   }
 }
