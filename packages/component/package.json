@@ -3,9 +3,7 @@
   "version": "1.0.0-alpha.9",
   "main": "target/public_api.js",
   "files": [
-    "target",
-    "lit-html",
-    "addons"
+    "target"
   ],
   "sideEffects": false,
   "description": "Framework around Lit-Html",
