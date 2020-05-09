@@ -14,11 +14,11 @@ describe('RouterLinkComponent', () => {
 
   it('should mark the router outlet with the default active class if the path matches', () => {
     @Component({
-      render() {
-        const el = document.createElement('router-link') as ElementInstance<any>;
-        el.path = '/foo';
+      render({ el }) {
+        const link = document.createElement('router-link') as ElementInstance<any>;
+        link.path = '/foo';
 
-        return el;
+        el.append(link);
       },
     })
     class TestBed {}
@@ -39,15 +39,15 @@ describe('RouterLinkComponent', () => {
 
   it('should use the path if the first child is an anchor', () => {
     @Component({
-      render() {
-        const el = document.createElement('router-link') as ElementInstance<any>;
+      render({ el }) {
+        const routerLink = document.createElement('router-link') as ElementInstance<any>;
 
         const anchor = document.createElement('a');
         anchor.href = '/bar';
 
-        el.appendChild(anchor);
+        routerLink.append(anchor);
 
-        return el;
+        el.append(routerLink);
       },
     })
     class TestBed {}

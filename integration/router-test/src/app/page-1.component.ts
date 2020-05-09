@@ -1,6 +1,6 @@
 import './page-2.component';
 
-import { Component, defineElement } from '@joist/component';
+import { defineElement, Component } from '@joist/component';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 

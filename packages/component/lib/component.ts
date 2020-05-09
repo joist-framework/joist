@@ -1,6 +1,4 @@
-import { ClassProviderToken } from '@joist/di';
-
-import { ProviderToken, Provider } from '@joist/di';
+import { ClassProviderToken, ProviderToken, Provider } from '@joist/di';
 
 export const COMPONENT_DEF_KEY = 'componentDef';
 
@@ -10,6 +8,7 @@ export interface TemplateCtx<T> {
   state: T;
   run: TemplateEvent;
   dispatch: (eventName: string, detail?: any) => () => void;
+  el: HTMLElement;
 }
 
 export type TemplateDef<T> = (ctx: TemplateCtx<T>) => unknown;
@@ -33,7 +32,5 @@ export function Component<T>(componentDef: ComponentDef<T> = {}) {
         return componentDef;
       },
     });
-
-    return component;
   };
 }

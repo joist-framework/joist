@@ -1,5 +1,4 @@
 import {
-  Component,
   ElRef,
   Handle,
   Prop,
@@ -7,6 +6,7 @@ import {
   State,
   OnPropChanges,
   defineElement,
+  Component,
 } from '@joist/component';
 import { html } from 'lit-html';
 

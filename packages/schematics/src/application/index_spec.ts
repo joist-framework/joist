@@ -32,6 +32,7 @@ describe('new-application', () => {
       '/hello-world/public/manifest.json',
       '/hello-world/src/app/app.component.spec.ts',
       '/hello-world/src/app/app.component.ts',
+      '/hello-world/src/environment.ts',
       '/hello-world/src/main.ts',
       '/hello-world/src/test.ts',
       '/hello-world/tsconfig.json',

@@ -8,7 +8,11 @@ Broadly speaking a "joist" component acts as the state manager for your custom e
 npm i @joist/component @joist/di lit-html
 ```
 
-If bootstrapping one component
+### Defining your renderer
+
+Joist works out of the box with lit-html and there are two ways to tell joist to use lit-html.
+
+#### Define it at the component level
 
 ```TS
 import { Component } from '@joist/component';
@@ -24,7 +28,7 @@ import { html } from 'lit-html'
 class AppComponent {}
 ```
 
-If bootstrapping an entire application
+#### Define it as the default renderer for your app
 
 ```TS
 import { bootstrapEnvironment } from '@joist/component';
@@ -74,6 +78,75 @@ class AppComponent {
     setInterval(() => {
       this.state.setValue(this.state.value + 1);
     }, 1000);
+  }
+}
+
+customElements.define('app-root', defineElement(AppComponent));
+```
+
+### Async Component State
+
+Component state can be set asynchronously.
+
+```TS
+import { Component, StateRef, State, defineElement } from '@joist/component';
+
+interface AppState {
+  loading: boolean;
+  data: string[];
+}
+
+@Component<AppState>({
+  state: { loading: false, data: [] },
+  render: ({ state }) => html`${JSON.stringify(state)}`
+})
+class AppComponent {
+  constructor(@StateRef private state: State<AppState>) {}
+
+  connectedCallback() {
+    this.state.setValue({ data: [], loading: true });
+
+    const data = fetch('/data').then(res => res.json()).then(data => ({ loading: false, data }));
+
+    this.state.setValue(data);
+  }
+}
+
+customElements.define('app-root', defineElement(AppComponent));
+```
+
+### Reducer Component State
+
+You can optionally use reducers to manage your state.
+Using the joist dependency injector you can use whatever sort of state management you would like.
+
+```TS
+import { Component, StateRef, State, defineElement } from '@joist/component';
+import { reducer, ReducerStateRef, ReducerState } from '@joist/component/extras'
+
+@Component({
+  state: 0,
+  render: ({ state }) => html`<h1>${state}</h1>`
+  providers: [
+    reducer<number>((action, state) => {
+      switch (action.type) {
+        case 'INCREMENT': return state + 1;
+        case 'DECREMENT': return state - 1;
+      }
+
+      return state;
+    })
+  ]
+})
+class AppComponent {
+  constructor(@ReducerStateRef public state: ReducerState<number>) {}
+
+  increment() {
+    return this.state.dispatch({ type: 'INCREMENT' });
+  }
+
+  decrement() {
+    return this.state.dispatch({ type: 'DECREMENT' });
   }
 }
 
@@ -180,37 +253,6 @@ class AppComponent {
 customElements.define('app-root', defineElement(AppComponent));
 ```
 
-### Async State
-
-Component state can be set asynchronously.
-
-```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-
-interface AppState {
-  loading: boolean;
-  data: string[];
-}
-
-@Component<AppState>({
-  state: { loading: false, data: [] },
-  render: ({ state }) => html`${JSON.stringify(state)}`
-})
-class AppComponent {
-  constructor(@StateRef private state: State<AppState>) {}
-
-  connectedCallback() {
-    this.state.setValue({ data: [], loading: true });
-
-    const data = fetch('/data').then(res => res.json()).then(data => ({ loading: false, data }));
-
-    this.state.setValue(data);
-  }
-}
-
-customElements.define('app-root', defineElement(AppComponent));
-```
-
 ### Extending native elements
 
 By default joist extends HTMLElement but there are times when you want to extend another native element,
@@ -230,44 +272,6 @@ customElements.define(
   defineElement(CustomAnchor, { extends: HTMLAnchorElement }),
   { extends: 'a' }
 );
-```
-
-### Reducer State
-
-You can optionally use reducers to manage your state.
-Using the joist dependency injector you can use whatever sort of state management you would like.
-
-```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-import { reducer, ReducerStateRef, ReducerState } from '@joist/addons'
-
-@Component({
-  state: 0,
-  render: ({ state }) => html`<h1>${state}</h1>`
-  providers: [
-    reducer<number>((action, state) => {
-      switch (action.type) {
-        case 'INCREMENT': return state + 1;
-        case 'DECREMENT': return state - 1;
-      }
-
-      return state;
-    })
-  ]
-})
-class AppComponent {
-  constructor(@ReducerStateRef public state: ReducerState<number>) {}
-
-  increment() {
-    return this.state.dispatch({ type: 'INCREMENT' });
-  }
-
-  decrement() {
-    return this.state.dispatch({ type: 'DECREMENT' });
-  }
-}
-
-customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Testing

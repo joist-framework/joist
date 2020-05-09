@@ -19,7 +19,19 @@ export interface RouterOutletState {
 
 @Component<RouterOutletState>({
   state: {},
-  render: (ctx) => ctx.state.element,
+  render({ state, el }) {
+    let child = el.lastElementChild;
+
+    while (child) {
+      el.removeChild(child);
+
+      child = el.lastElementChild;
+    }
+
+    if (state.element) {
+      el.append(state.element);
+    }
+  },
 })
 export class RouterOutletComponent implements OnConnected, OnDisconnected {
   @Prop() routes: Route[] = [];

@@ -1,5 +1,4 @@
 import {
-  Component,
   StateRef,
   State,
   Prop,
@@ -7,6 +6,7 @@ import {
   Handle,
   ElRef,
   defineElement,
+  Component,
 } from '@joist/component';
 import { html } from 'lit-html';
 

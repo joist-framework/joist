@@ -1,4 +1,4 @@
-import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '@joist/component';
+import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
 import { html } from 'lit-html';
 
 import { HackerNewsItem } from '../hacker-news.service';

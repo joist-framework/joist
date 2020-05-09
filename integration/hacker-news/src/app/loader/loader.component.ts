@@ -1,4 +1,4 @@
-import { Component, defineElement } from '@joist/component';
+import { defineElement, Component } from '@joist/component';
 import { html } from 'lit-html';
 
 @Component({

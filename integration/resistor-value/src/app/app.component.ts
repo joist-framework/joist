@@ -2,7 +2,7 @@ import './select-band-count.component';
 import './resistor.component';
 import './select-band-color.component';
 
-import { Component, StateRef, State, Handle, OnConnected, defineElement } from '@joist/component';
+import { StateRef, State, Handle, OnConnected, defineElement, Component } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorService, ResistorRef, ResistorBand } from './resistor.service';

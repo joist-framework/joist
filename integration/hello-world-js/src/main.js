@@ -1,22 +1,18 @@
-import { defineElement, State } from '@joist/component';
+import { defineElement, State, Renderer } from '@joist/component';
+import { LitHtmlRenderer } from '@joist/component/lit-html';
+import { html } from 'lit-html';
 
 class AppComponent {
   static get componentDef() {
     return {
+      providers: [{ provide: Renderer, useClass: LitHtmlRenderer }],
       state: '',
       render({ state, run }) {
-        const div = document.createElement('div');
+        return html`
+          <h1>${state}</h1>
 
-        const title = document.createElement('h1');
-        title.innerHTML = state;
-
-        const button = document.createElement('button');
-        button.innerHTML = 'Click Me!';
-        button.addEventListener('click', run('TEST_HANDLER'));
-
-        div.append(title, button);
-
-        return div;
+          <button @click=${run('TEST_HANDER')}>Click Me!</button>
+        `;
       },
     };
   }

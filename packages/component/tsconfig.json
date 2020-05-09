@@ -11,5 +11,5 @@
     }
   },
   "files": ["test.ts", "public_api.ts"],
-  "include": ["src", "lit-html", "addons"]
+  "include": ["lib", "lit-html", "extras"]
 }

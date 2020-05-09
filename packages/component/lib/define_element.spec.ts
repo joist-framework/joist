@@ -7,7 +7,6 @@ import { Component } from './component';
 
 describe('defineElement', () => {
   describe('creation', () => {
-    @Component({ render: () => '' })
     class MyComponent {}
 
     customElements.define('create-1', defineElement(MyComponent));
@@ -26,7 +25,6 @@ describe('defineElement', () => {
   });
 
   describe('props', () => {
-    @Component({ render: () => '' })
     class MyComponent {
       @Prop() foo: string = 'Hello World';
     }
@@ -64,12 +62,12 @@ describe('defineElement', () => {
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', (done) => {
       @Component({
-        render({ run }) {
-          const el = document.createElement('button');
+        render({ run, el }) {
+          const button = document.createElement('button');
 
-          el.onclick = run('TEST_RUN', 'Hello World');
+          button.onclick = run('TEST_RUN', 'Hello World');
 
-          return el;
+          el.appendChild(button);
         },
       })
       class MyComponent {
@@ -97,11 +95,11 @@ describe('defineElement', () => {
 
       @Component({
         render({ run }) {
-          const el = document.createElement('button');
+          const button = document.createElement('button');
 
-          el.onclick = run('TEST_RUN', 'Hello World');
+          button.onclick = run('TEST_RUN', 'Hello World');
 
-          return el;
+          el.appendChild(button);
         },
       })
       class MyComponent {
@@ -139,12 +137,12 @@ describe('defineElement', () => {
   describe('dispatch', () => {
     it('should dispatch and event using Ctx.dispatch', (done) => {
       @Component({
-        render({ dispatch }) {
-          const el = document.createElement('button');
+        render({ dispatch, el }) {
+          const button = document.createElement('button');
 
           el.onclick = dispatch('TEST_DISPATCH', 'Hello World');
 
-          return el;
+          el.append(button);
         },
       })
       class MyComponent {}
@@ -189,7 +187,6 @@ describe('defineElement', () => {
 
   describe('shadowDom', () => {
     it('should NOT use shadow dom by default', () => {
-      @Component({ render: () => 'Hello World' })
       class MyComponent {}
 
       customElements.define('shadowdom-1', defineElement(MyComponent));
@@ -202,10 +199,7 @@ describe('defineElement', () => {
     });
 
     it('should use shadow dom if specified', () => {
-      @Component({
-        render: () => 'Hello World',
-        useShadowDom: true,
-      })
+      @Component({ useShadowDom: true })
       class MyComponent {}
 
       customElements.define('shadowdom-2', defineElement(MyComponent));
@@ -220,7 +214,6 @@ describe('defineElement', () => {
 
   describe('built ins', () => {
     it('should extend a built in element', () => {
-      @Component({ render: () => 'Hello World' })
       class MyComponent {}
 
       customElements.define(

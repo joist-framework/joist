@@ -36,7 +36,7 @@ function connectComponent<State>(el: ElementInstance<any>, componentDef: Compone
 
   const componentRender = (state: State) => {
     if (componentDef.render) {
-      renderer.render(componentDef.render({ state, run, dispatch }), el.shadowRoot || el);
+      renderer.render(componentDef.render({ state, run, dispatch, el }), el.shadowRoot || el);
     }
   };
 
