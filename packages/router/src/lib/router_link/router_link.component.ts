@@ -35,10 +35,6 @@ export class RouterLinkComponent implements OnConnected, OnDisconnected {
     this.setActiveClass();
   }
 
-  onPropChanges() {
-    this.setActiveClass();
-  }
-
   disconnectedCallback() {
     if (this.removeListener) {
       this.removeListener();

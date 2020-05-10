@@ -13,6 +13,7 @@ npm i @joist/di @joist/router @joist/component
 ```TS
 import { Component, registerElement } from '@joist/component';
 import { Route, RouteCtxRef, RouteCtx } from '@joist/router';
+import { html } from 'lit-html';
 
 const routes: Route[] = [
   // Eager component route
@@ -26,14 +27,10 @@ const routes: Route[] = [
 
   // this would be in the child component outlet
   { path: '/parent/child', component: () => document.createElement('child-component')  }
-]
+].
 
-export interface AppState {
-  title: string;
-}
-
-@Component<AppState>({
-  render(state) {
+@Component({
+  render() {
     return html`
       <router-link path-match="full">
         <a href="/">Go To Home</a>
@@ -43,11 +40,7 @@ export interface AppState {
         <a href="/bar">Go To Bar</a>
       </router-link>
 
-      <section>
-        <router-outlet .routes=${routes}></router-outlet>
-      </section>
-
-      <footer>The Footer</footer>
+      <router-outlet .routes=${routes}></router-outlet>
     `;
   }
 })
