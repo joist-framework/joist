@@ -1,9 +1,10 @@
-import { Injector } from '@joist/di';
+import { Injector, Service, Inject } from '@joist/di';
 
 import { defineElement, ElementInstance } from './define_element';
 import { Prop } from './prop';
 import { Handle } from './handle';
 import { Component } from './component';
+import { getEnvironmentRef } from './environment';
 
 describe('defineElement', () => {
   describe('creation', () => {
@@ -226,6 +227,41 @@ describe('defineElement', () => {
 
       expect(el instanceof HTMLInputElement).toBe(true);
       expect('componentInstance' in el).toBe(true);
+    });
+  });
+
+  describe('environment', () => {
+    it('should use the default environment ref', () => {
+      @Service()
+      class MyService {}
+
+      class MyComponent {
+        constructor(@Inject(MyService) public service: MyService) {}
+      }
+
+      customElements.define('component-environment-1', defineElement(MyComponent));
+
+      const el = document.createElement('component-environment-1') as ElementInstance<MyComponent>;
+
+      expect(el.componentInstance.service).toBe(getEnvironmentRef().get(MyService));
+    });
+
+    it('should use the immediatly provided root', () => {
+      const root = new Injector();
+
+      @Service()
+      class MyService {}
+
+      class MyComponent {
+        constructor(@Inject(MyService) public service: MyService) {}
+      }
+
+      customElements.define('component-environment-2', defineElement(MyComponent, { root }));
+
+      const el = document.createElement('component-environment-2') as ElementInstance<MyComponent>;
+
+      expect(el.componentInstance.service).toBe(root.get(MyService));
+      expect(el.componentInstance.service).not.toBe(getEnvironmentRef().get(MyService));
     });
   });
 });

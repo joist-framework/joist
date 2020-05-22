@@ -1,9 +1,9 @@
 {
   "name": "@joist/router",
   "version": "1.0.0-alpha.14",
-  "main": "lib/public_api.js",
+  "main": "target/public_api.js",
   "files": [
-    "lib"
+    "target"
   ],
   "description": "Dependency Injection in ~800 bytes",
   "repository": {
@@ -27,7 +27,7 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "karma start",
-    "build": "../../node_modules/.bin/tsc --outDir lib --module es2015"
+    "build": "../../node_modules/.bin/tsc"
   },
   "peerDependencies": {
     "@joist/component": "^1.0.0",

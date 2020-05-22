@@ -20,7 +20,7 @@ export type ElementInstance<Component> = HTMLElement & {
 function connectComponent<State>(el: ElementInstance<any>, componentDef: ComponentDef<any>) {
   const handlers = getComponentHandlers(el.componentInstance.constructor);
 
-  const renderer = el.componentInjector.get(Renderer);
+  const renderer: Renderer = el.componentInjector.get(Renderer);
 
   const run: TemplateEvent = (eventName: string, payload: unknown) => (e: Event) => {
     if (eventName in handlers) {
@@ -48,17 +48,19 @@ function connectComponent<State>(el: ElementInstance<any>, componentDef: Compone
 }
 
 export interface DefineElementOptions {
-  extends: typeof HTMLElement;
+  extends?: typeof HTMLElement;
+  root?: Injector;
 }
 
 export function defineElement<T>(
   component: ClassProviderToken<any>,
-  options: DefineElementOptions = { extends: HTMLElement }
+  options: DefineElementOptions = {}
 ) {
   const componentDef = getComponentDef<T>(component);
   const componentProviders = componentDef.providers || [];
 
-  const LitKitElement = class extends options.extends implements ElementInstance<any> {
+  const LitKitElement = class extends (options.extends || HTMLElement)
+    implements ElementInstance<any> {
     static observedAttributes = componentDef.observedAttributes;
 
     public componentInjector = new Injector(
@@ -69,7 +71,7 @@ export function defineElement<T>(
         ]),
         bootstrap: componentProviders.map((p) => p.provide),
       },
-      getEnvironmentRef()
+      options.root || getEnvironmentRef()
     );
 
     public componentInstance: ComponentInstance<typeof component> = this.componentInjector.create(
