@@ -39,4 +39,30 @@ describe('RouterOutletComponent', () => {
       done();
     });
   });
+
+  it('should render any HTMLElement', (done) => {
+    history.pushState(null, 'title', '/foo');
+
+    el.routes = [
+      {
+        path: '/foo',
+        component: () => {
+          const el = document.createElement('div');
+
+          el.innerHTML = 'Hello World';
+
+          return el;
+        },
+      },
+    ] as Route[];
+
+    const state: State<RouterOutletState> = el.componentInjector.get(State);
+
+    const removeListener = state.onChange((val) => {
+      expect(val.element!.innerHTML).toBe('Hello World');
+
+      removeListener();
+      done();
+    });
+  });
 });

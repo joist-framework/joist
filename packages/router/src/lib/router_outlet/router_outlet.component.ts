@@ -102,7 +102,7 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected {
           .then(() => this.state.setValue({ element, activeRoute }));
       }
 
-      return Promise.resolve();
+      return this.state.setValue({ element, activeRoute });
     });
   }
 }

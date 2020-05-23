@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/component": "^2.0.0",
-    "@joist/di": "^2.0.0",
+    "@joist/component": "^1.0.0",
+    "@joist/di": "^1.0.0",
     "lit-html": "^1.1.2",
     "tslib": "^1.11.1"
   },
