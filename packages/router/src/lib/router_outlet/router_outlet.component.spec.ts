@@ -26,9 +26,11 @@ describe('RouterOutletComponent', () => {
   it('should render the correct initial route', (done) => {
     history.pushState(null, 'title', '/foo');
 
-    el.routes = [
+    const routes: Route[] = [
       { path: '/foo', component: () => document.createElement('router-outlet-component-1') },
-    ] as Route[];
+    ];
+
+    el.routes = routes;
 
     const state: State<RouterOutletState> = el.componentInjector.get(State);
 
@@ -43,7 +45,7 @@ describe('RouterOutletComponent', () => {
   it('should render any HTMLElement', (done) => {
     history.pushState(null, 'title', '/foo');
 
-    el.routes = [
+    const routes: Route[] = [
       {
         path: '/foo',
         component: () => {
@@ -54,7 +56,9 @@ describe('RouterOutletComponent', () => {
           return el;
         },
       },
-    ] as Route[];
+    ];
+
+    el.routes = routes;
 
     const state: State<RouterOutletState> = el.componentInjector.get(State);
 

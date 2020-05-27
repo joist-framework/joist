@@ -7,6 +7,7 @@ import {
   OnDisconnected,
   ElementInstance,
   defineElement,
+  OnPropChanges,
 } from '@joist/component';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
@@ -33,7 +34,7 @@ export interface RouterOutletState {
     }
   },
 })
-export class RouterOutletComponent implements OnConnected, OnDisconnected {
+export class RouterOutletComponent implements OnConnected, OnDisconnected, OnPropChanges {
   @Prop() routes: Route[] = [];
 
   private matchers: MatchFunction<object>[] = [];

@@ -1,5 +1,9 @@
 import { Inject, ProviderToken } from '@joist/di';
 
+export function StateRef(c: ProviderToken<any>, k: string, i: number) {
+  Inject(State)(c, k, i);
+}
+
 export class State<T> {
   private currentState: T;
   private listeners: Array<(state: T) => void> = [];
@@ -37,8 +41,4 @@ export class State<T> {
       this.listeners = this.listeners.filter((currentCb) => currentCb !== cb);
     };
   }
-}
-
-export function StateRef(c: ProviderToken<any>, k: string, i: number) {
-  Inject(State)(c, k, i);
 }

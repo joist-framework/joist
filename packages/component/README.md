@@ -276,7 +276,7 @@ customElements.define(
 
 ### Testing
 
-Testing can be handled in a couple of ways. The most straight forward way is to define your element in your test and use document.createElement.
+Testing can be handled in a couple of ways. The most straight forward way is to define your element in your test and use document.createElement. When testing elements this way it can also be beneficial to provide your own root provider.
 
 ```TS
 import { defineElement } from '@joist/component';
@@ -286,7 +286,7 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
   let el: HTMLElement;
 
-  customElements.define('test-app-component-1', defineElement(AppComponent));
+  customElements.define('test-app-component-1', defineElement(AppComponent, { root: new Injector() }));
 
   beforeEach(() => {
     el = document.createElement('test-app-component-1');

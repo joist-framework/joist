@@ -1,3 +1,4 @@
+import '@joist/router';
 import './page-1.component';
 
 import { defineElement, Component } from '@joist/component';
@@ -5,6 +6,16 @@ import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
 const routes: Route[] = [
+  {
+    path: '/test',
+    component: () => {
+      const el = document.createElement('div');
+
+      el.innerHTML = 'Hello World';
+
+      return el;
+    },
+  },
   { path: '/foo(.*)', component: () => document.createElement('page-1-component') },
 ];
 
@@ -20,7 +31,7 @@ export interface AppState {
         <h1>${state.title}</h1>
       </header>
 
-      <router-link pathMatch="full">
+      <router-link path-match="full">
         <a href="/">HOME</a>
       </router-link>
 

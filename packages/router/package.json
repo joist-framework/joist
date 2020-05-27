@@ -34,7 +34,8 @@
     "@joist/di": "^1.0.0"
   },
   "dependencies": {
-    "path-to-regexp": "^6.1.0"
+    "path-to-regexp": "^6.1.0",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@joist/component": "^1.0.0-alpha.16",

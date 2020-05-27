@@ -56,6 +56,7 @@ export function defineElement<T>(
   component: ClassProviderToken<any>,
   options: DefineElementOptions = {}
 ) {
+  const props = getComponentProps(component);
   const componentDef = getComponentDef<T>(component);
   const componentProviders = componentDef.providers || [];
 
@@ -114,8 +115,6 @@ export function defineElement<T>(
    * NOTE: This kind of seems like code smell.
    * It is well tested so attempt to refactor
    */
-  const props = getComponentProps(component);
-
   for (let i = 0; i < props.length; i++) {
     const prop = props[i];
 

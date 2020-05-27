@@ -1,11 +1,7 @@
-import { html } from 'lit-html';
-
 import { defineElement, ElementInstance } from './define_element';
 import { ElRef } from './el_ref';
-import { Component } from './component';
 
 describe('ElRef', () => {
-  @Component({ render: () => html`` })
   class MyComponent {
     constructor(@ElRef public elRef: HTMLElement) {}
   }
