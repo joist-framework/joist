@@ -22,8 +22,8 @@
     "@joist/schematics": "file:packages/schematics"
   },
   "devDependencies": {
-    "@angular-devkit/core": "9.1.7",
-    "@angular-devkit/schematics": "9.1.7",
+    "@angular-devkit/core": "9.1.8",
+    "@angular-devkit/schematics": "9.1.8",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@types/jasmine": "3.5.10",
