@@ -24,8 +24,8 @@
   "devDependencies": {
     "@angular-devkit/core": "9.1.9",
     "@angular-devkit/schematics": "9.1.9",
-    "@commitlint/cli": "8.3.5",
-    "@commitlint/config-conventional": "8.3.4",
+    "@commitlint/cli": "9.0.1",
+    "@commitlint/config-conventional": "9.0.1",
     "@types/jasmine": "3.5.10",
     "@types/node": "8.10.61",
     "clean-webpack-plugin": "3.0.0",
