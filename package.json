@@ -26,7 +26,7 @@
     "@angular-devkit/schematics": "9.1.9",
     "@commitlint/cli": "9.0.1",
     "@commitlint/config-conventional": "9.0.1",
-    "@types/jasmine": "3.5.10",
+    "@types/jasmine": "3.5.11",
     "@types/node": "8.10.61",
     "clean-webpack-plugin": "3.0.0",
     "compression-webpack-plugin": "4.0.0",
