@@ -88,9 +88,7 @@ class FooService {
 ```TS
 import { Injector, Inject } from '@joist/di';
 
-function FooRef(c: any, k: string, i: number) {
-  Inject(FooService)(c, k, i)
-}
+const FooRef = Inject(FooService);
 
 class FooService {
   sayHello() {
