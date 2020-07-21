@@ -1,11 +1,11 @@
-import { defineElement, ElementInstance, Component } from '@joist/component';
+import { JoistElement, Component } from '@joist/component';
 
-import { reducer, ReducerState, ReducerStateRef } from './reducer';
+import { reducer, ReducerState } from './reducer';
+import { Get } from 'lib/element';
 
 describe('Reducer', () => {
   @Component({
     state: 0,
-    render: ({ state }) => state.toString(),
     providers: [
       reducer<number>((action, state) => {
         switch (action.type) {
@@ -20,8 +20,8 @@ describe('Reducer', () => {
       }),
     ],
   })
-  class MyComponent {
-    constructor(@ReducerStateRef public state: ReducerState<number>) {}
+  class MyComponent extends JoistElement {
+    @Get(ReducerState) public state!: ReducerState<number>;
 
     increment() {
       return this.state.dispatch({ type: 'INCREMENT' });
@@ -32,27 +32,21 @@ describe('Reducer', () => {
     }
   }
 
-  customElements.define('reducer-test-1', defineElement(MyComponent));
+  customElements.define('reducer-test-1', MyComponent);
 
-  it('should increment the state by 1', (done) => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
-    const component = el.componentInstance;
+  it('should increment the state by 1', async () => {
+    const el = document.createElement('reducer-test-1') as MyComponent;
 
-    component.increment().then(() => {
-      expect(component.state.value).toBe(1);
+    await el.increment();
 
-      done();
-    });
+    expect(el.state.value).toBe(1);
   });
 
-  it('should decrement the state by 1', (done) => {
-    const el = document.createElement('reducer-test-1') as ElementInstance<MyComponent>;
-    const component = el.componentInstance;
+  it('should decrement the state by 1', async () => {
+    const el = document.createElement('reducer-test-1') as MyComponent;
 
-    component.decrement().then(() => {
-      expect(component.state.value).toBe(-1);
+    await el.decrement();
 
-      done();
-    });
+    expect(el.state.value).toBe(-1);
   });
 });

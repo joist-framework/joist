@@ -7,15 +7,7 @@ export type AbstractClassProviderToken<T> = Function & { prototype: T; [key: str
 
 export type ProviderToken<T> = ClassProviderToken<T> | AbstractClassProviderToken<T>;
 
-export interface ClassProvider<T> {
+export interface Provider<T> {
   provide: ProviderToken<T>;
-  useClass: ClassProviderToken<T>;
+  use: ClassProviderToken<T>;
 }
-
-export interface FactoryProvider<T> {
-  provide: ProviderToken<T>;
-  useFactory: (...args: any[]) => T;
-  deps: ProviderToken<any>[];
-}
-
-export type Provider<T> = ClassProvider<T> | FactoryProvider<T>;

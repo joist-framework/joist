@@ -1,3 +1,4 @@
 {
-  "main": "../target/lit-html/public_api.js"
+  "main": "../target/lit-html/main.js",
+  "module": "../target/lit-html/main.js"
 }

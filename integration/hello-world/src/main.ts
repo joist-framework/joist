@@ -6,12 +6,12 @@ export interface AppState {
 
 @Component<AppState>({
   state: { title: 'Hello World' },
-  render({ state }) {
+  render({ state, host }) {
     const el = document.createElement('h1');
 
     el.innerHTML = state.title;
 
-    return el;
+    host.append(el);
   },
 })
 export class AppComponent {}

@@ -1,49 +1,62 @@
 import {
   Component,
-  StateRef,
   State,
-  Prop,
   OnConnected,
   OnDisconnected,
-  ElementInstance,
-  defineElement,
   OnPropChanges,
+  JoistElement,
+  Get,
 } from '@joist/component';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
-import { Route, Router, RouterRef, RouteCtx } from '../router';
+import { Route, Router, RouteCtx } from '../router';
 
 export interface RouterOutletState {
   element?: HTMLElement & { [key: string]: any };
   activeRoute?: Route;
 }
 
+type RouterOutletLifeCycle = OnConnected & OnDisconnected & OnPropChanges;
+
 @Component<RouterOutletState>({
   state: {},
-  render({ state, el }) {
-    let child = el.lastElementChild;
+  render({ state, host }) {
+    let child = host.lastElementChild;
 
     while (child) {
-      el.removeChild(child);
+      host.removeChild(child);
 
-      child = el.lastElementChild;
+      child = host.lastElementChild;
     }
 
     if (state.element) {
-      el.append(state.element);
+      host.append(state.element);
     }
   },
 })
-export class RouterOutletComponent implements OnConnected, OnDisconnected, OnPropChanges {
-  @Prop() routes: Route[] = [];
+export class RouterOutletElement extends JoistElement implements RouterOutletLifeCycle {
+  @Get(State)
+  private state!: State<RouterOutletState>;
+
+  @Get(Router)
+  private router!: Router;
+
+  private __routes__: Route[] = [];
+
+  set routes(val: Route[]) {
+    this.__routes__ = val;
+
+    this.matchers = this.routes.map((route) => this.router.match(route.path));
+
+    this.check();
+  }
+
+  get routes() {
+    return this.__routes__;
+  }
 
   private matchers: MatchFunction<object>[] = [];
   private removeListener?: Function;
-
-  constructor(
-    @StateRef private state: State<RouterOutletState>,
-    @RouterRef private router: Router
-  ) {}
 
   connectedCallback() {
     this.removeListener = this.router.listen(() => {
@@ -95,9 +108,9 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected, OnPro
     return Promise.resolve(activeRoute.component()).then((element) => {
       // Only set route context if the HTMLElement has a lit kit injector attached
       if ('componentInjector' in element) {
-        const litKitComponent = element as ElementInstance<any>;
+        const joistElement = element as JoistElement;
 
-        return litKitComponent.componentInjector
+        return joistElement.injector
           .get(RouteCtx)
           .setValue(ctx)
           .then(() => this.state.setValue({ element, activeRoute }));
@@ -107,5 +120,3 @@ export class RouterOutletComponent implements OnConnected, OnDisconnected, OnPro
     });
   }
 }
-
-export const RouterOutletElement = defineElement(RouterOutletComponent);

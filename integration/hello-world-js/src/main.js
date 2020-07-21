@@ -1,19 +1,18 @@
-import { defineElement, State, Renderer } from '@joist/component';
-import { LitHtmlRenderer } from '@joist/component/lit-html';
+import { defineElement, State } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 class AppComponent {
   static get componentDef() {
     return {
-      providers: [{ provide: Renderer, useClass: LitHtmlRenderer }],
       state: '',
-      render({ state, run }) {
+      render: template(({ state, run }) => {
         return html`
           <h1>${state}</h1>
 
           <button @click=${run('TEST_HANDER')}>Click Me!</button>
         `;
-      },
+      }),
     };
   }
 

@@ -1,4 +1,3 @@
-import './environment';
 import './app/app.component';
 
 if (process.env.NODE_ENV === 'production') {

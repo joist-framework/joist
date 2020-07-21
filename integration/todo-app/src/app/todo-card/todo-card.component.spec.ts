@@ -1,12 +1,12 @@
 import { ElementInstance } from '@joist/component';
 
-import { TodoCardComponent } from './todo-card.component';
+import { TodoCardElement } from './todo-card.component';
 
 describe('TodoCardComponent', () => {
-  let el: ElementInstance<TodoCardComponent>;
+  let el: ElementInstance<TodoCardElement>;
 
   beforeEach(() => {
-    el = document.createElement('todo-card') as ElementInstance<TodoCardComponent>;
+    el = document.createElement('todo-card') as ElementInstance<TodoCardElement>;
 
     document.body.appendChild(el);
   });

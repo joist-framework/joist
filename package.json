@@ -13,7 +13,8 @@
   },
   "scripts": {
     "install": "npm run build-libs",
-    "build-libs": "lerna run build --scope @joist/*"
+    "build-libs": "lerna run build --scope @joist/*",
+    "test-libs": "lerna run test --scope @joist/*"
   },
   "dependencies": {
     "@joist/component": "file:packages/component",

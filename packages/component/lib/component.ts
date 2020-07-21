@@ -1,20 +1,18 @@
-import { ClassProviderToken, ProviderToken, Provider } from '@joist/di';
+import { ProviderToken, Provider } from '@joist/di';
 
 export const COMPONENT_DEF_KEY = 'componentDef';
 
-export type TemplateEvent = (event: string, ...args: unknown[]) => (e: Event) => void;
-
-export interface TemplateCtx<T> {
+export interface RenderCtx<T = unknown> {
   state: T;
-  run: TemplateEvent;
-  dispatch: (eventName: string, detail?: any) => () => void;
-  el: HTMLElement;
+  run: (event: string, ...args: unknown[]) => (e: Event) => void;
+  dispatch: (eventName: string, init?: CustomEventInit) => () => void;
+  host: HTMLElement;
 }
 
-export type TemplateDef<T> = (ctx: TemplateCtx<T>) => unknown;
+export type RenderDef<T> = (ctx: RenderCtx<T>) => unknown;
 
 export interface ComponentDef<T> {
-  render?: TemplateDef<T>;
+  render?: RenderDef<T>;
   state?: T;
   useShadowDom?: boolean;
   observedAttributes?: string[];
@@ -26,7 +24,7 @@ export function getComponentDef<T>(provider: ProviderToken<any>): ComponentDef<T
 }
 
 export function Component<T>(componentDef: ComponentDef<T> = {}) {
-  return function (component: ClassProviderToken<any>) {
+  return function (component: any) {
     Object.defineProperty(component, COMPONENT_DEF_KEY, {
       get() {
         return componentDef;

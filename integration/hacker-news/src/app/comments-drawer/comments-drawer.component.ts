@@ -1,13 +1,5 @@
-import {
-  StateRef,
-  State,
-  Prop,
-  OnPropChanges,
-  Handle,
-  ElRef,
-  defineElement,
-  Component,
-} from '@joist/component';
+import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { HackerNewsItemComment } from '../hacker-news.service';
@@ -19,7 +11,7 @@ export interface CommentsDrawerState {
 @Component<CommentsDrawerState>({
   state: { comments: [] },
   useShadowDom: true,
-  render({ state, run }) {
+  render: template(({ state, dispatch }) => {
     return html`
       <style>
         :host {
@@ -68,7 +60,7 @@ export interface CommentsDrawerState {
       <div class="drawer-header">
         <span class="title">Comments</span>
 
-        <button @click=${run('CLOSE_DRAWER')}>close</button>
+        <button @click=${dispatch('close_drawer')}>close</button>
       </div>
 
       <div class="drawer-content">
@@ -86,22 +78,15 @@ export interface CommentsDrawerState {
         )}
       </div>
     `;
-  },
+  }),
 })
 export class CommentsDrawerComponent implements OnPropChanges {
   @Prop() comments: HackerNewsItemComment[] = [];
 
-  constructor(
-    @StateRef private state: State<CommentsDrawerState>,
-    @ElRef private elRef: HTMLElement
-  ) {}
+  constructor(@StateRef private state: State<CommentsDrawerState>) {}
 
   onPropChanges() {
     this.state.setValue({ comments: this.comments });
-  }
-
-  @Handle('CLOSE_DRAWER') onCloseDrawer() {
-    this.elRef.dispatchEvent(new CustomEvent('close_drawer'));
   }
 }
 

@@ -1,4 +1,5 @@
-import { StateRef, State, ElRef, Handle, defineElement, Component } from '@joist/component';
+import { State, Handle, Component, JoistElement, Get } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 export interface TodoFormState {
@@ -6,9 +7,11 @@ export interface TodoFormState {
 }
 
 @Component<TodoFormState>({
-  state: { todo: '' },
+  state: {
+    todo: '',
+  },
   useShadowDom: true,
-  render({ state, run }) {
+  render: template(({ state, run }) => {
     return html`
       <form @submit=${run('FORM_SUBMIT')}>
         <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state.todo} />
@@ -16,10 +19,11 @@ export interface TodoFormState {
         <button>Add Todo</button>
       </form>
     `;
-  },
+  }),
 })
-export class TodoFormComponent {
-  constructor(@StateRef private state: State<TodoFormState>, @ElRef private elRef: HTMLElement) {}
+export class TodoFormElement extends JoistElement {
+  @Get(State)
+  private state!: State<TodoFormState>;
 
   @Handle('FORM_SUBMIT') onFormSubmit(e: Event) {
     e.preventDefault();
@@ -31,15 +35,13 @@ export class TodoFormComponent {
     this.state.setValue({ todo });
 
     if (todo.length) {
-      this.dispatchAddTodo(todo);
+      this.dispatchEvent(
+        new CustomEvent<string>('add_todo', { detail: todo })
+      );
 
       this.state.setValue({ todo: '' });
     }
   }
-
-  private dispatchAddTodo(detail: string) {
-    this.elRef.dispatchEvent(new CustomEvent('add_todo', { detail }));
-  }
 }
 
-customElements.define('todo-form', defineElement(TodoFormComponent));
+customElements.define('todo-form', TodoFormElement);

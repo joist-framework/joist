@@ -1,19 +1,23 @@
-import { ElementInstance, Component, State, defineElement } from '@joist/component';
+import { Component, State, JoistElement } from '@joist/component';
 
-import { RouterOutletComponent, RouterOutletState } from './router_outlet.component';
+import { RouterOutletElement, RouterOutletState } from './router_outlet.component';
 import { Route } from '../router';
 
 describe('RouterOutletComponent', () => {
-  let el: ElementInstance<RouterOutletComponent>;
+  let el: RouterOutletElement;
 
-  @Component({ render: () => 'HELLO WORLD' })
-  class One {}
+  @Component({
+    render({ host }) {
+      host.innerHTML = 'Hello World';
+    },
+  })
+  class One extends JoistElement {}
 
-  customElements.define('router-outlet-component-1', defineElement(One));
-  customElements.define('router-outlet', defineElement(RouterOutletComponent));
+  customElements.define('router-outlet-component-1', One);
+  customElements.define('router-outlet', RouterOutletElement);
 
   beforeEach(() => {
-    el = document.createElement('router-outlet') as ElementInstance<RouterOutletComponent>;
+    el = document.createElement('router-outlet') as RouterOutletElement;
 
     document.body.appendChild(el);
   });
@@ -32,7 +36,7 @@ describe('RouterOutletComponent', () => {
 
     el.routes = routes;
 
-    const state: State<RouterOutletState> = el.componentInjector.get(State);
+    const state: State<RouterOutletState> = el.injector.get(State);
 
     const removeListener = state.onChange((val) => {
       expect(val.element!.tagName).toBe('ROUTER-OUTLET-COMPONENT-1');
@@ -60,7 +64,7 @@ describe('RouterOutletComponent', () => {
 
     el.routes = routes;
 
-    const state: State<RouterOutletState> = el.componentInjector.get(State);
+    const state: State<RouterOutletState> = el.injector.get(State);
 
     const removeListener = state.onChange((val) => {
       expect(val.element!.innerHTML).toBe('Hello World');

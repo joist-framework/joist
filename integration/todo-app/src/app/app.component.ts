@@ -1,74 +1,67 @@
 import './todo-form/todo-form.component';
 import './todo-card/todo-card.component';
 
-import { StateRef, State, Handle, OnConnected, defineElement, Component } from '@joist/component';
+import {
+  State,
+  Handle,
+  OnConnected,
+  Component,
+  RenderCtx,
+  Get,
+  JoistElement,
+} from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-import { TodoRef, TodoService, Todo } from './todo.service';
+import { TodoService, Todo } from './todo.service';
 
 export interface AppState {
   todos: Todo[];
 }
 
-@Component<AppState>({
-  state: { todos: [] },
-  useShadowDom: false,
-  render({ state, run }) {
+function createTodoList({ state, run }: RenderCtx<AppState>) {
+  return state.todos.map((todo, index) => {
     return html`
-      <style>
-        app-root {
-          display: block;
-        }
+      <todo-card
+        .todo=${todo}
+        @remove_todo=${run('REMOVE_TODO', index)}
+        @complete_todo=${run('COMPLETE_TODO', index)}
+        @undo_complete=${run('UNDO_COMPLETE', index)}
+      ></todo-card>
+    `;
+  });
+}
 
-        app-root todo-form {
-          width: 100%;
-          margin-bottom: 0.5rem;
-        }
+@Component<AppState>({
+  state: {
+    todos: [],
+  },
+  render: template((ctx) => {
+    const { state, run } = ctx;
 
-        app-root todo-card {
-          margin-bottom: 0.5rem;
-        }
-
-        app-root .placeholder {
-          font-size: 1.5rem;
-          text-align: center;
-          padding: 1rem 0;
-          color: gray;
-        }
-      </style>
-
+    return html`
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
       ${!state.todos.length
         ? html` <div class="placeholder">Looks Like Everything is Done!</div> `
         : ''}
 
-      <section>
-        ${state.todos.map((todo, index) => {
-          return html`
-            <todo-card
-              .todo=${todo}
-              @remove_todo=${run('REMOVE_TODO', index)}
-              @complete_todo=${run('COMPLETE_TODO', index)}
-              @undo_complete=${run('UNDO_COMPLETE', index)}
-            ></todo-card>
-          `;
-        })}
-      </section>
+      <section>${createTodoList(ctx)}</section>
     `;
-  },
+  }),
 })
-export class AppComponent implements OnConnected {
-  constructor(
-    @StateRef private componentState: State<AppState>,
-    @TodoRef private todo: TodoService
-  ) {}
+export class AppElement extends JoistElement implements OnConnected {
+  @Get(State)
+  private state!: State<AppState>;
+
+  @Get(TodoService)
+  private todo!: TodoService;
 
   connectedCallback(): void {
-    this.componentState.setValue({ todos: this.todo.todos.value });
+    this.state.setValue({ todos: this.todo.todos.value });
 
     this.todo.todos.onChange((todos) => {
-      this.componentState.setValue({ todos });
+      this.state.setValue({ todos });
     });
   }
 
@@ -89,4 +82,4 @@ export class AppComponent implements OnConnected {
   }
 }
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

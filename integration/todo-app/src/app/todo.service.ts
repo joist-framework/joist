@@ -5,10 +5,6 @@ export class Todo {
   constructor(public readonly name: string, public readonly isComplete: boolean) {}
 }
 
-export function TodoRef(c: any, p: string, i: number) {
-  Inject(TodoService)(c, p, i);
-}
-
 @Service()
 export class TodoService {
   public readonly todos = new State<Todo[]>([]);
@@ -33,3 +29,5 @@ export class TodoService {
     );
   }
 }
+
+export const TodoRef = Inject(TodoService);

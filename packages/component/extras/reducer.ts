@@ -1,18 +1,18 @@
 import { State } from '@joist/component';
-import { Provider, Inject } from '@joist/di';
-
-export type Reducer<T> = (action: Action, state: T) => T;
+import { Provider } from '@joist/di';
 
 export interface Action {
   type: string;
   payload?: any;
 }
 
-export function ReducerStateRef(c: any, k: string, i: number) {
-  Inject(ReducerState)(c, k, i);
+export abstract class Reducer<T> {
+  abstract update(action: Action, state: T): T;
 }
 
 export class ReducerState<T> {
+  static deps = [Reducer, State];
+
   get value() {
     return this.state.value;
   }
@@ -20,7 +20,7 @@ export class ReducerState<T> {
   constructor(private reducer: Reducer<T>, private state: State<T>) {}
 
   dispatch(action: Action) {
-    return this.state.setValue(this.reducer(action, this.state.value));
+    return this.state.setValue(this.reducer.update(action, this.state.value));
   }
 
   onChange(fn: (state: T) => void) {
@@ -28,10 +28,11 @@ export class ReducerState<T> {
   }
 }
 
-export function reducer<T>(reducer: Reducer<T>): Provider<ReducerState<T>> {
+export function reducer<T>(update: (action: Action, state: T) => T): Provider<Reducer<T>> {
   return {
-    provide: ReducerState,
-    useFactory: (state) => new ReducerState<T>(reducer, state),
-    deps: [State],
+    provide: Reducer,
+    use: class extends Reducer<T> {
+      update = update;
+    },
   };
 }

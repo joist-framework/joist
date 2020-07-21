@@ -1,15 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "es2015",
-    "target": "es2015",
     "outDir": "target",
     "baseUrl": "./",
     "paths": {
-      "@joist/component": ["public_api.ts"],
+      "@joist/component": ["main.ts"],
       "lit-html": ["../../node_modules/lit-html/lit-html"]
     }
   },
-  "files": ["test.ts", "public_api.ts"],
+  "files": ["test.ts", "main.ts"],
   "include": ["lib", "lit-html", "extras"]
 }

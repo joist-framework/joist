@@ -1,7 +1,4 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const path = require('path');
+const { resolve } = require('path');
 
 module.exports = {
   mode: 'development',
@@ -11,11 +8,6 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: resolve(__dirname, 'public/target'),
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new CompressionPlugin(),
-  ],
 };

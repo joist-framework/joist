@@ -23,7 +23,7 @@ module.exports = function (config) {
       },
       resolve: {
         extensions: ['.ts', '.js'],
-        plugins: [new TsconfigPathsPlugin({ configFile: '../../tsconfig.json' })],
+        plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
       },
     },
     reporters: ['spec'],

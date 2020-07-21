@@ -1,9 +1,7 @@
-import { Injector, Service, Inject } from '@joist/di';
-import { html } from 'lit-html';
+import { Injector, Service } from '@joist/di';
 
 import { bootstrapEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
-import { defineElement, ElementInstance } from './define_element';
-import { Component } from './component';
+import { Get, JoistElement } from './element';
 
 describe('environment', () => {
   afterEach(() => {
@@ -16,23 +14,20 @@ describe('environment', () => {
     expect(getEnvironmentRef() instanceof Injector).toBe(true);
   });
 
-  it('should use the root injector when creating components', () => {
+  it('should use the root injector when creating services', () => {
     @Service()
     class MyService {}
 
-    @Component({
-      render: () => html``,
-    })
-    class MyComponent {
-      constructor(@Inject(MyService) public myService: MyService) {}
+    class MyElement extends JoistElement {
+      @Get(MyService) public myService!: MyService;
     }
 
-    customElements.define('environment-1', defineElement(MyComponent));
+    customElements.define('environment-1', MyElement);
 
     bootstrapEnvironment();
 
-    const el = document.createElement('environment-1') as ElementInstance<any>;
+    const el = document.createElement('environment-1') as MyElement;
 
-    expect(el.componentInstance.myService).toBe(getEnvironmentRef()!.get(MyService));
+    expect(el.myService).toBe(getEnvironmentRef()!.get(MyService));
   });
 });

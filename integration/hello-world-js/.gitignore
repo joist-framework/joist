@@ -1,5 +1,3 @@
 node_modules
-dist
-.firebase
-.DS_Store
+public/target
 stats.json

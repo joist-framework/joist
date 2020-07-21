@@ -1,4 +1,4 @@
-import { Inject, Service } from '@joist/di';
+import { Service } from '@joist/di';
 import { State } from '@joist/component';
 import { match, Path, MatchResult } from 'path-to-regexp';
 
@@ -7,15 +7,7 @@ export interface Route {
   component: () => HTMLElement | Promise<HTMLElement>;
 }
 
-export function RouteCtxRef(c: any, k: string, i: number) {
-  Inject(RouteCtx)(c, k, i);
-}
-
 export class RouteCtx extends State<MatchResult<any>> {}
-
-export function RouterRef(c: any, k: string, i: number) {
-  Inject(Router)(c, k, i);
-}
 
 @Service()
 export class Router {

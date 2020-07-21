@@ -1,7 +1,7 @@
 import './loader/loader.component';
 
 import { Component, StateRef, State, Handle, OnConnected, defineElement } from '@joist/component';
-
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 import { until } from 'lit-html/directives/until';
 
@@ -22,7 +22,7 @@ export interface AppState {
 @Component<AppState>({
   state: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
   useShadowDom: true,
-  render({ state, run }) {
+  render: template(({ state, run }) => {
     return html`
       <style>
         :host {
@@ -103,7 +103,7 @@ export interface AppState {
           `
         : ''}
     `;
-  },
+  }),
 })
 export class AppComponent implements OnConnected {
   constructor(
@@ -129,7 +129,7 @@ export class AppComponent implements OnConnected {
 
     this.state.patchValue(
       Promise.all([state, import('./comments-drawer/comments-drawer.component')]).then(
-        (res) => res[0]
+        ([state]) => state
       )
     );
   }

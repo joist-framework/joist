@@ -1,9 +1,9 @@
-import { defineElement, ElementInstance, Component } from '@joist/component';
+import { JoistElement, Component } from '@joist/component';
 
-import { RouterLinkComponent } from './router_link.component';
+import { RouterLinkElement } from './router_link.component';
 
 describe('RouterLinkComponent', () => {
-  customElements.define('router-link', defineElement(RouterLinkComponent));
+  customElements.define('router-link', RouterLinkElement);
 
   let el: HTMLElement;
 
@@ -14,57 +14,55 @@ describe('RouterLinkComponent', () => {
 
   it('should mark the router outlet with the default active class if the path matches', () => {
     @Component({
-      render({ el }) {
-        const link = document.createElement('router-link') as ElementInstance<any>;
+      render({ host }) {
+        const link = document.createElement('router-link');
 
         link.setAttribute('path', '/foo');
 
-        el.append(link);
+        host.append(link);
       },
     })
-    class TestBed {}
+    class TestBed extends JoistElement {}
 
-    customElements.define('routerlink-test-1', defineElement(TestBed));
+    customElements.define('routerlink-test-1', TestBed);
 
     history.replaceState(null, '', '/foo');
 
-    el = document.createElement('routerlink-test-1') as ElementInstance<any>;
+    el = document.createElement('routerlink-test-1') as TestBed;
 
     document.body.appendChild(el);
 
-    const routerLinks = el.querySelector('router-link');
-    const first = routerLinks as ElementInstance<RouterLinkComponent>;
+    const routerLinks = el.querySelector('router-link') as RouterLinkElement;
 
-    expect(first.classList.contains('active')).toBeTrue();
+    expect(routerLinks.classList.contains('active')).toBeTrue();
   });
 
   it('should use the path if the first child is an anchor', () => {
     @Component({
-      render({ el }) {
-        const routerLink = document.createElement('router-link') as ElementInstance<any>;
+      render({ host }) {
+        const routerLink = document.createElement('router-link');
 
         const anchor = document.createElement('a');
         anchor.href = '/bar';
 
         routerLink.append(anchor);
 
-        el.append(routerLink);
+        host.append(routerLink);
       },
     })
-    class TestBed {}
+    class TestBed extends JoistElement {}
 
-    customElements.define('routerlink-test-2', defineElement(TestBed));
+    customElements.define('routerlink-test-2', TestBed);
 
     history.replaceState(null, '', '/bar');
 
-    el = document.createElement('routerlink-test-2') as ElementInstance<any>;
+    el = document.createElement('routerlink-test-2') as TestBed;
 
     document.body.appendChild(el);
 
-    const routerLinks = el.querySelector('router-link');
-    const link = routerLinks as ElementInstance<RouterLinkComponent>;
+    const link = el.querySelector('router-link') as RouterLinkElement;
 
-    expect(link.componentInstance.path).toBe('/bar');
+    expect(link.path).toBe('/bar');
     expect(link.classList.contains('active')).toBeTrue();
   });
 });

@@ -1,4 +1,4 @@
-import { ProviderToken, Provider, ClassProviderToken, FactoryProvider } from './provider';
+import { ProviderToken, Provider, ClassProviderToken } from './provider';
 import { getProviderDeps } from './inject';
 import { isProvidedInRoot } from './service';
 
@@ -58,10 +58,12 @@ export class Injector {
   }
 
   private resolve<T>(token: ProviderToken<T>): T {
+    // Check to see if provider is defined in current scope
     const provider = this.findProvider(token);
 
     if (provider) {
-      return this.createFromProvider(provider);
+      // If provider is defined in current scope use that implementation
+      return this.create(provider.use);
     }
 
     if (this.parent && (isProvidedInRoot(token) || this.parent.has(token))) {
@@ -73,28 +75,11 @@ export class Injector {
     return this.create(token as ClassProviderToken<T>);
   }
 
-  private createFromProvider<T>(provider: Provider<T>): T | null {
-    if ('useClass' in provider) {
-      return this.create(provider.useClass);
-    } else if ('useFactory' in provider) {
-      return this.createFromFactory(provider as FactoryProvider<T>);
-    }
-
-    return null;
-  }
-
-  private createFromFactory<T>(token: FactoryProvider<T>) {
-    return token.useFactory.apply(
-      token,
-      token.deps.map((token) => this.get(token))
-    );
-  }
-
-  private findProvider(token: ProviderToken<any>): Provider<any> | null {
+  private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
     if (!this.opts.providers) {
-      return null;
+      return undefined;
     }
 
-    return this.opts.providers.find((provider) => provider.provide === token) || null;
+    return this.opts.providers.find((provider) => provider.provide === token);
   }
 }

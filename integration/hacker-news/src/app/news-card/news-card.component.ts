@@ -1,4 +1,5 @@
 import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { HackerNewsItem } from '../hacker-news.service';
@@ -8,7 +9,7 @@ export type NewsCardState = HackerNewsItem | null;
 @Component<NewsCardState>({
   state: null,
   useShadowDom: true,
-  render({ state }) {
+  render: template(({ state }) => {
     if (!state) {
       return html``;
     }
@@ -59,7 +60,7 @@ export type NewsCardState = HackerNewsItem | null;
         ${state.comments_count} comments
       </div>
     `;
-  },
+  }),
 })
 export class NewsCardComponent implements OnPropChanges {
   @Prop() newsItem: NewsCardState = null;

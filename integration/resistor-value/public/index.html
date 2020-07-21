@@ -5,24 +5,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="theme-color" content="#4a148c" />
+    <meta name="theme-color" content="#1c313a" />
 
-    <title>Todo</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <title>Resistors</title>
   </head>
 
   <body>
     <style>
       :root {
-        --color-primary: #4a148c;
-        --color-light: #7c43bd;
-        --color-dark: #12005e;
+        --color-primary: #455a64;
+        --color-dark: #1c313a;
+        --color-light: #718792;
       }
 
       html,
       body {
-        background: #f3f3f3;
+        background: #f1f8fd;
         margin: 0;
         padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
       }
 
       * {
@@ -32,21 +37,24 @@
       }
 
       header {
-        align-items: center;
         background: var(--color-primary);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.23);
-        color: #fff;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        height: 4rem;
+        margin-bottom: 1rem;
         display: flex;
-        height: 50px;
-        padding: 0 1rem;
+        align-items: center;
+        padding: 1rem;
         font-size: 1.5rem;
+        color: #fff;
         position: relative;
-        z-index: 1000;
+        z-index: 1001;
       }
     </style>
 
-    <header>Todo List</header>
+    <header>Resistor Value</header>
 
     <app-root></app-root>
+
+    <script src="target/main.bundle.js"></script>
   </body>
 </html>

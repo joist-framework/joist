@@ -1,10 +1,11 @@
 {
   "name": "@joist/component",
   "version": "1.0.0-alpha.17",
-  "main": "target/public_api.js",
+  "main": "target/main.js",
+  "module": "target/main.js",
   "files": [
     "target",
-    "lit-html/package.json",
+    "template/package.json",
     "extras/package.json"
   ],
   "sideEffects": false,

@@ -1,4 +1,5 @@
-import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
+import { State, Component, JoistElement, Get } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { Todo } from '../todo.service';
@@ -10,7 +11,7 @@ export interface TodoCardState {
 @Component<TodoCardState>({
   state: {},
   useShadowDom: true,
-  render({ state, dispatch }) {
+  render: template(({ state, dispatch }) => {
     if (!state.todo) {
       return html``;
     }
@@ -57,16 +58,14 @@ export interface TodoCardState {
         <button @click=${dispatch('remove_todo')}>REMOVE</button>
       </div>
     `;
-  },
+  }),
 })
-export class TodoCardComponent implements OnPropChanges {
-  @Prop() todo?: Todo;
+export class TodoCardElement extends JoistElement {
+  @Get(State) private state!: State<TodoCardState>;
 
-  constructor(@StateRef private state: State<TodoCardState>) {}
-
-  onPropChanges() {
-    this.state.setValue({ todo: this.todo });
+  public set(todo: Todo) {
+    this.state.setValue({ todo });
   }
 }
 
-customElements.define('todo-card', defineElement(TodoCardComponent));
+customElements.define('todo-card', TodoCardElement);
