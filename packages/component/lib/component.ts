@@ -1,10 +1,10 @@
-import { ProviderToken, Provider } from '@joist/di';
+import { Provider } from '@joist/di';
 
 export const COMPONENT_DEF_KEY = 'componentDef';
 
 export interface RenderCtx<T = unknown> {
   state: T;
-  run: (event: string, ...args: unknown[]) => (e: Event) => void;
+  run: (event: string, ...payload: any) => (e: Event) => void;
   dispatch: (eventName: string, init?: CustomEventInit) => () => void;
   host: HTMLElement;
 }
@@ -17,7 +17,7 @@ export interface ComponentDef<T> {
   providers?: Provider<any>[];
 }
 
-export function getComponentDef<T>(provider: ProviderToken<any>): ComponentDef<T> {
+export function getComponentDef<T>(provider: any): ComponentDef<T> {
   return provider[COMPONENT_DEF_KEY] || {};
 }
 
