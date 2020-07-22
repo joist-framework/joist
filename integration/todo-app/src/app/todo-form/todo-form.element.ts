@@ -10,7 +10,6 @@ export interface TodoFormState {
   state: {
     todo: '',
   },
-  useShadowDom: true,
   render: template(({ state, run }) => {
     return html`
       <form @submit=${run('FORM_SUBMIT')}>
@@ -24,6 +23,12 @@ export interface TodoFormState {
 export class TodoFormElement extends JoistElement {
   @Get(State)
   private state!: State<TodoFormState>;
+
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
+  }
 
   @Handle('FORM_SUBMIT') onFormSubmit(e: Event) {
     e.preventDefault();

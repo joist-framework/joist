@@ -1,47 +1,111 @@
 # @joist/component
 
-Broadly speaking a "joist" component acts as the state manager for your custom element meaing that it controls the data and the view. The examples in this doc will be using lit-html but any view library can be used.
-
 ### Installation
 
 ```BASH
-npm i @joist/component @joist/di lit-html
+npm i @joist/component @joist/di
 ```
 
 ### Component
 
 Components are created via the "Component" decorator and defining a custom element.
+The render function will be called whenver a components state us updated.
 
 ```TS
-import { Component, defineElement } from '@joist/component';
+import { Component, JoistElement } from '@joist/component';
+
+@Component<string>({
+  state: {
+    title: 'Hello World'
+  },
+  render({ state, host }) {
+    const h1 = document.createElement('h1');
+    h1.innerHTML = state.title;
+
+    host.append(h1);
+  }
+})
+class AppElement extends JoistElement {}
+
+customElements.define('app-root', AppComponent);
+```
+
+Once your component templates become more complicated you will probably reach for a view library.
+Joist ships with out of the box support for lit-html.
+
+```TS
+import { Component, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component<string>({
-  state: 'Hello World',
-  render: template(({ state }) => html`<h1>${state}</h1>`)
+  state: {
+    title: 'Hello World'
+  },
+  render: template(({ state }) => {
+    return html`<h1>${state.title}</h1>`
+  })
 })
-class AppComponent {}
+class AppElement extends JoistElement {}
+```
 
-customElements.define('app-root', defineElement(AppComponent));
+### Dependency Injection (DI)
+
+Sometimes you have code that you want to share between elements.
+One method of doing this is with Joist's built in dependency injector.
+The `@Get` decorator will map a class property to an instance of a service.
+One service can also inject another as an argument via the `@Inject` decorator.
+The `@Service` decorator ensures that your class will be treated as a global singleton.
+
+Property based DI with `@Get` is "lazy", meaning that the service won't be instantiated until the first time it is requested.
+
+```TS
+import { Component, JoistElement, Get } from '@joist/component';
+import { Service, Inject } from '@joist/di'
+
+@Service()
+class FooService {
+  sayHello() {
+    return 'Hello World';
+  }
+}
+
+@Service()
+class BarService {
+  constructor(@Inject(FooService) private foo: FooService) {}
+
+  sayHello() {
+    return this.foo.sayHello();
+  }
+}
+
+class AppElement extends JoistComponent {
+  @Get(MyService)
+  private myService!: MyService;
+
+  connectedCallback() {
+    console.log(this.myService.sayHello()
+  }
+}
 ```
 
 ### Component State
 
 A component view can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `State` instance which is available via `@StateRef`
+A component's state can be accessed and updated via it's `State` instance which is available via `@Get`
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { Component, State, JoistElement } from '@joist/component';
 
 @Component<number>({
   state: 0,
-  render: template({ state }) => html`${state}`)
+  render({ state, host }) {
+    host.innerHTML = state.toString();
+  }
 })
 class AppComponent extends JoistComponent {
-  constructor(@StateRef private state: State<number>) {}
+  @Get(State)
+  private state!: State<number>;
 
   connectedCallback() {
     setInterval(() => this.update(), 1000);
@@ -53,8 +117,6 @@ class AppComponent extends JoistComponent {
     this.state.setValue(value + 1);
   }
 }
-
-customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Async Component State
@@ -62,9 +124,15 @@ customElements.define('app-root', defineElement(AppComponent));
 Component state can be set asynchronously.
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { Component, State, JoistElement } from '@joist/component';
+import { Service } from '@joist/di';
+
+@Service()
+class UserService {
+  fetchUsers() {
+    return fetch('https://reqres.in/api/users').then(res => res.json());
+  }
+}
 
 interface AppState {
   loading: boolean;
@@ -76,27 +144,27 @@ interface AppState {
     loading: false,
     data: []
   },
-  render: template({ state }) => html`${JSON.stringify(state)}`)
+  render({ state, host }) {
+    host.innerHTML = JSON.stringify(state);
+  }
 })
-class AppComponent {
-  constructor(@StateRef private state: State<AppState>) {}
+class AppElement extends JoistElement {
+  @Get(State)
+  private state!: State<AppState>;
+
+  @Get(UserService)
+  private user!: UserService;
 
   connectedCallback() {
     this.state.setValue({ data: [], loading: true });
 
-    const res: Promise<AppState> = this.fetchUsers().then(data => {
+    const res: Promise<AppState> = this.user.fetchUsers().then(data => {
       return { loading: false, data }
     });
 
     this.state.setValue(data);
   }
-
-  private fetchUsers() {
-    return fetch('https://reqres.in/api/users').then(res => res.json());
-  }
 }
-
-customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Reducer Component State
@@ -105,14 +173,14 @@ You can optionally use reducers to manage your state.
 Using the joist dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-import { reducer, StateRef, ReducerState } from '@joist/component/extras';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { Component, State, JoistElement } from '@joist/component';
+import { reducer, ReducerState } from '@joist/component/extras';
 
 @Component({
   state: 0,
-  render: template({ state }) => html`${state}`)
+  render({ state, host }) {
+    host.innerHTML = state.toString();
+  },
   providers: [
     reducer<number>((action, state) => {
       switch (action.type) {
@@ -124,8 +192,9 @@ import { html } from 'lit-html';
     })
   ]
 })
-class AppComponent {
-  constructor(@StateRef public state: ReducerState<number>) {}
+class AppElement extends JoistElement {
+  @Get(ReducerState)
+  private state!: ReducerState<AppState>;
 
   increment() {
     return this.state.dispatch({ type: 'INCREMENT' });
@@ -135,46 +204,47 @@ class AppComponent {
     return this.state.dispatch({ type: 'DECREMENT' });
   }
 }
-
-customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Component Props
 
-Component props are defined via the `@Prop()` decorator. This creates a property that is available via the custom element.
-Prop changes to not trigger template updates. Use custom setters or `onPropChanges` to set new state and update the template.
+Since joist just uses custom elements any properties on your element will work.
+Below is an example of using properties to set state.
 
 ```TS
-import { Component, StateRef, State, Prop, OnPropChanges, defineElement } from '@joist/component';
-import { html } from 'lit-html';
+import { Component, State, JoistElement } from '@joist/component';
 
-@Component<string>({
-  state: '',
-  render({ state }) {
-    return html`<h1>${state}</h1>`
-  }
+@Component({
+  state: {
+    title: ''
+  },
+  render({ state, host }) {
+    host.innerHTML = state.tit;le;
+  },
 })
-class AppTitleComponent implements OnPropChanges {
-  @Prop() title: string = '';
+class AppElement extends JoistElement {
+  @Get(State)
+  private state!: State<AppState>;
 
-  constructor(@StateRef private state: State<string>) {}
+  set title(value: string) {
+    this.state.setValue(value);
+  }
 
-  onPropChanges(_prop: string, _oldVal: any, newValue: any) {
-    this.state.setValue(newVal);
+  get title(): string {
+    return this.state.value.title;
   }
 }
-
-customElements.define('app-title', defineElement(AppTitleComponent));
-
 ```
 
 ### Component Handlers
 
-In order to trigger methods in a component you can use the `run` function that is provided by the template function.
+In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
+Multiple methods can be mapped to the same key.
 
 ```TS
-import { Component, StateRef, State, Handle, defineElement } from '@joist/component';
+import { Component, State, Handle, JoistElement } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component<number>({
@@ -189,8 +259,9 @@ import { html } from 'lit-html';
     `
   })
 })
-class AppComponent {
-  constructor(@StateRef private state: State<number>) {}
+class AppElement extends JoistElement {
+  @Get(State)
+  private state!: State<AppState>;
 
   @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setValue(this.state.value + 1);
@@ -200,82 +271,48 @@ class AppComponent {
     this.state.setValue(this.state.value - 1);
   }
 }
-
-customElements.define('app-root', defineElement(AppComponent));
 ```
 
 ### Dispatching Events
 
-There are two ways to dispatch events from a component.
-You can either:
-
-1. Use the dispatch method passed to your template function
-2. Inject the element reference with the @ElRef decorator
+IN addition to calling HTMLElement.dispatchEvent you can also use the dispatch function passed to your render function.
 
 ```TS
-import { Component, Handle, ElRef, defineElement } from '@joist/component';
+import { Component, Handle, JoistElement } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@Component<number>({
-  state: 0,
-  render({ state, run, dispatch }) {
+@Component({
+  render: template(({ state, run, dispatch }) => {
     return html`
-      <button @click=${dispatch('DECREMENT')}>Decrement</button>
+      <button @click=${dispatch('FIRST')}>First</button>
 
-      ${state}
-
-      <button @click=${run('INCREMENT')}>Increment</button>
+      <button @click=${run('SECOND')}>Second</button>
     `
-  }
+  })
 })
-class AppComponent {
-  constructor(@ElRef private elRef: HTMLElement) {}
-
-  @Handle('DECREMENT') onDecrement() {
-    this.elRef.dispatchEvent(new CustomEvent('DECREMENT'));
+class AppElement extends JoistElement {
+  @Handle('SECOND') onSecond() {
+    this.dispatchEvent(new CustomEvent('SECOND_EVENT'));
   }
 }
-
-customElements.define('app-root', defineElement(AppComponent));
-```
-
-### Extending native elements
-
-By default joist extends HTMLElement but there are times when you want to extend another native element,
-
-```TS
-import { Component, StateRef, State, defineElement } from '@joist/component';
-
-
-@Component({
-  state: 'Hello World',
-  render: ({ state }) => html`<h1>${state}</h1>`
-})
-class CustomAnchor { }
-
-customElements.define(
-  'custom-anchor',
-  defineElement(CustomAnchor, { extends: HTMLAnchorElement }),
-  { extends: 'a' }
-);
 ```
 
 ### Testing
 
-Testing can be handled in a couple of ways. The most straight forward way is to define your element in your test and use document.createElement. When testing elements this way it can also be beneficial to provide your own root provider.
-
 ```TS
-import { defineElement } from '@joist/component';
-
-import { AppComponent } from './app.component';
+import { AppElement } from './app.element';
 
 describe('AppComponent', () => {
-  let el: HTMLElement;
+  let el: AppElement;
 
-  customElements.define('test-app-component-1', defineElement(AppComponent, { root: new Injector() }));
+  customElements.define('test-app-component-1', AppElement);
 
   beforeEach(() => {
-    el = document.createElement('test-app-component-1');
+    el = document.createElement('test-app-component-1') as AppElement;
+
+    // Since a components injected services are resolved lazily you can add your own injector for testing.
+    el.injector = new Injector();
 
     document.body.appendChild(el);
   });
@@ -286,25 +323,6 @@ describe('AppComponent', () => {
 
   it('should work', () => {
     expect(el).toBeTruthy();
-  });
-});
-```
-
-Joist has been specifically designed so that you can test your component code without the need to create an HTMLElement itself.
-This means you can manually create instances of your component and test them independently of joist
-
-```TS
-import { AppComponent, AppState } from './app.component';
-
-describe('AppComponent', () => {
-  let component: AppComponent;
-
-  beforeEach(() => {
-    component = new AppComponent(new State(null));
-  });
-
-  it('should work', () => {
-    expect(component).toBeTruthy();
   });
 });
 ```

@@ -1,4 +1,4 @@
-import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
+import { State, JoistElement, Component, Get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -9,8 +9,9 @@ export interface CommentsDrawerState {
 }
 
 @Component<CommentsDrawerState>({
-  state: { comments: [] },
-  useShadowDom: true,
+  state: {
+    comments: [],
+  },
   render: template(({ state, dispatch }) => {
     return html`
       <style>
@@ -80,14 +81,18 @@ export interface CommentsDrawerState {
     `;
   }),
 })
-export class CommentsDrawerComponent implements OnPropChanges {
-  @Prop() comments: HackerNewsItemComment[] = [];
+export class CommentsDrawerElement extends JoistElement {
+  @Get(State) private state!: State<CommentsDrawerState>;
 
-  constructor(@StateRef private state: State<CommentsDrawerState>) {}
+  constructor() {
+    super();
 
-  onPropChanges() {
-    this.state.setValue({ comments: this.comments });
+    this.attachShadow({ mode: 'open' });
+  }
+
+  set comments(comments: HackerNewsItemComment[]) {
+    this.state.setValue({ comments });
   }
 }
 
-customElements.define('comments-drawer', defineElement(CommentsDrawerComponent));
+customElements.define('comments-drawer', CommentsDrawerElement);

@@ -1,19 +1,21 @@
-import { Component, defineElement } from '@joist/component';
+import { Component, JoistElement } from '@joist/component';
 
 export interface AppState {
   title: string;
 }
 
 @Component<AppState>({
-  state: { title: 'Hello World' },
+  state: {
+    title: 'Hello World',
+  },
   render({ state, host }) {
-    const el = document.createElement('h1');
+    const title = document.createElement('h1');
 
-    el.innerHTML = state.title;
+    title.innerHTML = state.title;
 
-    host.append(el);
+    host.append(title);
   },
 })
-export class AppComponent {}
+export class AppElement extends JoistElement {}
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

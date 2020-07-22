@@ -1,9 +1,8 @@
-import { defineElement, Component } from '@joist/component';
+import { JoistElement, Component } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component({
-  useShadowDom: true,
   render: template(() => {
     return html`
       <style>
@@ -77,6 +76,12 @@ import { html } from 'lit-html';
     `;
   }),
 })
-export class LoaderComponent {}
+export class LoaderElement extends JoistElement {
+  constructor() {
+    super();
 
-customElements.define('app-loader', defineElement(LoaderComponent));
+    this.attachShadow({ mode: 'open' });
+  }
+}
+
+customElements.define('app-loader', LoaderElement);

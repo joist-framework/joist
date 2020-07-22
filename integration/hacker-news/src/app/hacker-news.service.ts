@@ -1,4 +1,4 @@
-import { Service, Inject } from '@joist/di';
+import { Service } from '@joist/di';
 
 export interface HackerNewsItem {
   id: number;
@@ -24,10 +24,6 @@ export interface HackerNewsItemComment {
 
 export interface HackerNewsItemFull extends HackerNewsItem {
   comments: HackerNewsItemComment[];
-}
-
-export function HackerNewsRef(c: any, p: string, i: number) {
-  Inject(HackerNewsService)(c, p, i);
 }
 
 @Service()

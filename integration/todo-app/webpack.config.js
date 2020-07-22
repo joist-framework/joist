@@ -1,7 +1,6 @@
 const { resolve } = require('path');
 
-module.exports = {
-  mode: 'production',
+const config = {
   entry: {
     main: './src/main.ts',
   },
@@ -16,8 +15,17 @@ module.exports = {
     chunkFilename: '[name].bundle.js',
     path: resolve(__dirname, 'public/target'),
   },
-  performance: {
-    hints: 'error',
-    maxEntrypointSize: 7000,
-  },
+  plugins: [],
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+  }
+
+  if (argv.mode === 'production') {
+    config.performance = { hints: 'error', maxEntrypointSize: 30000 };
+  }
+
+  return config;
 };

@@ -1,11 +1,10 @@
-import { Component, Prop, StateRef, State, OnPropChanges, defineElement } from '@joist/component';
+import { Component, State, JoistElement, Get } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
 
 @Component<ResistorBand[]>({
   state: [],
-  useShadowDom: true,
   render({ state }) {
     return html`
       <style>
@@ -80,14 +79,22 @@ import { ResistorBand } from './resistor.service';
     `;
   },
 })
-export class ResistorComponent implements OnPropChanges {
-  @Prop() bands: ResistorBand[] = [];
+export class ResistorElement extends JoistElement {
+  @Get(State) private state!: State<ResistorBand[]>;
 
-  constructor(@StateRef private state: State<ResistorBand[]>) {}
+  set bands(value: ResistorBand[]) {
+    this.state.setValue(value);
+  }
 
-  onPropChanges() {
-    this.state.setValue(this.bands);
+  get bands() {
+    return this.state.value;
+  }
+
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
   }
 }
 
-customElements.define('resistor-value', defineElement(ResistorComponent));
+customElements.define('resistor-value', ResistorElement);

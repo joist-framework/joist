@@ -1,12 +1,10 @@
-import { ElementInstance } from '@joist/component';
-
-import { AppComponent } from './app.component';
+import { AppElement } from './app.element';
 
 describe('AppComponent', () => {
-  let el: ElementInstance<AppComponent>;
+  let el: AppElement;
 
   beforeEach(() => {
-    el = document.createElement('app-root') as ElementInstance<AppComponent>;
+    el = document.createElement('app-root') as AppElement;
 
     document.body.appendChild(el);
   });

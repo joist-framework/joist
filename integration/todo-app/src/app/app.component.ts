@@ -1,5 +1,5 @@
-import './todo-form/todo-form.component';
-import './todo-card/todo-card.component';
+import './todo-form/todo-form.element';
+import './todo-card/todo-card.element';
 
 import {
   State,
@@ -40,6 +40,10 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
     const { state, run } = ctx;
 
     return html`
+      <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
+
+      <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
+
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
       ${!state.todos.length

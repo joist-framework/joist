@@ -1,7 +1,8 @@
 {
   "name": "@joist/di",
   "version": "1.0.0-alpha.17",
-  "main": "target/public_api.js",
+  "main": "target/main.js",
+  "module": "target/main.js",
   "files": [
     "target"
   ],

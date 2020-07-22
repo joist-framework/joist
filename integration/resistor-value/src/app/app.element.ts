@@ -2,10 +2,10 @@ import './select-band-count.component';
 import './resistor.component';
 import './select-band-color.component';
 
-import { StateRef, State, Handle, OnConnected, defineElement, Component } from '@joist/component';
+import { State, Handle, OnConnected, Component, JoistElement, Get } from '@joist/component';
 import { html } from 'lit-html';
 
-import { ResistorService, ResistorRef, ResistorBand } from './resistor.service';
+import { ResistorService, ResistorBand } from './resistor.service';
 
 export interface AppState {
   bands: ResistorBand[];
@@ -24,7 +24,6 @@ export interface AppState {
     availableBands: [],
     displayColors: false,
   },
-  useShadowDom: true,
   render({ state, run }) {
     return html`
       <style>
@@ -107,11 +106,18 @@ export interface AppState {
     `;
   },
 })
-export class AppComponent implements OnConnected {
-  constructor(
-    @ResistorRef private resistor: ResistorService,
-    @StateRef private state: State<AppState>
-  ) {}
+export class AppElement extends JoistElement implements OnConnected {
+  @Get(State)
+  private state!: State<AppState>;
+
+  @Get(ResistorService)
+  private resistor!: ResistorService;
+
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
+  }
 
   connectedCallback() {
     const bands = this.resistor.getResistorBands();
@@ -156,4 +162,4 @@ export class AppComponent implements OnConnected {
   }
 }
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

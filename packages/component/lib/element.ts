@@ -6,8 +6,12 @@ import { getComponentDef } from './component';
 import { getComponentHandlers } from './handle';
 import { Lifecycle } from './lifecycle';
 
+export interface InjectorBase {
+  readonly injector: Injector;
+}
+
 export function Get<T>(token: ProviderToken<T>) {
-  return function (target: JoistElement, key: string) {
+  return function (target: InjectorBase, key: string) {
     Object.defineProperty(target, key, {
       get() {
         return this.injector.get(token);
@@ -16,13 +20,10 @@ export function Get<T>(token: ProviderToken<T>) {
   };
 }
 
-export interface InjectorBase {
-  readonly injector: Injector;
-}
-
 export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle {
-  public readonly injector: Injector;
-  private readonly componentDef = getComponentDef<any>(this.constructor);
+  public injector: Injector;
+
+  private componentDef = getComponentDef<any>(this.constructor);
 
   constructor() {
     super();
@@ -50,6 +51,7 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
 
   connectedCallback() {
     const handlers = getComponentHandlers(this.constructor);
+    const state = this.injector.get(State);
 
     const run = (eventName: string, payload: unknown) => (e: Event) => {
       if (eventName in handlers) {
@@ -70,9 +72,9 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
       }
     };
 
-    componentRender(this.injector.get(State).value);
+    componentRender(state.value);
 
-    this.injector.get(State).onChange((state) => {
+    state.onChange((state) => {
       componentRender(state);
     });
   }

@@ -1,4 +1,4 @@
-import { StateRef, State, Prop, OnPropChanges, defineElement, Component } from '@joist/component';
+import { State, Component, Get, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -8,7 +8,6 @@ export type NewsCardState = HackerNewsItem | null;
 
 @Component<NewsCardState>({
   state: null,
-  useShadowDom: true,
   render: template(({ state }) => {
     if (!state) {
       return html``;
@@ -62,14 +61,12 @@ export type NewsCardState = HackerNewsItem | null;
     `;
   }),
 })
-export class NewsCardComponent implements OnPropChanges {
-  @Prop() newsItem: NewsCardState = null;
+export class NewsCardElement extends JoistElement {
+  @Get(State) private state!: State<NewsCardState>;
 
-  constructor(@StateRef private state: State<NewsCardState>) {}
-
-  onPropChanges() {
-    this.state.setValue(this.newsItem);
+  set newsItem(value: NewsCardState) {
+    this.state.setValue(value);
   }
 }
 
-customElements.define('news-card', defineElement(NewsCardComponent));
+customElements.define('news-card', NewsCardElement);

@@ -1,7 +1,8 @@
 import '@joist/router';
+
 import './page-1.component';
 
-import { defineElement, Component } from '@joist/component';
+import { Component, JoistElement } from '@joist/component';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
@@ -49,6 +50,6 @@ export interface AppState {
     `;
   },
 })
-class AppComponent {}
+class AppElement extends JoistElement {}
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

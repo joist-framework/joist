@@ -14,8 +14,6 @@ export type RenderDef<T> = (ctx: RenderCtx<T>) => unknown;
 export interface ComponentDef<T> {
   render?: RenderDef<T>;
   state?: T;
-  useShadowDom?: boolean;
-  observedAttributes?: string[];
   providers?: Provider<any>[];
 }
 

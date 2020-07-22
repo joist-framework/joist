@@ -1,6 +1,6 @@
 import { JoistElement, Component } from '@joist/component';
 
-import { RouterLinkElement } from './router_link.component';
+import { RouterLinkElement } from './router_link.element';
 
 describe('RouterLinkComponent', () => {
   customElements.define('router-link', RouterLinkElement);

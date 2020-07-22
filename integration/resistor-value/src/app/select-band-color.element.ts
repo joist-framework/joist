@@ -1,13 +1,4 @@
-import {
-  ElRef,
-  Handle,
-  Prop,
-  StateRef,
-  State,
-  OnPropChanges,
-  defineElement,
-  Component,
-} from '@joist/component';
+import { State, Component, JoistElement, Get } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -17,9 +8,10 @@ export interface SelectBandColorState {
 }
 
 @Component<SelectBandColorState>({
-  state: { bands: [] },
-  useShadowDom: true,
-  render({ state, run }) {
+  state: {
+    bands: [],
+  },
+  render({ state, dispatch }) {
     return html`
       <style>
         :host {
@@ -53,7 +45,7 @@ export interface SelectBandColorState {
 
       ${state.bands.map((band) => {
         return html`
-          <button @click=${run('BAND_SELECTED', band)}>
+          <button @click=${dispatch('band_selected', { detail: band })}>
             <div class="color-block" .style="background: ${band.color}"></div>
 
             <span>${band.color}</span>
@@ -63,21 +55,22 @@ export interface SelectBandColorState {
     `;
   },
 })
-export class SelectBandColorComponent implements OnPropChanges, SelectBandColorState {
-  @Prop() bands: ResistorBand[] = [];
+export class SelectBandColorElement extends JoistElement implements SelectBandColorState {
+  @Get(State) private state!: State<SelectBandColorState>;
 
-  constructor(
-    @ElRef private elRef: HTMLElement,
-    @StateRef private state: State<SelectBandColorState>
-  ) {}
-
-  onPropChanges() {
-    this.state.setValue({ bands: this.bands });
+  set bands(bands: ResistorBand[]) {
+    this.state.setValue({ bands });
   }
 
-  @Handle('BAND_SELECTED') onBandSelected(_: Event, detail: number) {
-    this.elRef.dispatchEvent(new CustomEvent('band_selected', { detail }));
+  get bands() {
+    return this.state.value.bands;
+  }
+
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
   }
 }
 
-customElements.define('select-band-color', defineElement(SelectBandColorComponent));
+customElements.define('select-band-color', SelectBandColorElement);

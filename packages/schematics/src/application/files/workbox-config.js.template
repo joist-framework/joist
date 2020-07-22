@@ -1,5 +1,5 @@
 module.exports = {
-  globDirectory: 'dist/',
+  globDirectory: 'target/',
   globPatterns: ['**/*.js'],
-  swDest: 'dist/sw.js'
+  swDest: 'target/sw.js'
 };

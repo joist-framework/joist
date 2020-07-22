@@ -1,16 +1,11 @@
-import './loader/loader.component';
+import './loader/loader.element';
 
-import { Component, StateRef, State, Handle, OnConnected, defineElement } from '@joist/component';
+import { Component, State, Handle, OnConnected, JoistElement, Get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 import { until } from 'lit-html/directives/until';
 
-import {
-  HackerNewsService,
-  HackerNewsItem,
-  HackerNewsRef,
-  HackerNewsItemFull,
-} from './hacker-news.service';
+import { HackerNewsService, HackerNewsItem, HackerNewsItemFull } from './hacker-news.service';
 
 export interface AppState {
   loadingNews: boolean;
@@ -20,8 +15,11 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  state: { loadingNews: false, news: [], loadingCurrentNewsItem: false },
-  useShadowDom: true,
+  state: {
+    loadingNews: false,
+    news: [],
+    loadingCurrentNewsItem: false,
+  },
   render: template(({ state, run }) => {
     return html`
       <style>
@@ -83,7 +81,7 @@ export interface AppState {
       <div class="cards">
         ${state.news.map((news) =>
           until(
-            import('./news-card/news-card.component').then(
+            import('./news-card/news-card.element').then(
               () =>
                 html`
                   <news-card .newsItem=${news} @click=${run('CARD_CLICKED', news)}></news-card>
@@ -105,11 +103,12 @@ export interface AppState {
     `;
   }),
 })
-export class AppComponent implements OnConnected {
-  constructor(
-    @StateRef private state: State<AppState>,
-    @HackerNewsRef private hackerNews: HackerNewsService
-  ) {}
+export class AppElement extends JoistElement implements OnConnected {
+  @Get(State)
+  private state!: State<AppState>;
+
+  @Get(HackerNewsService)
+  private hackerNews!: HackerNewsService;
 
   connectedCallback(): void {
     this.state.patchValue({ loadingNews: true });
@@ -128,7 +127,7 @@ export class AppComponent implements OnConnected {
     }));
 
     this.state.patchValue(
-      Promise.all([state, import('./comments-drawer/comments-drawer.component')]).then(
+      Promise.all([state, import('./comments-drawer/comments-drawer.element')]).then(
         ([state]) => state
       )
     );
@@ -139,4 +138,4 @@ export class AppComponent implements OnConnected {
   }
 }
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

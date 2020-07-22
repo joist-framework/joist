@@ -1,6 +1,6 @@
 import { Component, State, JoistElement } from '@joist/component';
 
-import { RouterOutletElement, RouterOutletState } from './router_outlet.component';
+import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
 import { Route } from '../router';
 
 describe('RouterOutletComponent', () => {

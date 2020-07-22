@@ -1,14 +1,12 @@
 import './todo-form.component';
 
-import { ElementInstance } from '@joist/component';
+import { TodoFormElement } from './todo-form.element';
 
-import { TodoFormElement } from './todo-form.component';
-
-fdescribe('TodoFormComponent', () => {
-  let el: ElementInstance<TodoFormElement>;
+fdescribe('TodoFormElement', () => {
+  let el: TodoFormElement;
 
   beforeEach(() => {
-    el = document.createElement('todo-form') as ElementInstance<TodoFormElement>;
+    el = document.createElement('todo-form') as TodoFormElement;
 
     document.body.appendChild(el);
   });

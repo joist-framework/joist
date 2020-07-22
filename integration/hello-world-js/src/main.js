@@ -1,8 +1,8 @@
-import { defineElement, State } from '@joist/component';
+import { State, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-class AppComponent {
+class AppElement extends JoistElement {
   static get componentDef() {
     return {
       state: '',
@@ -10,28 +10,20 @@ class AppComponent {
         return html`
           <h1>${state}</h1>
 
-          <button @click=${run('TEST_HANDER')}>Click Me!</button>
+          <button @click=${run('test_handler')}>Click Me!</button>
         `;
       }),
     };
   }
 
-  static get props() {
-    return [];
-  }
-
   static get handlers() {
     return {
-      TEST_HANDLER: ['foo', 'bar'],
+      test_handler: ['foo', 'bar'],
     };
   }
 
-  static get deps() {
-    return [State];
-  }
-
-  constructor(state) {
-    this.state = state;
+  get state() {
+    return this.injector.get(State);
   }
 
   connectedCallback() {
@@ -47,4 +39,4 @@ class AppComponent {
   }
 }
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);

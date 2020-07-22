@@ -1,13 +1,4 @@
-import {
-  ElRef,
-  Handle,
-  Prop,
-  StateRef,
-  State,
-  OnPropChanges,
-  defineElement,
-  Component,
-} from '@joist/component';
+import { State, Component, JoistElement, Get } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -18,9 +9,11 @@ interface SelectBandCountState {
 }
 
 @Component<SelectBandCountState>({
-  state: { bandLimit: 0, selectedBands: [] },
-  useShadowDom: true,
-  render({ state, run }) {
+  state: {
+    bandLimit: 0,
+    selectedBands: [],
+  },
+  render({ state, dispatch }) {
     return html`
       <style>
         :host {
@@ -81,36 +74,37 @@ interface SelectBandCountState {
       </style>
 
       ${state.bandLimit
-        ? html` <button class="scale-in" @click=${run('BAND_SELECTED', 0)}>clear</button> `
+        ? html`
+            <button class="scale-in" @click=${dispatch('band_count_selected', { detail: 0 })}>
+              clear
+            </button>
+          `
         : html`
             <div class="band-buttons scale-in">
-              <button @click=${run('BAND_SELECTED', 4)}>4 Bands</button>
-              <button @click=${run('BAND_SELECTED', 5)}>5 Bands</button>
-              <button @click=${run('BAND_SELECTED', 6)}>6 Bands</button>
+              <button @click=${dispatch('band_count_selected', { detail: 4 })}>4 Bands</button>
+              <button @click=${dispatch('band_count_selected', { detail: 5 })}>5 Bands</button>
+              <button @click=${dispatch('band_count_selected', { detail: 6 })}>6 Bands</button>
             </div>
           `}
     `;
   },
 })
-export class SelectBandCountComponent implements OnPropChanges, SelectBandCountState {
-  @Prop() bandLimit!: number;
-  @Prop() selectedBands: ResistorBand[] = [];
+export class SelectBandCountElement extends JoistElement implements SelectBandCountState {
+  @Get(State) private state!: State<SelectBandCountState>;
 
-  constructor(
-    @ElRef private elRef: HTMLElement,
-    @StateRef private state: State<SelectBandCountState>
-  ) {}
-
-  onPropChanges() {
-    this.state.setValue({
-      bandLimit: this.bandLimit,
-      selectedBands: this.selectedBands,
-    });
+  set bandLimit(bandLimit: number) {
+    this.state.patchValue({ bandLimit });
   }
 
-  @Handle('BAND_SELECTED') onBandSelected(_: Event, detail: number) {
-    this.elRef.dispatchEvent(new CustomEvent('band_count_selected', { detail }));
+  set selectedBands(selectedBands: ResistorBand[]) {
+    this.state.patchValue({ selectedBands });
+  }
+
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
   }
 }
 
-customElements.define('select-band-count', defineElement(SelectBandCountComponent));
+customElements.define('select-band-count', SelectBandCountElement);
