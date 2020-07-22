@@ -1,1201 +1,567 @@
-!(function (t) {
-  var e = {};
-  function s(n) {
-    if (e[n]) return e[n].exports;
-    var i = (e[n] = { i: n, l: !1, exports: {} });
-    return t[n].call(i.exports, i, i.exports, s), (i.l = !0), i.exports;
+/******/ (function (modules) {
+  // webpackBootstrap
+  /******/ // The module cache
+  /******/ var installedModules = {}; // The require function
+  /******/
+  /******/ /******/ function __webpack_require__(moduleId) {
+    /******/
+    /******/ // Check if module is in cache
+    /******/ if (installedModules[moduleId]) {
+      /******/ return installedModules[moduleId].exports;
+      /******/
+    } // Create a new module (and put it into the cache)
+    /******/ /******/ var module = (installedModules[moduleId] = {
+      /******/ i: moduleId,
+      /******/ l: false,
+      /******/ exports: {},
+      /******/
+    }); // Execute the module function
+    /******/
+    /******/ /******/ modules[moduleId].call(
+      module.exports,
+      module,
+      module.exports,
+      __webpack_require__
+    ); // Flag the module as loaded
+    /******/
+    /******/ /******/ module.l = true; // Return the exports of the module
+    /******/
+    /******/ /******/ return module.exports;
+    /******/
+  } // expose the modules object (__webpack_modules__)
+  /******/
+  /******/
+  /******/ /******/ __webpack_require__.m = modules; // expose the module cache
+  /******/
+  /******/ /******/ __webpack_require__.c = installedModules; // define getter function for harmony exports
+  /******/
+  /******/ /******/ __webpack_require__.d = function (exports, name, getter) {
+    /******/ if (!__webpack_require__.o(exports, name)) {
+      /******/ Object.defineProperty(exports, name, { enumerable: true, get: getter });
+      /******/
+    }
+    /******/
+  }; // define __esModule on exports
+  /******/
+  /******/ /******/ __webpack_require__.r = function (exports) {
+    /******/ if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+      /******/ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+      /******/
+    }
+    /******/ Object.defineProperty(exports, '__esModule', { value: true });
+    /******/
+  }; // create a fake namespace object // mode & 1: value is a module id, require it // mode & 2: merge all properties of value into the ns // mode & 4: return value when already ns object // mode & 8|1: behave like require
+  /******/
+  /******/ /******/ /******/ /******/ /******/ /******/ __webpack_require__.t = function (
+    value,
+    mode
+  ) {
+    /******/ if (mode & 1) value = __webpack_require__(value);
+    /******/ if (mode & 8) return value;
+    /******/ if (mode & 4 && typeof value === 'object' && value && value.__esModule) return value;
+    /******/ var ns = Object.create(null);
+    /******/ __webpack_require__.r(ns);
+    /******/ Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+    /******/ if (mode & 2 && typeof value != 'string')
+      for (var key in value)
+        __webpack_require__.d(
+          ns,
+          key,
+          function (key) {
+            return value[key];
+          }.bind(null, key)
+        );
+    /******/ return ns;
+    /******/
+  }; // getDefaultExport function for compatibility with non-harmony modules
+  /******/
+  /******/ /******/ __webpack_require__.n = function (module) {
+    /******/ var getter =
+      module && module.__esModule
+        ? /******/ function getDefault() {
+            return module['default'];
+          }
+        : /******/ function getModuleExports() {
+            return module;
+          };
+    /******/ __webpack_require__.d(getter, 'a', getter);
+    /******/ return getter;
+    /******/
+  }; // Object.prototype.hasOwnProperty.call
+  /******/
+  /******/ /******/ __webpack_require__.o = function (object, property) {
+    return Object.prototype.hasOwnProperty.call(object, property);
+  }; // __webpack_public_path__
+  /******/
+  /******/ /******/ __webpack_require__.p = ''; // Load entry module and return exports
+  /******/
+  /******/
+  /******/ /******/ return __webpack_require__((__webpack_require__.s = './src/main.ts'));
+  /******/
+})(
+  /************************************************************************/
+  /******/ {
+    /***/ '../../node_modules/lit-html/lib/default-template-processor.js':
+      /*!*******************************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/default-template-processor.js ***!
+  \*******************************************************************************************/
+      /*! exports provided: DefaultTemplateProcessor, defaultTemplateProcessor */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultTemplateProcessor", function() { return DefaultTemplateProcessor; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTemplateProcessor", function() { return defaultTemplateProcessor; });\n/* harmony import */ var _parts_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parts.js */ "../../node_modules/lit-html/lib/parts.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n\n/**\n * Creates Parts when a template is instantiated.\n */\nclass DefaultTemplateProcessor {\n    /**\n     * Create parts for an attribute-position binding, given the event, attribute\n     * name, and string literals.\n     *\n     * @param element The element containing the binding\n     * @param name  The attribute name\n     * @param strings The string literals. There are always at least two strings,\n     *   event for fully-controlled bindings with a single expression.\n     */\n    handleAttributeExpressions(element, name, strings, options) {\n        const prefix = name[0];\n        if (prefix === \'.\') {\n            const committer = new _parts_js__WEBPACK_IMPORTED_MODULE_0__["PropertyCommitter"](element, name.slice(1), strings);\n            return committer.parts;\n        }\n        if (prefix === \'@\') {\n            return [new _parts_js__WEBPACK_IMPORTED_MODULE_0__["EventPart"](element, name.slice(1), options.eventContext)];\n        }\n        if (prefix === \'?\') {\n            return [new _parts_js__WEBPACK_IMPORTED_MODULE_0__["BooleanAttributePart"](element, name.slice(1), strings)];\n        }\n        const committer = new _parts_js__WEBPACK_IMPORTED_MODULE_0__["AttributeCommitter"](element, name, strings);\n        return committer.parts;\n    }\n    /**\n     * Create parts for a text-position binding.\n     * @param templateFactory\n     */\n    handleTextExpression(options) {\n        return new _parts_js__WEBPACK_IMPORTED_MODULE_0__["NodePart"](options);\n    }\n}\nconst defaultTemplateProcessor = new DefaultTemplateProcessor();\n//# sourceMappingURL=default-template-processor.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/default-template-processor.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/directive.js':
+      /*!**************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/directive.js ***!
+  \**************************************************************************/
+      /*! exports provided: directive, isDirective */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "directive", function() { return directive; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDirective", function() { return isDirective; });\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\nconst directives = new WeakMap();\n/**\n * Brands a function as a directive factory function so that lit-html will call\n * the function during template rendering, rather than passing as a value.\n *\n * A _directive_ is a function that takes a Part as an argument. It has the\n * signature: `(part: Part) => void`.\n *\n * A directive _factory_ is a function that takes arguments for data and\n * configuration and returns a directive. Users of directive usually refer to\n * the directive factory as the directive. For example, "The repeat directive".\n *\n * Usually a template author will invoke a directive factory in their template\n * with relevant arguments, which will then return a directive function.\n *\n * Here\'s an example of using the `repeat()` directive factory that takes an\n * array and a function to render an item:\n *\n * ```js\n * html`<ul><${repeat(items, (item) => html`<li>${item}</li>`)}</ul>`\n * ```\n *\n * When `repeat` is invoked, it returns a directive function that closes over\n * `items` and the template function. When the outer template is rendered, the\n * return directive function is called with the Part for the expression.\n * `repeat` then performs it\'s custom logic to render multiple items.\n *\n * @param f The directive factory function. Must be a function that returns a\n * function of the signature `(part: Part) => void`. The returned function will\n * be called with the part object.\n *\n * @example\n *\n * import {directive, html} from \'lit-html\';\n *\n * const immutable = directive((v) => (part) => {\n *   if (part.value !== v) {\n *     part.setValue(v)\n *   }\n * });\n */\nconst directive = (f) => ((...args) => {\n    const d = f(...args);\n    directives.set(d, true);\n    return d;\n});\nconst isDirective = (o) => {\n    return typeof o === \'function\' && directives.has(o);\n};\n//# sourceMappingURL=directive.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/directive.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/dom.js':
+      /*!********************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/dom.js ***!
+  \********************************************************************/
+      /*! exports provided: isCEPolyfill, reparentNodes, removeNodes */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCEPolyfill", function() { return isCEPolyfill; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reparentNodes", function() { return reparentNodes; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeNodes", function() { return removeNodes; });\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * True if the custom elements polyfill is in use.\n */\nconst isCEPolyfill = typeof window !== \'undefined\' &&\n    window.customElements != null &&\n    window.customElements.polyfillWrapFlushCallback !==\n        undefined;\n/**\n * Reparents nodes, starting from `start` (inclusive) to `end` (exclusive),\n * into another container (could be the same container), before `before`. If\n * `before` is null, it appends the nodes to the container.\n */\nconst reparentNodes = (container, start, end = null, before = null) => {\n    while (start !== end) {\n        const n = start.nextSibling;\n        container.insertBefore(start, before);\n        start = n;\n    }\n};\n/**\n * Removes nodes, starting from `start` (inclusive) to `end` (exclusive), from\n * `container`.\n */\nconst removeNodes = (container, start, end = null) => {\n    while (start !== end) {\n        const n = start.nextSibling;\n        container.removeChild(start);\n        start = n;\n    }\n};\n//# sourceMappingURL=dom.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/dom.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/part.js':
+      /*!*********************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/part.js ***!
+  \*********************************************************************/
+      /*! exports provided: noChange, nothing */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noChange", function() { return noChange; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nothing", function() { return nothing; });\n/**\n * @license\n * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * A sentinel value that signals that a value was handled by a directive and\n * should not be written to the DOM.\n */\nconst noChange = {};\n/**\n * A sentinel value that signals a NodePart to fully clear its content.\n */\nconst nothing = {};\n//# sourceMappingURL=part.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/part.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/parts.js':
+      /*!**********************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/parts.js ***!
+  \**********************************************************************/
+      /*! exports provided: isPrimitive, isIterable, AttributeCommitter, AttributePart, NodePart, BooleanAttributePart, PropertyCommitter, PropertyPart, EventPart */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPrimitive", function() { return isPrimitive; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIterable", function() { return isIterable; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AttributeCommitter", function() { return AttributeCommitter; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AttributePart", function() { return AttributePart; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NodePart", function() { return NodePart; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BooleanAttributePart", function() { return BooleanAttributePart; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PropertyCommitter", function() { return PropertyCommitter; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PropertyPart", function() { return PropertyPart; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventPart", function() { return EventPart; });\n/* harmony import */ var _directive_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./directive.js */ "../../node_modules/lit-html/lib/directive.js");\n/* harmony import */ var _dom_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dom.js */ "../../node_modules/lit-html/lib/dom.js");\n/* harmony import */ var _part_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./part.js */ "../../node_modules/lit-html/lib/part.js");\n/* harmony import */ var _template_instance_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./template-instance.js */ "../../node_modules/lit-html/lib/template-instance.js");\n/* harmony import */ var _template_result_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./template-result.js */ "../../node_modules/lit-html/lib/template-result.js");\n/* harmony import */ var _template_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./template.js */ "../../node_modules/lit-html/lib/template.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * @module lit-html\n */\n\n\n\n\n\n\nconst isPrimitive = (value) => {\n    return (value === null ||\n        !(typeof value === \'object\' || typeof value === \'function\'));\n};\nconst isIterable = (value) => {\n    return Array.isArray(value) ||\n        // eslint-disable-next-line @typescript-eslint/no-explicit-any\n        !!(value && value[Symbol.iterator]);\n};\n/**\n * Writes attribute values to the DOM for a group of AttributeParts bound to a\n * single attribute. The value is only set once even if there are multiple parts\n * for an attribute.\n */\nclass AttributeCommitter {\n    constructor(element, name, strings) {\n        this.dirty = true;\n        this.element = element;\n        this.name = name;\n        this.strings = strings;\n        this.parts = [];\n        for (let i = 0; i < strings.length - 1; i++) {\n            this.parts[i] = this._createPart();\n        }\n    }\n    /**\n     * Creates a single part. Override this to create a differnt type of part.\n     */\n    _createPart() {\n        return new AttributePart(this);\n    }\n    _getValue() {\n        const strings = this.strings;\n        const l = strings.length - 1;\n        let text = \'\';\n        for (let i = 0; i < l; i++) {\n            text += strings[i];\n            const part = this.parts[i];\n            if (part !== undefined) {\n                const v = part.value;\n                if (isPrimitive(v) || !isIterable(v)) {\n                    text += typeof v === \'string\' ? v : String(v);\n                }\n                else {\n                    for (const t of v) {\n                        text += typeof t === \'string\' ? t : String(t);\n                    }\n                }\n            }\n        }\n        text += strings[l];\n        return text;\n    }\n    commit() {\n        if (this.dirty) {\n            this.dirty = false;\n            this.element.setAttribute(this.name, this._getValue());\n        }\n    }\n}\n/**\n * A Part that controls all or part of an attribute value.\n */\nclass AttributePart {\n    constructor(committer) {\n        this.value = undefined;\n        this.committer = committer;\n    }\n    setValue(value) {\n        if (value !== _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"] && (!isPrimitive(value) || value !== this.value)) {\n            this.value = value;\n            // If the value is a not a directive, dirty the committer so that it\'ll\n            // call setAttribute. If the value is a directive, it\'ll dirty the\n            // committer if it calls setValue().\n            if (!Object(_directive_js__WEBPACK_IMPORTED_MODULE_0__["isDirective"])(value)) {\n                this.committer.dirty = true;\n            }\n        }\n    }\n    commit() {\n        while (Object(_directive_js__WEBPACK_IMPORTED_MODULE_0__["isDirective"])(this.value)) {\n            const directive = this.value;\n            this.value = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n            directive(this);\n        }\n        if (this.value === _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"]) {\n            return;\n        }\n        this.committer.commit();\n    }\n}\n/**\n * A Part that controls a location within a Node tree. Like a Range, NodePart\n * has start and end locations and can set and update the Nodes between those\n * locations.\n *\n * NodeParts support several value types: primitives, Nodes, TemplateResults,\n * as well as arrays and iterables of those types.\n */\nclass NodePart {\n    constructor(options) {\n        this.value = undefined;\n        this.__pendingValue = undefined;\n        this.options = options;\n    }\n    /**\n     * Appends this part into a container.\n     *\n     * This part must be empty, as its contents are not automatically moved.\n     */\n    appendInto(container) {\n        this.startNode = container.appendChild(Object(_template_js__WEBPACK_IMPORTED_MODULE_5__["createMarker"])());\n        this.endNode = container.appendChild(Object(_template_js__WEBPACK_IMPORTED_MODULE_5__["createMarker"])());\n    }\n    /**\n     * Inserts this part after the `ref` node (between `ref` and `ref`\'s next\n     * sibling). Both `ref` and its next sibling must be static, unchanging nodes\n     * such as those that appear in a literal section of a template.\n     *\n     * This part must be empty, as its contents are not automatically moved.\n     */\n    insertAfterNode(ref) {\n        this.startNode = ref;\n        this.endNode = ref.nextSibling;\n    }\n    /**\n     * Appends this part into a parent part.\n     *\n     * This part must be empty, as its contents are not automatically moved.\n     */\n    appendIntoPart(part) {\n        part.__insert(this.startNode = Object(_template_js__WEBPACK_IMPORTED_MODULE_5__["createMarker"])());\n        part.__insert(this.endNode = Object(_template_js__WEBPACK_IMPORTED_MODULE_5__["createMarker"])());\n    }\n    /**\n     * Inserts this part after the `ref` part.\n     *\n     * This part must be empty, as its contents are not automatically moved.\n     */\n    insertAfterPart(ref) {\n        ref.__insert(this.startNode = Object(_template_js__WEBPACK_IMPORTED_MODULE_5__["createMarker"])());\n        this.endNode = ref.endNode;\n        ref.endNode = this.startNode;\n    }\n    setValue(value) {\n        this.__pendingValue = value;\n    }\n    commit() {\n        if (this.startNode.parentNode === null) {\n            return;\n        }\n        while (Object(_directive_js__WEBPACK_IMPORTED_MODULE_0__["isDirective"])(this.__pendingValue)) {\n            const directive = this.__pendingValue;\n            this.__pendingValue = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n            directive(this);\n        }\n        const value = this.__pendingValue;\n        if (value === _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"]) {\n            return;\n        }\n        if (isPrimitive(value)) {\n            if (value !== this.value) {\n                this.__commitText(value);\n            }\n        }\n        else if (value instanceof _template_result_js__WEBPACK_IMPORTED_MODULE_4__["TemplateResult"]) {\n            this.__commitTemplateResult(value);\n        }\n        else if (value instanceof Node) {\n            this.__commitNode(value);\n        }\n        else if (isIterable(value)) {\n            this.__commitIterable(value);\n        }\n        else if (value === _part_js__WEBPACK_IMPORTED_MODULE_2__["nothing"]) {\n            this.value = _part_js__WEBPACK_IMPORTED_MODULE_2__["nothing"];\n            this.clear();\n        }\n        else {\n            // Fallback, will render the string representation\n            this.__commitText(value);\n        }\n    }\n    __insert(node) {\n        this.endNode.parentNode.insertBefore(node, this.endNode);\n    }\n    __commitNode(value) {\n        if (this.value === value) {\n            return;\n        }\n        this.clear();\n        this.__insert(value);\n        this.value = value;\n    }\n    __commitText(value) {\n        const node = this.startNode.nextSibling;\n        value = value == null ? \'\' : value;\n        // If `value` isn\'t already a string, we explicitly convert it here in case\n        // it can\'t be implicitly converted - i.e. it\'s a symbol.\n        const valueAsString = typeof value === \'string\' ? value : String(value);\n        if (node === this.endNode.previousSibling &&\n            node.nodeType === 3 /* Node.TEXT_NODE */) {\n            // If we only have a single text node between the markers, we can just\n            // set its value, rather than replacing it.\n            // TODO(justinfagnani): Can we just check if this.value is primitive?\n            node.data = valueAsString;\n        }\n        else {\n            this.__commitNode(document.createTextNode(valueAsString));\n        }\n        this.value = value;\n    }\n    __commitTemplateResult(value) {\n        const template = this.options.templateFactory(value);\n        if (this.value instanceof _template_instance_js__WEBPACK_IMPORTED_MODULE_3__["TemplateInstance"] &&\n            this.value.template === template) {\n            this.value.update(value.values);\n        }\n        else {\n            // Make sure we propagate the template processor from the TemplateResult\n            // so that we use its syntax extension, etc. The template factory comes\n            // from the render function options so that it can control template\n            // caching and preprocessing.\n            const instance = new _template_instance_js__WEBPACK_IMPORTED_MODULE_3__["TemplateInstance"](template, value.processor, this.options);\n            const fragment = instance._clone();\n            instance.update(value.values);\n            this.__commitNode(fragment);\n            this.value = instance;\n        }\n    }\n    __commitIterable(value) {\n        // For an Iterable, we create a new InstancePart per item, then set its\n        // value to the item. This is a little bit of overhead for every item in\n        // an Iterable, but it lets us recurse easily and efficiently update Arrays\n        // of TemplateResults that will be commonly returned from expressions like:\n        // array.map((i) => html`${i}`), by reusing existing TemplateInstances.\n        // If _value is an array, then the previous render was of an\n        // iterable and _value will contain the NodeParts from the previous\n        // render. If _value is not an array, clear this part and make a new\n        // array for NodeParts.\n        if (!Array.isArray(this.value)) {\n            this.value = [];\n            this.clear();\n        }\n        // Lets us keep track of how many items we stamped so we can clear leftover\n        // items from a previous render\n        const itemParts = this.value;\n        let partIndex = 0;\n        let itemPart;\n        for (const item of value) {\n            // Try to reuse an existing part\n            itemPart = itemParts[partIndex];\n            // If no existing part, create a new one\n            if (itemPart === undefined) {\n                itemPart = new NodePart(this.options);\n                itemParts.push(itemPart);\n                if (partIndex === 0) {\n                    itemPart.appendIntoPart(this);\n                }\n                else {\n                    itemPart.insertAfterPart(itemParts[partIndex - 1]);\n                }\n            }\n            itemPart.setValue(item);\n            itemPart.commit();\n            partIndex++;\n        }\n        if (partIndex < itemParts.length) {\n            // Truncate the parts array so _value reflects the current state\n            itemParts.length = partIndex;\n            this.clear(itemPart && itemPart.endNode);\n        }\n    }\n    clear(startNode = this.startNode) {\n        Object(_dom_js__WEBPACK_IMPORTED_MODULE_1__["removeNodes"])(this.startNode.parentNode, startNode.nextSibling, this.endNode);\n    }\n}\n/**\n * Implements a boolean attribute, roughly as defined in the HTML\n * specification.\n *\n * If the value is truthy, then the attribute is present with a value of\n * \'\'. If the value is falsey, the attribute is removed.\n */\nclass BooleanAttributePart {\n    constructor(element, name, strings) {\n        this.value = undefined;\n        this.__pendingValue = undefined;\n        if (strings.length !== 2 || strings[0] !== \'\' || strings[1] !== \'\') {\n            throw new Error(\'Boolean attributes can only contain a single expression\');\n        }\n        this.element = element;\n        this.name = name;\n        this.strings = strings;\n    }\n    setValue(value) {\n        this.__pendingValue = value;\n    }\n    commit() {\n        while (Object(_directive_js__WEBPACK_IMPORTED_MODULE_0__["isDirective"])(this.__pendingValue)) {\n            const directive = this.__pendingValue;\n            this.__pendingValue = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n            directive(this);\n        }\n        if (this.__pendingValue === _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"]) {\n            return;\n        }\n        const value = !!this.__pendingValue;\n        if (this.value !== value) {\n            if (value) {\n                this.element.setAttribute(this.name, \'\');\n            }\n            else {\n                this.element.removeAttribute(this.name);\n            }\n            this.value = value;\n        }\n        this.__pendingValue = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n    }\n}\n/**\n * Sets attribute values for PropertyParts, so that the value is only set once\n * even if there are multiple parts for a property.\n *\n * If an expression controls the whole property value, then the value is simply\n * assigned to the property under control. If there are string literals or\n * multiple expressions, then the strings are expressions are interpolated into\n * a string first.\n */\nclass PropertyCommitter extends AttributeCommitter {\n    constructor(element, name, strings) {\n        super(element, name, strings);\n        this.single =\n            (strings.length === 2 && strings[0] === \'\' && strings[1] === \'\');\n    }\n    _createPart() {\n        return new PropertyPart(this);\n    }\n    _getValue() {\n        if (this.single) {\n            return this.parts[0].value;\n        }\n        return super._getValue();\n    }\n    commit() {\n        if (this.dirty) {\n            this.dirty = false;\n            // eslint-disable-next-line @typescript-eslint/no-explicit-any\n            this.element[this.name] = this._getValue();\n        }\n    }\n}\nclass PropertyPart extends AttributePart {\n}\n// Detect event listener options support. If the `capture` property is read\n// from the options object, then options are supported. If not, then the third\n// argument to add/removeEventListener is interpreted as the boolean capture\n// value so we should only pass the `capture` property.\nlet eventOptionsSupported = false;\n// Wrap into an IIFE because MS Edge <= v41 does not support having try/catch\n// blocks right into the body of a module\n(() => {\n    try {\n        const options = {\n            get capture() {\n                eventOptionsSupported = true;\n                return false;\n            }\n        };\n        // eslint-disable-next-line @typescript-eslint/no-explicit-any\n        window.addEventListener(\'test\', options, options);\n        // eslint-disable-next-line @typescript-eslint/no-explicit-any\n        window.removeEventListener(\'test\', options, options);\n    }\n    catch (_e) {\n        // event options not supported\n    }\n})();\nclass EventPart {\n    constructor(element, eventName, eventContext) {\n        this.value = undefined;\n        this.__pendingValue = undefined;\n        this.element = element;\n        this.eventName = eventName;\n        this.eventContext = eventContext;\n        this.__boundHandleEvent = (e) => this.handleEvent(e);\n    }\n    setValue(value) {\n        this.__pendingValue = value;\n    }\n    commit() {\n        while (Object(_directive_js__WEBPACK_IMPORTED_MODULE_0__["isDirective"])(this.__pendingValue)) {\n            const directive = this.__pendingValue;\n            this.__pendingValue = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n            directive(this);\n        }\n        if (this.__pendingValue === _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"]) {\n            return;\n        }\n        const newListener = this.__pendingValue;\n        const oldListener = this.value;\n        const shouldRemoveListener = newListener == null ||\n            oldListener != null &&\n                (newListener.capture !== oldListener.capture ||\n                    newListener.once !== oldListener.once ||\n                    newListener.passive !== oldListener.passive);\n        const shouldAddListener = newListener != null && (oldListener == null || shouldRemoveListener);\n        if (shouldRemoveListener) {\n            this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options);\n        }\n        if (shouldAddListener) {\n            this.__options = getOptions(newListener);\n            this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options);\n        }\n        this.value = newListener;\n        this.__pendingValue = _part_js__WEBPACK_IMPORTED_MODULE_2__["noChange"];\n    }\n    handleEvent(event) {\n        if (typeof this.value === \'function\') {\n            this.value.call(this.eventContext || this.element, event);\n        }\n        else {\n            this.value.handleEvent(event);\n        }\n    }\n}\n// We copy options because of the inconsistent behavior of browsers when reading\n// the third argument of add/removeEventListener. IE11 doesn\'t support options\n// at all. Chrome 41 only reads `capture` if the argument is an object.\nconst getOptions = (o) => o &&\n    (eventOptionsSupported ?\n        { capture: o.capture, passive: o.passive, once: o.once } :\n        o.capture);\n//# sourceMappingURL=parts.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/parts.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/render.js':
+      /*!***********************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/render.js ***!
+  \***********************************************************************/
+      /*! exports provided: parts, render */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parts", function() { return parts; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });\n/* harmony import */ var _dom_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom.js */ "../../node_modules/lit-html/lib/dom.js");\n/* harmony import */ var _parts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./parts.js */ "../../node_modules/lit-html/lib/parts.js");\n/* harmony import */ var _template_factory_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./template-factory.js */ "../../node_modules/lit-html/lib/template-factory.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * @module lit-html\n */\n\n\n\nconst parts = new WeakMap();\n/**\n * Renders a template result or other value to a container.\n *\n * To update a container with new values, reevaluate the template literal and\n * call `render` with the new result.\n *\n * @param result Any value renderable by NodePart - typically a TemplateResult\n *     created by evaluating a template tag like `html` or `svg`.\n * @param container A DOM parent to render to. The entire contents are either\n *     replaced, or efficiently updated if the same result type was previous\n *     rendered there.\n * @param options RenderOptions for the entire render tree rendered to this\n *     container. Render options must *not* change between renders to the same\n *     container, as those changes will not effect previously rendered DOM.\n */\nconst render = (result, container, options) => {\n    let part = parts.get(container);\n    if (part === undefined) {\n        Object(_dom_js__WEBPACK_IMPORTED_MODULE_0__["removeNodes"])(container, container.firstChild);\n        parts.set(container, part = new _parts_js__WEBPACK_IMPORTED_MODULE_1__["NodePart"](Object.assign({ templateFactory: _template_factory_js__WEBPACK_IMPORTED_MODULE_2__["templateFactory"] }, options)));\n        part.appendInto(container);\n    }\n    part.setValue(result);\n    part.commit();\n};\n//# sourceMappingURL=render.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/render.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/template-factory.js':
+      /*!*********************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/template-factory.js ***!
+  \*********************************************************************************/
+      /*! exports provided: templateFactory, templateCaches */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "templateFactory", function() { return templateFactory; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "templateCaches", function() { return templateCaches; });\n/* harmony import */ var _template_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./template.js */ "../../node_modules/lit-html/lib/template.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n\n/**\n * The default TemplateFactory which caches Templates keyed on\n * result.type and result.strings.\n */\nfunction templateFactory(result) {\n    let templateCache = templateCaches.get(result.type);\n    if (templateCache === undefined) {\n        templateCache = {\n            stringsArray: new WeakMap(),\n            keyString: new Map()\n        };\n        templateCaches.set(result.type, templateCache);\n    }\n    let template = templateCache.stringsArray.get(result.strings);\n    if (template !== undefined) {\n        return template;\n    }\n    // If the TemplateStringsArray is new, generate a key from the strings\n    // This key is shared between all templates with identical content\n    const key = result.strings.join(_template_js__WEBPACK_IMPORTED_MODULE_0__["marker"]);\n    // Check if we already have a Template for this key\n    template = templateCache.keyString.get(key);\n    if (template === undefined) {\n        // If we have not seen this key before, create a new Template\n        template = new _template_js__WEBPACK_IMPORTED_MODULE_0__["Template"](result, result.getTemplateElement());\n        // Cache the Template for this key\n        templateCache.keyString.set(key, template);\n    }\n    // Cache all future queries for this TemplateStringsArray\n    templateCache.stringsArray.set(result.strings, template);\n    return template;\n}\nconst templateCaches = new Map();\n//# sourceMappingURL=template-factory.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/template-factory.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/template-instance.js':
+      /*!**********************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/template-instance.js ***!
+  \**********************************************************************************/
+      /*! exports provided: TemplateInstance */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TemplateInstance", function() { return TemplateInstance; });\n/* harmony import */ var _dom_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom.js */ "../../node_modules/lit-html/lib/dom.js");\n/* harmony import */ var _template_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./template.js */ "../../node_modules/lit-html/lib/template.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * @module lit-html\n */\n\n\n/**\n * An instance of a `Template` that can be attached to the DOM and updated\n * with new values.\n */\nclass TemplateInstance {\n    constructor(template, processor, options) {\n        this.__parts = [];\n        this.template = template;\n        this.processor = processor;\n        this.options = options;\n    }\n    update(values) {\n        let i = 0;\n        for (const part of this.__parts) {\n            if (part !== undefined) {\n                part.setValue(values[i]);\n            }\n            i++;\n        }\n        for (const part of this.__parts) {\n            if (part !== undefined) {\n                part.commit();\n            }\n        }\n    }\n    _clone() {\n        // There are a number of steps in the lifecycle of a template instance\'s\n        // DOM fragment:\n        //  1. Clone - create the instance fragment\n        //  2. Adopt - adopt into the main document\n        //  3. Process - find part markers and create parts\n        //  4. Upgrade - upgrade custom elements\n        //  5. Update - set node, attribute, property, etc., values\n        //  6. Connect - connect to the document. Optional and outside of this\n        //     method.\n        //\n        // We have a few constraints on the ordering of these steps:\n        //  * We need to upgrade before updating, so that property values will pass\n        //    through any property setters.\n        //  * We would like to process before upgrading so that we\'re sure that the\n        //    cloned fragment is inert and not disturbed by self-modifying DOM.\n        //  * We want custom elements to upgrade even in disconnected fragments.\n        //\n        // Given these constraints, with full custom elements support we would\n        // prefer the order: Clone, Process, Adopt, Upgrade, Update, Connect\n        //\n        // But Safari does not implement CustomElementRegistry#upgrade, so we\n        // can not implement that order and still have upgrade-before-update and\n        // upgrade disconnected fragments. So we instead sacrifice the\n        // process-before-upgrade constraint, since in Custom Elements v1 elements\n        // must not modify their light DOM in the constructor. We still have issues\n        // when co-existing with CEv0 elements like Polymer 1, and with polyfills\n        // that don\'t strictly adhere to the no-modification rule because shadow\n        // DOM, which may be created in the constructor, is emulated by being placed\n        // in the light DOM.\n        //\n        // The resulting order is on native is: Clone, Adopt, Upgrade, Process,\n        // Update, Connect. document.importNode() performs Clone, Adopt, and Upgrade\n        // in one step.\n        //\n        // The Custom Elements v1 polyfill supports upgrade(), so the order when\n        // polyfilled is the more ideal: Clone, Process, Adopt, Upgrade, Update,\n        // Connect.\n        const fragment = _dom_js__WEBPACK_IMPORTED_MODULE_0__["isCEPolyfill"] ?\n            this.template.element.content.cloneNode(true) :\n            document.importNode(this.template.element.content, true);\n        const stack = [];\n        const parts = this.template.parts;\n        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null\n        const walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);\n        let partIndex = 0;\n        let nodeIndex = 0;\n        let part;\n        let node = walker.nextNode();\n        // Loop through all the nodes and parts of a template\n        while (partIndex < parts.length) {\n            part = parts[partIndex];\n            if (!Object(_template_js__WEBPACK_IMPORTED_MODULE_1__["isTemplatePartActive"])(part)) {\n                this.__parts.push(undefined);\n                partIndex++;\n                continue;\n            }\n            // Progress the tree walker until we find our next part\'s node.\n            // Note that multiple parts may share the same node (attribute parts\n            // on a single element), so this loop may not run at all.\n            while (nodeIndex < part.index) {\n                nodeIndex++;\n                if (node.nodeName === \'TEMPLATE\') {\n                    stack.push(node);\n                    walker.currentNode = node.content;\n                }\n                if ((node = walker.nextNode()) === null) {\n                    // We\'ve exhausted the content inside a nested template element.\n                    // Because we still have parts (the outer for-loop), we know:\n                    // - There is a template in the stack\n                    // - The walker will find a nextNode outside the template\n                    walker.currentNode = stack.pop();\n                    node = walker.nextNode();\n                }\n            }\n            // We\'ve arrived at our part\'s node.\n            if (part.type === \'node\') {\n                const part = this.processor.handleTextExpression(this.options);\n                part.insertAfterNode(node.previousSibling);\n                this.__parts.push(part);\n            }\n            else {\n                this.__parts.push(...this.processor.handleAttributeExpressions(node, part.name, part.strings, this.options));\n            }\n            partIndex++;\n        }\n        if (_dom_js__WEBPACK_IMPORTED_MODULE_0__["isCEPolyfill"]) {\n            document.adoptNode(fragment);\n            customElements.upgrade(fragment);\n        }\n        return fragment;\n    }\n}\n//# sourceMappingURL=template-instance.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/template-instance.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/template-result.js':
+      /*!********************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/template-result.js ***!
+  \********************************************************************************/
+      /*! exports provided: TemplateResult, SVGTemplateResult */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TemplateResult", function() { return TemplateResult; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SVGTemplateResult", function() { return SVGTemplateResult; });\n/* harmony import */ var _dom_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom.js */ "../../node_modules/lit-html/lib/dom.js");\n/* harmony import */ var _template_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./template.js */ "../../node_modules/lit-html/lib/template.js");\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * @module lit-html\n */\n\n\nconst commentMarker = ` ${_template_js__WEBPACK_IMPORTED_MODULE_1__["marker"]} `;\n/**\n * The return type of `html`, which holds a Template and the values from\n * interpolated expressions.\n */\nclass TemplateResult {\n    constructor(strings, values, type, processor) {\n        this.strings = strings;\n        this.values = values;\n        this.type = type;\n        this.processor = processor;\n    }\n    /**\n     * Returns a string of HTML used to create a `<template>` element.\n     */\n    getHTML() {\n        const l = this.strings.length - 1;\n        let html = \'\';\n        let isCommentBinding = false;\n        for (let i = 0; i < l; i++) {\n            const s = this.strings[i];\n            // For each binding we want to determine the kind of marker to insert\n            // into the template source before it\'s parsed by the browser\'s HTML\n            // parser. The marker type is based on whether the expression is in an\n            // attribute, text, or comment position.\n            //   * For node-position bindings we insert a comment with the marker\n            //     sentinel as its text content, like <!--{{lit-guid}}-->.\n            //   * For attribute bindings we insert just the marker sentinel for the\n            //     first binding, so that we support unquoted attribute bindings.\n            //     Subsequent bindings can use a comment marker because multi-binding\n            //     attributes must be quoted.\n            //   * For comment bindings we insert just the marker sentinel so we don\'t\n            //     close the comment.\n            //\n            // The following code scans the template source, but is *not* an HTML\n            // parser. We don\'t need to track the tree structure of the HTML, only\n            // whether a binding is inside a comment, and if not, if it appears to be\n            // the first binding in an attribute.\n            const commentOpen = s.lastIndexOf(\'<!--\');\n            // We\'re in comment position if we have a comment open with no following\n            // comment close. Because <-- can appear in an attribute value there can\n            // be false positives.\n            isCommentBinding = (commentOpen > -1 || isCommentBinding) &&\n                s.indexOf(\'-->\', commentOpen + 1) === -1;\n            // Check to see if we have an attribute-like sequence preceding the\n            // expression. This can match "name=value" like structures in text,\n            // comments, and attribute values, so there can be false-positives.\n            const attributeMatch = _template_js__WEBPACK_IMPORTED_MODULE_1__["lastAttributeNameRegex"].exec(s);\n            if (attributeMatch === null) {\n                // We\'re only in this branch if we don\'t have a attribute-like\n                // preceding sequence. For comments, this guards against unusual\n                // attribute values like <div foo="<!--${\'bar\'}">. Cases like\n                // <!-- foo=${\'bar\'}--> are handled correctly in the attribute branch\n                // below.\n                html += s + (isCommentBinding ? commentMarker : _template_js__WEBPACK_IMPORTED_MODULE_1__["nodeMarker"]);\n            }\n            else {\n                // For attributes we use just a marker sentinel, and also append a\n                // $lit$ suffix to the name to opt-out of attribute-specific parsing\n                // that IE and Edge do for style and certain SVG attributes.\n                html += s.substr(0, attributeMatch.index) + attributeMatch[1] +\n                    attributeMatch[2] + _template_js__WEBPACK_IMPORTED_MODULE_1__["boundAttributeSuffix"] + attributeMatch[3] +\n                    _template_js__WEBPACK_IMPORTED_MODULE_1__["marker"];\n            }\n        }\n        html += this.strings[l];\n        return html;\n    }\n    getTemplateElement() {\n        const template = document.createElement(\'template\');\n        template.innerHTML = this.getHTML();\n        return template;\n    }\n}\n/**\n * A TemplateResult for SVG fragments.\n *\n * This class wraps HTML in an `<svg>` tag in order to parse its contents in the\n * SVG namespace, then modifies the template to remove the `<svg>` tag so that\n * clones only container the original fragment.\n */\nclass SVGTemplateResult extends TemplateResult {\n    getHTML() {\n        return `<svg>${super.getHTML()}</svg>`;\n    }\n    getTemplateElement() {\n        const template = super.getTemplateElement();\n        const content = template.content;\n        const svgElement = content.firstChild;\n        content.removeChild(svgElement);\n        Object(_dom_js__WEBPACK_IMPORTED_MODULE_0__["reparentNodes"])(content, svgElement.firstChild);\n        return template;\n    }\n}\n//# sourceMappingURL=template-result.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/template-result.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lib/template.js':
+      /*!*************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lib/template.js ***!
+  \*************************************************************************/
+      /*! exports provided: marker, nodeMarker, markerRegex, boundAttributeSuffix, Template, isTemplatePartActive, createMarker, lastAttributeNameRegex */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "marker", function() { return marker; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodeMarker", function() { return nodeMarker; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "markerRegex", function() { return markerRegex; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boundAttributeSuffix", function() { return boundAttributeSuffix; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Template", function() { return Template; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTemplatePartActive", function() { return isTemplatePartActive; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMarker", function() { return createMarker; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lastAttributeNameRegex", function() { return lastAttributeNameRegex; });\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n * An expression marker with embedded unique key to avoid collision with\n * possible text in templates.\n */\nconst marker = `{{lit-${String(Math.random()).slice(2)}}}`;\n/**\n * An expression marker used text-positions, multi-binding attributes, and\n * attributes with markup-like text values.\n */\nconst nodeMarker = `<!--${marker}-->`;\nconst markerRegex = new RegExp(`${marker}|${nodeMarker}`);\n/**\n * Suffix appended to all bound attribute names.\n */\nconst boundAttributeSuffix = \'$lit$\';\n/**\n * An updatable Template that tracks the location of dynamic parts.\n */\nclass Template {\n    constructor(result, element) {\n        this.parts = [];\n        this.element = element;\n        const nodesToRemove = [];\n        const stack = [];\n        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null\n        const walker = document.createTreeWalker(element.content, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);\n        // Keeps track of the last index associated with a part. We try to delete\n        // unnecessary nodes, but we never want to associate two different parts\n        // to the same index. They must have a constant node between.\n        let lastPartIndex = 0;\n        let index = -1;\n        let partIndex = 0;\n        const { strings, values: { length } } = result;\n        while (partIndex < length) {\n            const node = walker.nextNode();\n            if (node === null) {\n                // We\'ve exhausted the content inside a nested template element.\n                // Because we still have parts (the outer for-loop), we know:\n                // - There is a template in the stack\n                // - The walker will find a nextNode outside the template\n                walker.currentNode = stack.pop();\n                continue;\n            }\n            index++;\n            if (node.nodeType === 1 /* Node.ELEMENT_NODE */) {\n                if (node.hasAttributes()) {\n                    const attributes = node.attributes;\n                    const { length } = attributes;\n                    // Per\n                    // https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,\n                    // attributes are not guaranteed to be returned in document order.\n                    // In particular, Edge/IE can return them out of order, so we cannot\n                    // assume a correspondence between part index and attribute index.\n                    let count = 0;\n                    for (let i = 0; i < length; i++) {\n                        if (endsWith(attributes[i].name, boundAttributeSuffix)) {\n                            count++;\n                        }\n                    }\n                    while (count-- > 0) {\n                        // Get the template literal section leading up to the first\n                        // expression in this attribute\n                        const stringForPart = strings[partIndex];\n                        // Find the attribute name\n                        const name = lastAttributeNameRegex.exec(stringForPart)[2];\n                        // Find the corresponding attribute\n                        // All bound attributes have had a suffix added in\n                        // TemplateResult#getHTML to opt out of special attribute\n                        // handling. To look up the attribute value we also need to add\n                        // the suffix.\n                        const attributeLookupName = name.toLowerCase() + boundAttributeSuffix;\n                        const attributeValue = node.getAttribute(attributeLookupName);\n                        node.removeAttribute(attributeLookupName);\n                        const statics = attributeValue.split(markerRegex);\n                        this.parts.push({ type: \'attribute\', index, name, strings: statics });\n                        partIndex += statics.length - 1;\n                    }\n                }\n                if (node.tagName === \'TEMPLATE\') {\n                    stack.push(node);\n                    walker.currentNode = node.content;\n                }\n            }\n            else if (node.nodeType === 3 /* Node.TEXT_NODE */) {\n                const data = node.data;\n                if (data.indexOf(marker) >= 0) {\n                    const parent = node.parentNode;\n                    const strings = data.split(markerRegex);\n                    const lastIndex = strings.length - 1;\n                    // Generate a new text node for each literal section\n                    // These nodes are also used as the markers for node parts\n                    for (let i = 0; i < lastIndex; i++) {\n                        let insert;\n                        let s = strings[i];\n                        if (s === \'\') {\n                            insert = createMarker();\n                        }\n                        else {\n                            const match = lastAttributeNameRegex.exec(s);\n                            if (match !== null && endsWith(match[2], boundAttributeSuffix)) {\n                                s = s.slice(0, match.index) + match[1] +\n                                    match[2].slice(0, -boundAttributeSuffix.length) + match[3];\n                            }\n                            insert = document.createTextNode(s);\n                        }\n                        parent.insertBefore(insert, node);\n                        this.parts.push({ type: \'node\', index: ++index });\n                    }\n                    // If there\'s no text, we must insert a comment to mark our place.\n                    // Else, we can trust it will stick around after cloning.\n                    if (strings[lastIndex] === \'\') {\n                        parent.insertBefore(createMarker(), node);\n                        nodesToRemove.push(node);\n                    }\n                    else {\n                        node.data = strings[lastIndex];\n                    }\n                    // We have a part for each match found\n                    partIndex += lastIndex;\n                }\n            }\n            else if (node.nodeType === 8 /* Node.COMMENT_NODE */) {\n                if (node.data === marker) {\n                    const parent = node.parentNode;\n                    // Add a new marker node to be the startNode of the Part if any of\n                    // the following are true:\n                    //  * We don\'t have a previousSibling\n                    //  * The previousSibling is already the start of a previous part\n                    if (node.previousSibling === null || index === lastPartIndex) {\n                        index++;\n                        parent.insertBefore(createMarker(), node);\n                    }\n                    lastPartIndex = index;\n                    this.parts.push({ type: \'node\', index });\n                    // If we don\'t have a nextSibling, keep this node so we have an end.\n                    // Else, we can remove it to save future costs.\n                    if (node.nextSibling === null) {\n                        node.data = \'\';\n                    }\n                    else {\n                        nodesToRemove.push(node);\n                        index--;\n                    }\n                    partIndex++;\n                }\n                else {\n                    let i = -1;\n                    while ((i = node.data.indexOf(marker, i + 1)) !== -1) {\n                        // Comment node has a binding marker inside, make an inactive part\n                        // The binding won\'t work, but subsequent bindings will\n                        // TODO (justinfagnani): consider whether it\'s even worth it to\n                        // make bindings in comments work\n                        this.parts.push({ type: \'node\', index: -1 });\n                        partIndex++;\n                    }\n                }\n            }\n        }\n        // Remove text binding nodes after the walk to not disturb the TreeWalker\n        for (const n of nodesToRemove) {\n            n.parentNode.removeChild(n);\n        }\n    }\n}\nconst endsWith = (str, suffix) => {\n    const index = str.length - suffix.length;\n    return index >= 0 && str.slice(index) === suffix;\n};\nconst isTemplatePartActive = (part) => part.index !== -1;\n// Allows `document.createComment(\'\')` to be renamed for a\n// small manual size-savings.\nconst createMarker = () => document.createComment(\'\');\n/**\n * This regex extracts the attribute name preceding an attribute-position\n * expression. It does this by matching the syntax allowed for attributes\n * against the string literal directly preceding the expression, assuming that\n * the expression is in an attribute-value position.\n *\n * See attributes in the HTML spec:\n * https://www.w3.org/TR/html5/syntax.html#elements-attributes\n *\n * " \\x09\\x0a\\x0c\\x0d" are HTML space characters:\n * https://www.w3.org/TR/html5/infrastructure.html#space-characters\n *\n * "\\0-\\x1F\\x7F-\\x9F" are Unicode control characters, which includes every\n * space character except " ".\n *\n * So an attribute is:\n *  * The name: any character except a control character, space character, (\'),\n *    ("), ">", "=", or "/"\n *  * Followed by zero or more space characters\n *  * Followed by "="\n *  * Followed by zero or more space characters\n *  * Followed by:\n *    * Any character except space, (\'), ("), "<", ">", "=", (`), or\n *    * (") then any non-("), or\n *    * (\') then any non-(\')\n */\nconst lastAttributeNameRegex = \n// eslint-disable-next-line no-control-regex\n/([ \\x09\\x0a\\x0c\\x0d])([^\\0-\\x1F\\x7F-\\x9F "\'>=/]+)([ \\x09\\x0a\\x0c\\x0d]*=[ \\x09\\x0a\\x0c\\x0d]*(?:[^ \\x09\\x0a\\x0c\\x0d"\'`<>=]*|"[^"]*|\'[^\']*))$/;\n//# sourceMappingURL=template.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lib/template.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/lit-html/lit-html.js':
+      /*!*********************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/lit-html/lit-html.js ***!
+  \*********************************************************************/
+      /*! exports provided: DefaultTemplateProcessor, defaultTemplateProcessor, directive, isDirective, removeNodes, reparentNodes, noChange, nothing, AttributeCommitter, AttributePart, BooleanAttributePart, EventPart, isIterable, isPrimitive, NodePart, PropertyCommitter, PropertyPart, parts, render, templateCaches, templateFactory, TemplateInstance, SVGTemplateResult, TemplateResult, createMarker, isTemplatePartActive, Template, html, svg */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "html", function() { return html; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svg", function() { return svg; });\n/* harmony import */ var _lib_default_template_processor_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/default-template-processor.js */ "../../node_modules/lit-html/lib/default-template-processor.js");\n/* harmony import */ var _lib_template_result_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/template-result.js */ "../../node_modules/lit-html/lib/template-result.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DefaultTemplateProcessor", function() { return _lib_default_template_processor_js__WEBPACK_IMPORTED_MODULE_0__["DefaultTemplateProcessor"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultTemplateProcessor", function() { return _lib_default_template_processor_js__WEBPACK_IMPORTED_MODULE_0__["defaultTemplateProcessor"]; });\n\n/* harmony import */ var _lib_directive_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/directive.js */ "../../node_modules/lit-html/lib/directive.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "directive", function() { return _lib_directive_js__WEBPACK_IMPORTED_MODULE_2__["directive"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDirective", function() { return _lib_directive_js__WEBPACK_IMPORTED_MODULE_2__["isDirective"]; });\n\n/* harmony import */ var _lib_dom_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lib/dom.js */ "../../node_modules/lit-html/lib/dom.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "removeNodes", function() { return _lib_dom_js__WEBPACK_IMPORTED_MODULE_3__["removeNodes"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reparentNodes", function() { return _lib_dom_js__WEBPACK_IMPORTED_MODULE_3__["reparentNodes"]; });\n\n/* harmony import */ var _lib_part_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/part.js */ "../../node_modules/lit-html/lib/part.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "noChange", function() { return _lib_part_js__WEBPACK_IMPORTED_MODULE_4__["noChange"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "nothing", function() { return _lib_part_js__WEBPACK_IMPORTED_MODULE_4__["nothing"]; });\n\n/* harmony import */ var _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/parts.js */ "../../node_modules/lit-html/lib/parts.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AttributeCommitter", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["AttributeCommitter"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AttributePart", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["AttributePart"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BooleanAttributePart", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["BooleanAttributePart"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventPart", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["EventPart"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isIterable", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["isIterable"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isPrimitive", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["isPrimitive"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NodePart", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["NodePart"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropertyCommitter", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["PropertyCommitter"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropertyPart", function() { return _lib_parts_js__WEBPACK_IMPORTED_MODULE_5__["PropertyPart"]; });\n\n/* harmony import */ var _lib_render_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/render.js */ "../../node_modules/lit-html/lib/render.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parts", function() { return _lib_render_js__WEBPACK_IMPORTED_MODULE_6__["parts"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _lib_render_js__WEBPACK_IMPORTED_MODULE_6__["render"]; });\n\n/* harmony import */ var _lib_template_factory_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lib/template-factory.js */ "../../node_modules/lit-html/lib/template-factory.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "templateCaches", function() { return _lib_template_factory_js__WEBPACK_IMPORTED_MODULE_7__["templateCaches"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "templateFactory", function() { return _lib_template_factory_js__WEBPACK_IMPORTED_MODULE_7__["templateFactory"]; });\n\n/* harmony import */ var _lib_template_instance_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./lib/template-instance.js */ "../../node_modules/lit-html/lib/template-instance.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TemplateInstance", function() { return _lib_template_instance_js__WEBPACK_IMPORTED_MODULE_8__["TemplateInstance"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SVGTemplateResult", function() { return _lib_template_result_js__WEBPACK_IMPORTED_MODULE_1__["SVGTemplateResult"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TemplateResult", function() { return _lib_template_result_js__WEBPACK_IMPORTED_MODULE_1__["TemplateResult"]; });\n\n/* harmony import */ var _lib_template_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lib/template.js */ "../../node_modules/lit-html/lib/template.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createMarker", function() { return _lib_template_js__WEBPACK_IMPORTED_MODULE_9__["createMarker"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isTemplatePartActive", function() { return _lib_template_js__WEBPACK_IMPORTED_MODULE_9__["isTemplatePartActive"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Template", function() { return _lib_template_js__WEBPACK_IMPORTED_MODULE_9__["Template"]; });\n\n/**\n * @license\n * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.\n * This code may only be used under the BSD style license found at\n * http://polymer.github.io/LICENSE.txt\n * The complete set of authors may be found at\n * http://polymer.github.io/AUTHORS.txt\n * The complete set of contributors may be found at\n * http://polymer.github.io/CONTRIBUTORS.txt\n * Code distributed by Google as part of the polymer project is also\n * subject to an additional IP rights grant found at\n * http://polymer.github.io/PATENTS.txt\n */\n/**\n *\n * Main lit-html module.\n *\n * Main exports:\n *\n * -  [[html]]\n * -  [[svg]]\n * -  [[render]]\n *\n * @module lit-html\n * @preferred\n */\n/**\n * Do not remove this comment; it keeps typedoc from misplacing the module\n * docs.\n */\n\n\n\n\n// TODO(justinfagnani): remove line when we get NodePart moving methods\n\n\n\n\n\n\n\n\n// IMPORTANT: do not change the property name or the assignment expression.\n// This line will be used in regexes to search for lit-html usage.\n// TODO(justinfagnani): inject version number at build time\nif (typeof window !== \'undefined\') {\n    (window[\'litHtmlVersions\'] || (window[\'litHtmlVersions\'] = [])).push(\'1.2.1\');\n}\n/**\n * Interprets a template literal as an HTML template that can efficiently\n * render to and update a container.\n */\nconst html = (strings, ...values) => new _lib_template_result_js__WEBPACK_IMPORTED_MODULE_1__["TemplateResult"](strings, values, \'html\', _lib_default_template_processor_js__WEBPACK_IMPORTED_MODULE_0__["defaultTemplateProcessor"]);\n/**\n * Interprets a template literal as an SVG template that can efficiently\n * render to and update a container.\n */\nconst svg = (strings, ...values) => new _lib_template_result_js__WEBPACK_IMPORTED_MODULE_1__["SVGTemplateResult"](strings, values, \'svg\', _lib_default_template_processor_js__WEBPACK_IMPORTED_MODULE_0__["defaultTemplateProcessor"]);\n//# sourceMappingURL=lit-html.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/lit-html/lit-html.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/path-to-regexp/dist.es2015/index.js':
+      /*!************************************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/path-to-regexp/dist.es2015/index.js ***!
+  \************************************************************************************/
+      /*! exports provided: parse, compile, tokensToFunction, match, regexpToFunction, tokensToRegexp, pathToRegexp */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parse", function() { return parse; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compile", function() { return compile; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tokensToFunction", function() { return tokensToFunction; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "match", function() { return match; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "regexpToFunction", function() { return regexpToFunction; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tokensToRegexp", function() { return tokensToRegexp; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pathToRegexp", function() { return pathToRegexp; });\n/**\n * Tokenize input string.\n */\nfunction lexer(str) {\n    var tokens = [];\n    var i = 0;\n    while (i < str.length) {\n        var char = str[i];\n        if (char === "*" || char === "+" || char === "?") {\n            tokens.push({ type: "MODIFIER", index: i, value: str[i++] });\n            continue;\n        }\n        if (char === "\\\\") {\n            tokens.push({ type: "ESCAPED_CHAR", index: i++, value: str[i++] });\n            continue;\n        }\n        if (char === "{") {\n            tokens.push({ type: "OPEN", index: i, value: str[i++] });\n            continue;\n        }\n        if (char === "}") {\n            tokens.push({ type: "CLOSE", index: i, value: str[i++] });\n            continue;\n        }\n        if (char === ":") {\n            var name = "";\n            var j = i + 1;\n            while (j < str.length) {\n                var code = str.charCodeAt(j);\n                if (\n                // `0-9`\n                (code >= 48 && code <= 57) ||\n                    // `A-Z`\n                    (code >= 65 && code <= 90) ||\n                    // `a-z`\n                    (code >= 97 && code <= 122) ||\n                    // `_`\n                    code === 95) {\n                    name += str[j++];\n                    continue;\n                }\n                break;\n            }\n            if (!name)\n                throw new TypeError("Missing parameter name at " + i);\n            tokens.push({ type: "NAME", index: i, value: name });\n            i = j;\n            continue;\n        }\n        if (char === "(") {\n            var count = 1;\n            var pattern = "";\n            var j = i + 1;\n            if (str[j] === "?") {\n                throw new TypeError("Pattern cannot start with \\"?\\" at " + j);\n            }\n            while (j < str.length) {\n                if (str[j] === "\\\\") {\n                    pattern += str[j++] + str[j++];\n                    continue;\n                }\n                if (str[j] === ")") {\n                    count--;\n                    if (count === 0) {\n                        j++;\n                        break;\n                    }\n                }\n                else if (str[j] === "(") {\n                    count++;\n                    if (str[j + 1] !== "?") {\n                        throw new TypeError("Capturing groups are not allowed at " + j);\n                    }\n                }\n                pattern += str[j++];\n            }\n            if (count)\n                throw new TypeError("Unbalanced pattern at " + i);\n            if (!pattern)\n                throw new TypeError("Missing pattern at " + i);\n            tokens.push({ type: "PATTERN", index: i, value: pattern });\n            i = j;\n            continue;\n        }\n        tokens.push({ type: "CHAR", index: i, value: str[i++] });\n    }\n    tokens.push({ type: "END", index: i, value: "" });\n    return tokens;\n}\n/**\n * Parse a string for the raw tokens.\n */\nfunction parse(str, options) {\n    if (options === void 0) { options = {}; }\n    var tokens = lexer(str);\n    var _a = options.prefixes, prefixes = _a === void 0 ? "./" : _a;\n    var defaultPattern = "[^" + escapeString(options.delimiter || "/#?") + "]+?";\n    var result = [];\n    var key = 0;\n    var i = 0;\n    var path = "";\n    var tryConsume = function (type) {\n        if (i < tokens.length && tokens[i].type === type)\n            return tokens[i++].value;\n    };\n    var mustConsume = function (type) {\n        var value = tryConsume(type);\n        if (value !== undefined)\n            return value;\n        var _a = tokens[i], nextType = _a.type, index = _a.index;\n        throw new TypeError("Unexpected " + nextType + " at " + index + ", expected " + type);\n    };\n    var consumeText = function () {\n        var result = "";\n        var value;\n        // tslint:disable-next-line\n        while ((value = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR"))) {\n            result += value;\n        }\n        return result;\n    };\n    while (i < tokens.length) {\n        var char = tryConsume("CHAR");\n        var name = tryConsume("NAME");\n        var pattern = tryConsume("PATTERN");\n        if (name || pattern) {\n            var prefix = char || "";\n            if (prefixes.indexOf(prefix) === -1) {\n                path += prefix;\n                prefix = "";\n            }\n            if (path) {\n                result.push(path);\n                path = "";\n            }\n            result.push({\n                name: name || key++,\n                prefix: prefix,\n                suffix: "",\n                pattern: pattern || defaultPattern,\n                modifier: tryConsume("MODIFIER") || ""\n            });\n            continue;\n        }\n        var value = char || tryConsume("ESCAPED_CHAR");\n        if (value) {\n            path += value;\n            continue;\n        }\n        if (path) {\n            result.push(path);\n            path = "";\n        }\n        var open = tryConsume("OPEN");\n        if (open) {\n            var prefix = consumeText();\n            var name_1 = tryConsume("NAME") || "";\n            var pattern_1 = tryConsume("PATTERN") || "";\n            var suffix = consumeText();\n            mustConsume("CLOSE");\n            result.push({\n                name: name_1 || (pattern_1 ? key++ : ""),\n                pattern: name_1 && !pattern_1 ? defaultPattern : pattern_1,\n                prefix: prefix,\n                suffix: suffix,\n                modifier: tryConsume("MODIFIER") || ""\n            });\n            continue;\n        }\n        mustConsume("END");\n    }\n    return result;\n}\n/**\n * Compile a string to a template function for the path.\n */\nfunction compile(str, options) {\n    return tokensToFunction(parse(str, options), options);\n}\n/**\n * Expose a method for transforming tokens into the path function.\n */\nfunction tokensToFunction(tokens, options) {\n    if (options === void 0) { options = {}; }\n    var reFlags = flags(options);\n    var _a = options.encode, encode = _a === void 0 ? function (x) { return x; } : _a, _b = options.validate, validate = _b === void 0 ? true : _b;\n    // Compile all the tokens into regexps.\n    var matches = tokens.map(function (token) {\n        if (typeof token === "object") {\n            return new RegExp("^(?:" + token.pattern + ")$", reFlags);\n        }\n    });\n    return function (data) {\n        var path = "";\n        for (var i = 0; i < tokens.length; i++) {\n            var token = tokens[i];\n            if (typeof token === "string") {\n                path += token;\n                continue;\n            }\n            var value = data ? data[token.name] : undefined;\n            var optional = token.modifier === "?" || token.modifier === "*";\n            var repeat = token.modifier === "*" || token.modifier === "+";\n            if (Array.isArray(value)) {\n                if (!repeat) {\n                    throw new TypeError("Expected \\"" + token.name + "\\" to not repeat, but got an array");\n                }\n                if (value.length === 0) {\n                    if (optional)\n                        continue;\n                    throw new TypeError("Expected \\"" + token.name + "\\" to not be empty");\n                }\n                for (var j = 0; j < value.length; j++) {\n                    var segment = encode(value[j], token);\n                    if (validate && !matches[i].test(segment)) {\n                        throw new TypeError("Expected all \\"" + token.name + "\\" to match \\"" + token.pattern + "\\", but got \\"" + segment + "\\"");\n                    }\n                    path += token.prefix + segment + token.suffix;\n                }\n                continue;\n            }\n            if (typeof value === "string" || typeof value === "number") {\n                var segment = encode(String(value), token);\n                if (validate && !matches[i].test(segment)) {\n                    throw new TypeError("Expected \\"" + token.name + "\\" to match \\"" + token.pattern + "\\", but got \\"" + segment + "\\"");\n                }\n                path += token.prefix + segment + token.suffix;\n                continue;\n            }\n            if (optional)\n                continue;\n            var typeOfMessage = repeat ? "an array" : "a string";\n            throw new TypeError("Expected \\"" + token.name + "\\" to be " + typeOfMessage);\n        }\n        return path;\n    };\n}\n/**\n * Create path match function from `path-to-regexp` spec.\n */\nfunction match(str, options) {\n    var keys = [];\n    var re = pathToRegexp(str, keys, options);\n    return regexpToFunction(re, keys, options);\n}\n/**\n * Create a path match function from `path-to-regexp` output.\n */\nfunction regexpToFunction(re, keys, options) {\n    if (options === void 0) { options = {}; }\n    var _a = options.decode, decode = _a === void 0 ? function (x) { return x; } : _a;\n    return function (pathname) {\n        var m = re.exec(pathname);\n        if (!m)\n            return false;\n        var path = m[0], index = m.index;\n        var params = Object.create(null);\n        var _loop_1 = function (i) {\n            // tslint:disable-next-line\n            if (m[i] === undefined)\n                return "continue";\n            var key = keys[i - 1];\n            if (key.modifier === "*" || key.modifier === "+") {\n                params[key.name] = m[i].split(key.prefix + key.suffix).map(function (value) {\n                    return decode(value, key);\n                });\n            }\n            else {\n                params[key.name] = decode(m[i], key);\n            }\n        };\n        for (var i = 1; i < m.length; i++) {\n            _loop_1(i);\n        }\n        return { path: path, index: index, params: params };\n    };\n}\n/**\n * Escape a regular expression string.\n */\nfunction escapeString(str) {\n    return str.replace(/([.+*?=^!:${}()[\\]|/\\\\])/g, "\\\\$1");\n}\n/**\n * Get the flags for a regexp from the options.\n */\nfunction flags(options) {\n    return options && options.sensitive ? "" : "i";\n}\n/**\n * Pull out keys from a regexp.\n */\nfunction regexpToRegexp(path, keys) {\n    if (!keys)\n        return path;\n    // Use a negative lookahead to match only capturing groups.\n    var groups = path.source.match(/\\((?!\\?)/g);\n    if (groups) {\n        for (var i = 0; i < groups.length; i++) {\n            keys.push({\n                name: i,\n                prefix: "",\n                suffix: "",\n                modifier: "",\n                pattern: ""\n            });\n        }\n    }\n    return path;\n}\n/**\n * Transform an array into a regexp.\n */\nfunction arrayToRegexp(paths, keys, options) {\n    var parts = paths.map(function (path) { return pathToRegexp(path, keys, options).source; });\n    return new RegExp("(?:" + parts.join("|") + ")", flags(options));\n}\n/**\n * Create a path regexp from string input.\n */\nfunction stringToRegexp(path, keys, options) {\n    return tokensToRegexp(parse(path, options), keys, options);\n}\n/**\n * Expose a function for taking tokens and returning a RegExp.\n */\nfunction tokensToRegexp(tokens, keys, options) {\n    if (options === void 0) { options = {}; }\n    var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function (x) { return x; } : _d;\n    var endsWith = "[" + escapeString(options.endsWith || "") + "]|$";\n    var delimiter = "[" + escapeString(options.delimiter || "/#?") + "]";\n    var route = start ? "^" : "";\n    // Iterate over the tokens and create our regexp string.\n    for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {\n        var token = tokens_1[_i];\n        if (typeof token === "string") {\n            route += escapeString(encode(token));\n        }\n        else {\n            var prefix = escapeString(encode(token.prefix));\n            var suffix = escapeString(encode(token.suffix));\n            if (token.pattern) {\n                if (keys)\n                    keys.push(token);\n                if (prefix || suffix) {\n                    if (token.modifier === "+" || token.modifier === "*") {\n                        var mod = token.modifier === "*" ? "?" : "";\n                        route += "(?:" + prefix + "((?:" + token.pattern + ")(?:" + suffix + prefix + "(?:" + token.pattern + "))*)" + suffix + ")" + mod;\n                    }\n                    else {\n                        route += "(?:" + prefix + "(" + token.pattern + ")" + suffix + ")" + token.modifier;\n                    }\n                }\n                else {\n                    route += "(" + token.pattern + ")" + token.modifier;\n                }\n            }\n            else {\n                route += "(?:" + prefix + suffix + ")" + token.modifier;\n            }\n        }\n    }\n    if (end) {\n        if (!strict)\n            route += delimiter + "?";\n        route += !options.endsWith ? "$" : "(?=" + endsWith + ")";\n    }\n    else {\n        var endToken = tokens[tokens.length - 1];\n        var isEndDelimited = typeof endToken === "string"\n            ? delimiter.indexOf(endToken[endToken.length - 1]) > -1\n            : // tslint:disable-next-line\n                endToken === undefined;\n        if (!strict) {\n            route += "(?:" + delimiter + "(?=" + endsWith + "))?";\n        }\n        if (!isEndDelimited) {\n            route += "(?=" + delimiter + "|" + endsWith + ")";\n        }\n    }\n    return new RegExp(route, flags(options));\n}\n/**\n * Normalize the given path string, returning a regular expression.\n *\n * An empty array can be passed in for the keys, which will hold the\n * placeholder key descriptions. For example, using `/user/:id`, `keys` will\n * contain `[{ name: \'id\', delimiter: \'/\', optional: false, repeat: false }]`.\n */\nfunction pathToRegexp(path, keys, options) {\n    if (path instanceof RegExp)\n        return regexpToRegexp(path, keys);\n    if (Array.isArray(path))\n        return arrayToRegexp(path, keys, options);\n    return stringToRegexp(path, keys, options);\n}\n//# sourceMappingURL=index.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/path-to-regexp/dist.es2015/index.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../node_modules/tslib/tslib.es6.js':
+      /*!*******************************************************************!*\
+  !*** /Users/dblue/projects/joist/node_modules/tslib/tslib.es6.js ***!
+  \*******************************************************************/
+      /*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __createBinding, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__extends", function() { return __extends; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__assign", function() { return __assign; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__rest", function() { return __rest; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__decorate", function() { return __decorate; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__param", function() { return __param; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__createBinding", function() { return __createBinding; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncValues", function() { return __asyncValues; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });\n/*! *****************************************************************************\r\nCopyright (c) Microsoft Corporation.\r\n\r\nPermission to use, copy, modify, and/or distribute this software for any\r\npurpose with or without fee is hereby granted.\r\n\r\nTHE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\r\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY\r\nAND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\r\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\r\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\r\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\r\nPERFORMANCE OF THIS SOFTWARE.\r\n***************************************************************************** */\r\n/* global Reflect, Promise */\r\n\r\nvar extendStatics = function(d, b) {\r\n    extendStatics = Object.setPrototypeOf ||\r\n        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||\r\n        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };\r\n    return extendStatics(d, b);\r\n};\r\n\r\nfunction __extends(d, b) {\r\n    extendStatics(d, b);\r\n    function __() { this.constructor = d; }\r\n    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());\r\n}\r\n\r\nvar __assign = function() {\r\n    __assign = Object.assign || function __assign(t) {\r\n        for (var s, i = 1, n = arguments.length; i < n; i++) {\r\n            s = arguments[i];\r\n            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];\r\n        }\r\n        return t;\r\n    }\r\n    return __assign.apply(this, arguments);\r\n}\r\n\r\nfunction __rest(s, e) {\r\n    var t = {};\r\n    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)\r\n        t[p] = s[p];\r\n    if (s != null && typeof Object.getOwnPropertySymbols === "function")\r\n        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {\r\n            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))\r\n                t[p[i]] = s[p[i]];\r\n        }\r\n    return t;\r\n}\r\n\r\nfunction __decorate(decorators, target, key, desc) {\r\n    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;\r\n    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);\r\n    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;\r\n    return c > 3 && r && Object.defineProperty(target, key, r), r;\r\n}\r\n\r\nfunction __param(paramIndex, decorator) {\r\n    return function (target, key) { decorator(target, key, paramIndex); }\r\n}\r\n\r\nfunction __metadata(metadataKey, metadataValue) {\r\n    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);\r\n}\r\n\r\nfunction __awaiter(thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n}\r\n\r\nfunction __generator(thisArg, body) {\r\n    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;\r\n    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;\r\n    function verb(n) { return function (v) { return step([n, v]); }; }\r\n    function step(op) {\r\n        if (f) throw new TypeError("Generator is already executing.");\r\n        while (_) try {\r\n            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;\r\n            if (y = 0, t) op = [op[0] & 2, t.value];\r\n            switch (op[0]) {\r\n                case 0: case 1: t = op; break;\r\n                case 4: _.label++; return { value: op[1], done: false };\r\n                case 5: _.label++; y = op[1]; op = [0]; continue;\r\n                case 7: op = _.ops.pop(); _.trys.pop(); continue;\r\n                default:\r\n                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }\r\n                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }\r\n                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }\r\n                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }\r\n                    if (t[2]) _.ops.pop();\r\n                    _.trys.pop(); continue;\r\n            }\r\n            op = body.call(thisArg, _);\r\n        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }\r\n        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };\r\n    }\r\n}\r\n\r\nvar __createBinding = Object.create ? (function(o, m, k, k2) {\r\n    if (k2 === undefined) k2 = k;\r\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\r\n}) : (function(o, m, k, k2) {\r\n    if (k2 === undefined) k2 = k;\r\n    o[k2] = m[k];\r\n});\r\n\r\nfunction __exportStar(m, exports) {\r\n    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);\r\n}\r\n\r\nfunction __values(o) {\r\n    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;\r\n    if (m) return m.call(o);\r\n    if (o && typeof o.length === "number") return {\r\n        next: function () {\r\n            if (o && i >= o.length) o = void 0;\r\n            return { value: o && o[i++], done: !o };\r\n        }\r\n    };\r\n    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");\r\n}\r\n\r\nfunction __read(o, n) {\r\n    var m = typeof Symbol === "function" && o[Symbol.iterator];\r\n    if (!m) return o;\r\n    var i = m.call(o), r, ar = [], e;\r\n    try {\r\n        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);\r\n    }\r\n    catch (error) { e = { error: error }; }\r\n    finally {\r\n        try {\r\n            if (r && !r.done && (m = i["return"])) m.call(i);\r\n        }\r\n        finally { if (e) throw e.error; }\r\n    }\r\n    return ar;\r\n}\r\n\r\nfunction __spread() {\r\n    for (var ar = [], i = 0; i < arguments.length; i++)\r\n        ar = ar.concat(__read(arguments[i]));\r\n    return ar;\r\n}\r\n\r\nfunction __spreadArrays() {\r\n    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;\r\n    for (var r = Array(s), k = 0, i = 0; i < il; i++)\r\n        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)\r\n            r[k] = a[j];\r\n    return r;\r\n};\r\n\r\nfunction __await(v) {\r\n    return this instanceof __await ? (this.v = v, this) : new __await(v);\r\n}\r\n\r\nfunction __asyncGenerator(thisArg, _arguments, generator) {\r\n    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");\r\n    var g = generator.apply(thisArg, _arguments || []), i, q = [];\r\n    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;\r\n    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }\r\n    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }\r\n    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }\r\n    function fulfill(value) { resume("next", value); }\r\n    function reject(value) { resume("throw", value); }\r\n    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }\r\n}\r\n\r\nfunction __asyncDelegator(o) {\r\n    var i, p;\r\n    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;\r\n    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }\r\n}\r\n\r\nfunction __asyncValues(o) {\r\n    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");\r\n    var m = o[Symbol.asyncIterator], i;\r\n    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);\r\n    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }\r\n    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }\r\n}\r\n\r\nfunction __makeTemplateObject(cooked, raw) {\r\n    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }\r\n    return cooked;\r\n};\r\n\r\nvar __setModuleDefault = Object.create ? (function(o, v) {\r\n    Object.defineProperty(o, "default", { enumerable: true, value: v });\r\n}) : function(o, v) {\r\n    o["default"] = v;\r\n};\r\n\r\nfunction __importStar(mod) {\r\n    if (mod && mod.__esModule) return mod;\r\n    var result = {};\r\n    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\r\n    __setModuleDefault(result, mod);\r\n    return result;\r\n}\r\n\r\nfunction __importDefault(mod) {\r\n    return (mod && mod.__esModule) ? mod : { default: mod };\r\n}\r\n\r\nfunction __classPrivateFieldGet(receiver, privateMap) {\r\n    if (!privateMap.has(receiver)) {\r\n        throw new TypeError("attempted to get private field on non-instance");\r\n    }\r\n    return privateMap.get(receiver);\r\n}\r\n\r\nfunction __classPrivateFieldSet(receiver, privateMap, value) {\r\n    if (!privateMap.has(receiver)) {\r\n        throw new TypeError("attempted to set private field on non-instance");\r\n    }\r\n    privateMap.set(receiver, value);\r\n    return value;\r\n}\r\n\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/node_modules/tslib/tslib.es6.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lib/component.js':
+      /*!******************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lib/component.js ***!
+  \******************************************************************************/
+      /*! exports provided: COMPONENT_DEF_KEY, getComponentDef, Component */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COMPONENT_DEF_KEY", function() { return COMPONENT_DEF_KEY; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComponentDef", function() { return getComponentDef; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });\nconst COMPONENT_DEF_KEY = \'componentDef\';\nfunction getComponentDef(provider) {\n    return provider[COMPONENT_DEF_KEY] || {};\n}\nfunction Component(componentDef = {}) {\n    return function (component) {\n        Object.defineProperty(component, COMPONENT_DEF_KEY, {\n            get() {\n                return componentDef;\n            },\n        });\n    };\n}\n//# sourceMappingURL=component.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lib/component.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lib/element.js':
+      /*!****************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lib/element.js ***!
+  \****************************************************************************/
+      /*! exports provided: Get, JoistElement */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Get", function() { return Get; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JoistElement", function() { return JoistElement; });\n/* harmony import */ var _joist_di__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @joist/di */ "../../packages/di/target/main.js");\n/* harmony import */ var _environment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./environment */ "../../packages/component/target/lib/environment.js");\n/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./state */ "../../packages/component/target/lib/state.js");\n/* harmony import */ var _component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./component */ "../../packages/component/target/lib/component.js");\n/* harmony import */ var _handle__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./handle */ "../../packages/component/target/lib/handle.js");\n\n\n\n\n\nfunction Get(token) {\n    return function (target, key) {\n        Object.defineProperty(target, key, {\n            get() {\n                return this.injector.get(token);\n            },\n        });\n    };\n}\nclass JoistElement extends HTMLElement {\n    constructor() {\n        super();\n        this.componentDef = Object(_component__WEBPACK_IMPORTED_MODULE_3__["getComponentDef"])(this.constructor);\n        const state = this.componentDef.state;\n        const providers = this.componentDef.providers || [];\n        this.injector = new _joist_di__WEBPACK_IMPORTED_MODULE_0__["Injector"]({\n            providers: providers.concat([\n                {\n                    provide: _state__WEBPACK_IMPORTED_MODULE_2__["State"],\n                    use: class extends _state__WEBPACK_IMPORTED_MODULE_2__["State"] {\n                        constructor() {\n                            super(state);\n                        }\n                    },\n                },\n            ]),\n            bootstrap: providers.map((p) => p.provide),\n        }, Object(_environment__WEBPACK_IMPORTED_MODULE_1__["getEnvironmentRef"])());\n    }\n    connectedCallback() {\n        const handlers = Object(_handle__WEBPACK_IMPORTED_MODULE_4__["getComponentHandlers"])(this.constructor);\n        const state = this.injector.get(_state__WEBPACK_IMPORTED_MODULE_2__["State"]);\n        const ctx = {\n            state: state.value,\n            run: (eventName, payload) => (e) => {\n                if (eventName in handlers) {\n                    handlers[eventName].forEach((methodName) => {\n                        // eww\n                        this[methodName].call(this, e, payload);\n                    });\n                }\n            },\n            dispatch: (eventName, init) => () => {\n                this.dispatchEvent(new CustomEvent(eventName, init));\n            },\n            host: this,\n        };\n        const componentRender = (state) => {\n            ctx.state = state;\n            if (this.componentDef.render) {\n                this.componentDef.render(ctx);\n            }\n        };\n        componentRender(state.value);\n        state.onChange((state) => {\n            componentRender(state);\n        });\n    }\n}\n//# sourceMappingURL=element.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lib/element.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lib/environment.js':
+      /*!********************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lib/environment.js ***!
+  \********************************************************************************/
+      /*! exports provided: bootstrapEnvironment, getEnvironmentRef, clearEnvironment */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bootstrapEnvironment", function() { return bootstrapEnvironment; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEnvironmentRef", function() { return getEnvironmentRef; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearEnvironment", function() { return clearEnvironment; });\n/* harmony import */ var _joist_di__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @joist/di */ "../../packages/di/target/main.js");\n\nlet ROOT_INJECTOR;\nfunction bootstrapEnvironment(providers = []) {\n    ROOT_INJECTOR = new _joist_di__WEBPACK_IMPORTED_MODULE_0__["Injector"]({ providers });\n    return ROOT_INJECTOR;\n}\nfunction getEnvironmentRef() {\n    if (ROOT_INJECTOR) {\n        return ROOT_INJECTOR;\n    }\n    return bootstrapEnvironment();\n}\nfunction clearEnvironment() {\n    ROOT_INJECTOR = undefined;\n}\n//# sourceMappingURL=environment.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lib/environment.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lib/handle.js':
+      /*!***************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lib/handle.js ***!
+  \***************************************************************************/
+      /*! exports provided: COMPONENT_HANDLERS_KEY, getComponentHandlers, Handle */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COMPONENT_HANDLERS_KEY", function() { return COMPONENT_HANDLERS_KEY; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComponentHandlers", function() { return getComponentHandlers; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Handle", function() { return Handle; });\nconst COMPONENT_HANDLERS_KEY = \'handlers\';\nfunction getComponentHandlers(provider) {\n    return provider[COMPONENT_HANDLERS_KEY] || {};\n}\nfunction Handle(action) {\n    return function (instance, key) {\n        const provider = instance.constructor;\n        provider[COMPONENT_HANDLERS_KEY] = provider[COMPONENT_HANDLERS_KEY] || {};\n        provider[COMPONENT_HANDLERS_KEY][action] = provider[COMPONENT_HANDLERS_KEY][action] || [];\n        provider[COMPONENT_HANDLERS_KEY][action].push(key);\n    };\n}\n//# sourceMappingURL=handle.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lib/handle.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lib/state.js':
+      /*!**************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lib/state.js ***!
+  \**************************************************************************/
+      /*! exports provided: State */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "State", function() { return State; });\nclass State {\n    constructor(state) {\n        this.listeners = [];\n        this.currentState = state;\n    }\n    get value() {\n        return this.currentState;\n    }\n    setValue(state) {\n        return Promise.resolve(state).then((res) => {\n            this.currentState = res;\n            this.listeners.forEach((cb) => cb(this.value));\n        });\n    }\n    patchValue(state) {\n        return Promise.resolve(state).then((res) => {\n            try {\n                this.setValue({ ...this.value, ...res });\n            }\n            catch (err) {\n                throw new Error(`cannot patch state that is of type ${typeof state}`);\n            }\n        });\n    }\n    onChange(cb) {\n        this.listeners.push(cb);\n        return () => {\n            this.listeners = this.listeners.filter((currentCb) => currentCb !== cb);\n        };\n    }\n}\n//# sourceMappingURL=state.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lib/state.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/lit-html/main.js':
+      /*!******************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/lit-html/main.js ***!
+  \******************************************************************************/
+      /*! exports provided: template */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "template", function() { return template; });\n/* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lit-html */ "../../node_modules/lit-html/lit-html.js");\n\nfunction template(result) {\n    return (ctx) => Object(lit_html__WEBPACK_IMPORTED_MODULE_0__["render"])(result(ctx), ctx.host.shadowRoot || ctx.host);\n}\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/lit-html/main.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/component/target/main.js':
+      /*!*********************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/component/target/main.js ***!
+  \*********************************************************************/
+      /*! exports provided: bootstrapEnvironment, clearEnvironment, getEnvironmentRef, State, Handle, Component, getComponentDef, JoistElement, Get */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/environment */ "../../packages/component/target/lib/environment.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "bootstrapEnvironment", function() { return _lib_environment__WEBPACK_IMPORTED_MODULE_0__["bootstrapEnvironment"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "clearEnvironment", function() { return _lib_environment__WEBPACK_IMPORTED_MODULE_0__["clearEnvironment"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEnvironmentRef", function() { return _lib_environment__WEBPACK_IMPORTED_MODULE_0__["getEnvironmentRef"]; });\n\n/* harmony import */ var _lib_state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/state */ "../../packages/component/target/lib/state.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "State", function() { return _lib_state__WEBPACK_IMPORTED_MODULE_1__["State"]; });\n\n/* harmony import */ var _lib_handle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/handle */ "../../packages/component/target/lib/handle.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Handle", function() { return _lib_handle__WEBPACK_IMPORTED_MODULE_2__["Handle"]; });\n\n/* harmony import */ var _lib_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lib/component */ "../../packages/component/target/lib/component.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return _lib_component__WEBPACK_IMPORTED_MODULE_3__["Component"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getComponentDef", function() { return _lib_component__WEBPACK_IMPORTED_MODULE_3__["getComponentDef"]; });\n\n/* harmony import */ var _lib_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/element */ "../../packages/component/target/lib/element.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "JoistElement", function() { return _lib_element__WEBPACK_IMPORTED_MODULE_4__["JoistElement"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Get", function() { return _lib_element__WEBPACK_IMPORTED_MODULE_4__["Get"]; });\n\n\n\n\n\n\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/component/target/main.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/di/target/lib/inject.js':
+      /*!********************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/di/target/lib/inject.js ***!
+  \********************************************************************/
+      /*! exports provided: PROVIDER_DEPS_KEY, getProviderDeps, Inject */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PROVIDER_DEPS_KEY", function() { return PROVIDER_DEPS_KEY; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProviderDeps", function() { return getProviderDeps; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Inject", function() { return Inject; });\nconst PROVIDER_DEPS_KEY = \'deps\';\nfunction getProviderDeps(provider) {\n    return provider[PROVIDER_DEPS_KEY] || [];\n}\nfunction Inject(injectable) {\n    return function (provider, _prop, index) {\n        provider[PROVIDER_DEPS_KEY] = provider[PROVIDER_DEPS_KEY] || [];\n        provider[PROVIDER_DEPS_KEY][index] = injectable;\n    };\n}\n//# sourceMappingURL=inject.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/di/target/lib/inject.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/di/target/lib/injector.js':
+      /*!**********************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/di/target/lib/injector.js ***!
+  \**********************************************************************/
+      /*! exports provided: Injector */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Injector", function() { return Injector; });\n/* harmony import */ var _inject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./inject */ "../../packages/di/target/lib/inject.js");\n/* harmony import */ var _service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./service */ "../../packages/di/target/lib/service.js");\n\n\n/**\n * Create an instance of a Dependency injector.\n * Can be used to create a singleton of any class that is property annotated with dependencies.\n *\n * @param opts configuration options for the current instance of Injector\n * @param parent a parent instance of Injector\n */\nclass Injector {\n    constructor(opts = {}, parent) {\n        this.opts = opts;\n        this.parent = parent;\n        this.providerMap = new WeakMap();\n        if (this.opts.bootstrap) {\n            this.opts.bootstrap.forEach((provider) => this.get(provider));\n        }\n    }\n    /**\n     * recursively check if a singleton instance is available for a provider\n     */\n    has(token) {\n        if (this.providerMap.has(token)) {\n            return true;\n        }\n        else if (this.parent) {\n            return this.parent.has(token);\n        }\n        return false;\n    }\n    /**\n     * fetches a singleton instance of a provider\n     */\n    get(token) {\n        if (this.providerMap.has(token)) {\n            return this.providerMap.get(token);\n        }\n        let instance = this.resolve(token);\n        this.providerMap.set(token, instance);\n        return instance;\n    }\n    create(P) {\n        const deps = Object(_inject__WEBPACK_IMPORTED_MODULE_0__["getProviderDeps"])(P);\n        return new P(...deps.map((dep) => this.get(dep)));\n    }\n    resolve(token) {\n        // Check to see if provider is defined in current scope\n        const provider = this.findProvider(token);\n        if (provider) {\n            // If provider is defined in current scope use that implementation\n            return this.create(provider.use);\n        }\n        if (this.parent && (Object(_service__WEBPACK_IMPORTED_MODULE_1__["isProvidedInRoot"])(token) || this.parent.has(token))) {\n            // if a parent is available and contains an instance of the provider already use that\n            return this.parent.get(token);\n        }\n        // if nothing else found assume ClassProviderToken\n        return this.create(token);\n    }\n    findProvider(token) {\n        if (!this.opts.providers) {\n            return undefined;\n        }\n        return this.opts.providers.find((provider) => provider.provide === token);\n    }\n}\n//# sourceMappingURL=injector.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/di/target/lib/injector.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/di/target/lib/provider.js':
+      /*!**********************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/di/target/lib/provider.js ***!
+  \**********************************************************************/
+      /*! no static exports found */
+      /***/ function (module, exports) {
+        eval(
+          '//# sourceMappingURL=provider.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/di/target/lib/provider.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/di/target/lib/service.js':
+      /*!*********************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/di/target/lib/service.js ***!
+  \*********************************************************************/
+      /*! exports provided: isProvidedInRoot, Service */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isProvidedInRoot", function() { return isProvidedInRoot; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Service", function() { return Service; });\nfunction isProvidedInRoot(provider) {\n    return provider.provideInRoot || false;\n}\nfunction Service() {\n    return function (provider) {\n        provider.provideInRoot = true;\n    };\n}\n//# sourceMappingURL=service.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/di/target/lib/service.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/di/target/main.js':
+      /*!**************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/di/target/main.js ***!
+  \**************************************************************/
+      /*! no static exports found */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_injector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/injector */ "../../packages/di/target/lib/injector.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Injector", function() { return _lib_injector__WEBPACK_IMPORTED_MODULE_0__["Injector"]; });\n\n/* harmony import */ var _lib_provider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/provider */ "../../packages/di/target/lib/provider.js");\n/* harmony import */ var _lib_provider__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_lib_provider__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _lib_provider__WEBPACK_IMPORTED_MODULE_1__) if(["Injector","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _lib_provider__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n/* harmony import */ var _lib_inject__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/inject */ "../../packages/di/target/lib/inject.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PROVIDER_DEPS_KEY", function() { return _lib_inject__WEBPACK_IMPORTED_MODULE_2__["PROVIDER_DEPS_KEY"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getProviderDeps", function() { return _lib_inject__WEBPACK_IMPORTED_MODULE_2__["getProviderDeps"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Inject", function() { return _lib_inject__WEBPACK_IMPORTED_MODULE_2__["Inject"]; });\n\n/* harmony import */ var _lib_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lib/service */ "../../packages/di/target/lib/service.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isProvidedInRoot", function() { return _lib_service__WEBPACK_IMPORTED_MODULE_3__["isProvidedInRoot"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Service", function() { return _lib_service__WEBPACK_IMPORTED_MODULE_3__["Service"]; });\n\n\n\n\n\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/di/target/main.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/router/target/lib/router.js':
+      /*!************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/router/target/lib/router.js ***!
+  \************************************************************************/
+      /*! exports provided: RouteCtx, Router */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RouteCtx", function() { return RouteCtx; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return Router; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _joist_di__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @joist/di */ "../../packages/di/target/main.js");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var path_to_regexp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! path-to-regexp */ "../../node_modules/path-to-regexp/dist.es2015/index.js");\n\n\n\n\nclass RouteCtx extends _joist_component__WEBPACK_IMPORTED_MODULE_2__["State"] {\n}\nlet Router = class Router {\n    constructor() {\n        this.listeners = [];\n        this.root = \'/\';\n        window.addEventListener(\'popstate\', () => {\n            this.notifyListeners();\n        });\n    }\n    getFragment() {\n        let fragment = \'\';\n        fragment = this.normalize(location.pathname);\n        fragment = this.root !== \'/\' ? fragment.replace(this.root, \'\') : fragment;\n        return this.normalize(fragment);\n    }\n    navigate(path) {\n        history.pushState(null, \'\', this.root + this.normalize(path));\n        this.notifyListeners();\n    }\n    listen(cb) {\n        this.listeners.push(cb);\n        return () => {\n            const index = this.listeners.indexOf(cb);\n            this.listeners.splice(index, 1);\n        };\n    }\n    match(path) {\n        return Object(path_to_regexp__WEBPACK_IMPORTED_MODULE_3__["match"])(this.normalize(path), { decode: decodeURIComponent });\n    }\n    normalize(path) {\n        return path.toString().replace(/^\\/|\\/$/g, \'\');\n    }\n    notifyListeners() {\n        this.listeners.forEach((cb) => {\n            cb();\n        });\n    }\n};\nRouter = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_di__WEBPACK_IMPORTED_MODULE_1__["Service"])()\n], Router);\n\n//# sourceMappingURL=router.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/router/target/lib/router.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/router/target/lib/router_link/router_link.element.js':
+      /*!*************************************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/router/target/lib/router_link/router_link.element.js ***!
+  \*************************************************************************************************/
+      /*! exports provided: RouterLinkElement */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RouterLinkElement", function() { return RouterLinkElement; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "../../packages/router/target/lib/router.js");\n\n\n\nclass RouterLinkElement extends _joist_component__WEBPACK_IMPORTED_MODULE_1__["JoistElement"] {\n    constructor() {\n        super(...arguments);\n        this.path = this.getAttribute(\'path\') || \'\';\n        this.pathMatch = this.getAttribute(\'path-match\') || \'startsWith\';\n        this.activeClass = this.getAttribute(\'active-class\') || \'active\';\n        this.normalizedPath = this.router.normalize(this.path);\n    }\n    connectedCallback() {\n        this.removeListener = this.router.listen(() => {\n            this.setActiveClass();\n        });\n        const child = this.children[0];\n        if (child && child instanceof HTMLAnchorElement) {\n            this.path = child.pathname;\n            this.normalizedPath = this.router.normalize(this.path);\n        }\n        this.onclick = (e) => {\n            e.preventDefault();\n            this.router.navigate(this.normalizedPath);\n        };\n        this.setActiveClass();\n    }\n    disconnectedCallback() {\n        if (this.removeListener) {\n            this.removeListener();\n        }\n    }\n    setActiveClass() {\n        const fragment = this.router.getFragment();\n        if (this.pathMatch === \'full\') {\n            if (fragment === this.normalizedPath) {\n                this.classList.add(this.activeClass);\n            }\n            else {\n                this.classList.remove(this.activeClass);\n            }\n        }\n        else if (fragment.startsWith(this.normalizedPath)) {\n            this.classList.add(this.activeClass);\n        }\n        else {\n            this.classList.remove(this.activeClass);\n        }\n    }\n}\nObject(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_1__["Get"])(_router__WEBPACK_IMPORTED_MODULE_2__["Router"])\n], RouterLinkElement.prototype, "router", void 0);\n//# sourceMappingURL=router_link.element.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/router/target/lib/router_link/router_link.element.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/router/target/lib/router_outlet/router_outlet.element.js':
+      /*!*****************************************************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/router/target/lib/router_outlet/router_outlet.element.js ***!
+  \*****************************************************************************************************/
+      /*! exports provided: RouterOutletElement */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RouterOutletElement", function() { return RouterOutletElement; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "../../packages/router/target/lib/router.js");\n\n\n\nlet RouterOutletElement = class RouterOutletElement extends _joist_component__WEBPACK_IMPORTED_MODULE_1__["JoistElement"] {\n    constructor() {\n        super(...arguments);\n        this.__routes__ = [];\n        this.matchers = [];\n    }\n    set routes(val) {\n        this.__routes__ = val;\n        this.matchers = this.routes.map((route) => this.router.match(route.path));\n        this.check();\n    }\n    get routes() {\n        return this.__routes__;\n    }\n    connectedCallback() {\n        super.connectedCallback();\n        this.removeListener = this.router.listen(() => {\n            this.check();\n        });\n    }\n    disconnectedCallback() {\n        if (this.removeListener) {\n            this.removeListener();\n        }\n    }\n    onPropChanges() {\n        this.matchers = this.routes.map((route) => this.router.match(route.path));\n        this.check();\n    }\n    check() {\n        const fragment = this.router.getFragment();\n        let route = null;\n        let matcher = null;\n        let match = null;\n        for (let i = 0; i < this.matchers.length; i++) {\n            route = this.routes[i];\n            matcher = this.matchers[i];\n            match = matcher(fragment);\n            if (match) {\n                break;\n            }\n        }\n        if (route && matcher && match) {\n            if (!this.state.value.activeRoute || this.state.value.activeRoute.path !== route.path) {\n                return this.resolve(route, match);\n            }\n            return Promise.resolve(void 0);\n        }\n        return this.state.setValue({});\n    }\n    resolve(activeRoute, ctx) {\n        return Promise.resolve(activeRoute.component()).then((element) => {\n            // Only set route context if the HTMLElement has a lit kit injector attached\n            if (\'componentInjector\' in element) {\n                const joistElement = element;\n                return joistElement.injector\n                    .get(_router__WEBPACK_IMPORTED_MODULE_2__["RouteCtx"])\n                    .setValue(ctx)\n                    .then(() => this.state.setValue({ element, activeRoute }));\n            }\n            return this.state.setValue({ element, activeRoute });\n        });\n    }\n};\nObject(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_1__["Get"])(_joist_component__WEBPACK_IMPORTED_MODULE_1__["State"])\n], RouterOutletElement.prototype, "state", void 0);\nObject(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_1__["Get"])(_router__WEBPACK_IMPORTED_MODULE_2__["Router"])\n], RouterOutletElement.prototype, "router", void 0);\nRouterOutletElement = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_1__["Component"])({\n        state: {},\n        render({ state, host }) {\n            let child = host.lastElementChild;\n            while (child) {\n                host.removeChild(child);\n                child = host.lastElementChild;\n            }\n            if (state.element) {\n                host.append(state.element);\n            }\n        },\n    })\n], RouterOutletElement);\n\n//# sourceMappingURL=router_outlet.element.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/router/target/lib/router_outlet/router_outlet.element.js?'
+        );
+
+        /***/
+      },
+
+    /***/ '../../packages/router/target/main.js':
+      /*!******************************************************************!*\
+  !*** /Users/dblue/projects/joist/packages/router/target/main.js ***!
+  \******************************************************************/
+      /*! exports provided: RouteCtx, Router, RouterOutletElement, RouterLinkElement */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_router_link_router_link_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/router_link/router_link.element */ "../../packages/router/target/lib/router_link/router_link.element.js");\n/* harmony import */ var _lib_router_outlet_router_outlet_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/router_outlet/router_outlet.element */ "../../packages/router/target/lib/router_outlet/router_outlet.element.js");\n/* harmony import */ var _lib_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/router */ "../../packages/router/target/lib/router.js");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RouteCtx", function() { return _lib_router__WEBPACK_IMPORTED_MODULE_2__["RouteCtx"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return _lib_router__WEBPACK_IMPORTED_MODULE_2__["Router"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RouterOutletElement", function() { return _lib_router_outlet_router_outlet_element__WEBPACK_IMPORTED_MODULE_1__["RouterOutletElement"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RouterLinkElement", function() { return _lib_router_link_router_link_element__WEBPACK_IMPORTED_MODULE_0__["RouterLinkElement"]; });\n\n\n\n\n\n\ncustomElements.define(\'router-link\', _lib_router_link_router_link_element__WEBPACK_IMPORTED_MODULE_0__["RouterLinkElement"]);\ncustomElements.define(\'router-outlet\', _lib_router_outlet_router_outlet_element__WEBPACK_IMPORTED_MODULE_1__["RouterOutletElement"]);\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:////Users/dblue/projects/joist/packages/router/target/main.js?'
+        );
+
+        /***/
+      },
+
+    /***/ './src/app/app.element.ts':
+      /*!********************************!*\
+  !*** ./src/app/app.element.ts ***!
+  \********************************/
+      /*! no exports provided */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _joist_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @joist/router */ "../../packages/router/target/main.js");\n/* harmony import */ var _page_1_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./page-1.element */ "./src/app/page-1.element.ts");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lit-html */ "../../node_modules/lit-html/lit-html.js");\n\n\n\n\n\nconst routes = [\n    {\n        path: \'/test\',\n        component: () => {\n            const el = document.createElement(\'div\');\n            el.innerHTML = \'Hello World\';\n            return el;\n        },\n    },\n    { path: \'/foo(.*)\', component: () => document.createElement(\'page-1-element\') },\n];\nlet AppElement = class AppElement extends _joist_component__WEBPACK_IMPORTED_MODULE_3__["JoistElement"] {\n};\nAppElement = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_3__["Component"])({\n        state: {\n            title: \'Hello World\',\n        },\n        render({ state }) {\n            return lit_html__WEBPACK_IMPORTED_MODULE_4__["html"] `\n      <header>\n        <h1>${state.title}</h1>\n      </header>\n\n      <router-link path-match="full">\n        <a href="/">HOME</a>\n      </router-link>\n\n      <router-link>\n        <a href="/foo">FOO</a>\n      </router-link>\n\n      <router-link>\n        <a href="/foo/bar">BAR</a>\n      </router-link>\n\n      <router-outlet .routes=${routes}></router-outlet>\n\n      <footer>The Footer</footer>\n    `;\n        },\n    })\n], AppElement);\ncustomElements.define(\'app-root\', AppElement);\n\n\n//# sourceURL=webpack:///./src/app/app.element.ts?'
+        );
+
+        /***/
+      },
+
+    /***/ './src/app/page-1.element.ts':
+      /*!***********************************!*\
+  !*** ./src/app/page-1.element.ts ***!
+  \***********************************/
+      /*! no exports provided */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _page_2_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./page-2.element */ "./src/app/page-2.element.ts");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lit-html */ "../../node_modules/lit-html/lit-html.js");\n\n\n\n\nconst routes = [\n    { path: \'/foo/bar\', component: () => document.createElement(\'page-2-element\') },\n];\nlet Page1Element = class Page1Element extends _joist_component__WEBPACK_IMPORTED_MODULE_2__["JoistElement"] {\n};\nPage1Element = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_2__["Component"])({\n        state: {\n            title: \'Page1Component Works!\',\n        },\n        render({ state }) {\n            return lit_html__WEBPACK_IMPORTED_MODULE_3__["html"] `\n      <h2>${state.title}</h2>\n\n      <router-outlet .routes=${routes}></router-outlet>\n    `;\n        },\n    })\n], Page1Element);\ncustomElements.define(\'page-1-element\', Page1Element);\n\n\n//# sourceURL=webpack:///./src/app/page-1.element.ts?'
+        );
+
+        /***/
+      },
+
+    /***/ './src/app/page-2.element.ts':
+      /*!***********************************!*\
+  !*** ./src/app/page-2.element.ts ***!
+  \***********************************/
+      /*! no exports provided */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");\n/* harmony import */ var _joist_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @joist/component */ "../../packages/component/target/main.js");\n/* harmony import */ var _joist_component_lit_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @joist/component/lit-html */ "../../packages/component/target/lit-html/main.js");\n/* harmony import */ var lit_html__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lit-html */ "../../node_modules/lit-html/lit-html.js");\n\n\n\n\nlet Page2Element = class Page2Element extends _joist_component__WEBPACK_IMPORTED_MODULE_1__["JoistElement"] {\n};\nPage2Element = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([\n    Object(_joist_component__WEBPACK_IMPORTED_MODULE_1__["Component"])({\n        state: {\n            title: \'Page2Component Works!\',\n        },\n        render: Object(_joist_component_lit_html__WEBPACK_IMPORTED_MODULE_2__["template"])(({ state }) => {\n            return lit_html__WEBPACK_IMPORTED_MODULE_3__["html"] ` <h3>${state.title}</h3> `;\n        }),\n    })\n], Page2Element);\ncustomElements.define(\'page-2-component\', Page2Element);\n\n\n//# sourceURL=webpack:///./src/app/page-2.element.ts?'
+        );
+
+        /***/
+      },
+
+    /***/ './src/main.ts':
+      /*!*********************!*\
+  !*** ./src/main.ts ***!
+  \*********************/
+      /*! no exports provided */
+      /***/ function (module, __webpack_exports__, __webpack_require__) {
+        'use strict';
+        eval(
+          '__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _app_app_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app/app.element */ "./src/app/app.element.ts");\n\n\n\n//# sourceURL=webpack:///./src/main.ts?'
+        );
+
+        /***/
+      },
+
+    /******/
   }
-  (s.m = t),
-    (s.c = e),
-    (s.d = function (t, e, n) {
-      s.o(t, e) || Object.defineProperty(t, e, { enumerable: !0, get: n });
-    }),
-    (s.r = function (t) {
-      'undefined' != typeof Symbol &&
-        Symbol.toStringTag &&
-        Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
-        Object.defineProperty(t, '__esModule', { value: !0 });
-    }),
-    (s.t = function (t, e) {
-      if ((1 & e && (t = s(t)), 8 & e)) return t;
-      if (4 & e && 'object' == typeof t && t && t.__esModule) return t;
-      var n = Object.create(null);
-      if (
-        (s.r(n),
-        Object.defineProperty(n, 'default', { enumerable: !0, value: t }),
-        2 & e && 'string' != typeof t)
-      )
-        for (var i in t)
-          s.d(
-            n,
-            i,
-            function (e) {
-              return t[e];
-            }.bind(null, i)
-          );
-      return n;
-    }),
-    (s.n = function (t) {
-      var e =
-        t && t.__esModule
-          ? function () {
-              return t.default;
-            }
-          : function () {
-              return t;
-            };
-      return s.d(e, 'a', e), e;
-    }),
-    (s.o = function (t, e) {
-      return Object.prototype.hasOwnProperty.call(t, e);
-    }),
-    (s.p = ''),
-    s((s.s = 2));
-})({
-  2: function (t, e, s) {
-    'use strict';
-    s.r(e);
-    function n(t, e, s, n) {
-      var i,
-        r = arguments.length,
-        o = r < 3 ? e : null === n ? (n = Object.getOwnPropertyDescriptor(e, s)) : n;
-      if ('object' == typeof Reflect && 'function' == typeof Reflect.decorate)
-        o = Reflect.decorate(t, e, s, n);
-      else
-        for (var a = t.length - 1; a >= 0; a--)
-          (i = t[a]) && (o = (r < 3 ? i(o) : r > 3 ? i(e, s, o) : i(e, s)) || o);
-      return r > 3 && o && Object.defineProperty(e, s, o), o;
-    }
-    Object.create;
-    Object.create;
-    class i {
-      constructor(t = {}, e) {
-        (this.opts = t),
-          (this.parent = e),
-          (this.providerMap = new WeakMap()),
-          this.opts.bootstrap && this.opts.bootstrap.forEach((t) => this.get(t));
-      }
-      has(t) {
-        return !!this.providerMap.has(t) || (!!this.parent && this.parent.has(t));
-      }
-      get(t) {
-        if (this.providerMap.has(t)) return this.providerMap.get(t);
-        let e = this.resolve(t);
-        return this.providerMap.set(t, e), e;
-      }
-      create(t) {
-        return new t(...(t.deps || []).map((t) => this.get(t)));
-      }
-      resolve(t) {
-        const e = this.findProvider(t);
-        return e
-          ? this.create(e.use)
-          : this.parent &&
-            ((function (t) {
-              return t.provideInRoot || !1;
-            })(t) ||
-              this.parent.has(t))
-          ? this.parent.get(t)
-          : this.create(t);
-      }
-      findProvider(t) {
-        if (this.opts.providers) return this.opts.providers.find((e) => e.provide === t);
-      }
-    }
-    let r;
-    function o() {
-      return (
-        r ||
-        (function (t = []) {
-          return (r = new i({ providers: t })), r;
-        })()
-      );
-    }
-    class a {
-      constructor(t) {
-        (this.listeners = []), (this.currentState = t);
-      }
-      get value() {
-        return this.currentState;
-      }
-      setValue(t) {
-        return Promise.resolve(t).then((t) => {
-          (this.currentState = t), this.listeners.forEach((t) => t(this.value));
-        });
-      }
-      patchValue(t) {
-        return Promise.resolve(t).then((e) => {
-          try {
-            this.setValue({ ...this.value, ...e });
-          } catch (e) {
-            throw new Error('cannot patch state that is of type ' + typeof t);
-          }
-        });
-      }
-      onChange(t) {
-        return (
-          this.listeners.push(t),
-          () => {
-            this.listeners = this.listeners.filter((e) => e !== t);
-          }
-        );
-      }
-    }
-    function l(t = {}) {
-      return function (e) {
-        Object.defineProperty(e, 'componentDef', { get: () => t });
-      };
-    }
-    function h(t) {
-      return function (e, s) {
-        Object.defineProperty(e, s, {
-          get() {
-            return this.injector.get(t);
-          },
-        });
-      };
-    }
-    class u extends HTMLElement {
-      constructor() {
-        super(), (this.componentDef = this.constructor.componentDef || {});
-        const t = this.componentDef.state,
-          e = this.componentDef.providers || [];
-        this.injector = new i(
-          {
-            providers: e.concat([
-              {
-                provide: a,
-                use: class extends a {
-                  constructor() {
-                    super(t);
-                  }
-                },
-              },
-            ]),
-            bootstrap: e.map((t) => t.provide),
-          },
-          o()
-        );
-      }
-      connectedCallback() {
-        const t = this.constructor.handlers || {};
-        const e = this.injector.get(a),
-          s = {
-            state: e.value,
-            run: (e, s) => (n) => {
-              e in t &&
-                t[e].forEach((t) => {
-                  this[t].call(this, n, s);
-                });
-            },
-            dispatch: (t, e) => () => {
-              this.dispatchEvent(new CustomEvent(t, e));
-            },
-            host: this,
-          },
-          n = (t) => {
-            (s.state = t), this.componentDef.render && this.componentDef.render(s);
-          };
-        n(e.value),
-          e.onChange((t) => {
-            n(t);
-          });
-      }
-    }
-    function c(t, e) {
-      void 0 === e && (e = {});
-      for (
-        var s = (function (t) {
-            for (var e = [], s = 0; s < t.length; ) {
-              var n = t[s];
-              if ('*' !== n && '+' !== n && '?' !== n)
-                if ('\\' !== n)
-                  if ('{' !== n)
-                    if ('}' !== n)
-                      if (':' !== n)
-                        if ('(' !== n) e.push({ type: 'CHAR', index: s, value: t[s++] });
-                        else {
-                          var i = 1,
-                            r = '';
-                          if ('?' === t[(a = s + 1)])
-                            throw new TypeError('Pattern cannot start with "?" at ' + a);
-                          for (; a < t.length; )
-                            if ('\\' !== t[a]) {
-                              if (')' === t[a]) {
-                                if (0 === --i) {
-                                  a++;
-                                  break;
-                                }
-                              } else if ('(' === t[a] && (i++, '?' !== t[a + 1]))
-                                throw new TypeError('Capturing groups are not allowed at ' + a);
-                              r += t[a++];
-                            } else r += t[a++] + t[a++];
-                          if (i) throw new TypeError('Unbalanced pattern at ' + s);
-                          if (!r) throw new TypeError('Missing pattern at ' + s);
-                          e.push({ type: 'PATTERN', index: s, value: r }), (s = a);
-                        }
-                      else {
-                        for (var o = '', a = s + 1; a < t.length; ) {
-                          var l = t.charCodeAt(a);
-                          if (
-                            !(
-                              (l >= 48 && l <= 57) ||
-                              (l >= 65 && l <= 90) ||
-                              (l >= 97 && l <= 122) ||
-                              95 === l
-                            )
-                          )
-                            break;
-                          o += t[a++];
-                        }
-                        if (!o) throw new TypeError('Missing parameter name at ' + s);
-                        e.push({ type: 'NAME', index: s, value: o }), (s = a);
-                      }
-                    else e.push({ type: 'CLOSE', index: s, value: t[s++] });
-                  else e.push({ type: 'OPEN', index: s, value: t[s++] });
-                else e.push({ type: 'ESCAPED_CHAR', index: s++, value: t[s++] });
-              else e.push({ type: 'MODIFIER', index: s, value: t[s++] });
-            }
-            return e.push({ type: 'END', index: s, value: '' }), e;
-          })(t),
-          n = e.prefixes,
-          i = void 0 === n ? './' : n,
-          r = '[^' + d(e.delimiter || '/#?') + ']+?',
-          o = [],
-          a = 0,
-          l = 0,
-          h = '',
-          u = function (t) {
-            if (l < s.length && s[l].type === t) return s[l++].value;
-          },
-          c = function (t) {
-            var e = u(t);
-            if (void 0 !== e) return e;
-            var n = s[l],
-              i = n.type,
-              r = n.index;
-            throw new TypeError('Unexpected ' + i + ' at ' + r + ', expected ' + t);
-          },
-          p = function () {
-            for (var t, e = ''; (t = u('CHAR') || u('ESCAPED_CHAR')); ) e += t;
-            return e;
-          };
-        l < s.length;
-
-      ) {
-        var f = u('CHAR'),
-          m = u('NAME'),
-          v = u('PATTERN');
-        if (m || v) {
-          var g = f || '';
-          -1 === i.indexOf(g) && ((h += g), (g = '')),
-            h && (o.push(h), (h = '')),
-            o.push({
-              name: m || a++,
-              prefix: g,
-              suffix: '',
-              pattern: v || r,
-              modifier: u('MODIFIER') || '',
-            });
-        } else {
-          var _ = f || u('ESCAPED_CHAR');
-          if (_) h += _;
-          else if ((h && (o.push(h), (h = '')), u('OPEN'))) {
-            g = p();
-            var x = u('NAME') || '',
-              y = u('PATTERN') || '',
-              E = p();
-            c('CLOSE'),
-              o.push({
-                name: x || (y ? a++ : ''),
-                pattern: x && !y ? r : y,
-                prefix: g,
-                suffix: E,
-                modifier: u('MODIFIER') || '',
-              });
-          } else c('END');
-        }
-      }
-      return o;
-    }
-    function p(t, e) {
-      var s = [];
-      return (function (t, e, s) {
-        void 0 === s && (s = {});
-        var n = s.decode,
-          i =
-            void 0 === n
-              ? function (t) {
-                  return t;
-                }
-              : n;
-        return function (s) {
-          var n = t.exec(s);
-          if (!n) return !1;
-          for (
-            var r = n[0],
-              o = n.index,
-              a = Object.create(null),
-              l = function (t) {
-                if (void 0 === n[t]) return 'continue';
-                var s = e[t - 1];
-                '*' === s.modifier || '+' === s.modifier
-                  ? (a[s.name] = n[t].split(s.prefix + s.suffix).map(function (t) {
-                      return i(t, s);
-                    }))
-                  : (a[s.name] = i(n[t], s));
-              },
-              h = 1;
-            h < n.length;
-            h++
-          )
-            l(h);
-          return { path: r, index: o, params: a };
-        };
-      })(v(t, s, e), s, e);
-    }
-    function d(t) {
-      return t.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
-    }
-    function f(t) {
-      return t && t.sensitive ? '' : 'i';
-    }
-    function m(t, e, s) {
-      return (function (t, e, s) {
-        void 0 === s && (s = {});
-        for (
-          var n = s.strict,
-            i = void 0 !== n && n,
-            r = s.start,
-            o = void 0 === r || r,
-            a = s.end,
-            l = void 0 === a || a,
-            h = s.encode,
-            u =
-              void 0 === h
-                ? function (t) {
-                    return t;
-                  }
-                : h,
-            c = '[' + d(s.endsWith || '') + ']|$',
-            p = '[' + d(s.delimiter || '/#?') + ']',
-            m = o ? '^' : '',
-            v = 0,
-            g = t;
-          v < g.length;
-          v++
-        ) {
-          var _ = g[v];
-          if ('string' == typeof _) m += d(u(_));
-          else {
-            var x = d(u(_.prefix)),
-              y = d(u(_.suffix));
-            if (_.pattern)
-              if ((e && e.push(_), x || y))
-                if ('+' === _.modifier || '*' === _.modifier) {
-                  var E = '*' === _.modifier ? '?' : '';
-                  m +=
-                    '(?:' +
-                    x +
-                    '((?:' +
-                    _.pattern +
-                    ')(?:' +
-                    y +
-                    x +
-                    '(?:' +
-                    _.pattern +
-                    '))*)' +
-                    y +
-                    ')' +
-                    E;
-                } else m += '(?:' + x + '(' + _.pattern + ')' + y + ')' + _.modifier;
-              else m += '(' + _.pattern + ')' + _.modifier;
-            else m += '(?:' + x + y + ')' + _.modifier;
-          }
-        }
-        if (l) i || (m += p + '?'), (m += s.endsWith ? '(?=' + c + ')' : '$');
-        else {
-          var b = t[t.length - 1],
-            w = 'string' == typeof b ? p.indexOf(b[b.length - 1]) > -1 : void 0 === b;
-          i || (m += '(?:' + p + '(?=' + c + '))?'), w || (m += '(?=' + p + '|' + c + ')');
-        }
-        return new RegExp(m, f(s));
-      })(c(t, s), e, s);
-    }
-    function v(t, e, s) {
-      return t instanceof RegExp
-        ? (function (t, e) {
-            if (!e) return t;
-            var s = t.source.match(/\((?!\?)/g);
-            if (s)
-              for (var n = 0; n < s.length; n++)
-                e.push({ name: n, prefix: '', suffix: '', modifier: '', pattern: '' });
-            return t;
-          })(t, e)
-        : Array.isArray(t)
-        ? (function (t, e, s) {
-            var n = t.map(function (t) {
-              return v(t, e, s).source;
-            });
-            return new RegExp('(?:' + n.join('|') + ')', f(s));
-          })(t, e, s)
-        : m(t, e, s);
-    }
-    class g extends a {}
-    let _ = class {
-      constructor() {
-        (this.listeners = []),
-          (this.root = '/'),
-          window.addEventListener('popstate', () => {
-            this.notifyListeners();
-          });
-      }
-      getFragment() {
-        let t = '';
-        return (
-          (t = this.normalize(location.pathname)),
-          (t = '/' !== this.root ? t.replace(this.root, '') : t),
-          this.normalize(t)
-        );
-      }
-      navigate(t) {
-        history.pushState(null, '', this.root + this.normalize(t)), this.notifyListeners();
-      }
-      listen(t) {
-        return (
-          this.listeners.push(t),
-          () => {
-            const e = this.listeners.indexOf(t);
-            this.listeners.splice(e, 1);
-          }
-        );
-      }
-      match(t) {
-        return p(this.normalize(t), { decode: decodeURIComponent });
-      }
-      normalize(t) {
-        return t.toString().replace(/^\/|\/$/g, '');
-      }
-      notifyListeners() {
-        this.listeners.forEach((t) => {
-          t();
-        });
-      }
-    };
-    _ = n(
-      [
-        function (t) {
-          t.provideInRoot = !0;
-        },
-      ],
-      _
-    );
-    class x extends u {
-      constructor() {
-        super(...arguments),
-          (this.path = this.getAttribute('path') || ''),
-          (this.pathMatch = this.getAttribute('path-match') || 'startsWith'),
-          (this.activeClass = this.getAttribute('active-class') || 'active'),
-          (this.normalizedPath = this.router.normalize(this.path));
-      }
-      connectedCallback() {
-        this.removeListener = this.router.listen(() => {
-          this.setActiveClass();
-        });
-        const t = this.children[0];
-        t &&
-          t instanceof HTMLAnchorElement &&
-          ((this.path = t.pathname), (this.normalizedPath = this.router.normalize(this.path))),
-          (this.onclick = (t) => {
-            t.preventDefault(), this.router.navigate(this.normalizedPath);
-          }),
-          this.setActiveClass();
-      }
-      disconnectedCallback() {
-        this.removeListener && this.removeListener();
-      }
-      setActiveClass() {
-        const t = this.router.getFragment();
-        'full' === this.pathMatch
-          ? t === this.normalizedPath
-            ? this.classList.add(this.activeClass)
-            : this.classList.remove(this.activeClass)
-          : t.startsWith(this.normalizedPath)
-          ? this.classList.add(this.activeClass)
-          : this.classList.remove(this.activeClass);
-      }
-    }
-    n([h(_)], x.prototype, 'router', void 0);
-    let y = class extends u {
-      constructor() {
-        super(...arguments), (this.__routes__ = []), (this.matchers = []);
-      }
-      set routes(t) {
-        (this.__routes__ = t),
-          (this.matchers = this.routes.map((t) => this.router.match(t.path))),
-          this.check();
-      }
-      get routes() {
-        return this.__routes__;
-      }
-      connectedCallback() {
-        this.removeListener = this.router.listen(() => {
-          this.check();
-        });
-      }
-      disconnectedCallback() {
-        this.removeListener && this.removeListener();
-      }
-      onPropChanges() {
-        (this.matchers = this.routes.map((t) => this.router.match(t.path))), this.check();
-      }
-      check() {
-        const t = this.router.getFragment();
-        let e = null,
-          s = null,
-          n = null;
-        for (
-          let i = 0;
-          i < this.matchers.length &&
-          ((e = this.routes[i]), (s = this.matchers[i]), (n = s(t)), !n);
-          i++
-        );
-        return e && s && n
-          ? this.state.value.activeRoute && this.state.value.activeRoute.path === e.path
-            ? Promise.resolve(void 0)
-            : this.resolve(e, n)
-          : this.state.setValue({});
-      }
-      resolve(t, e) {
-        return Promise.resolve(t.component()).then((s) => {
-          if ('componentInjector' in s) {
-            return s.injector
-              .get(g)
-              .setValue(e)
-              .then(() => this.state.setValue({ element: s, activeRoute: t }));
-          }
-          return this.state.setValue({ element: s, activeRoute: t });
-        });
-      }
-    };
-    n([h(a)], y.prototype, 'state', void 0),
-      n([h(_)], y.prototype, 'router', void 0),
-      (y = n(
-        [
-          l({
-            state: {},
-            render({ state: t, host: e }) {
-              let s = e.lastElementChild;
-              for (; s; ) e.removeChild(s), (s = e.lastElementChild);
-              t.element && e.append(t.element);
-            },
-          }),
-        ],
-        y
-      )),
-      customElements.define('router-link', x),
-      customElements.define('router-outlet', y);
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
-    const E = new WeakMap(),
-      b = (t) => 'function' == typeof t && E.has(t),
-      w =
-        'undefined' != typeof window &&
-        null != window.customElements &&
-        void 0 !== window.customElements.polyfillWrapFlushCallback,
-      N = (t, e, s = null) => {
-        for (; e !== s; ) {
-          const s = e.nextSibling;
-          t.removeChild(e), (e = s);
-        }
-      },
-      A = {},
-      C = {},
-      V = `{{lit-${String(Math.random()).slice(2)}}}`,
-      T = `\x3c!--${V}--\x3e`,
-      P = new RegExp(`${V}|${T}`);
-    class M {
-      constructor(t, e) {
-        (this.parts = []), (this.element = e);
-        const s = [],
-          n = [],
-          i = document.createTreeWalker(e.content, 133, null, !1);
-        let r = 0,
-          o = -1,
-          a = 0;
-        const {
-          strings: l,
-          values: { length: h },
-        } = t;
-        for (; a < h; ) {
-          const t = i.nextNode();
-          if (null !== t) {
-            if ((o++, 1 === t.nodeType)) {
-              if (t.hasAttributes()) {
-                const e = t.attributes,
-                  { length: s } = e;
-                let n = 0;
-                for (let t = 0; t < s; t++) O(e[t].name, '$lit$') && n++;
-                for (; n-- > 0; ) {
-                  const e = l[a],
-                    s = R.exec(e)[2],
-                    n = s.toLowerCase() + '$lit$',
-                    i = t.getAttribute(n);
-                  t.removeAttribute(n);
-                  const r = i.split(P);
-                  this.parts.push({ type: 'attribute', index: o, name: s, strings: r }),
-                    (a += r.length - 1);
-                }
-              }
-              'TEMPLATE' === t.tagName && (n.push(t), (i.currentNode = t.content));
-            } else if (3 === t.nodeType) {
-              const e = t.data;
-              if (e.indexOf(V) >= 0) {
-                const n = t.parentNode,
-                  i = e.split(P),
-                  r = i.length - 1;
-                for (let e = 0; e < r; e++) {
-                  let s,
-                    r = i[e];
-                  if ('' === r) s = S();
-                  else {
-                    const t = R.exec(r);
-                    null !== t &&
-                      O(t[2], '$lit$') &&
-                      (r = r.slice(0, t.index) + t[1] + t[2].slice(0, -'$lit$'.length) + t[3]),
-                      (s = document.createTextNode(r));
-                  }
-                  n.insertBefore(s, t), this.parts.push({ type: 'node', index: ++o });
-                }
-                '' === i[r] ? (n.insertBefore(S(), t), s.push(t)) : (t.data = i[r]), (a += r);
-              }
-            } else if (8 === t.nodeType)
-              if (t.data === V) {
-                const e = t.parentNode;
-                (null !== t.previousSibling && o !== r) || (o++, e.insertBefore(S(), t)),
-                  (r = o),
-                  this.parts.push({ type: 'node', index: o }),
-                  null === t.nextSibling ? (t.data = '') : (s.push(t), o--),
-                  a++;
-              } else {
-                let e = -1;
-                for (; -1 !== (e = t.data.indexOf(V, e + 1)); )
-                  this.parts.push({ type: 'node', index: -1 }), a++;
-              }
-          } else i.currentNode = n.pop();
-        }
-        for (const t of s) t.parentNode.removeChild(t);
-      }
-    }
-    const O = (t, e) => {
-        const s = t.length - e.length;
-        return s >= 0 && t.slice(s) === e;
-      },
-      k = (t) => -1 !== t.index,
-      S = () => document.createComment(''),
-      R = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
-    class L {
-      constructor(t, e, s) {
-        (this.__parts = []), (this.template = t), (this.processor = e), (this.options = s);
-      }
-      update(t) {
-        let e = 0;
-        for (const s of this.__parts) void 0 !== s && s.setValue(t[e]), e++;
-        for (const t of this.__parts) void 0 !== t && t.commit();
-      }
-      _clone() {
-        const t = w
-            ? this.template.element.content.cloneNode(!0)
-            : document.importNode(this.template.element.content, !0),
-          e = [],
-          s = this.template.parts,
-          n = document.createTreeWalker(t, 133, null, !1);
-        let i,
-          r = 0,
-          o = 0,
-          a = n.nextNode();
-        for (; r < s.length; )
-          if (((i = s[r]), k(i))) {
-            for (; o < i.index; )
-              o++,
-                'TEMPLATE' === a.nodeName && (e.push(a), (n.currentNode = a.content)),
-                null === (a = n.nextNode()) && ((n.currentNode = e.pop()), (a = n.nextNode()));
-            if ('node' === i.type) {
-              const t = this.processor.handleTextExpression(this.options);
-              t.insertAfterNode(a.previousSibling), this.__parts.push(t);
-            } else
-              this.__parts.push(
-                ...this.processor.handleAttributeExpressions(a, i.name, i.strings, this.options)
-              );
-            r++;
-          } else this.__parts.push(void 0), r++;
-        return w && (document.adoptNode(t), customElements.upgrade(t)), t;
-      }
-    }
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */ const $ = ` ${V} `;
-    class j {
-      constructor(t, e, s, n) {
-        (this.strings = t), (this.values = e), (this.type = s), (this.processor = n);
-      }
-      getHTML() {
-        const t = this.strings.length - 1;
-        let e = '',
-          s = !1;
-        for (let n = 0; n < t; n++) {
-          const t = this.strings[n],
-            i = t.lastIndexOf('\x3c!--');
-          s = (i > -1 || s) && -1 === t.indexOf('--\x3e', i + 1);
-          const r = R.exec(t);
-          e +=
-            null === r ? t + (s ? $ : T) : t.substr(0, r.index) + r[1] + r[2] + '$lit$' + r[3] + V;
-        }
-        return (e += this.strings[t]), e;
-      }
-      getTemplateElement() {
-        const t = document.createElement('template');
-        return (t.innerHTML = this.getHTML()), t;
-      }
-    }
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
-    const H = (t) => null === t || !('object' == typeof t || 'function' == typeof t),
-      D = (t) => Array.isArray(t) || !(!t || !t[Symbol.iterator]);
-    class I {
-      constructor(t, e, s) {
-        (this.dirty = !0),
-          (this.element = t),
-          (this.name = e),
-          (this.strings = s),
-          (this.parts = []);
-        for (let t = 0; t < s.length - 1; t++) this.parts[t] = this._createPart();
-      }
-      _createPart() {
-        return new W(this);
-      }
-      _getValue() {
-        const t = this.strings,
-          e = t.length - 1;
-        let s = '';
-        for (let n = 0; n < e; n++) {
-          s += t[n];
-          const e = this.parts[n];
-          if (void 0 !== e) {
-            const t = e.value;
-            if (H(t) || !D(t)) s += 'string' == typeof t ? t : String(t);
-            else for (const e of t) s += 'string' == typeof e ? e : String(e);
-          }
-        }
-        return (s += t[e]), s;
-      }
-      commit() {
-        this.dirty && ((this.dirty = !1), this.element.setAttribute(this.name, this._getValue()));
-      }
-    }
-    class W {
-      constructor(t) {
-        (this.value = void 0), (this.committer = t);
-      }
-      setValue(t) {
-        t === A ||
-          (H(t) && t === this.value) ||
-          ((this.value = t), b(t) || (this.committer.dirty = !0));
-      }
-      commit() {
-        for (; b(this.value); ) {
-          const t = this.value;
-          (this.value = A), t(this);
-        }
-        this.value !== A && this.committer.commit();
-      }
-    }
-    class F {
-      constructor(t) {
-        (this.value = void 0), (this.__pendingValue = void 0), (this.options = t);
-      }
-      appendInto(t) {
-        (this.startNode = t.appendChild(S())), (this.endNode = t.appendChild(S()));
-      }
-      insertAfterNode(t) {
-        (this.startNode = t), (this.endNode = t.nextSibling);
-      }
-      appendIntoPart(t) {
-        t.__insert((this.startNode = S())), t.__insert((this.endNode = S()));
-      }
-      insertAfterPart(t) {
-        t.__insert((this.startNode = S())),
-          (this.endNode = t.endNode),
-          (t.endNode = this.startNode);
-      }
-      setValue(t) {
-        this.__pendingValue = t;
-      }
-      commit() {
-        if (null === this.startNode.parentNode) return;
-        for (; b(this.__pendingValue); ) {
-          const t = this.__pendingValue;
-          (this.__pendingValue = A), t(this);
-        }
-        const t = this.__pendingValue;
-        t !== A &&
-          (H(t)
-            ? t !== this.value && this.__commitText(t)
-            : t instanceof j
-            ? this.__commitTemplateResult(t)
-            : t instanceof Node
-            ? this.__commitNode(t)
-            : D(t)
-            ? this.__commitIterable(t)
-            : t === C
-            ? ((this.value = C), this.clear())
-            : this.__commitText(t));
-      }
-      __insert(t) {
-        this.endNode.parentNode.insertBefore(t, this.endNode);
-      }
-      __commitNode(t) {
-        this.value !== t && (this.clear(), this.__insert(t), (this.value = t));
-      }
-      __commitText(t) {
-        const e = this.startNode.nextSibling,
-          s = 'string' == typeof (t = null == t ? '' : t) ? t : String(t);
-        e === this.endNode.previousSibling && 3 === e.nodeType
-          ? (e.data = s)
-          : this.__commitNode(document.createTextNode(s)),
-          (this.value = t);
-      }
-      __commitTemplateResult(t) {
-        const e = this.options.templateFactory(t);
-        if (this.value instanceof L && this.value.template === e) this.value.update(t.values);
-        else {
-          const s = new L(e, t.processor, this.options),
-            n = s._clone();
-          s.update(t.values), this.__commitNode(n), (this.value = s);
-        }
-      }
-      __commitIterable(t) {
-        Array.isArray(this.value) || ((this.value = []), this.clear());
-        const e = this.value;
-        let s,
-          n = 0;
-        for (const i of t)
-          (s = e[n]),
-            void 0 === s &&
-              ((s = new F(this.options)),
-              e.push(s),
-              0 === n ? s.appendIntoPart(this) : s.insertAfterPart(e[n - 1])),
-            s.setValue(i),
-            s.commit(),
-            n++;
-        n < e.length && ((e.length = n), this.clear(s && s.endNode));
-      }
-      clear(t = this.startNode) {
-        N(this.startNode.parentNode, t.nextSibling, this.endNode);
-      }
-    }
-    class z {
-      constructor(t, e, s) {
-        if (
-          ((this.value = void 0),
-          (this.__pendingValue = void 0),
-          2 !== s.length || '' !== s[0] || '' !== s[1])
-        )
-          throw new Error('Boolean attributes can only contain a single expression');
-        (this.element = t), (this.name = e), (this.strings = s);
-      }
-      setValue(t) {
-        this.__pendingValue = t;
-      }
-      commit() {
-        for (; b(this.__pendingValue); ) {
-          const t = this.__pendingValue;
-          (this.__pendingValue = A), t(this);
-        }
-        if (this.__pendingValue === A) return;
-        const t = !!this.__pendingValue;
-        this.value !== t &&
-          (t ? this.element.setAttribute(this.name, '') : this.element.removeAttribute(this.name),
-          (this.value = t)),
-          (this.__pendingValue = A);
-      }
-    }
-    class B extends I {
-      constructor(t, e, s) {
-        super(t, e, s), (this.single = 2 === s.length && '' === s[0] && '' === s[1]);
-      }
-      _createPart() {
-        return new U(this);
-      }
-      _getValue() {
-        return this.single ? this.parts[0].value : super._getValue();
-      }
-      commit() {
-        this.dirty && ((this.dirty = !1), (this.element[this.name] = this._getValue()));
-      }
-    }
-    class U extends W {}
-    let q = !1;
-    (() => {
-      try {
-        const t = {
-          get capture() {
-            return (q = !0), !1;
-          },
-        };
-        window.addEventListener('test', t, t), window.removeEventListener('test', t, t);
-      } catch (t) {}
-    })();
-    class G {
-      constructor(t, e, s) {
-        (this.value = void 0),
-          (this.__pendingValue = void 0),
-          (this.element = t),
-          (this.eventName = e),
-          (this.eventContext = s),
-          (this.__boundHandleEvent = (t) => this.handleEvent(t));
-      }
-      setValue(t) {
-        this.__pendingValue = t;
-      }
-      commit() {
-        for (; b(this.__pendingValue); ) {
-          const t = this.__pendingValue;
-          (this.__pendingValue = A), t(this);
-        }
-        if (this.__pendingValue === A) return;
-        const t = this.__pendingValue,
-          e = this.value,
-          s =
-            null == t ||
-            (null != e &&
-              (t.capture !== e.capture || t.once !== e.once || t.passive !== e.passive)),
-          n = null != t && (null == e || s);
-        s &&
-          this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options),
-          n &&
-            ((this.__options = J(t)),
-            this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)),
-          (this.value = t),
-          (this.__pendingValue = A);
-      }
-      handleEvent(t) {
-        'function' == typeof this.value
-          ? this.value.call(this.eventContext || this.element, t)
-          : this.value.handleEvent(t);
-      }
-    }
-    const J = (t) =>
-      t && (q ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */ const K = new (class {
-      handleAttributeExpressions(t, e, s, n) {
-        const i = e[0];
-        if ('.' === i) {
-          return new B(t, e.slice(1), s).parts;
-        }
-        return '@' === i
-          ? [new G(t, e.slice(1), n.eventContext)]
-          : '?' === i
-          ? [new z(t, e.slice(1), s)]
-          : new I(t, e, s).parts;
-      }
-      handleTextExpression(t) {
-        return new F(t);
-      }
-    })();
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */ function Q(t) {
-      let e = X.get(t.type);
-      void 0 === e &&
-        ((e = { stringsArray: new WeakMap(), keyString: new Map() }), X.set(t.type, e));
-      let s = e.stringsArray.get(t.strings);
-      if (void 0 !== s) return s;
-      const n = t.strings.join(V);
-      return (
-        (s = e.keyString.get(n)),
-        void 0 === s && ((s = new M(t, t.getTemplateElement())), e.keyString.set(n, s)),
-        e.stringsArray.set(t.strings, s),
-        s
-      );
-    }
-    const X = new Map(),
-      Y = new WeakMap();
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
-    /**
-     * @license
-     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-     * This code may only be used under the BSD style license found at
-     * http://polymer.github.io/LICENSE.txt
-     * The complete set of authors may be found at
-     * http://polymer.github.io/AUTHORS.txt
-     * The complete set of contributors may be found at
-     * http://polymer.github.io/CONTRIBUTORS.txt
-     * Code distributed by Google as part of the polymer project is also
-     * subject to an additional IP rights grant found at
-     * http://polymer.github.io/PATENTS.txt
-     */
-    'undefined' != typeof window &&
-      (window.litHtmlVersions || (window.litHtmlVersions = [])).push('1.2.1');
-    const Z = (t, ...e) => new j(t, e, 'html', K);
-    let tt = class extends u {};
-    var et;
-    (tt = n(
-      [
-        l({
-          state: { title: 'Page2Component Works!' },
-          render:
-            ((et = ({ state: t }) => Z` <h3>${t.title}</h3> `),
-            (t) =>
-              ((t, e, s) => {
-                let n = Y.get(e);
-                void 0 === n &&
-                  (N(e, e.firstChild),
-                  Y.set(e, (n = new F(Object.assign({ templateFactory: Q }, s)))),
-                  n.appendInto(e)),
-                  n.setValue(t),
-                  n.commit();
-              })(et(t), t.host.shadowRoot || t.host)),
-        }),
-      ],
-      tt
-    )),
-      customElements.define('page-2-component', tt);
-    const st = [{ path: '/foo/bar', component: () => document.createElement('page-2-element') }];
-    let nt = class extends u {};
-    (nt = n(
-      [
-        l({
-          state: { title: 'Page1Component Works!' },
-          render: ({ state: t }) => Z`
-      <h2>${t.title}</h2>
-
-      <router-outlet .routes=${st}></router-outlet>
-    `,
-        }),
-      ],
-      nt
-    )),
-      customElements.define('page-1-element', nt);
-    const it = [
-      {
-        path: '/test',
-        component: () => {
-          const t = document.createElement('div');
-          return (t.innerHTML = 'Hello World'), t;
-        },
-      },
-      { path: '/foo(.*)', component: () => document.createElement('page-1-element') },
-    ];
-    let rt = class extends u {};
-    (rt = n(
-      [
-        l({
-          state: { title: 'Hello World' },
-          render: ({ state: t }) => Z`
-      <header>
-        <h1>${t.title}</h1>
-      </header>
-
-      <router-link path-match="full">
-        <a href="/">HOME</a>
-      </router-link>
-
-      <router-link>
-        <a href="/foo">FOO</a>
-      </router-link>
-
-      <router-link>
-        <a href="/foo/bar">BAR</a>
-      </router-link>
-
-      <router-outlet .routes=${it}></router-outlet>
-
-      <footer>The Footer</footer>
-    `,
-        }),
-      ],
-      rt
-    )),
-      customElements.define('app-root', rt);
-  },
-});
+);

@@ -1,9 +1,0 @@
-import { <%= classify(name) %>Service } from './<%= name %>.service';
-
-describe('<%= classify(name) %>Service', () => {
-  it('should work', () => {
-    const service = new <%= classify(name) %>Service();
-
-    expect(service).toBeTruthy();
-  });
-});

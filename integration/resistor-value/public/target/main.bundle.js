@@ -235,10 +235,10 @@
         }
       },
       v = {},
-      b = {},
-      f = `{{lit-${String(Math.random()).slice(2)}}}`,
-      _ = `\x3c!--${f}--\x3e`;
-    new RegExp(`${f}|${_}`);
+      f = {},
+      b = `{{lit-${String(Math.random()).slice(2)}}}`,
+      _ = `\x3c!--${b}--\x3e`;
+    new RegExp(`${b}|${_}`);
     const y = (e) => -1 !== e.index,
       x = () => document.createComment(''),
       w = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
@@ -305,7 +305,7 @@
      * Code distributed by Google as part of the polymer project is also
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
-     */ const N = ` ${f} `;
+     */ const N = ` ${b} `;
     class B {
       constructor(e, t, s, n) {
         (this.strings = e), (this.values = t), (this.type = s), (this.processor = n);
@@ -320,7 +320,7 @@
           s = (i > -1 || s) && -1 === e.indexOf('--\x3e', i + 1);
           const r = w.exec(e);
           t +=
-            null === r ? e + (s ? N : _) : e.substr(0, r.index) + r[1] + r[2] + '$lit$' + r[3] + f;
+            null === r ? e + (s ? N : _) : e.substr(0, r.index) + r[1] + r[2] + '$lit$' + r[3] + b;
         }
         return (t += this.strings[e]), t;
       }
@@ -429,8 +429,8 @@
             ? this.__commitNode(e)
             : k(e)
             ? this.__commitIterable(e)
-            : e === b
-            ? ((this.value = b), this.clear())
+            : e === f
+            ? ((this.value = f), this.clear())
             : this.__commitText(e));
       }
       __insert(e) {
@@ -587,11 +587,9 @@
         if ('.' === i) {
           return new C(e, t.slice(1), s).parts;
         }
-        return '@' === i
-          ? [new P(e, t.slice(1), n.eventContext)]
-          : '?' === i
-          ? [new L(e, t.slice(1), s)]
-          : new S(e, t, s).parts;
+        if ('@' === i) return [new P(e, t.slice(1), n.eventContext)];
+        if ('?' === i) return [new L(e, t.slice(1), s)];
+        return new S(e, t, s).parts;
       }
       handleTextExpression(e) {
         return new T(e);

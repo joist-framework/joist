@@ -214,7 +214,8 @@ define('./workbox-1a661b4a.js', ['exports'], function (e) {
           c = this.i.get(s);
         return this.u({ cacheKey: n, cacheMode: c, event: e, integrity: i, plugins: t, url: s });
       });
-      return await Promise.all(r), { updatedURLs: n.map((e) => e.url), notUpdatedURLs: s };
+      await Promise.all(r);
+      return { updatedURLs: n.map((e) => e.url), notUpdatedURLs: s };
     }
     async activate() {
       const e = await self.caches.open(this.t),

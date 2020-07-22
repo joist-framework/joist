@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "start": "npx webpack-dev-server --mode development",
-    "test": "npx karma start",
     "build": "webpack --mode production"
   },
   "repository": {
