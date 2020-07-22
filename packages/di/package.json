@@ -1,6 +1,6 @@
 {
   "name": "@joist/di",
-  "version": "1.0.0-alpha.17",
+  "version": "1.0.0-alpha.18",
   "main": "target/main.js",
   "module": "target/main.js",
   "files": [
