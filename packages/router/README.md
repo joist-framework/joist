@@ -11,7 +11,8 @@ npm i @joist/di @joist/router @joist/component
 #### Example:
 
 ```TS
-import { Component, registerElement } from '@joist/component';
+import { Component, JoistElement } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { Route, RouteCtxRef, RouteCtx } from '@joist/router';
 import { html } from 'lit-html';
 
@@ -30,7 +31,7 @@ const routes: Route[] = [
 ].
 
 @Component({
-  render() {
+  render: template(() => {
     return html`
       <router-link path-match="full">
         <a href="/">Go To Home</a>
@@ -42,10 +43,11 @@ const routes: Route[] = [
 
       <router-outlet .routes=${routes}></router-outlet>
     `;
-  }
+  })
 })
-export class AppComponent {
-  constructor(@RouteCtxRef private route: RouteCtx) {}
+export class AppElement extends JoistElement {
+  @Get(RouteCtx)
+  private route: RouteCtx;
 
   connectedCallback() {
     console.log(this.route.value);
@@ -56,5 +58,5 @@ export class AppComponent {
   }
 }
 
-customElements.define('app-root', defineElement(AppComponent));
+customElements.define('app-root', AppElement);
 ```
