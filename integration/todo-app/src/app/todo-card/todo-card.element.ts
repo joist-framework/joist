@@ -60,10 +60,15 @@ export interface TodoCardState {
   }),
 })
 export class TodoCardElement extends JoistElement {
-  @Get(State) private state!: State<TodoCardState>;
+  @Get(State)
+  private state!: State<TodoCardState>;
 
-  public set(todo: Todo) {
+  set todo(todo: Todo | undefined) {
     this.state.setValue({ todo });
+  }
+
+  get todo() {
+    return this.state.value.todo;
   }
 
   constructor() {

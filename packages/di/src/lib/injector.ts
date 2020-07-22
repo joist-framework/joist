@@ -17,7 +17,7 @@ export interface InjectorOptions {
 export class Injector {
   private providerMap = new WeakMap<ProviderToken<any>, any>();
 
-  constructor(private opts: InjectorOptions = {}, private parent?: Injector) {
+  constructor(private opts: InjectorOptions = {}, public parent?: Injector) {
     if (this.opts.bootstrap) {
       this.opts.bootstrap.forEach((provider) => this.get(provider));
     }

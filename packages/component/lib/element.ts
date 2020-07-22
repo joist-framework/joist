@@ -2,7 +2,7 @@ import { Injector, ProviderToken } from '@joist/di';
 
 import { getEnvironmentRef } from './environment';
 import { State } from './state';
-import { getComponentDef } from './component';
+import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers } from './handle';
 import { Lifecycle } from './lifecycle';
 
@@ -53,22 +53,27 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
     const handlers = getComponentHandlers(this.constructor);
     const state = this.injector.get(State);
 
-    const run = (eventName: string, payload: unknown) => (e: Event) => {
-      if (eventName in handlers) {
-        handlers[eventName].forEach((methodName) => {
-          // eww
-          ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
-        });
-      }
-    };
-
-    const dispatch = (eventName: string, init?: CustomEventInit) => () => {
-      this.dispatchEvent(new CustomEvent(eventName, init));
+    const ctx: RenderCtx<any> = {
+      state: state.value,
+      run: (eventName: string, payload: unknown) => (e: Event) => {
+        if (eventName in handlers) {
+          handlers[eventName].forEach((methodName) => {
+            // eww
+            ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
+          });
+        }
+      },
+      dispatch: (eventName: string, init?: CustomEventInit) => () => {
+        this.dispatchEvent(new CustomEvent(eventName, init));
+      },
+      host: this,
     };
 
     const componentRender = (state: any) => {
+      ctx.state = state;
+
       if (this.componentDef.render) {
-        this.componentDef.render({ state, run, dispatch, host: this });
+        this.componentDef.render(ctx);
       }
     };
 

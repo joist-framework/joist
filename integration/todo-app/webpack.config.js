@@ -1,4 +1,4 @@
-const { resolve } = require('path');
+const { join } = require('path');
 
 const config = {
   entry: {
@@ -13,7 +13,7 @@ const config = {
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: resolve(__dirname, 'public/target'),
+    path: join(__dirname, 'public/target'),
   },
   plugins: [],
 };
@@ -21,6 +21,14 @@ const config = {
 module.exports = (_env, argv) => {
   if (argv.mode === 'development') {
     config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      compress: true,
+      port: 9000,
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
   }
 
   if (argv.mode === 'production') {

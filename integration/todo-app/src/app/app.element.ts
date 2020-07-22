@@ -42,10 +42,6 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
     return html`
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
-      <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
-
-      <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
-
       ${!state.todos.length
         ? html` <div class="placeholder">Looks Like Everything is Done!</div> `
         : ''}
@@ -62,6 +58,8 @@ export class AppElement extends JoistElement implements OnConnected {
   private todo!: TodoService;
 
   connectedCallback(): void {
+    super.connectedCallback();
+
     this.state.setValue({ todos: this.todo.todos.value });
 
     this.todo.todos.onChange((todos) => {

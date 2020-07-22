@@ -1,4 +1,4 @@
-import { State, Handle, Component, JoistElement, Get } from '@joist/component';
+import { State, Component, JoistElement, Get, OnConnected } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -10,9 +10,9 @@ export interface TodoFormState {
   state: {
     todo: '',
   },
-  render: template(({ state, run }) => {
+  render: template(({ state }) => {
     return html`
-      <form @submit=${run('FORM_SUBMIT')}>
+      <form>
         <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state.todo} />
 
         <button>Add Todo</button>
@@ -20,18 +20,19 @@ export interface TodoFormState {
     `;
   }),
 })
-export class TodoFormElement extends JoistElement {
+export class TodoFormElement extends JoistElement implements OnConnected {
   @Get(State)
   private state!: State<TodoFormState>;
 
   constructor() {
     super();
 
-    this.attachShadow({ mode: 'open' });
+    this.addEventListener('submit', this.onFormSubmit.bind(this));
   }
 
-  @Handle('FORM_SUBMIT') onFormSubmit(e: Event) {
+  private onFormSubmit(e: Event) {
     e.preventDefault();
+    e.stopPropagation();
 
     const el = e.target as HTMLFormElement;
     const form = new FormData(el);

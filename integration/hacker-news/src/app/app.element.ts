@@ -91,15 +91,6 @@ export interface AppState {
           )
         )}
       </div>
-
-      ${state.currentNewsItem
-        ? html`
-            <comments-drawer
-              .comments=${state.currentNewsItem.comments}
-              @close_drawer=${run('CLOSE_DRAWER')}
-            ></comments-drawer>
-          `
-        : ''}
     `;
   }),
 })

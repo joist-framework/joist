@@ -27,7 +27,7 @@ import { Component, JoistElement } from '@joist/component';
 })
 class AppElement extends JoistElement {}
 
-customElements.define('app-root', AppComponent);
+customElements.define('app-root', AppElement);
 ```
 
 Once your component templates become more complicated you will probably reach for a view library.
@@ -103,7 +103,7 @@ import { Component, State, JoistElement } from '@joist/component';
     host.innerHTML = state.toString();
   }
 })
-class AppComponent extends JoistComponent {
+class AppElement extends JoistElement {
   @Get(State)
   private state!: State<number>;
 
@@ -303,7 +303,7 @@ class AppElement extends JoistElement {
 ```TS
 import { AppElement } from './app.element';
 
-describe('AppComponent', () => {
+describe('AppElement', () => {
   let el: AppElement;
 
   customElements.define('test-app-component-1', AppElement);
@@ -311,8 +311,8 @@ describe('AppComponent', () => {
   beforeEach(() => {
     el = document.createElement('test-app-component-1') as AppElement;
 
-    // Since a components injected services are resolved lazily you can add your own injector for testing.
-    el.injector = new Injector();
+    // Since a components injected services are resolved lazily you can add your own injector root for testing
+    el.injector.parent = new Injector();
 
     document.body.appendChild(el);
   });

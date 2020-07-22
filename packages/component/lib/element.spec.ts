@@ -145,7 +145,7 @@ describe('JoistElement', () => {
 
       customElements.define('handlers-2', MyElement);
 
-      const el = document.createElement('handlers-2') as JoistElement;
+      const el = document.createElement('handlers-2') as MyElement;
 
       el.connectedCallback();
 

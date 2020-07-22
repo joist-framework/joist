@@ -4,7 +4,7 @@
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --mode development",
     "test": "karma  start",
     "build": "NODE_ENV=production webpack"
   },

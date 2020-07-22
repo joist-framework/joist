@@ -1,12 +1,15 @@
 import './todo-form.component';
 
 import { TodoFormElement } from './todo-form.element';
+import { Injector } from '@joist/di';
 
-fdescribe('TodoFormElement', () => {
+describe('TodoFormElement', () => {
   let el: TodoFormElement;
 
   beforeEach(() => {
     el = document.createElement('todo-form') as TodoFormElement;
+
+    el.injector.parent = new Injector();
 
     document.body.appendChild(el);
   });
