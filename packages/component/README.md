@@ -84,8 +84,6 @@ class AppElement extends JoistComponent {
   private myService!: MyService;
 
   connectedCallback() {
-    super.connectedCallback();
-    
     console.log(this.myService.sayHello());
   }
 }
@@ -110,6 +108,8 @@ class AppElement extends JoistElement {
   private state!: State<number>;
 
   connectedCallback() {
+    super.connectedCallback();
+    
     setInterval(() => this.update(), 1000);
   }
 
@@ -158,6 +158,8 @@ class AppElement extends JoistElement {
   private user!: UserService;
 
   connectedCallback() {
+    super.connectedCallback();
+    
     this.state.setValue({ data: [], loading: true });
 
     const res: Promise<AppState> = this.user.fetchUsers().then(data => {
