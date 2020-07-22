@@ -79,6 +79,7 @@ class BarService {
   }
 }
 
+@Component()
 class AppElement extends JoistComponent {
   @Get(MyService)
   private myService!: MyService;
