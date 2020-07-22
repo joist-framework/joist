@@ -1,6 +1,6 @@
 import '@joist/router';
 
-import './page-1.component';
+import './page-1.element';
 
 import { Component, JoistElement } from '@joist/component';
 import { Route } from '@joist/router';
@@ -17,7 +17,7 @@ const routes: Route[] = [
       return el;
     },
   },
-  { path: '/foo(.*)', component: () => document.createElement('page-1-component') },
+  { path: '/foo(.*)', component: () => document.createElement('page-1-element') },
 ];
 
 export interface AppState {
@@ -25,7 +25,9 @@ export interface AppState {
 }
 
 @Component<AppState>({
-  state: { title: 'Hello World' },
+  state: {
+    title: 'Hello World',
+  },
   render({ state }) {
     return html`
       <header>

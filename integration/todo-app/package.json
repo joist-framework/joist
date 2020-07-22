@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "test": "karma  start",
-    "build": "NODE_ENV=production webpack"
+    "test": "karma start",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",

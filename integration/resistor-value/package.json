@@ -4,9 +4,9 @@
   "description": "PWA for calculating resistor values",
   "private": true,
   "scripts": {
-    "start": "npx webpack-dev-server",
+    "start": "npx webpack-dev-server --mode development",
     "test": "npx karma start",
-    "build": "NODE_ENV=production webpack"
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",

@@ -21,7 +21,8 @@ describe('Reducer', () => {
     ],
   })
   class MyComponent extends JoistElement {
-    @Get(ReducerState) public state!: ReducerState<number>;
+    @Get(ReducerState)
+    public state!: ReducerState<number>;
 
     increment() {
       return this.state.dispatch({ type: 'INCREMENT' });
@@ -38,8 +39,9 @@ describe('Reducer', () => {
     const el = document.createElement('reducer-test-1') as MyComponent;
 
     await el.increment();
+    await el.increment();
 
-    expect(el.state.value).toBe(1);
+    expect(el.state.value).toBe(2);
   });
 
   it('should decrement the state by 1', async () => {

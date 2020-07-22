@@ -1,2 +1,1 @@
-import './environment';
-import './app/app.component';
+import './app/app.element';

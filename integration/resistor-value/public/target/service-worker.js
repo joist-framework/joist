@@ -49,7 +49,7 @@ define('./service-worker.js', ['./workbox-1a661b4a'], function (e) {
     e.data && 'SKIP_WAITING' === e.data.type && self.skipWaiting();
   }),
     e.precacheAndRoute(
-      [{ url: 'main.bundle.js', revision: 'b2efe5383c0f6dd91fc5c1de5aa68754' }],
+      [{ url: 'main.bundle.js', revision: '32ce0cef896d9c77fff737ed9bdea6f1' }],
       {}
     );
 });

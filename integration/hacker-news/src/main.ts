@@ -1,4 +1,4 @@
-import './app/app.component';
+import './app/app.element';
 
 if (process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('/service-worker.js').then(

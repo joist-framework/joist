@@ -1,6 +1,7 @@
-const { resolve } = require('path');
+const { join } = require('path');
 
 const config = {
+  mode: 'development',
   entry: {
     main: './src/main.ts',
   },
@@ -13,7 +14,7 @@ const config = {
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: resolve(__dirname, 'public/target'),
+    path: join(__dirname, 'public/target'),
   },
   plugins: [],
 };
@@ -21,10 +22,16 @@ const config = {
 module.exports = (_env, argv) => {
   if (argv.mode === 'development') {
     config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
   }
 
   if (argv.mode === 'production') {
-    config.performance = { hints: 'error', maxEntrypointSize: 7000 };
+    config.performance = { hints: 'error', maxEntrypointSize: 3600 };
   }
 
   return config;

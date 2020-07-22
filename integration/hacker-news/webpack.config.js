@@ -1,7 +1,8 @@
-const { resolve } = require('path');
+const { join } = require('path');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
-module.exports = {
-  mode: 'production',
+const config = {
+  mode: 'development',
   entry: {
     main: './src/main.ts',
   },
@@ -14,11 +15,26 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: resolve(__dirname, 'public/target'),
+    path: join(__dirname, 'public/target'),
   },
-  performance: {
-    hints: 'error',
-    maxEntrypointSize: 7000,
-  },
-  plugins: [new GenerateSW()],
+  plugins: [],
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
+  }
+
+  if (argv.mode === 'production') {
+    config.performance = { hints: 'error', maxEntrypointSize: 28500 };
+    config.plugins.push(new GenerateSW());
+  }
+
+  return config;
 };

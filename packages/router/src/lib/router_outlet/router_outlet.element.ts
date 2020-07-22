@@ -59,6 +59,8 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   private removeListener?: Function;
 
   connectedCallback() {
+    super.connectedCallback();
+
     this.removeListener = this.router.listen(() => {
       this.check();
     });

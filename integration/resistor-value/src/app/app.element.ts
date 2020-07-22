@@ -1,6 +1,6 @@
-import './select-band-count.component';
-import './resistor.component';
-import './select-band-color.component';
+import './select-band-count.element';
+import './resistor.element';
+import './select-band-color.element';
 
 import { State, Handle, OnConnected, Component, JoistElement, Get } from '@joist/component';
 import { html } from 'lit-html';

@@ -1,41 +1,41 @@
 !(function (e) {
   var t = {};
-  function n(s) {
-    if (t[s]) return t[s].exports;
-    var o = (t[s] = { i: s, l: !1, exports: {} });
-    return e[s].call(o.exports, o, o.exports, n), (o.l = !0), o.exports;
+  function s(n) {
+    if (t[n]) return t[n].exports;
+    var i = (t[n] = { i: n, l: !1, exports: {} });
+    return e[n].call(i.exports, i, i.exports, s), (i.l = !0), i.exports;
   }
-  (n.m = e),
-    (n.c = t),
-    (n.d = function (e, t, s) {
-      n.o(e, t) || Object.defineProperty(e, t, { enumerable: !0, get: s });
+  (s.m = e),
+    (s.c = t),
+    (s.d = function (e, t, n) {
+      s.o(e, t) || Object.defineProperty(e, t, { enumerable: !0, get: n });
     }),
-    (n.r = function (e) {
+    (s.r = function (e) {
       'undefined' != typeof Symbol &&
         Symbol.toStringTag &&
         Object.defineProperty(e, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(e, '__esModule', { value: !0 });
     }),
-    (n.t = function (e, t) {
-      if ((1 & t && (e = n(e)), 8 & t)) return e;
+    (s.t = function (e, t) {
+      if ((1 & t && (e = s(e)), 8 & t)) return e;
       if (4 & t && 'object' == typeof e && e && e.__esModule) return e;
-      var s = Object.create(null);
+      var n = Object.create(null);
       if (
-        (n.r(s),
-        Object.defineProperty(s, 'default', { enumerable: !0, value: e }),
+        (s.r(n),
+        Object.defineProperty(n, 'default', { enumerable: !0, value: e }),
         2 & t && 'string' != typeof e)
       )
-        for (var o in e)
-          n.d(
-            s,
-            o,
+        for (var i in e)
+          s.d(
+            n,
+            i,
             function (t) {
               return e[t];
-            }.bind(null, o)
+            }.bind(null, i)
           );
-      return s;
+      return n;
     }),
-    (n.n = function (e) {
+    (s.n = function (e) {
       var t =
         e && e.__esModule
           ? function () {
@@ -44,23 +44,31 @@
           : function () {
               return e;
             };
-      return n.d(t, 'a', t), t;
+      return s.d(t, 'a', t), t;
     }),
-    (n.o = function (e, t) {
+    (s.o = function (e, t) {
       return Object.prototype.hasOwnProperty.call(e, t);
     }),
-    (n.p = ''),
-    n((n.s = 2));
+    (s.p = ''),
+    s((s.s = 2));
 })({
-  2: function (e, t, n) {
+  2: function (e, t, s) {
     'use strict';
-    n.r(t);
-    function s(e) {
-      return function (t, n, s) {
-        (t.deps = t.deps || []), (t.deps[s] = e);
-      };
+    s.r(t);
+    function n(e, t, s, n) {
+      var i,
+        r = arguments.length,
+        o = r < 3 ? t : null === n ? (n = Object.getOwnPropertyDescriptor(t, s)) : n;
+      if ('object' == typeof Reflect && 'function' == typeof Reflect.decorate)
+        o = Reflect.decorate(e, t, s, n);
+      else
+        for (var a = e.length - 1; a >= 0; a--)
+          (i = e[a]) && (o = (r < 3 ? i(o) : r > 3 ? i(t, s, o) : i(t, s)) || o);
+      return r > 3 && o && Object.defineProperty(t, s, o), o;
     }
-    class o {
+    Object.create;
+    Object.create;
+    class i {
       constructor(e = {}, t) {
         (this.opts = e),
           (this.parent = t),
@@ -81,7 +89,7 @@
       resolve(e) {
         const t = this.findProvider(e);
         return t
-          ? this.createFromProvider(t)
+          ? this.create(t.use)
           : this.parent &&
             ((function (e) {
               return e.provideInRoot || !1;
@@ -90,61 +98,118 @@
           ? this.parent.get(e)
           : this.create(e);
       }
-      createFromProvider(e) {
-        return 'useClass' in e
-          ? this.create(e.useClass)
-          : 'useFactory' in e
-          ? this.createFromFactory(e)
-          : null;
-      }
-      createFromFactory(e) {
-        return e.useFactory.apply(
-          e,
-          e.deps.map((e) => this.get(e))
-        );
-      }
       findProvider(e) {
-        return (this.opts.providers && this.opts.providers.find((t) => t.provide === e)) || null;
+        if (this.opts.providers) return this.opts.providers.find((t) => t.provide === e);
       }
     }
     let r;
-    function i(e = []) {
-      return (r = new o({ providers: e })), r;
-    }
-    function a(e, t, n, s) {
-      var o,
-        r = arguments.length,
-        i = r < 3 ? t : null === s ? (s = Object.getOwnPropertyDescriptor(t, n)) : s;
-      if ('object' == typeof Reflect && 'function' == typeof Reflect.decorate)
-        i = Reflect.decorate(e, t, n, s);
-      else
-        for (var a = e.length - 1; a >= 0; a--)
-          (o = e[a]) && (i = (r < 3 ? o(i) : r > 3 ? o(t, n, i) : o(t, n)) || i);
-      return r > 3 && i && Object.defineProperty(t, n, i), i;
-    }
-    function l(e, t) {
-      return function (n, s) {
-        t(n, s, e);
-      };
-    }
-    Object.create;
-    Object.create;
-    let c = (() => {
-      let e = class {
-        render(e, t) {}
-      };
+    function o() {
       return (
-        (e = a(
-          [
-            function (e) {
-              e.provideInRoot = !0;
-            },
-          ],
-          e
-        )),
-        e
+        r ||
+        (function (e = []) {
+          return (r = new i({ providers: e })), r;
+        })()
       );
-    })();
+    }
+    class a {
+      constructor(e) {
+        (this.listeners = []), (this.currentState = e);
+      }
+      get value() {
+        return this.currentState;
+      }
+      setValue(e) {
+        return Promise.resolve(e).then((e) => {
+          (this.currentState = e), this.listeners.forEach((e) => e(this.value));
+        });
+      }
+      patchValue(e) {
+        return Promise.resolve(e).then((t) => {
+          try {
+            this.setValue({ ...this.value, ...t });
+          } catch (t) {
+            throw new Error('cannot patch state that is of type ' + typeof e);
+          }
+        });
+      }
+      onChange(e) {
+        return (
+          this.listeners.push(e),
+          () => {
+            this.listeners = this.listeners.filter((t) => t !== e);
+          }
+        );
+      }
+    }
+    function l(e = {}) {
+      return function (t) {
+        Object.defineProperty(t, 'componentDef', { get: () => e });
+      };
+    }
+    function c(e) {
+      return function (t, s) {
+        const n = t.constructor;
+        (n.handlers = n.handlers || {}),
+          (n.handlers[e] = n.handlers[e] || []),
+          n.handlers[e].push(s);
+      };
+    }
+    function d(e) {
+      return function (t, s) {
+        Object.defineProperty(t, s, {
+          get() {
+            return this.injector.get(e);
+          },
+        });
+      };
+    }
+    class u extends HTMLElement {
+      constructor() {
+        super(), (this.componentDef = this.constructor.componentDef || {});
+        const e = this.componentDef.state,
+          t = this.componentDef.providers || [];
+        this.injector = new i(
+          {
+            providers: t.concat([
+              {
+                provide: a,
+                use: class extends a {
+                  constructor() {
+                    super(e);
+                  }
+                },
+              },
+            ]),
+            bootstrap: t.map((e) => e.provide),
+          },
+          o()
+        );
+      }
+      connectedCallback() {
+        const e = this.constructor.handlers || {};
+        const t = this.injector.get(a),
+          s = {
+            state: t.value,
+            run: (t, s) => (n) => {
+              t in e &&
+                e[t].forEach((e) => {
+                  this[e].call(this, n, s);
+                });
+            },
+            dispatch: (e, t) => () => {
+              this.dispatchEvent(new CustomEvent(e, t));
+            },
+            host: this,
+          },
+          n = (e) => {
+            (s.state = e), this.componentDef.render && this.componentDef.render(s);
+          };
+        n(t.value),
+          t.onChange((e) => {
+            n(e);
+          });
+      }
+    }
     /**
      * @license
      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -157,104 +222,26 @@
      * Code distributed by Google as part of the polymer project is also
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
-     */
-    const d = new WeakMap(),
-      u = (e) => 'function' == typeof e && d.has(e),
-      h =
+     */ const h = new WeakMap(),
+      p = (e) => 'function' == typeof e && h.has(e),
+      m =
         'undefined' != typeof window &&
         null != window.customElements &&
         void 0 !== window.customElements.polyfillWrapFlushCallback,
-      p = (e, t, n = null) => {
-        for (; t !== n; ) {
-          const n = t.nextSibling;
-          e.removeChild(t), (t = n);
+      g = (e, t, s = null) => {
+        for (; t !== s; ) {
+          const s = t.nextSibling;
+          e.removeChild(t), (t = s);
         }
       },
-      m = {},
-      g = {},
+      v = {},
+      b = {},
       f = `{{lit-${String(Math.random()).slice(2)}}}`,
-      b = `\x3c!--${f}--\x3e`,
-      v = new RegExp(`${f}|${b}`);
-    class _ {
-      constructor(e, t) {
-        (this.parts = []), (this.element = t);
-        const n = [],
-          s = [],
-          o = document.createTreeWalker(t.content, 133, null, !1);
-        let r = 0,
-          i = -1,
-          a = 0;
-        const {
-          strings: l,
-          values: { length: c },
-        } = e;
-        for (; a < c; ) {
-          const e = o.nextNode();
-          if (null !== e) {
-            if ((i++, 1 === e.nodeType)) {
-              if (e.hasAttributes()) {
-                const t = e.attributes,
-                  { length: n } = t;
-                let s = 0;
-                for (let e = 0; e < n; e++) y(t[e].name, '$lit$') && s++;
-                for (; s-- > 0; ) {
-                  const t = l[a],
-                    n = E.exec(t)[2],
-                    s = n.toLowerCase() + '$lit$',
-                    o = e.getAttribute(s);
-                  e.removeAttribute(s);
-                  const r = o.split(v);
-                  this.parts.push({ type: 'attribute', index: i, name: n, strings: r }),
-                    (a += r.length - 1);
-                }
-              }
-              'TEMPLATE' === e.tagName && (s.push(e), (o.currentNode = e.content));
-            } else if (3 === e.nodeType) {
-              const t = e.data;
-              if (t.indexOf(f) >= 0) {
-                const s = e.parentNode,
-                  o = t.split(v),
-                  r = o.length - 1;
-                for (let t = 0; t < r; t++) {
-                  let n,
-                    r = o[t];
-                  if ('' === r) n = w();
-                  else {
-                    const e = E.exec(r);
-                    null !== e &&
-                      y(e[2], '$lit$') &&
-                      (r = r.slice(0, e.index) + e[1] + e[2].slice(0, -'$lit$'.length) + e[3]),
-                      (n = document.createTextNode(r));
-                  }
-                  s.insertBefore(n, e), this.parts.push({ type: 'node', index: ++i });
-                }
-                '' === o[r] ? (s.insertBefore(w(), e), n.push(e)) : (e.data = o[r]), (a += r);
-              }
-            } else if (8 === e.nodeType)
-              if (e.data === f) {
-                const t = e.parentNode;
-                (null !== e.previousSibling && i !== r) || (i++, t.insertBefore(w(), e)),
-                  (r = i),
-                  this.parts.push({ type: 'node', index: i }),
-                  null === e.nextSibling ? (e.data = '') : (n.push(e), i--),
-                  a++;
-              } else {
-                let t = -1;
-                for (; -1 !== (t = e.data.indexOf(f, t + 1)); )
-                  this.parts.push({ type: 'node', index: -1 }), a++;
-              }
-          } else o.currentNode = s.pop();
-        }
-        for (const e of n) e.parentNode.removeChild(e);
-      }
-    }
-    const y = (e, t) => {
-        const n = e.length - t.length;
-        return n >= 0 && e.slice(n) === t;
-      },
-      x = (e) => -1 !== e.index,
-      w = () => document.createComment(''),
-      E = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
+      _ = `\x3c!--${f}--\x3e`;
+    new RegExp(`${f}|${_}`);
+    const y = (e) => -1 !== e.index,
+      x = () => document.createComment(''),
+      w = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
     /**
      * @license
      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -268,42 +255,42 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
-    class B {
-      constructor(e, t, n) {
-        (this.__parts = []), (this.template = e), (this.processor = t), (this.options = n);
+    class V {
+      constructor(e, t, s) {
+        (this.__parts = []), (this.template = e), (this.processor = t), (this.options = s);
       }
       update(e) {
         let t = 0;
-        for (const n of this.__parts) void 0 !== n && n.setValue(e[t]), t++;
+        for (const s of this.__parts) void 0 !== s && s.setValue(e[t]), t++;
         for (const e of this.__parts) void 0 !== e && e.commit();
       }
       _clone() {
-        const e = h
+        const e = m
             ? this.template.element.content.cloneNode(!0)
             : document.importNode(this.template.element.content, !0),
           t = [],
-          n = this.template.parts,
-          s = document.createTreeWalker(e, 133, null, !1);
-        let o,
+          s = this.template.parts,
+          n = document.createTreeWalker(e, 133, null, !1);
+        let i,
           r = 0,
-          i = 0,
-          a = s.nextNode();
-        for (; r < n.length; )
-          if (((o = n[r]), x(o))) {
-            for (; i < o.index; )
-              i++,
-                'TEMPLATE' === a.nodeName && (t.push(a), (s.currentNode = a.content)),
-                null === (a = s.nextNode()) && ((s.currentNode = t.pop()), (a = s.nextNode()));
-            if ('node' === o.type) {
+          o = 0,
+          a = n.nextNode();
+        for (; r < s.length; )
+          if (((i = s[r]), y(i))) {
+            for (; o < i.index; )
+              o++,
+                'TEMPLATE' === a.nodeName && (t.push(a), (n.currentNode = a.content)),
+                null === (a = n.nextNode()) && ((n.currentNode = t.pop()), (a = n.nextNode()));
+            if ('node' === i.type) {
               const e = this.processor.handleTextExpression(this.options);
               e.insertAfterNode(a.previousSibling), this.__parts.push(e);
             } else
               this.__parts.push(
-                ...this.processor.handleAttributeExpressions(a, o.name, o.strings, this.options)
+                ...this.processor.handleAttributeExpressions(a, i.name, i.strings, this.options)
               );
             r++;
           } else this.__parts.push(void 0), r++;
-        return h && (document.adoptNode(e), customElements.upgrade(e)), e;
+        return m && (document.adoptNode(e), customElements.upgrade(e)), e;
       }
     }
     /**
@@ -319,21 +306,21 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */ const N = ` ${f} `;
-    class V {
-      constructor(e, t, n, s) {
-        (this.strings = e), (this.values = t), (this.type = n), (this.processor = s);
+    class B {
+      constructor(e, t, s, n) {
+        (this.strings = e), (this.values = t), (this.type = s), (this.processor = n);
       }
       getHTML() {
         const e = this.strings.length - 1;
         let t = '',
-          n = !1;
-        for (let s = 0; s < e; s++) {
-          const e = this.strings[s],
-            o = e.lastIndexOf('\x3c!--');
-          n = (o > -1 || n) && -1 === e.indexOf('--\x3e', o + 1);
-          const r = E.exec(e);
+          s = !1;
+        for (let n = 0; n < e; n++) {
+          const e = this.strings[n],
+            i = e.lastIndexOf('\x3c!--');
+          s = (i > -1 || s) && -1 === e.indexOf('--\x3e', i + 1);
+          const r = w.exec(e);
           t +=
-            null === r ? e + (n ? N : b) : e.substr(0, r.index) + r[1] + r[2] + '$lit$' + r[3] + f;
+            null === r ? e + (s ? N : _) : e.substr(0, r.index) + r[1] + r[2] + '$lit$' + r[3] + f;
         }
         return (t += this.strings[e]), t;
       }
@@ -355,71 +342,71 @@
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
      */
-    const S = (e) => null === e || !('object' == typeof e || 'function' == typeof e),
-      C = (e) => Array.isArray(e) || !(!e || !e[Symbol.iterator]);
-    class k {
-      constructor(e, t, n) {
+    const E = (e) => null === e || !('object' == typeof e || 'function' == typeof e),
+      k = (e) => Array.isArray(e) || !(!e || !e[Symbol.iterator]);
+    class S {
+      constructor(e, t, s) {
         (this.dirty = !0),
           (this.element = e),
           (this.name = t),
-          (this.strings = n),
+          (this.strings = s),
           (this.parts = []);
-        for (let e = 0; e < n.length - 1; e++) this.parts[e] = this._createPart();
+        for (let e = 0; e < s.length - 1; e++) this.parts[e] = this._createPart();
       }
       _createPart() {
-        return new T(this);
+        return new $(this);
       }
       _getValue() {
         const e = this.strings,
           t = e.length - 1;
-        let n = '';
-        for (let s = 0; s < t; s++) {
-          n += e[s];
-          const t = this.parts[s];
+        let s = '';
+        for (let n = 0; n < t; n++) {
+          s += e[n];
+          const t = this.parts[n];
           if (void 0 !== t) {
             const e = t.value;
-            if (S(e) || !C(e)) n += 'string' == typeof e ? e : String(e);
-            else for (const t of e) n += 'string' == typeof t ? t : String(t);
+            if (E(e) || !k(e)) s += 'string' == typeof e ? e : String(e);
+            else for (const t of e) s += 'string' == typeof t ? t : String(t);
           }
         }
-        return (n += e[t]), n;
+        return (s += e[t]), s;
       }
       commit() {
         this.dirty && ((this.dirty = !1), this.element.setAttribute(this.name, this._getValue()));
       }
     }
-    class T {
+    class $ {
       constructor(e) {
         (this.value = void 0), (this.committer = e);
       }
       setValue(e) {
-        e === m ||
-          (S(e) && e === this.value) ||
-          ((this.value = e), u(e) || (this.committer.dirty = !0));
+        e === v ||
+          (E(e) && e === this.value) ||
+          ((this.value = e), p(e) || (this.committer.dirty = !0));
       }
       commit() {
-        for (; u(this.value); ) {
+        for (; p(this.value); ) {
           const e = this.value;
-          (this.value = m), e(this);
+          (this.value = v), e(this);
         }
-        this.value !== m && this.committer.commit();
+        this.value !== v && this.committer.commit();
       }
     }
-    class $ {
+    class T {
       constructor(e) {
         (this.value = void 0), (this.__pendingValue = void 0), (this.options = e);
       }
       appendInto(e) {
-        (this.startNode = e.appendChild(w())), (this.endNode = e.appendChild(w()));
+        (this.startNode = e.appendChild(x())), (this.endNode = e.appendChild(x()));
       }
       insertAfterNode(e) {
         (this.startNode = e), (this.endNode = e.nextSibling);
       }
       appendIntoPart(e) {
-        e.__insert((this.startNode = w())), e.__insert((this.endNode = w()));
+        e.__insert((this.startNode = x())), e.__insert((this.endNode = x()));
       }
       insertAfterPart(e) {
-        e.__insert((this.startNode = w())),
+        e.__insert((this.startNode = x())),
           (this.endNode = e.endNode),
           (e.endNode = this.startNode);
       }
@@ -428,22 +415,22 @@
       }
       commit() {
         if (null === this.startNode.parentNode) return;
-        for (; u(this.__pendingValue); ) {
+        for (; p(this.__pendingValue); ) {
           const e = this.__pendingValue;
-          (this.__pendingValue = m), e(this);
+          (this.__pendingValue = v), e(this);
         }
         const e = this.__pendingValue;
-        e !== m &&
-          (S(e)
+        e !== v &&
+          (E(e)
             ? e !== this.value && this.__commitText(e)
-            : e instanceof V
+            : e instanceof B
             ? this.__commitTemplateResult(e)
             : e instanceof Node
             ? this.__commitNode(e)
-            : C(e)
+            : k(e)
             ? this.__commitIterable(e)
-            : e === g
-            ? ((this.value = g), this.clear())
+            : e === b
+            ? ((this.value = b), this.clear())
             : this.__commitText(e));
       }
       __insert(e) {
@@ -454,73 +441,73 @@
       }
       __commitText(e) {
         const t = this.startNode.nextSibling,
-          n = 'string' == typeof (e = null == e ? '' : e) ? e : String(e);
+          s = 'string' == typeof (e = null == e ? '' : e) ? e : String(e);
         t === this.endNode.previousSibling && 3 === t.nodeType
-          ? (t.data = n)
-          : this.__commitNode(document.createTextNode(n)),
+          ? (t.data = s)
+          : this.__commitNode(document.createTextNode(s)),
           (this.value = e);
       }
       __commitTemplateResult(e) {
         const t = this.options.templateFactory(e);
-        if (this.value instanceof B && this.value.template === t) this.value.update(e.values);
+        if (this.value instanceof V && this.value.template === t) this.value.update(e.values);
         else {
-          const n = new B(t, e.processor, this.options),
-            s = n._clone();
-          n.update(e.values), this.__commitNode(s), (this.value = n);
+          const s = new V(t, e.processor, this.options),
+            n = s._clone();
+          s.update(e.values), this.__commitNode(n), (this.value = s);
         }
       }
       __commitIterable(e) {
         Array.isArray(this.value) || ((this.value = []), this.clear());
         const t = this.value;
-        let n,
-          s = 0;
-        for (const o of e)
-          (n = t[s]),
-            void 0 === n &&
-              ((n = new $(this.options)),
-              t.push(n),
-              0 === s ? n.appendIntoPart(this) : n.insertAfterPart(t[s - 1])),
-            n.setValue(o),
-            n.commit(),
-            s++;
-        s < t.length && ((t.length = s), this.clear(n && n.endNode));
+        let s,
+          n = 0;
+        for (const i of e)
+          (s = t[n]),
+            void 0 === s &&
+              ((s = new T(this.options)),
+              t.push(s),
+              0 === n ? s.appendIntoPart(this) : s.insertAfterPart(t[n - 1])),
+            s.setValue(i),
+            s.commit(),
+            n++;
+        n < t.length && ((t.length = n), this.clear(s && s.endNode));
       }
       clear(e = this.startNode) {
-        p(this.startNode.parentNode, e.nextSibling, this.endNode);
+        g(this.startNode.parentNode, e.nextSibling, this.endNode);
       }
     }
-    class A {
-      constructor(e, t, n) {
+    class L {
+      constructor(e, t, s) {
         if (
           ((this.value = void 0),
           (this.__pendingValue = void 0),
-          2 !== n.length || '' !== n[0] || '' !== n[1])
+          2 !== s.length || '' !== s[0] || '' !== s[1])
         )
           throw new Error('Boolean attributes can only contain a single expression');
-        (this.element = e), (this.name = t), (this.strings = n);
+        (this.element = e), (this.name = t), (this.strings = s);
       }
       setValue(e) {
         this.__pendingValue = e;
       }
       commit() {
-        for (; u(this.__pendingValue); ) {
+        for (; p(this.__pendingValue); ) {
           const e = this.__pendingValue;
-          (this.__pendingValue = m), e(this);
+          (this.__pendingValue = v), e(this);
         }
-        if (this.__pendingValue === m) return;
+        if (this.__pendingValue === v) return;
         const e = !!this.__pendingValue;
         this.value !== e &&
           (e ? this.element.setAttribute(this.name, '') : this.element.removeAttribute(this.name),
           (this.value = e)),
-          (this.__pendingValue = m);
+          (this.__pendingValue = v);
       }
     }
-    class L extends k {
-      constructor(e, t, n) {
-        super(e, t, n), (this.single = 2 === n.length && '' === n[0] && '' === n[1]);
+    class C extends S {
+      constructor(e, t, s) {
+        super(e, t, s), (this.single = 2 === s.length && '' === s[0] && '' === s[1]);
       }
       _createPart() {
-        return new D(this);
+        return new M(this);
       }
       _getValue() {
         return this.single ? this.parts[0].value : super._getValue();
@@ -529,50 +516,50 @@
         this.dirty && ((this.dirty = !1), (this.element[this.name] = this._getValue()));
       }
     }
-    class D extends T {}
-    let P = !1;
+    class M extends $ {}
+    let A = !1;
     (() => {
       try {
         const e = {
           get capture() {
-            return (P = !0), !1;
+            return (A = !0), !1;
           },
         };
         window.addEventListener('test', e, e), window.removeEventListener('test', e, e);
       } catch (e) {}
     })();
-    class I {
-      constructor(e, t, n) {
+    class P {
+      constructor(e, t, s) {
         (this.value = void 0),
           (this.__pendingValue = void 0),
           (this.element = e),
           (this.eventName = t),
-          (this.eventContext = n),
+          (this.eventContext = s),
           (this.__boundHandleEvent = (e) => this.handleEvent(e));
       }
       setValue(e) {
         this.__pendingValue = e;
       }
       commit() {
-        for (; u(this.__pendingValue); ) {
+        for (; p(this.__pendingValue); ) {
           const e = this.__pendingValue;
-          (this.__pendingValue = m), e(this);
+          (this.__pendingValue = v), e(this);
         }
-        if (this.__pendingValue === m) return;
+        if (this.__pendingValue === v) return;
         const e = this.__pendingValue,
           t = this.value,
-          n =
+          s =
             null == e ||
             (null != t &&
               (e.capture !== t.capture || e.once !== t.once || e.passive !== t.passive)),
-          s = null != e && (null == t || n);
-        n &&
+          n = null != e && (null == t || s);
+        s &&
           this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options),
-          s &&
+          n &&
             ((this.__options = j(e)),
             this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)),
           (this.value = e),
-          (this.__pendingValue = m);
+          (this.__pendingValue = v);
       }
       handleEvent(e) {
         'function' == typeof this.value
@@ -581,7 +568,7 @@
       }
     }
     const j = (e) =>
-      e && (P ? { capture: e.capture, passive: e.passive, once: e.once } : e.capture);
+      e && (A ? { capture: e.capture, passive: e.passive, once: e.once } : e.capture);
     /**
      * @license
      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -594,20 +581,20 @@
      * Code distributed by Google as part of the polymer project is also
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
-     */ const M = new (class {
-      handleAttributeExpressions(e, t, n, s) {
-        const o = t[0];
-        if ('.' === o) {
-          return new L(e, t.slice(1), n).parts;
+     */ const O = new (class {
+      handleAttributeExpressions(e, t, s, n) {
+        const i = t[0];
+        if ('.' === i) {
+          return new C(e, t.slice(1), s).parts;
         }
-        return '@' === o
-          ? [new I(e, t.slice(1), s.eventContext)]
-          : '?' === o
-          ? [new A(e, t.slice(1), n)]
-          : new k(e, t, n).parts;
+        return '@' === i
+          ? [new P(e, t.slice(1), n.eventContext)]
+          : '?' === i
+          ? [new L(e, t.slice(1), s)]
+          : new S(e, t, s).parts;
       }
       handleTextExpression(e) {
-        return new $(e);
+        return new T(e);
       }
     })();
     /**
@@ -622,22 +609,7 @@
      * Code distributed by Google as part of the polymer project is also
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
-     */ function O(e) {
-      let t = R.get(e.type);
-      void 0 === t &&
-        ((t = { stringsArray: new WeakMap(), keyString: new Map() }), R.set(e.type, t));
-      let n = t.stringsArray.get(e.strings);
-      if (void 0 !== n) return n;
-      const s = e.strings.join(f);
-      return (
-        (n = t.keyString.get(s)),
-        void 0 === n && ((n = new _(e, e.getTemplateElement())), t.keyString.set(s, n)),
-        t.stringsArray.set(e.strings, n),
-        n
-      );
-    }
-    const R = new Map(),
-      F = new WeakMap();
+     */ new Map(), new WeakMap();
     /**
      * @license
      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -666,185 +638,24 @@
      */
     'undefined' != typeof window &&
       (window.litHtmlVersions || (window.litHtmlVersions = [])).push('1.2.1');
-    const W = (e, ...t) => new V(e, t, 'html', M);
-    class Y extends c {
-      render(e, t) {
-        ((e, t, n) => {
-          let s = F.get(t);
-          void 0 === s &&
-            (p(t, t.firstChild),
-            F.set(t, (s = new $(Object.assign({ templateFactory: O }, n)))),
-            s.appendInto(t)),
-            s.setValue(e),
-            s.commit();
-        })(e, t.shadowRoot || t);
+    const R = (e, ...t) => new B(e, t, 'html', O);
+    let D = class extends u {
+      constructor() {
+        super(), this.attachShadow({ mode: 'open' });
       }
-    }
-    i([{ provide: c, useClass: Y }]);
-    function H(e) {
-      return function (t, n) {
-        const s = t.constructor;
-        (s.handlers = s.handlers || {}),
-          (s.handlers[e] = s.handlers[e] || []),
-          s.handlers[e].push(n);
-      };
-    }
-    function G(e = {}) {
-      return function (t) {
-        Object.defineProperty(t, 'componentDef', { get: () => e });
-      };
-    }
-    class z {}
-    function U(e, t, n) {
-      s(z)(e, t, n);
-    }
-    function K(e, t, n) {
-      s(q)(e, t, n);
-    }
-    class q {
-      constructor(e) {
-        (this.listeners = []), (this.currentState = e);
+      set bandLimit(e) {
+        this.state.patchValue({ bandLimit: e });
       }
-      get value() {
-        return this.currentState;
+      set selectedBands(e) {
+        this.state.patchValue({ selectedBands: e });
       }
-      setValue(e) {
-        return Promise.resolve(e).then((e) => {
-          (this.currentState = e), this.listeners.forEach((e) => e(this.value));
-        });
-      }
-      patchValue(e) {
-        return Promise.resolve(e).then((t) => {
-          try {
-            this.setValue(Object.assign(Object.assign({}, this.value), t));
-          } catch (t) {
-            throw new Error('cannot patch state that is of type ' + typeof e);
-          }
-        });
-      }
-      onChange(e) {
-        return (
-          this.listeners.push(e),
-          () => {
-            this.listeners = this.listeners.filter((t) => t !== e);
-          }
-        );
-      }
-    }
-    function J(e, t = {}) {
-      var n;
-      const s = e.props || [];
-      const a = (function (e) {
-          return e.componentDef || {};
-        })(e),
-        l = a.providers || [],
-        d =
-          (((n = class extends (t.extends || HTMLElement) {
-            constructor() {
-              super(),
-                (this.componentInjector = new o(
-                  {
-                    providers: l.concat([
-                      { provide: z, useFactory: () => this, deps: [] },
-                      { provide: q, useFactory: () => new q(a.state), deps: [] },
-                    ]),
-                    bootstrap: l.map((e) => e.provide),
-                  },
-                  t.root || r || i()
-                )),
-                (this.componentInstance = this.componentInjector.create(e)),
-                a.useShadowDom && this.attachShadow({ mode: 'open' });
-            }
-            connectedCallback() {
-              !(function (e, t) {
-                const n = e.componentInstance.constructor.handlers || {},
-                  s = e.componentInjector.get(c),
-                  o = e.componentInjector.get(q),
-                  r = (t, s) => (o) => {
-                    t in n &&
-                      n[t].forEach((t) => {
-                        e.componentInstance[t].call(e.componentInstance, o, s);
-                      });
-                  },
-                  i = (t, n) => () => {
-                    e.dispatchEvent(new CustomEvent(t, n));
-                  },
-                  a = (n) => {
-                    t.render && s.render(t.render({ state: n, run: r, dispatch: i, host: e }), e);
-                  };
-                a(o.value),
-                  o.onChange((e) => {
-                    a(e);
-                  });
-              })(this, a),
-                this.componentInstance.connectedCallback &&
-                  this.componentInstance.connectedCallback();
-            }
-            disconnectedCallback() {
-              this.componentInstance.disconnectedCallback &&
-                this.componentInstance.disconnectedCallback();
-            }
-            attributeChangedCallback(e, t, n) {
-              this.componentInstance.attributeChangedCallback &&
-                this.componentInstance.attributeChangedCallback(e, t, n);
-            }
-          }).observedAttributes = a.observedAttributes),
-          n);
-      for (let e = 0; e < s.length; e++) {
-        const t = s[e];
-        Object.defineProperty(d.prototype, t, {
-          set(e) {
-            const n = this.componentInstance,
-              s = n[t];
-            (n[t] = e), n.onPropChanges && n.onPropChanges(t, s, e);
-          },
-          get() {
-            return this.componentInstance[t];
-          },
-        });
-      }
-      return d;
-    }
-    let Q = (() => {
-      let e = class {
-        constructor(e, t) {
-          (this.elRef = e), (this.state = t), (this.selectedBands = []);
-        }
-        onPropChanges() {
-          this.state.setValue({ bandLimit: this.bandLimit, selectedBands: this.selectedBands });
-        }
-        onBandSelected(e, t) {
-          this.elRef.dispatchEvent(new CustomEvent('band_count_selected', { detail: t }));
-        }
-      };
-      return (
-        a(
-          [
-            function (e, t) {
-              (e.constructor.props = e.constructor.props || []), e.constructor.props.push(t);
-            },
-          ],
-          e.prototype,
-          'bandLimit',
-          void 0
-        ),
-        a(
-          [
-            function (e, t) {
-              (e.constructor.props = e.constructor.props || []), e.constructor.props.push(t);
-            },
-          ],
-          e.prototype,
-          'selectedBands',
-          void 0
-        ),
-        a([H('BAND_SELECTED')], e.prototype, 'onBandSelected', null),
-        (e = a(
-          [
-            G({
-              state: { bandLimit: 0, selectedBands: [] },
-              useShadowDom: !0,
-              render: ({ state: e, run: t }) => W`
+    };
+    n([d(a)], D.prototype, 'state', void 0),
+      (D = n(
+        [
+          l({
+            state: { bandLimit: 0, selectedBands: [] },
+            render: ({ state: e, dispatch: t }) => R`
       <style>
         :host {
           display: block;
@@ -905,52 +716,42 @@
 
       ${
         e.bandLimit
-          ? W` <button class="scale-in" @click=${t('BAND_SELECTED', 0)}>clear</button> `
-          : W`
+          ? R`
+            <button class="scale-in" @click=${t('band_count_selected', { detail: 0 })}>
+              clear
+            </button>
+          `
+          : R`
             <div class="band-buttons scale-in">
-              <button @click=${t('BAND_SELECTED', 4)}>4 Bands</button>
-              <button @click=${t('BAND_SELECTED', 5)}>5 Bands</button>
-              <button @click=${t('BAND_SELECTED', 6)}>6 Bands</button>
+              <button @click=${t('band_count_selected', { detail: 4 })}>4 Bands</button>
+              <button @click=${t('band_count_selected', { detail: 5 })}>5 Bands</button>
+              <button @click=${t('band_count_selected', { detail: 6 })}>6 Bands</button>
             </div>
           `
       }
     `,
-            }),
-            l(0, U),
-            l(1, K),
-          ],
-          e
-        )),
-        e
-      );
-    })();
-    customElements.define('select-band-count', J(Q));
-    let X = (() => {
-      let e = class {
-        constructor(e) {
-          (this.state = e), (this.bands = []);
-        }
-        onPropChanges() {
-          this.state.setValue(this.bands);
-        }
-      };
-      return (
-        a(
-          [
-            function (e, t) {
-              (e.constructor.props = e.constructor.props || []), e.constructor.props.push(t);
-            },
-          ],
-          e.prototype,
-          'bands',
-          void 0
-        ),
-        (e = a(
-          [
-            G({
-              state: [],
-              useShadowDom: !0,
-              render: ({ state: e }) => W`
+          }),
+        ],
+        D
+      )),
+      customElements.define('select-band-count', D);
+    let Y = class extends u {
+      constructor() {
+        super(), this.attachShadow({ mode: 'open' });
+      }
+      set bands(e) {
+        this.state.setValue(e);
+      }
+      get bands() {
+        return this.state.value;
+      }
+    };
+    n([d(a)], Y.prototype, 'state', void 0),
+      (Y = n(
+        [
+          l({
+            state: [],
+            render: ({ state: e }) => R`
       <style>
         :host {
           display: flex;
@@ -1014,50 +815,34 @@
       <section class="start"></section>
 
       <section class="middle">
-        ${e.map((e) => W` <div class="band" .style="background: ${e.color}"></div> `)}
+        ${e.map((e) => R` <div class="band" .style="background: ${e.color}"></div> `)}
       </section>
 
       <section class="end"></section>
     `,
-            }),
-            l(0, K),
-          ],
-          e
-        )),
-        e
-      );
-    })();
-    customElements.define('resistor-value', J(X));
-    let Z = (() => {
-      let e = class {
-        constructor(e, t) {
-          (this.elRef = e), (this.state = t), (this.bands = []);
-        }
-        onPropChanges() {
-          this.state.setValue({ bands: this.bands });
-        }
-        onBandSelected(e, t) {
-          this.elRef.dispatchEvent(new CustomEvent('band_selected', { detail: t }));
-        }
-      };
-      return (
-        a(
-          [
-            function (e, t) {
-              (e.constructor.props = e.constructor.props || []), e.constructor.props.push(t);
-            },
-          ],
-          e.prototype,
-          'bands',
-          void 0
-        ),
-        a([H('BAND_SELECTED')], e.prototype, 'onBandSelected', null),
-        (e = a(
-          [
-            G({
-              state: { bands: [] },
-              useShadowDom: !0,
-              render: ({ state: e, run: t }) => W`
+          }),
+        ],
+        Y
+      )),
+      customElements.define('resistor-value', Y);
+    let W = class extends u {
+      constructor() {
+        super(), this.attachShadow({ mode: 'open' });
+      }
+      set bands(e) {
+        this.state.setValue({ bands: e });
+      }
+      get bands() {
+        return this.state.value.bands;
+      }
+    };
+    var H;
+    n([d(a)], W.prototype, 'state', void 0),
+      (W = n(
+        [
+          l({
+            state: { bands: [] },
+            render: ({ state: e, dispatch: t }) => R`
       <style>
         :host {
           display: block;
@@ -1089,8 +874,8 @@
       </style>
 
       ${e.bands.map(
-        (e) => W`
-          <button @click=${t('BAND_SELECTED', e)}>
+        (e) => R`
+          <button @click=${t('band_selected', { detail: e })}>
             <div class="color-block" .style="background: ${e.color}"></div>
 
             <span>${e.color}</span>
@@ -1098,20 +883,11 @@
         `
       )}
     `,
-            }),
-            l(0, U),
-            l(1, K),
-          ],
-          e
-        )),
-        e
-      );
-    })();
-    var ee;
-    function te(e, t, n) {
-      s(ne)(e, t, n);
-    }
-    customElements.define('select-band-color', J(Z)),
+          }),
+        ],
+        W
+      )),
+      customElements.define('select-band-color', W),
       (function (e) {
         (e.Black = 'black'),
           (e.Brown = 'brown'),
@@ -1125,125 +901,119 @@
           (e.White = 'white'),
           (e.Gold = 'gold'),
           (e.Silver = 'silver');
-      })(ee || (ee = {}));
-    let ne = (() => {
-        let e = class {
-          constructor() {
-            this.bands = [
-              { color: ee.Black, value: 0, multiplier: 1 },
-              { color: ee.Brown, value: 1, multiplier: 10, tolerance: 1 },
-              { color: ee.Red, value: 2, multiplier: 100, tolerance: 2 },
-              { color: ee.Organge, value: 3, multiplier: 1e3 },
-              { color: ee.Yellow, value: 4, multiplier: 1e4 },
-              { color: ee.Green, value: 5, multiplier: 1e5, tolerance: 0.5 },
-              { color: ee.Blue, value: 6, multiplier: 1e6, tolerance: 0.25 },
-              { color: ee.Violet, value: 7, multiplier: 1e7, tolerance: 0.1 },
-              { color: ee.Grey, value: 8, tolerance: 0.05 },
-              { color: ee.White, value: 9 },
-              { color: ee.Gold, multiplier: 0.1, tolerance: 5 },
-              { color: ee.Silver, multiplier: 0.01, tolerance: 10 },
-            ];
-          }
-          getResistorBands() {
-            return this.bands;
-          }
-          getValueBands() {
-            return this.bands.filter((e) => void 0 !== e.value);
-          }
-          getMultiplierBands() {
-            return this.bands.filter((e) => !!e.multiplier);
-          }
-          getToleranceBands() {
-            return this.bands.filter((e) => !!e.tolerance);
-          }
-          getResistorValue(e, t) {
-            const n = e[t - 2],
-              s = e[t - 1],
-              o = this.getValue(e, t),
-              r = this.multiply(o, n),
-              i = this.getReadableValue(r);
-            return this.getTolerance(i, s);
-          }
-          getValue(e, t) {
-            return Number(e.filter((e, n) => n + 2 < t).reduce((e, t) => e + t.value, ''));
-          }
-          multiply(e, t) {
-            return t && t.multiplier ? e * t.multiplier : e;
-          }
-          getReadableValue(e) {
-            return e >= 1e6
-              ? (e / 1e6).toString() + 'M'
-              : e >= 1e3
-              ? (e / 1e3).toString() + 'K'
-              : e.toString();
-          }
-          getTolerance(e, t) {
-            return t ? e + ' ±' + t.tolerance : e;
-          }
-        };
-        return (
-          (e = a(
-            [
-              function (e) {
-                e.provideInRoot = !0;
-              },
-            ],
-            e
-          )),
-          e
-        );
-      })(),
-      se = (() => {
-        let e = class {
-          constructor(e, t) {
-            (this.resistor = e), (this.state = t);
-          }
-          connectedCallback() {
-            const e = this.resistor.getResistorBands();
-            this.state.patchValue({ bands: e });
-          }
-          onBandCountSelected(e) {
-            const t = e.detail;
-            this.state.patchValue({
+      })(H || (H = {}));
+    let I = class {
+      constructor() {
+        this.bands = [
+          { color: H.Black, value: 0, multiplier: 1 },
+          { color: H.Brown, value: 1, multiplier: 10, tolerance: 1 },
+          { color: H.Red, value: 2, multiplier: 100, tolerance: 2 },
+          { color: H.Organge, value: 3, multiplier: 1e3 },
+          { color: H.Yellow, value: 4, multiplier: 1e4 },
+          { color: H.Green, value: 5, multiplier: 1e5, tolerance: 0.5 },
+          { color: H.Blue, value: 6, multiplier: 1e6, tolerance: 0.25 },
+          { color: H.Violet, value: 7, multiplier: 1e7, tolerance: 0.1 },
+          { color: H.Grey, value: 8, tolerance: 0.05 },
+          { color: H.White, value: 9 },
+          { color: H.Gold, multiplier: 0.1, tolerance: 5 },
+          { color: H.Silver, multiplier: 0.01, tolerance: 10 },
+        ];
+      }
+      getResistorBands() {
+        return this.bands;
+      }
+      getValueBands() {
+        return this.bands.filter((e) => void 0 !== e.value);
+      }
+      getMultiplierBands() {
+        return this.bands.filter((e) => !!e.multiplier);
+      }
+      getToleranceBands() {
+        return this.bands.filter((e) => !!e.tolerance);
+      }
+      getResistorValue(e, t) {
+        const s = e[t - 2],
+          n = e[t - 1],
+          i = this.getValue(e, t),
+          r = this.multiply(i, s),
+          o = this.getReadableValue(r);
+        return this.getTolerance(o, n);
+      }
+      getValue(e, t) {
+        return Number(e.filter((e, s) => s + 2 < t).reduce((e, t) => e + t.value, ''));
+      }
+      multiply(e, t) {
+        return t && t.multiplier ? e * t.multiplier : e;
+      }
+      getReadableValue(e) {
+        return e >= 1e6
+          ? (e / 1e6).toString() + 'M'
+          : e >= 1e3
+          ? (e / 1e3).toString() + 'K'
+          : e.toString();
+      }
+      getTolerance(e, t) {
+        return t ? e + ' ±' + t.tolerance : e;
+      }
+    };
+    I = n(
+      [
+        function (e) {
+          e.provideInRoot = !0;
+        },
+      ],
+      I
+    );
+    let G = class extends u {
+      constructor() {
+        super(), this.attachShadow({ mode: 'open' });
+      }
+      connectedCallback() {
+        const e = this.resistor.getResistorBands();
+        this.state.patchValue({ bands: e });
+      }
+      onBandCountSelected(e) {
+        const t = e.detail;
+        this.state.patchValue({
+          selectedBands: [],
+          resistorValue: void 0,
+          bandLimit: t,
+          displayColors: t > 0,
+          availableBands: this.getAvailableBands([], t),
+        });
+      }
+      onBandSelected(e) {
+        if (this.state.value.selectedBands.length >= this.state.value.bandLimit) return;
+        const t = [...this.state.value.selectedBands, e.detail];
+        this.state.patchValue({
+          selectedBands: t,
+          availableBands: this.getAvailableBands(t, this.state.value.bandLimit),
+          resistorValue: this.resistor.getResistorValue(t, this.state.value.bandLimit),
+        });
+      }
+      getAvailableBands(e, t) {
+        return e.length + 1 === t - 1
+          ? this.resistor.getMultiplierBands()
+          : e.length + 1 === t
+          ? this.resistor.getToleranceBands()
+          : this.resistor.getValueBands();
+      }
+    };
+    n([d(a)], G.prototype, 'state', void 0),
+      n([d(I)], G.prototype, 'resistor', void 0),
+      n([c('BAND_COUNT_SELECTED')], G.prototype, 'onBandCountSelected', null),
+      n([c('BAND_SELECTED')], G.prototype, 'onBandSelected', null),
+      (G = n(
+        [
+          l({
+            state: {
+              bandLimit: 0,
+              bands: [],
               selectedBands: [],
-              resistorValue: void 0,
-              bandLimit: t,
-              displayColors: t > 0,
-              availableBands: this.getAvailableBands([], t),
-            });
-          }
-          onBandSelected(e) {
-            if (this.state.value.selectedBands.length >= this.state.value.bandLimit) return;
-            const t = [...this.state.value.selectedBands, e.detail];
-            this.state.patchValue({
-              selectedBands: t,
-              availableBands: this.getAvailableBands(t, this.state.value.bandLimit),
-              resistorValue: this.resistor.getResistorValue(t, this.state.value.bandLimit),
-            });
-          }
-          getAvailableBands(e, t) {
-            return e.length + 1 === t - 1
-              ? this.resistor.getMultiplierBands()
-              : e.length + 1 === t
-              ? this.resistor.getToleranceBands()
-              : this.resistor.getValueBands();
-          }
-        };
-        return (
-          a([H('BAND_COUNT_SELECTED')], e.prototype, 'onBandCountSelected', null),
-          a([H('BAND_SELECTED')], e.prototype, 'onBandSelected', null),
-          (e = a(
-            [
-              G({
-                state: {
-                  bandLimit: 0,
-                  bands: [],
-                  selectedBands: [],
-                  availableBands: [],
-                  displayColors: !1,
-                },
-                useShadowDom: !0,
-                render: ({ state: e, run: t }) => W`
+              availableBands: [],
+              displayColors: !1,
+            },
+            render: ({ state: e, run: t }) => R`
       <style>
         select-band-color {
           position: absolute;
@@ -1304,9 +1074,9 @@
         ${
           e.displayColors
             ? e.selectedBands.length < e.bandLimit
-              ? W` <span>${e.selectedBands.length}/${e.bandLimit} Bands</span> `
-              : W` <span>${e.resistorValue} &#8486;</span> `
-            : W` <span>Select Resistor Bands</span> `
+              ? R` <span>${e.selectedBands.length}/${e.bandLimit} Bands</span> `
+              : R` <span>${e.resistorValue} &#8486;</span> `
+            : R` <span>Select Resistor Bands</span> `
         }
       </div>
 
@@ -1324,16 +1094,11 @@
         @band_selected=${t('BAND_SELECTED')}
       ></select-band-color>
     `,
-              }),
-              l(0, te),
-              l(1, K),
-            ],
-            e
-          )),
-          e
-        );
-      })();
-    customElements.define('app-root', J(se)),
+          }),
+        ],
+        G
+      )),
+      customElements.define('app-root', G),
       navigator.serviceWorker.register('/service-worker.js').then(
         function (e) {
           console.log('ServiceWorker registration successful with scope: ', e.scope);

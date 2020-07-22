@@ -1,7 +1,7 @@
-import './todo-form.component';
-
-import { TodoFormElement } from './todo-form.element';
 import { Injector } from '@joist/di';
+
+import './todo-form.element';
+import { TodoFormElement } from './todo-form.element';
 
 describe('TodoFormElement', () => {
   let el: TodoFormElement;
@@ -19,10 +19,8 @@ describe('TodoFormElement', () => {
   });
 
   it('should dispatch the correct value', (done) => {
-    const root = el.shadowRoot!;
-
-    const input = root.querySelector('input') as HTMLInputElement;
-    const submit = root.querySelector('button') as HTMLButtonElement;
+    const input = el.querySelector('input') as HTMLInputElement;
+    const submit = el.querySelector('button') as HTMLButtonElement;
 
     input.value = 'Hello World';
 

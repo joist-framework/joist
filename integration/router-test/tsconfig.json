@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
-    "module": "esnext",
     "types": ["node"],
-    "typeRoots": [],
-    "declaration": false,
-    "sourceMap": true
+    "declaration": false
   }
 }

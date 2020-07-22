@@ -1,44 +1,34 @@
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { join } = require('path');
 
-const plugins = [
-  new CleanWebpackPlugin(),
-  new CopyPlugin([{ from: './src/index.html', to: './index.html' }])
-];
-
-const performance = {};
-
-if (process.env.NODE_ENV === 'production') {
-  plugins.push(new CompressionPlugin());
-  performance.hints = 'error';
-  performance.maxEntrypointSize = 30000;
-}
-
-module.exports = {
-  mode: process.env.NODE_ENV || 'development',
+const config = {
+  mode: 'development',
   entry: {
-    main: './src/main.ts'
+    main: './src/main.ts',
   },
   module: {
-    rules: [{ test: /\.ts?$/, use: 'ts-loader', exclude: /node_modules/ }]
+    rules: [{ test: /\.ts?$/, use: 'ts-loader', exclude: /node_modules/ }],
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
   },
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: join(__dirname, 'public/target'),
   },
-  devServer: {
-    historyApiFallback: true
-  },
-  optimization: {
-    minimizer: [new TerserPlugin({ terserOptions: { output: { comments: false } } })]
-  },
-  plugins,
-  performance
+  plugins: [],
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
+  }
+
+  return config;
 };

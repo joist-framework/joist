@@ -1,6 +1,6 @@
-const { resolve } = require('path');
+const { join } = require('path');
 
-module.exports = {
+const config = {
   mode: 'development',
   entry: {
     main: './src/main.js',
@@ -8,6 +8,20 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    path: resolve(__dirname, 'public/target'),
+    path: join(__dirname, 'public/target'),
   },
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
+  }
+
+  return config;
 };

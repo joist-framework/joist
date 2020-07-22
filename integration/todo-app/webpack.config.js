@@ -1,6 +1,7 @@
 const { join } = require('path');
 
 const config = {
+  mode: 'development',
   entry: {
     main: './src/main.ts',
   },
@@ -24,15 +25,13 @@ module.exports = (_env, argv) => {
 
     config.devServer = {
       contentBase: join(__dirname, 'public'),
-      compress: true,
-      port: 9000,
       historyApiFallback: true,
       writeToDisk: true,
     };
   }
 
   if (argv.mode === 'production') {
-    config.performance = { hints: 'error', maxEntrypointSize: 30000 };
+    config.performance = { hints: 'error', maxEntrypointSize: 21000 };
   }
 
   return config;

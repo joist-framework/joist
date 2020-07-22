@@ -285,7 +285,7 @@ import { html } from 'lit-html';
 @Component({
   render: template(({ state, run, dispatch }) => {
     return html`
-      <button @click=${dispatch('FIRST')}>First</button>
+      <button @click=${dispatch('FIRST_EVENT')}>First</button>
 
       <button @click=${run('SECOND')}>Second</button>
     `
@@ -301,6 +301,8 @@ class AppElement extends JoistElement {
 ### Testing
 
 ```TS
+import { Injector } from '@joist/di';
+
 import { AppElement } from './app.element';
 
 describe('AppElement', () => {
