@@ -11,10 +11,6 @@ export interface TodoCardState {
 @Component<TodoCardState>({
   state: {},
   render: template(({ state, dispatch }) => {
-    if (!state.todo) {
-      return html``;
-    }
-
     return html`
       <style>
         :host {
@@ -47,15 +43,17 @@ export interface TodoCardState {
         }
       </style>
 
-      <div class="container ${state.todo.isComplete ? 'complete' : ''}">
-        <span class="todo-name">${state.todo.name}</span>
+      ${state.todo
+        ? html`<div class="container ${state.todo.isComplete ? 'complete' : ''}">
+            <span class="todo-name">${state.todo.name}</span>
 
-        <button @click=${dispatch(state.todo.isComplete ? 'undo_complete' : 'complete_todo')}>
-          ${state.todo.isComplete ? 'UNDO' : 'COMPLETE'}
-        </button>
+            <button @click=${dispatch(state.todo.isComplete ? 'undo_complete' : 'complete_todo')}>
+              ${state.todo.isComplete ? 'UNDO' : 'COMPLETE'}
+            </button>
 
-        <button @click=${dispatch('remove_todo')}>REMOVE</button>
-      </div>
+            <button @click=${dispatch('remove_todo')}>REMOVE</button>
+          </div>`
+        : ''}
     `;
   }),
 })

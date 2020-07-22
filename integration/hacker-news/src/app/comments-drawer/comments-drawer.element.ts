@@ -82,7 +82,8 @@ export interface CommentsDrawerState {
   }),
 })
 export class CommentsDrawerElement extends JoistElement {
-  @Get(State) private state!: State<CommentsDrawerState>;
+  @Get(State)
+  private state!: State<CommentsDrawerState>;
 
   constructor() {
     super();

@@ -3,7 +3,8 @@ import { JoistElement, OnConnected, OnDisconnected, Get } from '@joist/component
 import { Router } from '../router';
 
 export class RouterLinkElement extends JoistElement implements OnConnected, OnDisconnected {
-  @Get(Router) private router!: Router;
+  @Get(Router)
+  private router!: Router;
 
   path: string = this.getAttribute('path') || '';
   pathMatch: string = this.getAttribute('path-match') || 'startsWith';

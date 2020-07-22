@@ -1,12 +1,4 @@
-import {
-  Component,
-  State,
-  OnConnected,
-  OnDisconnected,
-  OnPropChanges,
-  JoistElement,
-  Get,
-} from '@joist/component';
+import { Component, State, OnConnected, OnDisconnected, JoistElement, Get } from '@joist/component';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
 import { Route, Router, RouteCtx } from '../router';
@@ -16,7 +8,7 @@ export interface RouterOutletState {
   activeRoute?: Route;
 }
 
-type RouterOutletLifeCycle = OnConnected & OnDisconnected & OnPropChanges;
+type RouterOutletLifeCycle = OnConnected & OnDisconnected;
 
 @Component<RouterOutletState>({
   state: {},
@@ -72,12 +64,6 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
     }
   }
 
-  onPropChanges() {
-    this.matchers = this.routes.map((route) => this.router.match(route.path));
-
-    this.check();
-  }
-
   private check(): Promise<void> {
     const fragment = this.router.getFragment();
 
@@ -108,17 +94,17 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
 
   private resolve(activeRoute: Route, ctx: MatchResult<object>) {
     return Promise.resolve(activeRoute.component()).then((element) => {
-      // Only set route context if the HTMLElement has a lit kit injector attached
-      if ('componentInjector' in element) {
-        const joistElement = element as JoistElement;
+      const state = this.state.setValue({ element, activeRoute });
 
-        return joistElement.injector
-          .get(RouteCtx)
-          .setValue(ctx)
-          .then(() => this.state.setValue({ element, activeRoute }));
+      // Only set route context if the HTMLElement has am injector attached
+      if ('injector' in element) {
+        const joistElement = element as JoistElement;
+        const routeCtx = joistElement.injector.get(RouteCtx);
+
+        return routeCtx.setValue(ctx).then(() => state);
       }
 
-      return this.state.setValue({ element, activeRoute });
+      return state;
     });
   }
 }
