@@ -78,6 +78,7 @@ class BarService {
     return this.foo.sayHello();
   }
 }
+
 class AppElement extends JoistComponent {
   @Get(MyService)
   private myService!: MyService;
