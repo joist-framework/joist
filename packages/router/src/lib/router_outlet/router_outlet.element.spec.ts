@@ -1,4 +1,4 @@
-import { State, JoistElement } from '@joist/component';
+import { State, JoistElement, Component } from '@joist/component';
 import { Injector } from '@joist/di';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
@@ -7,13 +7,16 @@ import { Route } from '../router';
 describe('RouterOutletComponent', () => {
   let el: RouterOutletElement;
 
-  customElements.define(
-    'router-outlet-component-1',
-    class extends JoistElement {
-      foo: string = 'Hello World';
-    }
-  );
+  @Component({
+    render({ host }) {
+      host.innerHTML = 'Hello World';
+    },
+  })
+  class TestElement extends JoistElement {
+    foo: string = 'Hello World';
+  }
 
+  customElements.define('router-outlet-component-1', TestElement);
   customElements.define('router-outlet', RouterOutletElement);
 
   beforeEach(() => {
@@ -43,6 +46,7 @@ describe('RouterOutletComponent', () => {
     const removeListener = state.onChange((val) => {
       expect(val.element!.tagName).toBe('ROUTER-OUTLET-COMPONENT-1');
       expect(val.element!.foo).toBe('Hello World');
+      expect(val.element!.innerHTML).toBe('Hello World');
 
       removeListener();
       done();
