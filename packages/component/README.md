@@ -84,6 +84,8 @@ class AppElement extends JoistComponent {
   private myService!: MyService;
 
   connectedCallback() {
+    super.connectedCallback();
+    
     console.log(this.myService.sayHello());
   }
 }
