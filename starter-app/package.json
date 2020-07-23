@@ -1,6 +1,6 @@
 {
   "name": "joist-start-app",
-  "version": "1.0.0-alpha.19",
+  "version": "1.0.0-alpha.20",
   "description": "Joist starter app",
   "private": true,
   "scripts": {
@@ -15,9 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/component": "^1.0.0-alpha.19",
-    "@joist/di": "^1.0.0-alpha.19",
-    "@joist/router": "^1.0.0-alpha.19",
+    "@joist/component": "^1.0.0-alpha.20",
+    "@joist/di": "^1.0.0-alpha.20",
+    "@joist/router": "^1.0.0-alpha.20",
     "lit-html": "^1.2.1",
     "tslib": "^2.0.0"
   },
