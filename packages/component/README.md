@@ -234,10 +234,6 @@ class AppElement extends JoistElement {
   set title(value: string) {
     this.state.setValue(value);
   }
-
-  get title(): string {
-    return this.state.value.title;
-  }
 }
 ```
 
