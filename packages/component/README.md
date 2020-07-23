@@ -333,3 +333,35 @@ describe('AppElement', () => {
   });
 });
 ```
+
+### Use with LitElement
+
+If you want to use the Joist DI system by don't want to use JoistElement it is easy enough to into something like LitElement.
+
+```TS
+import { InjectorBase, getEnvironmentRef, Get } from '@joist/component';
+import { Injector, Service } from '@joist/di';
+import { LitElement, html, property, customElement } from 'lit-element';
+
+class LitElementDi extends LitElement implements InjectorBase {
+  public injector = new Injector({}, getEnvironmentRef());
+}
+
+@Service()
+class FooService {
+  sayHello(name: string) {
+    return `Hello, ${name}`;
+  }
+}
+
+@customElement('simple-greeting')
+export class SimpleGreeting extends LitElementDi {
+  @Get(FooService) private foo: FooService;
+  
+  @property() name = 'World';
+
+  render() {
+    return html`<p>${this.foo.sayHello(this.name)}!</p>`;
+  }
+}
+```
