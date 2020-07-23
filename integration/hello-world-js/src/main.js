@@ -27,6 +27,8 @@ class AppElement extends JoistElement {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+    
     this.state.setValue('Hello World');
   }
 
