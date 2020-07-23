@@ -1,0 +1,41 @@
+const { join } = require('path');
+const { GenerateSW } = require('workbox-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
+const config = {
+  mode: 'development',
+  entry: {
+    main: './src/main.ts',
+  },
+  module: {
+    rules: [{ test: /\.ts?$/, use: 'ts-loader', exclude: /node_modules/ }],
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+    plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
+  },
+  output: {
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
+    path: join(__dirname, 'public/target'),
+  },
+  plugins: [],
+};
+
+module.exports = (_env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+
+    config.devServer = {
+      contentBase: join(__dirname, 'public'),
+      historyApiFallback: true,
+      writeToDisk: true,
+    };
+  }
+
+  if (argv.mode === 'production') {
+    config.plugins.push(new GenerateSW());
+  }
+
+  return config;
+};

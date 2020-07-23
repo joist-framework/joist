@@ -5,7 +5,7 @@
   "module": "target/main.js",
   "files": [
     "target",
-    "template/package.json",
+    "lit-html/package.json",
     "extras/package.json"
   ],
   "sideEffects": false,

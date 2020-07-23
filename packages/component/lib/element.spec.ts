@@ -64,7 +64,7 @@ describe('JoistElement', () => {
       }
 
       @Component({
-        providers: [{ provide: MyService, use: MyService }],
+        providers: [{ provide: MyService, use: class extends MyService {} }],
       })
       class MyElement extends JoistElement {
         @Get(MyService) public service!: MyService;
@@ -154,7 +154,7 @@ describe('JoistElement', () => {
       button.click();
     });
 
-    it('should let one function handle multiple events', (done) => {
+    it('should let one function handle multiple actions', (done) => {
       let doneCounter = 0;
 
       @Component({

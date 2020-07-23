@@ -1,5 +1,5 @@
 {
-  "packages": ["integration/*", "packages/*"],
+  "packages": ["integration/*", "packages/*", "starter-app"],
   "version": "1.0.0-alpha.19",
   "command": {
     "publish": {
