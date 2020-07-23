@@ -18,8 +18,8 @@
     "@joist/component": "^1.0.0-alpha.20",
     "@joist/di": "^1.0.0-alpha.20",
     "@joist/router": "^1.0.0-alpha.20",
-    "lit-html": "^1.2.1",
-    "tslib": "^2.0.0"
+    "lit-html": "1.2.1",
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.11",
