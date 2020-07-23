@@ -4,7 +4,13 @@ describe('Service', () => {
   @Service()
   class A {}
 
-  it('servie provideInRoot should be true', () => {
+  class B {}
+
+  it('should be provided in root', () => {
     expect(isProvidedInRoot(A)).toBe(true);
+  });
+
+  it('should NOT be provided in root', () => {
+    expect(isProvidedInRoot(B)).toBe(false);
   });
 });

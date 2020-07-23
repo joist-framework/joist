@@ -1,5 +1,5 @@
-import { Service } from '@joist/di';
 import { State } from '@joist/component';
+import { Service } from '@joist/di';
 import { match, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {

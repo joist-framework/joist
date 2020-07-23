@@ -153,5 +153,46 @@ describe('JoistElement', () => {
 
       button.click();
     });
+
+    it('should let one function handle multiple events', (done) => {
+      let doneCounter = 0;
+
+      @Component({
+        render({ run, host }) {
+          const button = document.createElement('button');
+
+          button.onclick = (e) => {
+            run('FOO', 'Hello World')(e);
+            run('BAR', 'Hello World')(e);
+          };
+
+          host.append(button);
+        },
+      })
+      class MyElement extends JoistElement {
+        @Handle('FOO')
+        @Handle('BAR')
+        onTestRun(e: Event, payload: string) {
+          expect(e instanceof Event).toBe(true);
+          expect(payload).toBe('Hello World');
+
+          doneCounter++;
+
+          if (doneCounter === 2) {
+            done();
+          }
+        }
+      }
+
+      customElements.define('handlers-3', MyElement);
+
+      const el = document.createElement('handlers-3') as MyElement;
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+    });
   });
 });

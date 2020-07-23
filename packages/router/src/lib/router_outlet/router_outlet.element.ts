@@ -1,4 +1,13 @@
-import { Component, State, OnConnected, OnDisconnected, JoistElement, Get } from '@joist/component';
+import {
+  Component,
+  State,
+  OnConnected,
+  OnDisconnected,
+  JoistElement,
+  Get,
+  InjectorBase,
+} from '@joist/component';
+import { Injector } from '@joist/di';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
 import { Route, Router, RouteCtx } from '../router';
@@ -7,8 +16,6 @@ export interface RouterOutletState {
   element?: HTMLElement & { [key: string]: any };
   activeRoute?: Route;
 }
-
-type RouterOutletLifeCycle = OnConnected & OnDisconnected;
 
 @Component<RouterOutletState>({
   state: {},
@@ -26,7 +33,7 @@ type RouterOutletLifeCycle = OnConnected & OnDisconnected;
     }
   },
 })
-export class RouterOutletElement extends JoistElement implements RouterOutletLifeCycle {
+export class RouterOutletElement extends JoistElement implements OnConnected, OnDisconnected {
   @Get(State)
   private state!: State<RouterOutletState>;
 
@@ -92,16 +99,19 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
     return this.state.setValue({});
   }
 
-  private resolve(activeRoute: Route, ctx: MatchResult<object>) {
+  private resolve(activeRoute: Route, ctx: MatchResult<object>): Promise<void> {
     return Promise.resolve(activeRoute.component()).then((element) => {
       const state = this.state.setValue({ element, activeRoute });
 
       // Only set route context if the HTMLElement has am injector attached
       if ('injector' in element) {
-        const joistElement = element as JoistElement;
-        const routeCtx = joistElement.injector.get(RouteCtx);
+        const injectorBase = element as InjectorBase;
 
-        return routeCtx.setValue(ctx).then(() => state);
+        if (injectorBase.injector instanceof Injector) {
+          const routeCtx = injectorBase.injector.get(RouteCtx);
+
+          return routeCtx.setValue(ctx).then(() => state);
+        }
       }
 
       return state;
