@@ -67,7 +67,8 @@ describe('JoistElement', () => {
         providers: [{ provide: MyService, use: class extends MyService {} }],
       })
       class MyElement extends JoistElement {
-        @Get(MyService) public service!: MyService;
+        @Get(MyService)
+        public service!: MyService;
       }
 
       customElements.define('di-2', MyElement);
@@ -81,7 +82,7 @@ describe('JoistElement', () => {
   });
 
   describe('handlers', () => {
-    it('should call a function if the trigger is mapped to a class method', (done) => {
+    it('should call a function if the trigger is mapped to a class method', () => {
       @Component({
         render({ run, host }) {
           const button = document.createElement('button');
@@ -92,28 +93,26 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
-          expect(e instanceof Event).toBe(true);
-          expect(payload).toBe('Hello World');
-
-          done();
-        }
+        @Handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
       }
 
       customElements.define('handlers-1', MyElement);
 
-      const el = document.createElement('handlers-1') as JoistElement;
+      const el = document.createElement('handlers-1') as MyElement;
+
+      spyOn(el, 'onTestRun');
 
       el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
       button.click();
+
+      expect(el.onTestRun).toHaveBeenCalledTimes(1);
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'Hello World');
     });
 
-    it('should handle multiple functions', (done) => {
-      let doneCounter = 0;
-
+    it('should handle multiple functions', () => {
       @Component({
         render({ run, host }) {
           const button = document.createElement('button');
@@ -124,47 +123,34 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @Handle('TEST_RUN') onTestRun(e: Event, payload: string) {
-          expect(e instanceof Event).toBe(true);
-          expect(payload).toBe('Hello World');
-
-          doneCounter++;
-        }
-
-        @Handle('TEST_RUN') onTestRun2(e: Event, payload: string) {
-          expect(e instanceof Event).toBe(true);
-          expect(payload).toBe('Hello World');
-
-          doneCounter++;
-
-          expect(doneCounter).toBe(2);
-
-          done();
-        }
+        @Handle('TEST_RUN') onTestRun() {}
+        @Handle('TEST_RUN') onTestRun2() {}
       }
 
       customElements.define('handlers-2', MyElement);
 
       const el = document.createElement('handlers-2') as MyElement;
 
+      spyOn(el, 'onTestRun');
+      spyOn(el, 'onTestRun2');
+
       el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
       button.click();
+
+      expect(el.onTestRun).toHaveBeenCalledTimes(1);
+      expect(el.onTestRun2).toHaveBeenCalledTimes(1);
     });
 
-    it('should let one function handle multiple actions', (done) => {
-      let doneCounter = 0;
-
+    it('should let one function handle multiple actions', () => {
       @Component({
         render({ run, host }) {
           const button = document.createElement('button');
 
-          button.onclick = (e) => {
-            run('FOO', 'Hello World')(e);
-            run('BAR', 'Hello World')(e);
-          };
+          button.addEventListener('click', run('FOO', 'foo'));
+          button.addEventListener('click', run('BAR', 'bar'));
 
           host.append(button);
         },
@@ -172,27 +158,24 @@ describe('JoistElement', () => {
       class MyElement extends JoistElement {
         @Handle('FOO')
         @Handle('BAR')
-        onTestRun(e: Event, payload: string) {
-          expect(e instanceof Event).toBe(true);
-          expect(payload).toBe('Hello World');
-
-          doneCounter++;
-
-          if (doneCounter === 2) {
-            done();
-          }
-        }
+        onTestRun(_e: Event, _payload: string) {}
       }
 
       customElements.define('handlers-3', MyElement);
 
       const el = document.createElement('handlers-3') as MyElement;
 
+      spyOn(el, 'onTestRun');
+
       el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
       button.click();
+
+      expect(el.onTestRun).toHaveBeenCalledTimes(2);
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo');
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar');
     });
   });
 });
