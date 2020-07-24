@@ -21,7 +21,7 @@ describe('JoistElement', () => {
     }
 
     it('should update the view when state is updated', async () => {
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = new MyElement();
 
       el.connectedCallback();
 
@@ -49,7 +49,7 @@ describe('JoistElement', () => {
         @Get(MyService) public service!: MyService;
       }
 
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = new MyElement();
 
       expect(el.injector.get(MyService)).toBe(el.service);
       expect(el.service.helloWorld()).toBe('Hello World');
@@ -72,7 +72,7 @@ describe('JoistElement', () => {
         public service!: MyService;
       }
 
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = new MyElement();
 
       expect(getEnvironmentRef().get(MyService)).not.toBe(el.service);
 
@@ -98,7 +98,7 @@ describe('JoistElement', () => {
         public service!: MyService;
       }
 
-      const el = Reflect.construct(MyElement, []) as MyElement;
+      const el = new MyElement();
 
       expect(el.service).toBe(parent.get(MyService));
     });

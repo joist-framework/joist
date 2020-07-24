@@ -10,16 +10,13 @@ describe('testing', () => {
       }
     }
 
-    const environment = defineTestEnvironment([
-      {
-        provide: MyService,
-        use: class implements MyService {
-          sayHello() {
-            return 'GOTCHA!';
-          }
-        },
-      },
-    ]);
+    class MyMockService implements MyService {
+      sayHello() {
+        return 'GOTCHA!';
+      }
+    }
+
+    const environment = defineTestEnvironment([{ provide: MyService, use: MyMockService }]);
 
     @Component({
       tagName: 'testing-1',
@@ -29,8 +26,10 @@ describe('testing', () => {
       public service!: MyService;
     }
 
-    const el = environment.create(MyElement);
+    const el = new MyElement();
+    const testingEl = environment.create(MyElement);
 
-    expect(el.service.sayHello()).toBe('GOTCHA!');
+    expect(el.service.sayHello()).toBe('Hello World');
+    expect(testingEl.service.sayHello()).toBe('GOTCHA!');
   });
 });
