@@ -1,5 +1,4 @@
 import { Service, Injector } from '@joist/di';
-import { defineTestEnvironment } from '@joist/component/testing';
 
 import { JoistElement, Get } from './element';
 import { Component } from './component';
@@ -120,7 +119,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
       }
 
-      const el = defineTestEnvironment().create(MyElement);
+      const el = new MyElement();
 
       spyOn(el, 'onTestRun');
 
@@ -150,7 +149,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun2() {}
       }
 
-      const el = defineTestEnvironment().create(MyElement);
+      const el = new MyElement();
 
       spyOn(el, 'onTestRun');
       spyOn(el, 'onTestRun2');
@@ -183,7 +182,7 @@ describe('JoistElement', () => {
         onTestRun(_e: Event, _payload: string) {}
       }
 
-      const el = defineTestEnvironment().create(MyElement);
+      const el = new MyElement();
 
       spyOn(el, 'onTestRun');
 

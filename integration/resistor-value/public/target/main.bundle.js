@@ -76,7 +76,11 @@
           this.opts.bootstrap && this.opts.bootstrap.forEach((e) => this.get(e));
       }
       has(e) {
-        return !!this.providerMap.has(e) || (!!this.parent && this.parent.has(e));
+        return (
+          !!this.providerMap.has(e) ||
+          !!this.findProvider(e) ||
+          (!!this.parent && this.parent.has(e))
+        );
       }
       get(e) {
         if (this.providerMap.has(e)) return this.providerMap.get(e);
@@ -183,7 +187,7 @@
             ]),
             bootstrap: t.map((e) => e.provide),
           },
-          this.componentDef.root || o()
+          this.componentDef.parent || o()
         )),
           this.componentDef.shadowDom && this.attachShadow({ mode: this.componentDef.shadowDom });
       }
@@ -519,18 +523,18 @@
       }
     }
     class M extends $ {}
-    let A = !1;
+    let P = !1;
     (() => {
       try {
         const e = {
           get capture() {
-            return (A = !0), !1;
+            return (P = !0), !1;
           },
         };
         window.addEventListener('test', e, e), window.removeEventListener('test', e, e);
       } catch (e) {}
     })();
-    class D {
+    class A {
       constructor(e, t, s) {
         (this.value = void 0),
           (this.__pendingValue = void 0),
@@ -558,7 +562,7 @@
         s &&
           this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options),
           n &&
-            ((this.__options = P(e)),
+            ((this.__options = D(e)),
             this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)),
           (this.value = e),
           (this.__pendingValue = v);
@@ -569,8 +573,8 @@
           : this.value.handleEvent(e);
       }
     }
-    const P = (e) =>
-      e && (A ? { capture: e.capture, passive: e.passive, once: e.once } : e.capture);
+    const D = (e) =>
+      e && (P ? { capture: e.capture, passive: e.passive, once: e.once } : e.capture);
     /**
      * @license
      * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -589,7 +593,7 @@
         if ('.' === i) {
           return new C(e, t.slice(1), s).parts;
         }
-        if ('@' === i) return [new D(e, t.slice(1), n.eventContext)];
+        if ('@' === i) return [new A(e, t.slice(1), n.eventContext)];
         if ('?' === i) return [new L(e, t.slice(1), s)];
         return new S(e, t, s).parts;
       }

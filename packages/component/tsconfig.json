@@ -5,9 +5,11 @@
     "baseUrl": "./",
     "paths": {
       "@joist/component": ["main.ts"],
+      "@joist/component/extras": ["extras/ain.ts"],
+      "@joist/component/lit-html": ["lit-html/main.ts"],
       "lit-html": ["../../node_modules/lit-html/lit-html"]
     }
   },
   "files": ["test.ts", "main.ts"],
-  "include": ["lib", "lit-html", "extras", "testing"]
+  "include": ["lib", "lit-html", "extras"]
 }

@@ -331,17 +331,15 @@ describe('AppElement', () => {
 });
 ```
 
-If you want to make use of mock providers you can use the supplied testing library.
+If you want to make use of mock providers you can manually bootstrap your environment.
 
 ```TS
-import { defineTestEnvironment, TestEnvironment } from '@joist/component/testing';
+import { bootstrapEnvironment, clearEnvironment } from '@joist/component';
 
 import { AppElement } from './app.element';
 import { MyService } from './my.service'
 
 describe('AppElement', () => {
-  let environment: TestEnvironment;
-
   class MockMyService implements MyService {
     sayHello() {
       return 'GOTCHA!';
@@ -349,14 +347,15 @@ describe('AppElement', () => {
   }
 
   beforeEach(() => {
-    // Any component created with this factory will use the defined services
-    environment = defineTestEnvironment([
-      { provide: MyService, use: MockMyService }
-    ]);
-  })
+    bootstrapEnvironment([{ provide: MyService, use: MockMyService }]);
+  });
+
+  afterEach(() => {
+    clearEnvironment();
+  });
 
   it('should work', () => {
-    const el = environment.create(MyElement);
+    const el = new AppElement();
 
     expect(el.service.sayHello()).toBe('GOTCHA!');
   });
