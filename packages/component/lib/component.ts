@@ -17,7 +17,7 @@ export interface ComponentDef<T> {
   render?: RenderDef<T>;
   state?: T;
   providers?: Provider<any>[];
-  root?: Injector;
+  parent?: Injector;
 }
 
 export function getComponentDef<T>(provider: any): ComponentDef<T> {

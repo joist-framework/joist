@@ -29,6 +29,8 @@ export class Injector {
   has(token: ProviderToken<any>): boolean {
     if (this.providerMap.has(token)) {
       return true;
+    } else if (this.findProvider(token)) {
+      return true;
     } else if (this.parent) {
       return this.parent.has(token);
     }

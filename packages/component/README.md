@@ -313,33 +313,55 @@ class AppElement extends JoistElement {
 
 ### Testing
 
-```TS
-import { Injector } from '@joist/di';
+The simplest way to test your components is to just create a new instance using `document.createElement`
 
+```TS
 import { AppElement } from './app.element';
 
 describe('AppElement', () => {
   let el: AppElement;
 
-  customElements.define('test-app-component-1', AppElement);
-
   beforeEach(() => {
-    el = document.createElement('test-app-component-1') as AppElement;
-
-    // Since a components injected services are resolved lazily you can add your own injector root for testing
-    el.injector.parent = new Injector();
-
-    document.body.appendChild(el);
+    el = document.createElement('app-root') as AppElement;
   });
-
-  afterEach(() => {
-    document.body.removeChild(el);
-  }))
 
   it('should work', () => {
     expect(el).toBeTruthy();
   });
 });
+```
+
+If you want to make use of mock providers you can use the supplied testing library.
+
+```TS
+import { defineTestEnvironment, TestEnvironment } from '@joist/component/testing';
+
+import { AppElement } from './app.element';
+import { MyService } from './my.service'
+
+describe('AppElement', () => {
+  let environment: TestEnvironment;
+
+  class MockMyService implements MyService {
+    sayHello() {
+      return 'GOTCHA!';
+    }
+  }
+
+  beforeEach(() => {
+    // Any component created with this factory will use the defined services
+    environment = defineTestEnvironment([
+      { provide: MyService, use: MockMyService }
+    ]);
+  })
+
+  it('should work', () => {
+    const el = environment.create(MyElement);
+
+    expect(el.service.sayHello()).toBe('GOTCHA!');
+  });
+});
+
 ```
 
 ### Use with LitElement

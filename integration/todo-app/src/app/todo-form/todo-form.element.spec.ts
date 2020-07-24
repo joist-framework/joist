@@ -1,4 +1,4 @@
-import { Injector } from '@joist/di';
+import { defineTestEnvironment } from '@joist/component/testing';
 
 import './todo-form.element';
 import { TodoFormElement } from './todo-form.element';
@@ -7,9 +7,7 @@ describe('TodoFormElement', () => {
   let el: TodoFormElement;
 
   beforeEach(() => {
-    el = document.createElement('todo-form') as TodoFormElement;
-
-    el.injector.parent = new Injector();
+    el = defineTestEnvironment().create(TodoFormElement);
 
     document.body.appendChild(el);
   });

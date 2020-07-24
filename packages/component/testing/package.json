@@ -1,0 +1,4 @@
+{
+  "main": "../target/testing/main.js",
+  "module": "../target/testing/main.js"
+}

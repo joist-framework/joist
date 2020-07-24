@@ -1,4 +1,5 @@
-import { Service } from '@joist/di';
+import { Service, Injector } from '@joist/di';
+import { defineTestEnvironment } from '@joist/component/testing';
 
 import { JoistElement, Get } from './element';
 import { Component } from './component';
@@ -77,6 +78,30 @@ describe('JoistElement', () => {
 
       clearEnvironment();
     });
+
+    it('should use the passed in parent injector instead of the default environment', () => {
+      const parent = new Injector();
+
+      @Service()
+      class MyService {
+        sayHello() {
+          return 'Hello World';
+        }
+      }
+
+      @Component({
+        tagName: 'di-3',
+        parent,
+      })
+      class MyElement extends JoistElement {
+        @Get(MyService)
+        public service!: MyService;
+      }
+
+      const el = Reflect.construct(MyElement, []) as MyElement;
+
+      expect(el.service).toBe(parent.get(MyService));
+    });
   });
 
   describe('handlers', () => {
@@ -95,7 +120,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
       }
 
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = defineTestEnvironment().create(MyElement);
 
       spyOn(el, 'onTestRun');
 
@@ -125,7 +150,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun2() {}
       }
 
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = defineTestEnvironment().create(MyElement);
 
       spyOn(el, 'onTestRun');
       spyOn(el, 'onTestRun2');
@@ -158,7 +183,7 @@ describe('JoistElement', () => {
         onTestRun(_e: Event, _payload: string) {}
       }
 
-      const el: MyElement = Reflect.construct(MyElement, []);
+      const el = defineTestEnvironment().create(MyElement);
 
       spyOn(el, 'onTestRun');
 
@@ -171,24 +196,6 @@ describe('JoistElement', () => {
       expect(el.onTestRun).toHaveBeenCalledTimes(2);
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo');
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar');
-    });
-  });
-
-  describe('ShadowDom', () => {
-    it('should create an open shadow root', async () => {
-      @Component({
-        tagName: 'shadow-1',
-        shadowDom: 'open',
-        state: 0,
-        render({ state, host }) {
-          host.innerHTML = state.toString();
-        },
-      })
-      class MyElement extends JoistElement {}
-
-      const el: MyElement = Reflect.construct(MyElement, []);
-
-      expect(el.shadowRoot!.mode).toBe('open');
     });
   });
 });
