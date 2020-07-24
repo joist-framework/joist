@@ -4,6 +4,7 @@ import { html } from 'lit-html';
 import { ResistorBand } from './resistor.service';
 
 @Component<ResistorBand[]>({
+  tagName: 'resistor-value',
   state: [],
   render({ state }) {
     return html`
@@ -96,5 +97,3 @@ export class ResistorElement extends JoistElement {
     this.attachShadow({ mode: 'open' });
   }
 }
-
-customElements.define('resistor-value', ResistorElement);

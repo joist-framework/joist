@@ -33,6 +33,7 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     todos: [],
   },
@@ -83,5 +84,3 @@ export class AppElement extends JoistElement implements OnConnected {
     this.todo.markTodoAsComplete(payload, false);
   }
 }
-
-customElements.define('app-root', AppElement);

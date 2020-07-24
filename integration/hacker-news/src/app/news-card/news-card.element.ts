@@ -7,6 +7,7 @@ import { HackerNewsItem } from '../hacker-news.service';
 export type NewsCardState = HackerNewsItem | null;
 
 @Component<NewsCardState>({
+  tagName: 'news-card',
   state: null,
   render: template(({ state }) => {
     if (!state) {
@@ -68,5 +69,3 @@ export class NewsCardElement extends JoistElement {
     this.state.setValue(value);
   }
 }
-
-customElements.define('news-card', NewsCardElement);

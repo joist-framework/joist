@@ -13,6 +13,7 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'page-1-element',
   state: {
     title: 'Page1Component Works!',
   },
@@ -24,6 +25,4 @@ export interface AppState {
     `;
   },
 })
-class Page1Element extends JoistElement {}
-
-customElements.define('page-1-element', Page1Element);
+export class Page1Element extends JoistElement {}

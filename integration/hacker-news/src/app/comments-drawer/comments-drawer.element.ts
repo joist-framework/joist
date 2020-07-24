@@ -9,6 +9,7 @@ export interface CommentsDrawerState {
 }
 
 @Component<CommentsDrawerState>({
+  tagName: 'comments-drawer',
   state: {
     comments: [],
   },
@@ -95,5 +96,3 @@ export class CommentsDrawerElement extends JoistElement {
     this.state.setValue({ comments });
   }
 }
-
-customElements.define('comments-drawer', CommentsDrawerElement);

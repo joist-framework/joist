@@ -9,6 +9,7 @@ import { Handle } from './handle';
 describe('JoistElement', () => {
   describe('state', () => {
     @Component({
+      tagName: 'state-1',
       state: 0,
       render({ state, host }) {
         host.innerHTML = state.toString();
@@ -18,10 +19,8 @@ describe('JoistElement', () => {
       @Get(State) public state!: State<number>;
     }
 
-    customElements.define('state-1', MyElement);
-
     it('should update the view when state is updated', async () => {
-      const el = document.createElement('state-1') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       el.connectedCallback();
 
@@ -42,14 +41,14 @@ describe('JoistElement', () => {
         }
       }
 
-      @Component()
+      @Component({
+        tagName: 'di-1',
+      })
       class MyElement extends JoistElement {
         @Get(MyService) public service!: MyService;
       }
 
-      customElements.define('di-1', MyElement);
-
-      const el = document.createElement('di-1') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       expect(el.injector.get(MyService)).toBe(el.service);
       expect(el.service.helloWorld()).toBe('Hello World');
@@ -64,6 +63,7 @@ describe('JoistElement', () => {
       }
 
       @Component({
+        tagName: 'di-2',
         providers: [{ provide: MyService, use: class extends MyService {} }],
       })
       class MyElement extends JoistElement {
@@ -71,9 +71,7 @@ describe('JoistElement', () => {
         public service!: MyService;
       }
 
-      customElements.define('di-2', MyElement);
-
-      const el = document.createElement('di-2') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       expect(getEnvironmentRef().get(MyService)).not.toBe(el.service);
 
@@ -84,6 +82,7 @@ describe('JoistElement', () => {
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', () => {
       @Component({
+        tagName: 'handlers-1',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -96,9 +95,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
       }
 
-      customElements.define('handlers-1', MyElement);
-
-      const el = document.createElement('handlers-1') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       spyOn(el, 'onTestRun');
 
@@ -114,6 +111,7 @@ describe('JoistElement', () => {
 
     it('should handle multiple functions', () => {
       @Component({
+        tagName: 'handlers-2',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -127,9 +125,7 @@ describe('JoistElement', () => {
         @Handle('TEST_RUN') onTestRun2() {}
       }
 
-      customElements.define('handlers-2', MyElement);
-
-      const el = document.createElement('handlers-2') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       spyOn(el, 'onTestRun');
       spyOn(el, 'onTestRun2');
@@ -146,6 +142,7 @@ describe('JoistElement', () => {
 
     it('should let one function handle multiple actions', () => {
       @Component({
+        tagName: 'handlers-3',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -161,9 +158,7 @@ describe('JoistElement', () => {
         onTestRun(_e: Event, _payload: string) {}
       }
 
-      customElements.define('handlers-3', MyElement);
-
-      const el = document.createElement('handlers-3') as MyElement;
+      const el: MyElement = Reflect.construct(MyElement, []);
 
       spyOn(el, 'onTestRun');
 

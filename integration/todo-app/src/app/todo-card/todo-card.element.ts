@@ -9,6 +9,7 @@ export interface TodoCardState {
 }
 
 @Component<TodoCardState>({
+  tagName: 'todo-card',
   state: {},
   render: template(({ state, dispatch }) => {
     return html`
@@ -75,5 +76,3 @@ export class TodoCardElement extends JoistElement {
     this.attachShadow({ mode: 'open' });
   }
 }
-
-customElements.define('todo-card', TodoCardElement);

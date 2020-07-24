@@ -8,6 +8,7 @@ export interface SelectBandColorState {
 }
 
 @Component<SelectBandColorState>({
+  tagName: 'select-band-color',
   state: {
     bands: [],
   },
@@ -72,5 +73,3 @@ export class SelectBandColorElement extends JoistElement implements SelectBandCo
     this.attachShadow({ mode: 'open' });
   }
 }
-
-customElements.define('select-band-color', SelectBandColorElement);

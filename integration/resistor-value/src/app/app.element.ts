@@ -17,6 +17,7 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     bandLimit: 0,
     bands: [],

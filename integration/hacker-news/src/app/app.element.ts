@@ -15,6 +15,7 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     loadingNews: false,
     news: [],
@@ -128,5 +129,3 @@ export class AppElement extends JoistElement implements OnConnected {
     this.state.patchValue({ currentNewsItem: undefined });
   }
 }
-
-customElements.define('app-root', AppElement);

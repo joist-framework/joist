@@ -7,6 +7,7 @@ export interface TodoFormState {
 }
 
 @Component<TodoFormState>({
+  tagName: 'todo-form',
   state: {
     todo: '',
   },
@@ -49,5 +50,3 @@ export class TodoFormElement extends JoistElement implements OnConnected {
     }
   }
 }
-
-customElements.define('todo-form', TodoFormElement);

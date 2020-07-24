@@ -9,6 +9,7 @@ interface SelectBandCountState {
 }
 
 @Component<SelectBandCountState>({
+  tagName: 'select-band-count',
   state: {
     bandLimit: 0,
     selectedBands: [],
@@ -106,5 +107,3 @@ export class SelectBandCountElement extends JoistElement implements SelectBandCo
     this.attachShadow({ mode: 'open' });
   }
 }
-
-customElements.define('select-band-count', SelectBandCountElement);

@@ -12,6 +12,7 @@ export interface RenderCtx<T = unknown> {
 export type RenderDef<T> = (ctx: RenderCtx<T>) => unknown;
 
 export interface ComponentDef<T> {
+  tagName?: string;
   render?: RenderDef<T>;
   state?: T;
   providers?: Provider<any>[];
@@ -22,7 +23,11 @@ export function getComponentDef<T>(provider: any): ComponentDef<T> {
 }
 
 export function Component<T>(componentDef: ComponentDef<T> = {}) {
-  return function (component: any) {
+  return function (component: CustomElementConstructor) {
+    if (componentDef.tagName) {
+      customElements.define(componentDef.tagName, component);
+    }
+
     Object.defineProperty(component, COMPONENT_DEF_KEY, {
       get() {
         return componentDef;

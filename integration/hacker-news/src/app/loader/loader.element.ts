@@ -3,6 +3,7 @@ import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component({
+  tagName: 'app-loader',
   render: template(() => {
     return html`
       <style>
@@ -83,5 +84,3 @@ export class LoaderElement extends JoistElement {
     this.attachShadow({ mode: 'open' });
   }
 }
-
-customElements.define('app-loader', LoaderElement);

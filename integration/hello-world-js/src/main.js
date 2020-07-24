@@ -2,9 +2,10 @@ import { State, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-class AppElement extends JoistElement {
+export class AppElement extends JoistElement {
   static get componentDef() {
     return {
+      tagName: 'app-root',
       state: '',
       render: template(({ state, run }) => {
         return html`
@@ -28,7 +29,7 @@ class AppElement extends JoistElement {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     this.state.setValue('Hello World');
   }
 
@@ -40,5 +41,3 @@ class AppElement extends JoistElement {
     console.log('BAR CALLED');
   }
 }
-
-customElements.define('app-root', AppElement);

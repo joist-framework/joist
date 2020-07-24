@@ -9,12 +9,14 @@ npm i @joist/component @joist/di
 ### Component
 
 Components are created via the "Component" decorator and defining a custom element.
-The render function will be called whenver a components state us updated.
+The render function will be called whenver a components [state](#component-state) is updated.
+You can register your custom element either by passing in a `tagName` or my manually calling `customElements.define`
 
 ```TS
 import { Component, JoistElement } from '@joist/component';
 
 @Component<string>({
+  tagName: 'app-root', // register immediatly
   state: {
     title: 'Hello World'
   },
@@ -27,6 +29,7 @@ import { Component, JoistElement } from '@joist/component';
 })
 class AppElement extends JoistElement {}
 
+// register later
 customElements.define('app-root', AppElement);
 ```
 
@@ -39,6 +42,7 @@ import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component<string>({
+  tagName: 'app-root',
   state: {
     title: 'Hello World'
   },
@@ -79,7 +83,9 @@ class BarService {
   }
 }
 
-@Component()
+@Component({
+  tagName: 'app-root',
+})
 class AppElement extends JoistComponent {
   @Get(MyService)
   private myService!: MyService;
@@ -99,6 +105,7 @@ A component's state can be accessed and updated via it's `State` instance which 
 import { Component, State, JoistElement } from '@joist/component';
 
 @Component<number>({
+  tagName: 'app-root',
   state: 0,
   render({ state, host }) {
     host.innerHTML = state.toString();
@@ -110,7 +117,7 @@ class AppElement extends JoistElement {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     setInterval(() => this.update(), 1000);
   }
 
@@ -143,6 +150,7 @@ interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     loading: false,
     data: []
@@ -160,7 +168,7 @@ class AppElement extends JoistElement {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     this.state.setValue({ data: [], loading: true });
 
     const res: Promise<AppState> = this.user.fetchUsers().then(data => {
@@ -182,6 +190,7 @@ import { Component, State, JoistElement } from '@joist/component';
 import { reducer, ReducerState } from '@joist/component/extras';
 
 @Component({
+  tagName: 'app-root',
   state: 0,
   render({ state, host }) {
     host.innerHTML = state.toString();
@@ -220,6 +229,7 @@ Below is an example of using properties to set state.
 import { Component, State, JoistElement } from '@joist/component';
 
 @Component({
+  tagName: 'app-root',
   state: {
     title: ''
   },
@@ -249,6 +259,7 @@ import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component<number>({
+  tagName: 'app-root',
   state: 0,
   render: template(({ state, run }) => {
     return html`
@@ -284,6 +295,7 @@ import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 @Component({
+  tagName: 'app-root',
   render: template(({ state, run, dispatch }) => {
     return html`
       <button @click=${dispatch('FIRST_EVENT')}>First</button>
@@ -353,7 +365,7 @@ class FooService {
 @customElement('simple-greeting')
 export class SimpleGreeting extends LitElementDi {
   @Get(FooService) private foo: FooService;
-  
+
   @property() name = 'World';
 
   render() {

@@ -3,6 +3,7 @@ import '@joist/router';
 import './page-1.element';
 
 import { Component, JoistElement } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
@@ -25,10 +26,11 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     title: 'Hello World',
   },
-  render({ state }) {
+  render: template(({ state }) => {
     return html`
       <header>
         <h1>${state.title}</h1>
@@ -50,8 +52,6 @@ export interface AppState {
 
       <footer>The Footer</footer>
     `;
-  },
+  }),
 })
-class AppElement extends JoistElement {}
-
-customElements.define('app-root', AppElement);
+export class AppElement extends JoistElement {}

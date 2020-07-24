@@ -7,6 +7,7 @@ export interface AppState {
 }
 
 @Component<AppState>({
+  tagName: 'app-root',
   state: {
     title: 'Hello World',
   },
@@ -15,5 +16,3 @@ export interface AppState {
   }),
 })
 export class AppElement extends JoistElement {}
-
-customElements.define('app-root', AppElement);
