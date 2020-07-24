@@ -43,9 +43,7 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
     return html`
       <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
 
-      ${!state.todos.length
-        ? html` <div class="placeholder">Looks Like Everything is Done!</div> `
-        : ''}
+      ${!state.todos.length && html`<div class="placeholder">Looks Like Everything is Done!</div>`}
 
       <section>${createTodoList(ctx)}</section>
     `;

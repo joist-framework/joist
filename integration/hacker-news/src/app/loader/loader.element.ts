@@ -4,6 +4,7 @@ import { html } from 'lit-html';
 
 @Component({
   tagName: 'app-loader',
+  shadowDom: 'open',
   render: template(() => {
     return html`
       <style>
@@ -77,10 +78,4 @@ import { html } from 'lit-html';
     `;
   }),
 })
-export class LoaderElement extends JoistElement {
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
-  }
-}
+export class LoaderElement extends JoistElement {}

@@ -173,4 +173,22 @@ describe('JoistElement', () => {
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar');
     });
   });
+
+  describe('ShadowDom', () => {
+    it('should create an open shadow root', async () => {
+      @Component({
+        tagName: 'shadow-1',
+        shadowDom: 'open',
+        state: 0,
+        render({ state, host }) {
+          host.innerHTML = state.toString();
+        },
+      })
+      class MyElement extends JoistElement {}
+
+      const el: MyElement = Reflect.construct(MyElement, []);
+
+      expect(el.shadowRoot!.mode).toBe('open');
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { Provider } from '@joist/di';
+import { Provider, Injector } from '@joist/di';
 
 export const COMPONENT_DEF_KEY = 'componentDef';
 
@@ -13,9 +13,11 @@ export type RenderDef<T> = (ctx: RenderCtx<T>) => unknown;
 
 export interface ComponentDef<T> {
   tagName?: string;
+  shadowDom?: 'open' | 'closed';
   render?: RenderDef<T>;
   state?: T;
   providers?: Provider<any>[];
+  root?: Injector;
 }
 
 export function getComponentDef<T>(provider: any): ComponentDef<T> {

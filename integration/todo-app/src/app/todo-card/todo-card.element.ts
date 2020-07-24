@@ -10,6 +10,7 @@ export interface TodoCardState {
 
 @Component<TodoCardState>({
   tagName: 'todo-card',
+  shadowDom: 'open',
   state: {},
   render: template(({ state, dispatch }) => {
     return html`
@@ -68,11 +69,5 @@ export class TodoCardElement extends JoistElement {
 
   get todo() {
     return this.state.value.todo;
-  }
-
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
   }
 }

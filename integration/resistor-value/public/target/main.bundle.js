@@ -143,7 +143,8 @@
     }
     function l(e = {}) {
       return function (t) {
-        Object.defineProperty(t, 'componentDef', { get: () => e });
+        e.tagName && customElements.define(e.tagName, t),
+          Object.defineProperty(t, 'componentDef', { get: () => e });
       };
     }
     function c(e) {
@@ -168,7 +169,7 @@
         super(), (this.componentDef = this.constructor.componentDef || {});
         const e = this.componentDef.state,
           t = this.componentDef.providers || [];
-        this.injector = new i(
+        (this.injector = new i(
           {
             providers: t.concat([
               {
@@ -182,8 +183,9 @@
             ]),
             bootstrap: t.map((e) => e.provide),
           },
-          o()
-        );
+          this.componentDef.root || o()
+        )),
+          this.componentDef.shadowDom && this.attachShadow({ mode: this.componentDef.shadowDom });
       }
       connectedCallback() {
         const e = this.constructor.handlers || {};
@@ -528,7 +530,7 @@
         window.addEventListener('test', e, e), window.removeEventListener('test', e, e);
       } catch (e) {}
     })();
-    class P {
+    class D {
       constructor(e, t, s) {
         (this.value = void 0),
           (this.__pendingValue = void 0),
@@ -556,7 +558,7 @@
         s &&
           this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options),
           n &&
-            ((this.__options = j(e)),
+            ((this.__options = P(e)),
             this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)),
           (this.value = e),
           (this.__pendingValue = v);
@@ -567,7 +569,7 @@
           : this.value.handleEvent(e);
       }
     }
-    const j = (e) =>
+    const P = (e) =>
       e && (A ? { capture: e.capture, passive: e.passive, once: e.once } : e.capture);
     /**
      * @license
@@ -581,13 +583,13 @@
      * Code distributed by Google as part of the polymer project is also
      * subject to an additional IP rights grant found at
      * http://polymer.github.io/PATENTS.txt
-     */ const O = new (class {
+     */ const j = new (class {
       handleAttributeExpressions(e, t, s, n) {
         const i = t[0];
         if ('.' === i) {
           return new C(e, t.slice(1), s).parts;
         }
-        if ('@' === i) return [new P(e, t.slice(1), n.eventContext)];
+        if ('@' === i) return [new D(e, t.slice(1), n.eventContext)];
         if ('?' === i) return [new L(e, t.slice(1), s)];
         return new S(e, t, s).parts;
       }
@@ -636,8 +638,8 @@
      */
     'undefined' != typeof window &&
       (window.litHtmlVersions || (window.litHtmlVersions = [])).push('1.2.1');
-    const R = (e, ...t) => new B(e, t, 'html', O);
-    let D = class extends u {
+    const O = (e, ...t) => new B(e, t, 'html', j);
+    let R = class extends u {
       constructor() {
         super(), this.attachShadow({ mode: 'open' });
       }
@@ -648,12 +650,13 @@
         this.state.patchValue({ selectedBands: e });
       }
     };
-    n([d(a)], D.prototype, 'state', void 0),
-      (D = n(
+    n([d(a)], R.prototype, 'state', void 0),
+      (R = n(
         [
           l({
+            tagName: 'select-band-count',
             state: { bandLimit: 0, selectedBands: [] },
-            render: ({ state: e, dispatch: t }) => R`
+            render: ({ state: e, dispatch: t }) => O`
       <style>
         :host {
           display: block;
@@ -714,12 +717,12 @@
 
       ${
         e.bandLimit
-          ? R`
+          ? O`
             <button class="scale-in" @click=${t('band_count_selected', { detail: 0 })}>
               clear
             </button>
           `
-          : R`
+          : O`
             <div class="band-buttons scale-in">
               <button @click=${t('band_count_selected', { detail: 4 })}>4 Bands</button>
               <button @click=${t('band_count_selected', { detail: 5 })}>5 Bands</button>
@@ -730,9 +733,8 @@
     `,
           }),
         ],
-        D
-      )),
-      customElements.define('select-band-count', D);
+        R
+      ));
     let Y = class extends u {
       constructor() {
         super(), this.attachShadow({ mode: 'open' });
@@ -748,8 +750,9 @@
       (Y = n(
         [
           l({
+            tagName: 'resistor-value',
             state: [],
-            render: ({ state: e }) => R`
+            render: ({ state: e }) => O`
       <style>
         :host {
           display: flex;
@@ -813,7 +816,7 @@
       <section class="start"></section>
 
       <section class="middle">
-        ${e.map((e) => R` <div class="band" .style="background: ${e.color}"></div> `)}
+        ${e.map((e) => O` <div class="band" .style="background: ${e.color}"></div> `)}
       </section>
 
       <section class="end"></section>
@@ -821,8 +824,7 @@
           }),
         ],
         Y
-      )),
-      customElements.define('resistor-value', Y);
+      ));
     let W = class extends u {
       constructor() {
         super(), this.attachShadow({ mode: 'open' });
@@ -839,8 +841,9 @@
       (W = n(
         [
           l({
+            tagName: 'select-band-color',
             state: { bands: [] },
-            render: ({ state: e, dispatch: t }) => R`
+            render: ({ state: e, dispatch: t }) => O`
       <style>
         :host {
           display: block;
@@ -872,7 +875,7 @@
       </style>
 
       ${e.bands.map(
-        (e) => R`
+        (e) => O`
           <button @click=${t('band_selected', { detail: e })}>
             <div class="color-block" .style="background: ${e.color}"></div>
 
@@ -885,7 +888,6 @@
         ],
         W
       )),
-      customElements.define('select-band-color', W),
       (function (e) {
         (e.Black = 'black'),
           (e.Brown = 'brown'),
@@ -1004,6 +1006,7 @@
       (G = n(
         [
           l({
+            tagName: 'app-root',
             state: {
               bandLimit: 0,
               bands: [],
@@ -1011,7 +1014,7 @@
               availableBands: [],
               displayColors: !1,
             },
-            render: ({ state: e, run: t }) => R`
+            render: ({ state: e, run: t }) => O`
       <style>
         select-band-color {
           position: absolute;
@@ -1072,9 +1075,9 @@
         ${
           e.displayColors
             ? e.selectedBands.length < e.bandLimit
-              ? R` <span>${e.selectedBands.length}/${e.bandLimit} Bands</span> `
-              : R` <span>${e.resistorValue} &#8486;</span> `
-            : R` <span>Select Resistor Bands</span> `
+              ? O` <span>${e.selectedBands.length}/${e.bandLimit} Bands</span> `
+              : O` <span>${e.resistorValue} &#8486;</span> `
+            : O` <span>Select Resistor Bands</span> `
         }
       </div>
 

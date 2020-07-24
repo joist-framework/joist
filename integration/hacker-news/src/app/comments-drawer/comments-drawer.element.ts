@@ -10,6 +10,7 @@ export interface CommentsDrawerState {
 
 @Component<CommentsDrawerState>({
   tagName: 'comments-drawer',
+  shadowDom: 'open',
   state: {
     comments: [],
   },
@@ -85,12 +86,6 @@ export interface CommentsDrawerState {
 export class CommentsDrawerElement extends JoistElement {
   @Get(State)
   private state!: State<CommentsDrawerState>;
-
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
-  }
 
   set comments(comments: HackerNewsItemComment[]) {
     this.state.setValue({ comments });

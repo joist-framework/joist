@@ -31,7 +31,7 @@ module.exports = (_env, argv) => {
   }
 
   if (argv.mode === 'production') {
-    config.performance = { hints: 'error', maxEntrypointSize: 3600 };
+    config.performance = { hints: 'error', maxEntrypointSize: 3700 };
   }
 
   return config;

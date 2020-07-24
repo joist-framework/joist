@@ -45,8 +45,12 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
         ]),
         bootstrap: providers.map((p) => p.provide),
       },
-      getEnvironmentRef()
+      this.componentDef.root || getEnvironmentRef()
     );
+
+    if (this.componentDef.shadowDom) {
+      this.attachShadow({ mode: this.componentDef.shadowDom });
+    }
   }
 
   connectedCallback() {
