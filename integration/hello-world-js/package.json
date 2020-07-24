@@ -1,6 +1,6 @@
 {
   "name": "@joist-examples/hello-world-js",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.21",
   "description": "Hello World",
   "private": true,
   "scripts": {
