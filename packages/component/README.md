@@ -251,7 +251,7 @@ class AppElement extends JoistElement {
 
 In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
-Multiple methods can be mapped to the same key.
+Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
 
 ```TS
 import { Component, State, Handle, JoistElement } from '@joist/component';
