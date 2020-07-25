@@ -2,13 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "target",
-    "importHelpers": true,
-    "baseUrl": ".",
-    "paths": {
-      "@joist/component": ["../component/main.ts"],
-      "@joist/component/extras": ["../component/extras/main.ts"],
-      "@joist/component/lit-html": ["../component/lit-html/main.ts"]
-    }
+    "importHelpers": true
   },
   "include": ["src"]
 }
