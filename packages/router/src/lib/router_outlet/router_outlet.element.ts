@@ -6,6 +6,8 @@ import {
   JoistElement,
   get,
   InjectorBase,
+  property,
+  OnPropChanges,
 } from '@joist/component';
 import { Injector } from '@joist/di';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
@@ -16,6 +18,8 @@ export interface RouterOutletState {
   element?: HTMLElement & { [key: string]: any };
   activeRoute?: Route;
 }
+
+type RouterOutletLifecycle = OnConnected & OnDisconnected & OnPropChanges;
 
 @component<RouterOutletState>({
   state: {},
@@ -33,29 +37,23 @@ export interface RouterOutletState {
     }
   },
 })
-export class RouterOutletElement extends JoistElement implements OnConnected, OnDisconnected {
+export class RouterOutletElement extends JoistElement implements RouterOutletLifecycle {
   @get(State)
   private state!: State<RouterOutletState>;
 
   @get(Router)
   private router!: Router;
 
-  private __routes__: Route[] = [];
+  @property() routes: Route[] = [];
 
-  set routes(val: Route[]) {
-    this.__routes__ = val;
+  private matchers: MatchFunction<object>[] = [];
+  private removeListener?: Function;
 
+  onPropChanges() {
     this.matchers = this.routes.map((route) => this.router.match(route.path));
 
     this.check();
   }
-
-  get routes() {
-    return this.__routes__;
-  }
-
-  private matchers: MatchFunction<object>[] = [];
-  private removeListener?: Function;
 
   connectedCallback() {
     super.connectedCallback();
