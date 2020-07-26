@@ -6,7 +6,7 @@
 npm i @joist/component @joist/di
 ```
 
-### component
+### Component
 
 Components are created via the "component" decorator and defining a custom element.
 The render function will be called whenver a components [state](#component-state) is updated.
@@ -95,7 +95,7 @@ class AppElement extends Joistcomponent {
 }
 ```
 
-### component State
+### Component State
 
 A component view can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `State` instance which is available via `@get`
@@ -127,7 +127,7 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Async component State
+### Async Component State
 
 component state can be set asynchronously.
 
