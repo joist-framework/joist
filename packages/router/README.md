@@ -11,7 +11,7 @@ npm i @joist/di @joist/router @joist/component
 #### Example:
 
 ```TS
-import { Component, JoistElement } from '@joist/component';
+import { component, get, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { Route, RouteCtxRef, RouteCtx } from '@joist/router';
 import { html } from 'lit-html';
@@ -31,6 +31,7 @@ const routes: Route[] = [
 ].
 
 @Component({
+  tagName: 'app-root',
   render: template(() => {
     return html`
       <router-link path-match="full">
@@ -46,8 +47,7 @@ const routes: Route[] = [
   })
 })
 export class AppElement extends JoistElement {
-  @Get(RouteCtx)
-  private route: RouteCtx;
+  @get(RouteCtx) private route: RouteCtx;
 
   connectedCallback() {
     console.log(this.route.value);
@@ -57,6 +57,4 @@ export class AppElement extends JoistElement {
     })
   }
 }
-
-customElements.define('app-root', AppElement);
 ```
