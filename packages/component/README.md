@@ -239,7 +239,7 @@ class AppElement extends JoistElement implements OnPropChanges {
 
   @property() greeting = '';
 
-  onPropChanges() {
+  onPropChanges(_name: string, _oldVal: string, _newVal: string) {
     this.state.setValue(this.greeting);
   }
 }
@@ -272,11 +272,11 @@ import { html } from 'lit-html';
 class AppElement extends JoistElement {
   @get(State) private state!: State<number>;
 
-  @Handle('INCREMENT') onIncrement(_: Event) {
+  @handle('INCREMENT') onIncrement(_: Event) {
     this.state.setValue(this.state.value + 1);
   }
 
-  @Handle('DECREMENT') onDecrement(_: Event) {
+  @handle('DECREMENT') onDecrement(_: Event) {
     this.state.setValue(this.state.value - 1);
   }
 }

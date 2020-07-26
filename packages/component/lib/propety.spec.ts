@@ -6,7 +6,7 @@ describe('property', () => {
     class MyElement implements OnPropChanges {
       @property() hello: string = 'Hello World';
 
-      onPropChanges() {}
+      onPropChanges(_name: 'hello', _old: string, _new: string) {}
     }
 
     const el = new MyElement();
@@ -16,6 +16,7 @@ describe('property', () => {
     el.hello = 'Goodbye World';
 
     expect(el.onPropChanges).toHaveBeenCalledTimes(1);
+    expect(el.onPropChanges).toHaveBeenCalledWith('hello', 'Hello World', 'Goodbye World');
     expect(el.hello).toBe('Goodbye World');
   });
 });

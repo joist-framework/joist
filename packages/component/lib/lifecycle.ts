@@ -15,7 +15,7 @@ export interface OnAttributeChanged {
 }
 
 export interface OnPropChanges {
-  onPropChanges(): void;
+  onPropChanges(name: string, oldValue: any, newValue: any): void;
 }
 
 export type Lifecycle = Partial<OnPropChanges> &

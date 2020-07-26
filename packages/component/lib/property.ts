@@ -3,9 +3,11 @@ export function property() {
     Object.defineProperty(target, key, {
       set(val) {
         if (this.onPropChanges) {
+          const oldValue = this[key];
+
           this[`__prop__${key}`] = val;
 
-          this.onPropChanges();
+          this.onPropChanges(key, oldValue, val);
         }
       },
       get() {
