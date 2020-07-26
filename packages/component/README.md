@@ -21,10 +21,7 @@ import { component, JoistElement } from '@joist/component';
     title: 'Hello World'
   },
   render({ state, host }) {
-    const h1 = document.createElement('h1');
-    h1.innerHTML = state.title;
-
-    host.append(h1);
+    host.innerHTML = state.title;
   }
 })
 class AppElement extends JoistElement {}
