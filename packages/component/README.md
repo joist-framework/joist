@@ -32,6 +32,10 @@ class AppElement extends JoistElement {}
 Once your component templates become more complicated you will probably reach for a view library.
 Joist ships with out of the box support for lit-html.
 
+```BASH
+npm i lit-html
+```
+
 ```TS
 import { component, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
