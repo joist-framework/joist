@@ -6,16 +6,16 @@
 npm i @joist/component @joist/di
 ```
 
-### Component
+### component
 
-Components are created via the "Component" decorator and defining a custom element.
+Components are created via the "component" decorator and defining a custom element.
 The render function will be called whenver a components [state](#component-state) is updated.
 You can register your custom element either by passing in a `tagName` or my manually calling `customElements.define`
 
 ```TS
-import { Component, JoistElement } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 
-@Component<string>({
+@component<string>({
   tagName: 'app-root', // register immediatly
   state: {
     title: 'Hello World'
@@ -37,11 +37,11 @@ Once your component templates become more complicated you will probably reach fo
 Joist ships with out of the box support for lit-html.
 
 ```TS
-import { Component, JoistElement } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@Component<string>({
+@component<string>({
   tagName: 'app-root',
   state: {
     title: 'Hello World'
@@ -53,58 +53,57 @@ import { html } from 'lit-html';
 class AppElement extends JoistElement {}
 ```
 
-### Dependency Injection (DI)
+### Dependency injection (DI)
 
 Sometimes you have code that you want to share between elements.
 One method of doing this is with Joist's built in dependency injector.
-The `@Get` decorator will map a class property to an instance of a service.
-One service can also inject another as an argument via the `@Inject` decorator.
-The `@Service` decorator ensures that your class will be treated as a global singleton.
+The `@get` decorator will map a class property to an instance of a service.
+One service can also inject another as an argument via the `@inject` decorator.
+The `@service` decorator ensures that your class will be treated as a global singleton.
 
-Property based DI with `@Get` is "lazy", meaning that the service won't be instantiated until the first time it is requested.
+Property based DI with `@get` is "lazy", meaning that the service won't be instantiated until the first time it is requested.
 
 ```TS
-import { Component, JoistElement, Get } from '@joist/component';
-import { Service, Inject } from '@joist/di'
+import { component, JoistElement, get } from '@joist/component';
+import { service, inject } from '@joist/di'
 
-@Service()
-class FooService {
+@service()
+class Fooservice {
   sayHello() {
     return 'Hello World';
   }
 }
 
-@Service()
-class BarService {
-  constructor(@Inject(FooService) private foo: FooService) {}
+@service()
+class Barservice {
+  constructor(@inject(Fooservice) private foo: Fooservice) {}
 
   sayHello() {
     return this.foo.sayHello();
   }
 }
 
-@Component({
+@component({
   tagName: 'app-root',
 })
-class AppElement extends JoistComponent {
-  @Get(MyService)
-  private myService!: MyService;
+class AppElement extends Joistcomponent {
+  @get(Myservice) private myservice!: Myservice;
 
   connectedCallback() {
-    console.log(this.myService.sayHello());
+    console.log(this.myservice.sayHello());
   }
 }
 ```
 
-### Component State
+### component State
 
 A component view can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `State` instance which is available via `@Get`
+A component's state can be accessed and updated via it's `State` instance which is available via `@get`
 
 ```TS
-import { Component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement } from '@joist/component';
 
-@Component<number>({
+@component<number>({
   tagName: 'app-root',
   state: 0,
   render({ state, host }) {
@@ -112,8 +111,7 @@ import { Component, State, JoistElement } from '@joist/component';
   }
 })
 class AppElement extends JoistElement {
-  @Get(State)
-  private state!: State<number>;
+  @get(State) private state!: State<number>;
 
   connectedCallback() {
     super.connectedCallback();
@@ -129,16 +127,16 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Async Component State
+### Async component State
 
-Component state can be set asynchronously.
+component state can be set asynchronously.
 
 ```TS
-import { Component, State, JoistElement } from '@joist/component';
-import { Service } from '@joist/di';
+import { component, State, JoistElement } from '@joist/component';
+import { service } from '@joist/di';
 
-@Service()
-class UserService {
+@service()
+class Userservice {
   fetchUsers() {
     return fetch('https://reqres.in/api/users').then(res => res.json());
   }
@@ -149,7 +147,7 @@ interface AppState {
   data: any[];
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     loading: false,
@@ -160,11 +158,11 @@ interface AppState {
   }
 })
 class AppElement extends JoistElement {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
-  @Get(UserService)
-  private user!: UserService;
+  @get(Userservice)
+  private user!: Userservice;
 
   connectedCallback() {
     super.connectedCallback();
@@ -180,16 +178,16 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Reducer Component State
+### Reducer component State
 
 You can optionally use reducers to manage your state.
 Using the joist dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { Component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement } from '@joist/component';
 import { reducer, ReducerState } from '@joist/component/extras';
 
-@Component({
+@component({
   tagName: 'app-root',
   state: 0,
   render({ state, host }) {
@@ -207,7 +205,7 @@ import { reducer, ReducerState } from '@joist/component/extras';
   ]
 })
 class AppElement extends JoistElement {
-  @Get(ReducerState)
+  @get(ReducerState)
   private state!: ReducerState<AppState>;
 
   increment() {
@@ -220,15 +218,15 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Component Props
+### component Props
 
 Since joist just uses custom elements any properties on your element will work.
 Below is an example of using properties to set state.
 
 ```TS
-import { Component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement } from '@joist/component';
 
-@Component({
+@component({
   tagName: 'app-root',
   state: {
     title: ''
@@ -238,7 +236,7 @@ import { Component, State, JoistElement } from '@joist/component';
   },
 })
 class AppElement extends JoistElement {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
   set title(value: string) {
@@ -247,18 +245,18 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Component Handlers
+### component Handlers
 
 In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
 Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
 
 ```TS
-import { Component, State, Handle, JoistElement } from '@joist/component';
+import { component, State, Handle, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@Component<number>({
+@component<number>({
   tagName: 'app-root',
   state: 0,
   render: template(({ state, run }) => {
@@ -272,7 +270,7 @@ import { html } from 'lit-html';
   })
 })
 class AppElement extends JoistElement {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
   @Handle('INCREMENT') onIncrement(_: Event) {
@@ -290,11 +288,11 @@ class AppElement extends JoistElement {
 IN addition to calling HTMLElement.dispatchEvent you can also use the dispatch function passed to your render function.
 
 ```TS
-import { Component, Handle, JoistElement } from '@joist/component';
+import { component, Handle, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@Component({
+@component({
   tagName: 'app-root',
   render: template(({ state, run, dispatch }) => {
     return html`
@@ -337,17 +335,17 @@ If you want to make use of mock providers you can manually bootstrap your enviro
 import { bootstrapEnvironment, clearEnvironment } from '@joist/component';
 
 import { AppElement } from './app.element';
-import { MyService } from './my.service'
+import { Myservice } from './my.service'
 
 describe('AppElement', () => {
-  class MockMyService implements MyService {
+  class MockMyservice implements Myservice {
     sayHello() {
       return 'GOTCHA!';
     }
   }
 
   beforeEach(() => {
-    bootstrapEnvironment([{ provide: MyService, use: MockMyService }]);
+    bootstrapEnvironment([{ provide: Myservice, use: MockMyservice }]);
   });
 
   afterEach(() => {
@@ -368,16 +366,16 @@ describe('AppElement', () => {
 If you want to use the Joist DI system by don't want to use JoistElement it is easy enough to into something like LitElement.
 
 ```TS
-import { InjectorBase, getEnvironmentRef, Get } from '@joist/component';
-import { Injector, Service } from '@joist/di';
+import { injectorBase, getEnvironmentRef, get } from '@joist/component';
+import { injector, service } from '@joist/di';
 import { LitElement, html, property, customElement } from 'lit-element';
 
-class LitElementDi extends LitElement implements InjectorBase {
-  public injector = new Injector({}, getEnvironmentRef());
+class LitElementDi extends LitElement implements injectorBase {
+  public injector = new injector({}, getEnvironmentRef());
 }
 
-@Service()
-class FooService {
+@service()
+class Fooservice {
   sayHello(name: string) {
     return `Hello, ${name}`;
   }
@@ -385,7 +383,7 @@ class FooService {
 
 @customElement('simple-greeting')
 export class SimpleGreeting extends LitElementDi {
-  @Get(FooService) private foo: FooService;
+  @get(Fooservice) private foo: Fooservice;
 
   @property() name = 'World';
 
