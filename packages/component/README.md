@@ -186,7 +186,7 @@ You can optionally use reducers to manage your state.
 Using the joist dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { component, State, JoistElement } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 import { reducer, ReducerState } from '@joist/component/extras';
 
 @component({
@@ -287,7 +287,7 @@ class AppElement extends JoistElement {
 IN addition to calling HTMLElement.dispatchEvent you can also use the dispatch function passed to your render function.
 
 ```TS
-import { component, Handle, JoistElement } from '@joist/component';
+import { component, handle, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -302,7 +302,7 @@ import { html } from 'lit-html';
   })
 })
 class AppElement extends JoistElement {
-  @Handle('SECOND') onSecond() {
+  @handle('SECOND') onSecond() {
     this.dispatchEvent(new CustomEvent('SECOND_EVENT'));
   }
 }
@@ -331,7 +331,7 @@ describe('AppElement', () => {
 If you want to make use of mock providers you can manually bootstrap your environment.
 
 ```TS
-import { bootstrapEnvironment, clearEnvironment } from '@joist/component';
+import { defineEnvironment, clearEnvironment } from '@joist/component';
 
 import { AppElement } from './app.element';
 import { Myservice } from './my.service'
@@ -344,7 +344,7 @@ describe('AppElement', () => {
   }
 
   beforeEach(() => {
-    bootstrapEnvironment([{ provide: Myservice, use: MockMyservice }]);
+    defineEnvironment([{ provide: Myservice, use: MockMyservice }]);
   });
 
   afterEach(() => {
