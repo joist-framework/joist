@@ -16,7 +16,7 @@ You can register your custom element either by passing in a `tagName` or my manu
 import { component, JoistElement } from '@joist/component';
 
 @component({
-  tagName: 'app-root', // register immediatly
+  tagName: 'app-root', // register now
   state: {
     title: 'Hello World'
   },
@@ -29,8 +29,7 @@ import { component, JoistElement } from '@joist/component';
 })
 class AppElement extends JoistElement {}
 
-// register later
-customElements.define('app-root', AppElement);
+// register later: customElements.define('app-root', AppElement);
 ```
 
 Once your component templates become more complicated you will probably reach for a view library.
