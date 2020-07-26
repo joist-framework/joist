@@ -14,7 +14,12 @@ export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
 
+export interface OnPropChanges {
+  onPropChanges(): void;
+}
+
 export type Lifecycle = Partial<OnPropChanges> &
   Partial<OnConnected> &
   Partial<OnDisconnected> &
-  Partial<OnAttributeChanged>;
+  Partial<OnAttributeChanged> &
+  Partial<OnPropChanges>;

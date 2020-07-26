@@ -91,7 +91,7 @@ class AppElement extends Joistcomponent {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     console.log(this.myservice.sayHello());
   }
 }
@@ -219,13 +219,13 @@ class AppElement extends JoistElement {
 }
 ```
 
-### component Props
+### Component Props
 
 Since joist just uses custom elements any properties on your element will work.
-Below is an example of using properties to set state.
+You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement, property, OnPropChanges } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -234,16 +234,18 @@ import { component, State, JoistElement } from '@joist/component';
     host.innerHTML = state;
   },
 })
-class AppElement extends JoistElement {
+class AppElement extends JoistElement implements OnPropChanges {
   @get(State) private state!: State<string>;
 
-  set title(value: string) {
-    this.state.setValue(value);
+  @property() greeting = '';
+
+  onPropChanges() {
+    this.state.setValue(this.greeting);
   }
 }
 ```
 
-### component Handlers
+### Component Handlers
 
 In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@Handle('NAME')` to handle whatever is run.
@@ -360,14 +362,15 @@ describe('AppElement', () => {
 
 ### Use with LitElement
 
-If you want to use the Joist DI system by don't want to use JoistElement it is easy enough to into something like LitElement.
+Joist components are an opinionated way to writing elements,
+If you want to use the Joist DI system by don't want to use Joist components it is easy enough to use something like LitElement instead.
 
 ```TS
 import { injectorBase, getEnvironmentRef, get } from '@joist/component';
 import { injector, service } from '@joist/di';
-import { LitElement, html, property, customElement } from 'lit-element';
+import { LitElement as LitElementOg, html, property, customElement } from 'lit-element';
 
-class LitElementDi extends LitElement implements injectorBase {
+class LitElement extends LitElementOg implements injectorBase {
   public injector = new injector({}, getEnvironmentRef());
 }
 
