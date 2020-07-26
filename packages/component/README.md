@@ -103,7 +103,7 @@ A component view can ONLY be updated by updating the component's state.
 A component's state can be accessed and updated via it's `State` instance which is available via `@get`
 
 ```TS
-import { component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement, get } from '@joist/component';
 
 @component<number>({
   tagName: 'app-root',
@@ -134,7 +134,7 @@ class AppElement extends JoistElement {
 component state can be set asynchronously.
 
 ```TS
-import { component, State, JoistElement } from '@joist/component';
+import { component, State, JoistElement, get } from '@joist/component';
 import { service } from '@joist/di';
 
 @service()
@@ -186,7 +186,7 @@ You can optionally use reducers to manage your state.
 Using the joist dependency injector you can use whatever sort of state management you would like.
 
 ```TS
-import { component, JoistElement } from '@joist/component';
+import { component, JoistElement, get } from '@joist/component';
 import { reducer, ReducerState } from '@joist/component/extras';
 
 @component({
@@ -225,7 +225,7 @@ Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement, property, OnPropChanges } from '@joist/component';
+import { component, State, JoistElement, property, OnPropChanges, get } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -252,7 +252,7 @@ Decorate component methods with `@handle('NAME')` to handle whatever is run.
 Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
 
 ```TS
-import { component, State, handle, JoistElement } from '@joist/component';
+import { component, State, handle, JoistElement, get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
