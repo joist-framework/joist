@@ -175,7 +175,7 @@ class AppElement extends JoistElement {
       return { loading: false, data }
     });
 
-    this.state.setValue(data);
+    this.state.setValue(res);
   }
 }
 ```
