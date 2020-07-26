@@ -15,7 +15,7 @@ You can register your custom element either by passing in a `tagName` or my manu
 ```TS
 import { component, JoistElement } from '@joist/component';
 
-@component<string>({
+@component({
   tagName: 'app-root', // register immediatly
   state: {
     title: 'Hello World'
@@ -41,7 +41,7 @@ import { component, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@component<string>({
+@component({
   tagName: 'app-root',
   state: {
     title: 'Hello World'
@@ -205,8 +205,7 @@ import { reducer, ReducerState } from '@joist/component/extras';
   ]
 })
 class AppElement extends JoistElement {
-  @get(ReducerState)
-  private state!: ReducerState<AppState>;
+  @get(ReducerState) private state!: ReducerState<number>;
 
   increment() {
     return this.state.dispatch({ type: 'INCREMENT' });
@@ -228,16 +227,13 @@ import { component, State, JoistElement } from '@joist/component';
 
 @component({
   tagName: 'app-root',
-  state: {
-    title: ''
-  },
+  state: ''
   render({ state, host }) {
-    host.innerHTML = state.tit;le;
+    host.innerHTML = state;
   },
 })
 class AppElement extends JoistElement {
-  @get(State)
-  private state!: State<AppState>;
+  @get(State) private state!: State<string>;
 
   set title(value: string) {
     this.state.setValue(value);
@@ -270,8 +266,7 @@ import { html } from 'lit-html';
   })
 })
 class AppElement extends JoistElement {
-  @get(State)
-  private state!: State<AppState>;
+  @get(State) private state!: State<number>;
 
   @Handle('INCREMENT') onIncrement(_: Event) {
     this.state.setValue(this.state.value + 1);
@@ -294,7 +289,7 @@ import { html } from 'lit-html';
 
 @component({
   tagName: 'app-root',
-  render: template(({ state, run, dispatch }) => {
+  render: template(({ run, dispatch }) => {
     return html`
       <button @click=${dispatch('FIRST_EVENT')}>First</button>
 
