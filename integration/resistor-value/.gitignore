@@ -1,5 +1,4 @@
 node_modules
-dist
-src/**/*.js
-.firebase
+public/target
 stats.json
+.firebase

@@ -13,6 +13,8 @@
   },
   "scripts": {
     "install": "npm run build-libs",
+    "build-all": "lerna run build",
+    "test-all": "lerna run test",
     "build-libs": "lerna run build --scope @joist/*",
     "test-libs": "lerna run test --scope @joist/*",
     "build-integration": "lerna run build --scope @joist-examples/*",
