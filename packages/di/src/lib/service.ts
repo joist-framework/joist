@@ -6,6 +6,10 @@ export function isProvidedInRoot(provider: ProviderToken<any>) {
 
 export function service() {
   return function (provider: ProviderToken<any>) {
-    provider.provideInRoot = true;
+    Object.defineProperty(provider, 'provideInRoot', {
+      get() {
+        return true;
+      },
+    });
   };
 }
