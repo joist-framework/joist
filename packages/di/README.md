@@ -11,7 +11,7 @@ npm i @joist/di
 #### Example:
 
 ```TS
-import { Injector, Inject } from '@joist/di';
+import { Injector, inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -20,7 +20,7 @@ class FooService {
 }
 
 class BarService {
-  constructor(@Inject(FooService) private foo: FooService) {}
+  constructor(@inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
@@ -35,7 +35,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 #### Override A Service:
 
 ```TS
-import { Injector, Inject } from '@joist/di';
+import { Injector, inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -44,7 +44,7 @@ class FooService {
 }
 
 class BarService {
-  constructor(@Inject(FooService) private foo: FooService) {}
+  constructor(@inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
@@ -73,9 +73,9 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 If you have nested injectors and you still want singleton instances decorator your services with `@Service()`
 
 ```TS
-import { Service } from '@joist/di';
+import { service } from '@joist/di';
 
-@Service()
+@service()
 class FooService {
   sayHello() {
     return 'Hello From FooService';
@@ -86,10 +86,10 @@ class FooService {
 #### Inject services with custom decorators:
 
 ```TS
-import { Injector, Inject } from '@joist/di';
+import { Injector, inject } from '@joist/di';
 
-function FooRef(c: any, k: string, i: number) {
-  Inject(FooService)(c, k, i)
+function fooRef(c: any, k: string, i: number) {
+  inject(FooService)(c, k, i)
 }
 
 class FooService {
@@ -99,7 +99,7 @@ class FooService {
 }
 
 class BarService {
-  constructor(@FooRef private foo: FooService) {}
+  constructor(@fooRef private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
