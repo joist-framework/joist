@@ -14,7 +14,9 @@
   "scripts": {
     "install": "npm run build-libs",
     "build-libs": "lerna run build --scope @joist/*",
-    "test-libs": "lerna run test --scope @joist/*"
+    "test-libs": "lerna run test --scope @joist/*",
+    "build-integration": "lerna run build --scope @joist-examples/*",
+    "test-integration": "lerna run test --scope @joist-examples/*"
   },
   "dependencies": {
     "@joist/component": "file:packages/component",

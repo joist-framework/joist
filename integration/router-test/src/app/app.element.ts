@@ -2,7 +2,7 @@ import '@joist/router';
 
 import './page-1.element';
 
-import { Component, JoistElement } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
@@ -25,7 +25,7 @@ export interface AppState {
   title: string;
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     title: 'Hello World',

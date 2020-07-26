@@ -1,10 +1,10 @@
-import { Component, JoistElement } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 
 export interface AppState {
   title: string;
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     title: 'Hello World',

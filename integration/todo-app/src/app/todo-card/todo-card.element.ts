@@ -1,4 +1,4 @@
-import { State, Component, JoistElement, Get } from '@joist/component';
+import { State, component, JoistElement, get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -8,7 +8,7 @@ export interface TodoCardState {
   todo?: Todo;
 }
 
-@Component<TodoCardState>({
+@component<TodoCardState>({
   tagName: 'todo-card',
   shadowDom: 'open',
   state: {},
@@ -60,14 +60,9 @@ export interface TodoCardState {
   }),
 })
 export class TodoCardElement extends JoistElement {
-  @Get(State)
-  private state!: State<TodoCardState>;
+  @get(State) private state!: State<TodoCardState>;
 
   set todo(todo: Todo | undefined) {
     this.state.setValue({ todo });
-  }
-
-  get todo() {
-    return this.state.value.todo;
   }
 }

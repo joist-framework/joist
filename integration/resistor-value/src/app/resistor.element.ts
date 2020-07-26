@@ -1,10 +1,11 @@
-import { Component, State, JoistElement, Get } from '@joist/component';
+import { component, State, JoistElement, get } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
 
-@Component<ResistorBand[]>({
+@component<ResistorBand[]>({
   tagName: 'resistor-value',
+  shadowDom: 'open',
   state: [],
   render({ state }) {
     return html`
@@ -81,19 +82,9 @@ import { ResistorBand } from './resistor.service';
   },
 })
 export class ResistorElement extends JoistElement {
-  @Get(State) private state!: State<ResistorBand[]>;
+  @get(State) private state!: State<ResistorBand[]>;
 
   set bands(value: ResistorBand[]) {
     this.state.setValue(value);
-  }
-
-  get bands() {
-    return this.state.value;
-  }
-
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
   }
 }

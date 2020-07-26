@@ -1,4 +1,4 @@
-import { State, JoistElement, Component } from '@joist/component';
+import { State, JoistElement, component } from '@joist/component';
 import { Injector } from '@joist/di';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
@@ -7,7 +7,7 @@ import { Route } from '../router';
 describe('RouterOutletComponent', () => {
   let el: RouterOutletElement;
 
-  @Component({
+  @component({
     render({ host }) {
       host.innerHTML = 'Hello World';
     },

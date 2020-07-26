@@ -1,4 +1,4 @@
-import { State, Component, Get, JoistElement } from '@joist/component';
+import { State, component, get, JoistElement } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -6,7 +6,7 @@ import { HackerNewsItem } from '../hacker-news.service';
 
 export type NewsCardState = HackerNewsItem | null;
 
-@Component<NewsCardState>({
+@component<NewsCardState>({
   tagName: 'news-card',
   state: null,
   render: template(({ state }) => {
@@ -63,7 +63,7 @@ export type NewsCardState = HackerNewsItem | null;
   }),
 })
 export class NewsCardElement extends JoistElement {
-  @Get(State) private state!: State<NewsCardState>;
+  @get(State) private state!: State<NewsCardState>;
 
   set newsItem(value: NewsCardState) {
     this.state.setValue(value);

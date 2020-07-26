@@ -1,10 +1,10 @@
-import { Inject, getProviderDeps } from './inject';
+import { inject, getProviderDeps } from './inject';
 
-describe('Inject', () => {
+describe('inject', () => {
   class A {}
   class B {}
   class C {
-    constructor(@Inject(A) public a: A, @Inject(B) public b: B) {}
+    constructor(@inject(A) public a: A, @inject(B) public b: B) {}
   }
 
   it('should return an empty array by default', () => {

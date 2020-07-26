@@ -1,8 +1,8 @@
-import { JoistElement, Component } from '@joist/component';
+import { JoistElement, component } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-@Component({
+@component({
   tagName: 'app-loader',
   shadowDom: 'open',
   render: template(() => {

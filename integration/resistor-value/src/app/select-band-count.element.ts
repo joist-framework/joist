@@ -1,4 +1,5 @@
-import { State, Component, JoistElement, Get } from '@joist/component';
+import { State, component, JoistElement, get } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -8,13 +9,14 @@ interface SelectBandCountState {
   selectedBands: ResistorBand[];
 }
 
-@Component<SelectBandCountState>({
+@component<SelectBandCountState>({
   tagName: 'select-band-count',
+  shadowDom: 'open',
   state: {
     bandLimit: 0,
     selectedBands: [],
   },
-  render({ state, dispatch }) {
+  render: template(({ state, dispatch }) => {
     return html`
       <style>
         :host {
@@ -88,10 +90,10 @@ interface SelectBandCountState {
             </div>
           `}
     `;
-  },
+  }),
 })
 export class SelectBandCountElement extends JoistElement implements SelectBandCountState {
-  @Get(State) private state!: State<SelectBandCountState>;
+  @get(State) private state!: State<SelectBandCountState>;
 
   set bandLimit(bandLimit: number) {
     this.state.patchValue({ bandLimit });
@@ -99,11 +101,5 @@ export class SelectBandCountElement extends JoistElement implements SelectBandCo
 
   set selectedBands(selectedBands: ResistorBand[]) {
     this.state.patchValue({ selectedBands });
-  }
-
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
   }
 }

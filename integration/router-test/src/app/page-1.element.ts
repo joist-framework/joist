@@ -1,6 +1,6 @@
 import './page-2.element';
 
-import { JoistElement, Component } from '@joist/component';
+import { JoistElement, component } from '@joist/component';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
@@ -12,7 +12,7 @@ export interface AppState {
   title: string;
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'page-1-element',
   state: {
     title: 'Page1Component Works!',

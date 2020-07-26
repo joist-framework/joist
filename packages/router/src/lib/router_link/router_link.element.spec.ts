@@ -1,4 +1,4 @@
-import { JoistElement, Component } from '@joist/component';
+import { JoistElement, component } from '@joist/component';
 
 import { RouterLinkElement } from './router_link.element';
 
@@ -13,7 +13,7 @@ describe('RouterLinkComponent', () => {
   });
 
   it('should mark the router outlet with the default active class if the path matches', () => {
-    @Component({
+    @component({
       render({ host }) {
         const link = document.createElement('router-link');
 
@@ -38,7 +38,7 @@ describe('RouterLinkComponent', () => {
   });
 
   it('should use the path if the first child is an anchor', () => {
-    @Component({
+    @component({
       render({ host }) {
         const routerLink = document.createElement('router-link');
 

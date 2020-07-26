@@ -1,4 +1,5 @@
-import { State, Component, JoistElement, Get } from '@joist/component';
+import { State, component, JoistElement, get } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -7,12 +8,13 @@ export interface SelectBandColorState {
   bands: ResistorBand[];
 }
 
-@Component<SelectBandColorState>({
+@component<SelectBandColorState>({
   tagName: 'select-band-color',
+  shadowDom: 'open',
   state: {
     bands: [],
   },
-  render({ state, dispatch }) {
+  render: template(({ state, dispatch }) => {
     return html`
       <style>
         :host {
@@ -54,22 +56,12 @@ export interface SelectBandColorState {
         `;
       })}
     `;
-  },
+  }),
 })
 export class SelectBandColorElement extends JoistElement implements SelectBandColorState {
-  @Get(State) private state!: State<SelectBandColorState>;
+  @get(State) private state!: State<SelectBandColorState>;
 
   set bands(bands: ResistorBand[]) {
     this.state.setValue({ bands });
-  }
-
-  get bands() {
-    return this.state.value.bands;
-  }
-
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: 'open' });
   }
 }

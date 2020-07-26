@@ -3,11 +3,11 @@ import './todo-card/todo-card.element';
 
 import {
   State,
-  Handle,
+  handle,
   OnConnected,
-  Component,
+  component,
   RenderCtx,
-  Get,
+  get,
   JoistElement,
 } from '@joist/component';
 import { template } from '@joist/component/lit-html';
@@ -32,7 +32,7 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
   });
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     todos: [],
@@ -50,10 +50,10 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
   }),
 })
 export class AppElement extends JoistElement implements OnConnected {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
-  @Get(TodoService)
+  @get(TodoService)
   private todo!: TodoService;
 
   connectedCallback(): void {
@@ -66,19 +66,19 @@ export class AppElement extends JoistElement implements OnConnected {
     });
   }
 
-  @Handle('ADD_TODO') onAddTodo(e: CustomEvent<string>): void {
+  @handle('ADD_TODO') onAddTodo(e: CustomEvent<string>): void {
     this.todo.addTodo(new Todo(e.detail, false));
   }
 
-  @Handle('REMOVE_TODO') onRemoveTodo(_: Event, payload: number): void {
+  @handle('REMOVE_TODO') onRemoveTodo(_: Event, payload: number): void {
     this.todo.removeTodo(payload);
   }
 
-  @Handle('COMPLETE_TODO') onCompleteTodo(_: Event, payload: number): void {
+  @handle('COMPLETE_TODO') onCompleteTodo(_: Event, payload: number): void {
     this.todo.markTodoAsComplete(payload);
   }
 
-  @Handle('UNDO_COMPLETE') onUndoComplete(_: Event, payload: number): void {
+  @handle('UNDO_COMPLETE') onUndoComplete(_: Event, payload: number): void {
     this.todo.markTodoAsComplete(payload, false);
   }
 }

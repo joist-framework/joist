@@ -10,7 +10,7 @@ export interface InjectorBase {
   readonly injector: Injector;
 }
 
-export function Get<T>(token: ProviderToken<T>) {
+export function get<T>(token: ProviderToken<T>) {
   return function (target: InjectorBase, key: string) {
     Object.defineProperty(target, key, {
       get() {

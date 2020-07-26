@@ -4,7 +4,7 @@ export function getComponentHandlers(provider: any): Record<string, string[]> {
   return provider[COMPONENT_HANDLERS_KEY] || {};
 }
 
-export function Handle(action: string) {
+export function handle(action: string) {
   return function (instance: { constructor: any; [key: string]: any }, key: string) {
     const provider = instance.constructor;
 

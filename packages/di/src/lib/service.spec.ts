@@ -1,7 +1,7 @@
-import { Service, isProvidedInRoot } from './service';
+import { service, isProvidedInRoot } from './service';
 
 describe('Service', () => {
-  @Service()
+  @service()
   class A {}
 
   class B {}

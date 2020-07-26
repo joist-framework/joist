@@ -1,4 +1,4 @@
-import { State, Component, JoistElement, Get, OnConnected } from '@joist/component';
+import { State, component, JoistElement, get, OnConnected } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -6,7 +6,7 @@ export interface TodoFormState {
   todo: string;
 }
 
-@Component<TodoFormState>({
+@component<TodoFormState>({
   tagName: 'todo-form',
   state: {
     todo: '',
@@ -22,8 +22,7 @@ export interface TodoFormState {
   }),
 })
 export class TodoFormElement extends JoistElement implements OnConnected {
-  @Get(State)
-  private state!: State<TodoFormState>;
+  @get(State) private state!: State<TodoFormState>;
 
   constructor() {
     super();

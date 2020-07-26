@@ -1,10 +1,10 @@
-import { JoistElement, Component } from '@joist/component';
+import { JoistElement, component, get } from '@joist/component';
 
 import { reducer, ReducerState } from './reducer';
-import { Get } from 'lib/element';
 
 describe('Reducer', () => {
-  @Component({
+  @component({
+    tagName: 'reducer-test-1',
     state: 0,
     providers: [
       reducer<number>((action, state) => {
@@ -20,9 +20,8 @@ describe('Reducer', () => {
       }),
     ],
   })
-  class MyComponent extends JoistElement {
-    @Get(ReducerState)
-    public state!: ReducerState<number>;
+  class MyElement extends JoistElement {
+    @get(ReducerState) state!: ReducerState<number>;
 
     increment() {
       return this.state.dispatch({ type: 'INCREMENT' });
@@ -33,10 +32,8 @@ describe('Reducer', () => {
     }
   }
 
-  customElements.define('reducer-test-1', MyComponent);
-
   it('should increment the state by 1', async () => {
-    const el = document.createElement('reducer-test-1') as MyComponent;
+    const el = new MyElement();
 
     await el.increment();
     await el.increment();
@@ -45,7 +42,7 @@ describe('Reducer', () => {
   });
 
   it('should decrement the state by 1', async () => {
-    const el = document.createElement('reducer-test-1') as MyComponent;
+    const el = new MyElement();
 
     await el.decrement();
 

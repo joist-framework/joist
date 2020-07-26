@@ -1,11 +1,11 @@
-import { Component, getComponentDef, ComponentDef } from './component';
+import { component, getComponentDef, ComponentDef } from './component';
 
 describe('Component', () => {
   const def: ComponentDef<void> = {
     tagName: 'component-test-1',
   };
 
-  @Component(def)
+  @component(def)
   class MyComponent extends HTMLElement {}
 
   it('should add component definition to class', () => {

@@ -1,10 +1,10 @@
 import {
-  Component,
+  component,
   State,
   OnConnected,
   OnDisconnected,
   JoistElement,
-  Get,
+  get,
   InjectorBase,
 } from '@joist/component';
 import { Injector } from '@joist/di';
@@ -17,7 +17,7 @@ export interface RouterOutletState {
   activeRoute?: Route;
 }
 
-@Component<RouterOutletState>({
+@component<RouterOutletState>({
   state: {},
   render({ state, host }) {
     let child = host.lastElementChild;
@@ -34,10 +34,10 @@ export interface RouterOutletState {
   },
 })
 export class RouterOutletElement extends JoistElement implements OnConnected, OnDisconnected {
-  @Get(State)
+  @get(State)
   private state!: State<RouterOutletState>;
 
-  @Get(Router)
+  @get(Router)
   private router!: Router;
 
   private __routes__: Route[] = [];

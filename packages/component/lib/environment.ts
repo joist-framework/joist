@@ -2,7 +2,7 @@ import { Injector, Provider } from '@joist/di';
 
 let ROOT_INJECTOR: Injector | undefined;
 
-export function bootstrapEnvironment(providers: Provider<any>[] = []): Injector {
+export function defineEnvironment(providers: Provider<any>[] = []): Injector {
   ROOT_INJECTOR = new Injector({ providers });
 
   return ROOT_INJECTOR;
@@ -13,7 +13,7 @@ export function getEnvironmentRef(): Injector {
     return ROOT_INJECTOR;
   }
 
-  return bootstrapEnvironment();
+  return defineEnvironment();
 }
 
 export function clearEnvironment(): void {

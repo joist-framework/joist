@@ -1,4 +1,4 @@
-import { Service, Inject } from '@joist/di';
+import { service } from '@joist/di';
 
 export enum ResistorBandColor {
   Black = 'black',
@@ -22,11 +22,7 @@ export interface ResistorBand {
   tolerance?: number;
 }
 
-export function ResistorRef(c: any, p: string, i: number) {
-  Inject(ResistorService)(c, p, i);
-}
-
-@Service()
+@service()
 export class ResistorService {
   private readonly bands: ResistorBand[] = [
     {

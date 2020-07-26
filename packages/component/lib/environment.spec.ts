@@ -1,7 +1,7 @@
-import { Injector, Service } from '@joist/di';
+import { Injector, service } from '@joist/di';
 
-import { bootstrapEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
-import { Get, JoistElement } from './element';
+import { defineEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
+import { get, JoistElement } from './element';
 
 describe('environment', () => {
   afterEach(() => {
@@ -9,22 +9,22 @@ describe('environment', () => {
   });
 
   it('should create a global Injector instance', () => {
-    bootstrapEnvironment();
+    defineEnvironment();
 
     expect(getEnvironmentRef() instanceof Injector).toBe(true);
   });
 
   it('should use the root injector when creating services', () => {
-    @Service()
+    @service()
     class MyService {}
 
     class MyElement extends JoistElement {
-      @Get(MyService) public myService!: MyService;
+      @get(MyService) myService!: MyService;
     }
 
     customElements.define('environment-1', MyElement);
 
-    bootstrapEnvironment();
+    defineEnvironment();
 
     const el = document.createElement('environment-1') as MyElement;
 

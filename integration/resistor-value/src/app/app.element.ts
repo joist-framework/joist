@@ -2,7 +2,7 @@ import './select-band-count.element';
 import './resistor.element';
 import './select-band-color.element';
 
-import { State, Handle, OnConnected, Component, JoistElement, Get } from '@joist/component';
+import { State, handle, OnConnected, component, JoistElement, get } from '@joist/component';
 import { html } from 'lit-html';
 
 import { ResistorService, ResistorBand } from './resistor.service';
@@ -16,7 +16,7 @@ export interface AppState {
   resistorValue?: string;
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     bandLimit: 0,
@@ -108,10 +108,10 @@ export interface AppState {
   },
 })
 export class AppElement extends JoistElement implements OnConnected {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
-  @Get(ResistorService)
+  @get(ResistorService)
   private resistor!: ResistorService;
 
   constructor() {
@@ -126,7 +126,7 @@ export class AppElement extends JoistElement implements OnConnected {
     this.state.patchValue({ bands });
   }
 
-  @Handle('BAND_COUNT_SELECTED') onBandCountSelected(e: CustomEvent<number>): void {
+  @handle('BAND_COUNT_SELECTED') onBandCountSelected(e: CustomEvent<number>): void {
     const bandLimit = e.detail;
 
     this.state.patchValue({
@@ -138,7 +138,7 @@ export class AppElement extends JoistElement implements OnConnected {
     });
   }
 
-  @Handle('BAND_SELECTED') onBandSelected(e: CustomEvent<ResistorBand>): void {
+  @handle('BAND_SELECTED') onBandSelected(e: CustomEvent<ResistorBand>): void {
     if (this.state.value.selectedBands.length >= this.state.value.bandLimit) {
       return void 0;
     }
@@ -162,5 +162,3 @@ export class AppElement extends JoistElement implements OnConnected {
     return this.resistor.getValueBands();
   }
 }
-
-customElements.define('app-root', AppElement);

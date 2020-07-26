@@ -1,4 +1,4 @@
-import { State, JoistElement, Component, Get } from '@joist/component';
+import { State, JoistElement, component, get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -8,7 +8,7 @@ export interface CommentsDrawerState {
   comments: HackerNewsItemComment[];
 }
 
-@Component<CommentsDrawerState>({
+@component<CommentsDrawerState>({
   tagName: 'comments-drawer',
   shadowDom: 'open',
   state: {
@@ -84,7 +84,7 @@ export interface CommentsDrawerState {
   }),
 })
 export class CommentsDrawerElement extends JoistElement {
-  @Get(State)
+  @get(State)
   private state!: State<CommentsDrawerState>;
 
   set comments(comments: HackerNewsItemComment[]) {

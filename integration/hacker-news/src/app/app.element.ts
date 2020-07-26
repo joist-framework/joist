@@ -1,6 +1,6 @@
 import './loader/loader.element';
 
-import { Component, State, Handle, OnConnected, JoistElement, Get } from '@joist/component';
+import { component, State, handle, OnConnected, JoistElement, get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 import { until } from 'lit-html/directives/until';
@@ -14,7 +14,7 @@ export interface AppState {
   currentNewsItem?: HackerNewsItemFull;
 }
 
-@Component<AppState>({
+@component<AppState>({
   tagName: 'app-root',
   state: {
     loadingNews: false,
@@ -96,10 +96,10 @@ export interface AppState {
   }),
 })
 export class AppElement extends JoistElement implements OnConnected {
-  @Get(State)
+  @get(State)
   private state!: State<AppState>;
 
-  @Get(HackerNewsService)
+  @get(HackerNewsService)
   private hackerNews!: HackerNewsService;
 
   connectedCallback(): void {
@@ -110,7 +110,7 @@ export class AppElement extends JoistElement implements OnConnected {
     this.state.patchValue(state);
   }
 
-  @Handle('CARD_CLICKED') onCardClicked(_: Event, news: HackerNewsItemFull): void {
+  @handle('CARD_CLICKED') onCardClicked(_: Event, news: HackerNewsItemFull): void {
     this.state.patchValue({ loadingCurrentNewsItem: true });
 
     const state = this.hackerNews.getNewsItem(news.id).then((currentNewsItem) => ({
@@ -125,7 +125,7 @@ export class AppElement extends JoistElement implements OnConnected {
     );
   }
 
-  @Handle('CLOSE_DRAWER') onCloseDrawer(_: CustomEvent): void {
+  @handle('CLOSE_DRAWER') onCloseDrawer(_: CustomEvent): void {
     this.state.patchValue({ currentNewsItem: undefined });
   }
 }

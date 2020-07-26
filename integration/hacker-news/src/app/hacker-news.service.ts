@@ -1,4 +1,4 @@
-import { Service } from '@joist/di';
+import { service } from '@joist/di';
 
 export interface HackerNewsItem {
   id: number;
@@ -26,7 +26,7 @@ export interface HackerNewsItemFull extends HackerNewsItem {
   comments: HackerNewsItemComment[];
 }
 
-@Service()
+@service()
 export class HackerNewsService {
   getNews(): Promise<HackerNewsItem[]> {
     return fetch('https://api.hackerwebapp.com/news').then((res) => res.json());

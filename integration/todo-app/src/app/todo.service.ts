@@ -1,11 +1,11 @@
-import { Service, Inject } from '@joist/di';
+import { service } from '@joist/di';
 import { State } from '@joist/component';
 
 export class Todo {
   constructor(public readonly name: string, public readonly isComplete: boolean) {}
 }
 
-@Service()
+@service()
 export class TodoService {
   public readonly todos = new State<Todo[]>([]);
 
@@ -29,5 +29,3 @@ export class TodoService {
     );
   }
 }
-
-export const TodoRef = Inject(TodoService);

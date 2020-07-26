@@ -1,6 +1,6 @@
-import { Service } from './service';
+import { service } from './service';
 import { Injector } from './injector';
-import { Inject } from './inject';
+import { inject } from './inject';
 import { ProviderToken } from './provider';
 
 describe('Injector', () => {
@@ -27,8 +27,8 @@ describe('Injector', () => {
       readonly value = this.foo.foo + this.bar.bar;
 
       constructor(
-        @Inject(FooService) private foo: FooService,
-        @Inject(BarService) private bar: BarService
+        @inject(FooService) private foo: FooService,
+        @inject(BarService) private bar: BarService
       ) {}
     }
 
@@ -45,7 +45,7 @@ describe('Injector', () => {
     }
 
     class B {
-      constructor(@Inject(A) private a: A) {}
+      constructor(@inject(A) private a: A) {}
 
       sayHello() {
         return this.a.sayHello() + '|';
@@ -53,7 +53,7 @@ describe('Injector', () => {
     }
 
     class C {
-      constructor(@Inject(A) private a: A, @Inject(B) private b: B) {}
+      constructor(@inject(A) private a: A, @inject(B) private b: B) {}
 
       sayHello() {
         return this.a.sayHello() + '|' + this.b.sayHello();
@@ -61,7 +61,7 @@ describe('Injector', () => {
     }
 
     class D {
-      constructor(@Inject(A) private a: A, @Inject(B) private b: B, @Inject(C) private c: C) {}
+      constructor(@inject(A) private a: A, @inject(B) private b: B, @inject(C) private c: C) {}
 
       sayHello() {
         return this.a.sayHello() + '|' + this.b.sayHello() + this.c.sayHello();
@@ -69,7 +69,7 @@ describe('Injector', () => {
     }
 
     class E {
-      constructor(@Inject(D) private d: D) {}
+      constructor(@inject(D) private d: D) {}
 
       sayHello() {
         return this.d.sayHello() + '|';
@@ -87,7 +87,7 @@ describe('Injector', () => {
     }
 
     class FooService {
-      constructor(@Inject(BarService) private bar: BarService) {}
+      constructor(@inject(BarService) private bar: BarService) {}
 
       sayHello() {
         return this.bar.foo;
@@ -136,7 +136,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@Inject(BarService) public bar: BarService) {}
+      constructor(@inject(BarService) public bar: BarService) {}
     }
 
     const app = new Injector();
@@ -148,7 +148,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@Inject(BarService) public bar: BarService) {}
+      constructor(@inject(BarService) public bar: BarService) {}
     }
 
     const app = new Injector();
@@ -160,7 +160,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@Inject(BarService) public bar: BarService) {}
+      constructor(@inject(BarService) public bar: BarService) {}
     }
 
     const parent = new Injector();
@@ -176,7 +176,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@Inject(BarService) public bar: BarService) {}
+      constructor(@inject(BarService) public bar: BarService) {}
     }
 
     const parent = new Injector();
@@ -227,7 +227,7 @@ describe('Injector', () => {
     }
 
     const MyFirst = () => (c: ProviderToken<any>, k: string, i: number) =>
-      Inject(MyFirstService)(c, k, i);
+      inject(MyFirstService)(c, k, i);
 
     class MyService {
       constructor(@MyFirst() private test: MyFirstService) {}
@@ -243,11 +243,11 @@ describe('Injector', () => {
   });
 
   it('should use the root Injector if specified', () => {
-    @Service()
+    @service()
     class BarService {}
 
     class FooService {
-      constructor(@Inject(BarService) public bar: BarService) {}
+      constructor(@inject(BarService) public bar: BarService) {}
     }
 
     const parent = new Injector();

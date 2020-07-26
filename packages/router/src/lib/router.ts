@@ -1,5 +1,5 @@
 import { State } from '@joist/component';
-import { Service } from '@joist/di';
+import { service } from '@joist/di';
 import { match, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
@@ -9,7 +9,7 @@ export interface Route {
 
 export class RouteCtx extends State<MatchResult<any>> {}
 
-@Service()
+@service()
 export class Router {
   private listeners: Function[] = [];
 

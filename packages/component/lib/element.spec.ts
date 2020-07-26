@@ -1,14 +1,14 @@
-import { Service, Injector } from '@joist/di';
+import { service, Injector } from '@joist/di';
 
-import { JoistElement, Get } from './element';
-import { Component } from './component';
+import { JoistElement, get } from './element';
+import { component } from './component';
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { State } from './state';
-import { Handle } from './handle';
+import { handle } from './handle';
 
 describe('JoistElement', () => {
   describe('state', () => {
-    @Component({
+    @component({
       tagName: 'state-1',
       state: 0,
       render({ state, host }) {
@@ -16,7 +16,7 @@ describe('JoistElement', () => {
       },
     })
     class MyElement extends JoistElement {
-      @Get(State) public state!: State<number>;
+      @get(State) state!: State<number>;
     }
 
     it('should update the view when state is updated', async () => {
@@ -34,18 +34,18 @@ describe('JoistElement', () => {
 
   describe('dependency injection', () => {
     it('should map a service to a property', () => {
-      @Service()
+      @service()
       class MyService {
         helloWorld() {
           return 'Hello World';
         }
       }
 
-      @Component({
+      @component({
         tagName: 'di-1',
       })
       class MyElement extends JoistElement {
-        @Get(MyService) public service!: MyService;
+        @get(MyService) service!: MyService;
       }
 
       const el = new MyElement();
@@ -55,20 +55,19 @@ describe('JoistElement', () => {
     });
 
     it('should use scoped providers', () => {
-      @Service()
+      @service()
       class MyService {
         helloWorld() {
           return 'Hello World';
         }
       }
 
-      @Component({
+      @component({
         tagName: 'di-2',
         providers: [{ provide: MyService, use: class extends MyService {} }],
       })
       class MyElement extends JoistElement {
-        @Get(MyService)
-        public service!: MyService;
+        @get(MyService) service!: MyService;
       }
 
       const el = new MyElement();
@@ -81,20 +80,19 @@ describe('JoistElement', () => {
     it('should use the passed in parent injector instead of the default environment', () => {
       const parent = new Injector();
 
-      @Service()
+      @service()
       class MyService {
         sayHello() {
           return 'Hello World';
         }
       }
 
-      @Component({
+      @component({
         tagName: 'di-3',
         parent,
       })
       class MyElement extends JoistElement {
-        @Get(MyService)
-        public service!: MyService;
+        @get(MyService) service!: MyService;
       }
 
       const el = new MyElement();
@@ -105,7 +103,7 @@ describe('JoistElement', () => {
 
   describe('handlers', () => {
     it('should call a function if the trigger is mapped to a class method', () => {
-      @Component({
+      @component({
         tagName: 'handlers-1',
         render({ run, host }) {
           const button = document.createElement('button');
@@ -116,7 +114,7 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @Handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
+        @handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
       }
 
       const el = new MyElement();
@@ -134,7 +132,7 @@ describe('JoistElement', () => {
     });
 
     it('should handle multiple functions', () => {
-      @Component({
+      @component({
         tagName: 'handlers-2',
         render({ run, host }) {
           const button = document.createElement('button');
@@ -145,8 +143,8 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @Handle('TEST_RUN') onTestRun() {}
-        @Handle('TEST_RUN') onTestRun2() {}
+        @handle('TEST_RUN') onTestRun() {}
+        @handle('TEST_RUN') onTestRun2() {}
       }
 
       const el = new MyElement();
@@ -165,7 +163,7 @@ describe('JoistElement', () => {
     });
 
     it('should let one function handle multiple actions', () => {
-      @Component({
+      @component({
         tagName: 'handlers-3',
         render({ run, host }) {
           const button = document.createElement('button');
@@ -177,8 +175,8 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @Handle('FOO')
-        @Handle('BAR')
+        @handle('FOO')
+        @handle('BAR')
         onTestRun(_e: Event, _payload: string) {}
       }
 
