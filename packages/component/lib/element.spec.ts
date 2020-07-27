@@ -1,4 +1,4 @@
-import { service, Injector } from '@joist/di';
+import { service } from '@joist/di';
 
 import { JoistElement, get } from './element';
 import { component } from './component';
@@ -72,32 +72,34 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
+      expect(el.service).toBeInstanceOf(MyService);
+
       expect(getEnvironmentRef().get(MyService)).not.toBe(el.service);
 
       clearEnvironment();
     });
 
-    it('should use the passed in parent injector instead of the default environment', () => {
-      const parent = new Injector();
+    it('should use find and use the parent injector scope if available', () => {
+      @component()
+      class Parent extends JoistElement {}
+      customElements.define('di-3-parent', Parent);
 
-      @service()
-      class MyService {
-        sayHello() {
-          return 'Hello World';
-        }
-      }
+      @component()
+      class Child extends JoistElement {}
+      customElements.define('di-3-child', Child);
 
-      @component({
-        tagName: 'di-3',
-        parent,
-      })
-      class MyElement extends JoistElement {
-        @get(MyService) service!: MyService;
-      }
+      const host = document.createElement('div');
 
-      const el = new MyElement();
+      host.innerHTML = `
+        <di-3-parent>
+          <di-3-child></di-3-child>
+        </di-3-parent>
+      `;
 
-      expect(el.service).toBe(parent.get(MyService));
+      const parent = host.querySelector('di-3-parent') as JoistElement;
+      const child = host.querySelector('di-3-child') as JoistElement;
+
+      expect(child.injector.parent).toBe(parent.injector);
     });
   });
 

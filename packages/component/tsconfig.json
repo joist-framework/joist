@@ -11,5 +11,5 @@
     }
   },
   "files": ["test.ts", "main.ts"],
-  "include": ["lib", "lit-html", "extras"]
+  "include": ["lib", "lit-html", "extras", "testing"]
 }

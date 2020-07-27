@@ -1,7 +1,7 @@
-import { State, JoistElement, component } from '@joist/component';
-import { Injector } from '@joist/di';
+import { State, JoistElement, component, defineEnvironment } from '@joist/component';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
+import { Location } from '../router';
 
 describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', RouterOutletElement);
@@ -13,22 +13,29 @@ describe('RouterOutletComponent', () => {
   })
   class TestElement extends JoistElement {}
 
-  beforeEach(() => {
-    el = new RouterOutletElement();
+  class MockLocation extends Location {
+    getPath() {
+      return '/foo';
+    }
 
-    el.injector.parent = new Injector();
+    onPopState() {
+      return () => {};
+    }
+  }
+
+  beforeEach(() => {
+    defineEnvironment([{ provide: Location, use: MockLocation }]);
+
+    el = new RouterOutletElement();
 
     document.body.appendChild(el);
   });
 
   afterEach(() => {
     document.body.removeChild(el);
-    history.replaceState(null, '', '');
   });
 
   it('should render the correct initial route', (done) => {
-    history.pushState(null, 'title', '/foo');
-
     el.routes = [{ path: '/foo', component: () => new TestElement() }];
 
     const state: State<RouterOutletState> = el.injector.get(State);

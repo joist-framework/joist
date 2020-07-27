@@ -7,7 +7,7 @@ import { getComponentHandlers } from './handle';
 import { Lifecycle } from './lifecycle';
 
 export interface InjectorBase {
-  readonly injector: Injector;
+  injector: Injector;
 }
 
 export function get<T>(token: ProviderToken<T>) {
@@ -24,28 +24,28 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
   public injector: Injector;
 
   private componentDef = getComponentDef<any>(this.constructor);
+  private handlers = getComponentHandlers(this.constructor);
 
   constructor() {
     super();
 
+    this.setAttribute('__joist-component__', '');
+
     const state = this.componentDef.state;
     const providers = this.componentDef.providers || [];
 
+    class ComponentState extends State<any> {
+      constructor() {
+        super(state);
+      }
+    }
+
     this.injector = new Injector(
       {
-        providers: providers.concat([
-          {
-            provide: State,
-            use: class extends State<any> {
-              constructor() {
-                super(state);
-              }
-            },
-          },
-        ]),
+        providers: [...providers, { provide: State, use: ComponentState }],
         bootstrap: providers.map((p) => p.provide),
       },
-      this.componentDef.parent || getEnvironmentRef()
+      this.getParentInjector()
     );
 
     if (this.componentDef.shadowDom) {
@@ -54,14 +54,15 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
   }
 
   connectedCallback() {
-    const handlers = getComponentHandlers(this.constructor);
+    this.injector.parent = this.getParentInjector();
+
     const state = this.injector.get(State);
 
     const ctx: RenderCtx<any> = {
       state: state.value,
       run: (eventName: string, payload: unknown) => (e: Event) => {
-        if (eventName in handlers) {
-          handlers[eventName].forEach((methodName) => {
+        if (eventName in this.handlers) {
+          this.handlers[eventName].forEach((methodName) => {
             // eww
             ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
           });
@@ -86,5 +87,15 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
     state.onChange((state) => {
       componentRender(state);
     });
+  }
+
+  private getParentInjector() {
+    let parent: JoistElement | null = null;
+
+    if (this.parentElement) {
+      parent = this.parentElement.closest('[__joist-component__]');
+    }
+
+    return parent ? parent.injector : getEnvironmentRef();
   }
 }

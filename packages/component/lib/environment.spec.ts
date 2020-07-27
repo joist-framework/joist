@@ -1,7 +1,8 @@
 import { Injector, service } from '@joist/di';
 
-import { defineEnvironment, getEnvironmentRef, clearEnvironment } from './environment';
+import { getEnvironmentRef, clearEnvironment } from './environment';
 import { get, JoistElement } from './element';
+import { component } from './component';
 
 describe('environment', () => {
   afterEach(() => {
@@ -9,8 +10,6 @@ describe('environment', () => {
   });
 
   it('should create a global Injector instance', () => {
-    defineEnvironment();
-
     expect(getEnvironmentRef() instanceof Injector).toBe(true);
   });
 
@@ -18,15 +17,14 @@ describe('environment', () => {
     @service()
     class MyService {}
 
+    @component({
+      tagName: 'environment-1',
+    })
     class MyElement extends JoistElement {
       @get(MyService) myService!: MyService;
     }
 
-    customElements.define('environment-1', MyElement);
-
-    defineEnvironment();
-
-    const el = document.createElement('environment-1') as MyElement;
+    const el = new MyElement();
 
     expect(el.myService).toBe(getEnvironmentRef()!.get(MyService));
   });

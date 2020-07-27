@@ -44,7 +44,8 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   @get(Router)
   private router!: Router;
 
-  @property() routes: Route[] = [];
+  @property()
+  public routes: Route[] = [];
 
   private matchers: MatchFunction<object>[] = [];
   private removeListener?: Function;
@@ -58,9 +59,7 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   connectedCallback() {
     super.connectedCallback();
 
-    this.removeListener = this.router.listen(() => {
-      this.check();
-    });
+    this.removeListener = this.router.listen(this.check.bind(this));
   }
 
   disconnectedCallback() {

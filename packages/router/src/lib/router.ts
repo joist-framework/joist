@@ -1,5 +1,5 @@
 import { State } from '@joist/component';
-import { service } from '@joist/di';
+import { service, inject } from '@joist/di';
 import { match, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
@@ -10,28 +10,47 @@ export interface Route {
 export class RouteCtx extends State<MatchResult<any>> {}
 
 @service()
+export class Location {
+  getPath() {
+    return window.location.pathname;
+  }
+
+  goTo(path: string) {
+    history.pushState(null, '', path);
+  }
+
+  onPopState(cb: Function) {
+    const fn = () => cb();
+
+    window.addEventListener('popstate', fn);
+
+    return () => {
+      window.removeEventListener('popstate', fn);
+    };
+  }
+}
+
+@service()
 export class Router {
   private listeners: Function[] = [];
 
   root: string = '/';
 
-  constructor() {
-    window.addEventListener('popstate', () => {
-      this.notifyListeners();
-    });
-  }
+  detach = this.location.onPopState(this.notifyListeners.bind(this));
+
+  constructor(@inject(Location) private location: Location) {}
 
   getFragment() {
     let fragment = '';
 
-    fragment = this.normalize(location.pathname);
+    fragment = this.normalize(this.location.getPath());
     fragment = this.root !== '/' ? fragment.replace(this.root, '') : fragment;
 
     return this.normalize(fragment);
   }
 
   navigate(path: string) {
-    history.pushState(null, '', this.root + this.normalize(path));
+    this.location.goTo(this.root + this.normalize(path));
 
     this.notifyListeners();
   }
@@ -55,8 +74,6 @@ export class Router {
   }
 
   private notifyListeners() {
-    this.listeners.forEach((cb) => {
-      cb();
-    });
+    this.listeners.forEach((cb) => cb());
   }
 }

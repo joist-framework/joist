@@ -1,18 +1,41 @@
-import { JoistElement, OnConnected, OnDisconnected, get } from '@joist/component';
+import {
+  JoistElement,
+  OnConnected,
+  OnDisconnected,
+  get,
+  property,
+  OnPropChanges,
+} from '@joist/component';
 
 import { Router } from '../router';
 
-export class RouterLinkElement extends JoistElement implements OnConnected, OnDisconnected {
-  @get(Router) router!: Router;
+type RouterLinkLifecycle = OnConnected & OnDisconnected & OnPropChanges;
 
-  path: string = this.getAttribute('path') || '';
-  pathMatch: string = this.getAttribute('path-match') || 'startsWith';
-  activeClass: string = this.getAttribute('active-class') || 'active';
+export class RouterLinkElement extends JoistElement implements RouterLinkLifecycle {
+  @get(Router)
+  private router!: Router;
+
+  @property()
+  public path: string = this.getAttribute('path') || '';
+
+  @property()
+  public pathMatch: string = this.getAttribute('path-match') || 'startsWith';
+
+  @property()
+  public activeClass: string = this.getAttribute('active-class') || 'active';
 
   private normalizedPath: string = this.router.normalize(this.path);
   private removeListener?: Function;
 
+  onPropChanges(key: string, o: string, n: string) {
+    if (key === 'path' && o !== n) {
+      this.normalizedPath = this.router.normalize(this.path);
+    }
+  }
+
   connectedCallback() {
+    super.connectedCallback();
+
     this.removeListener = this.router.listen(() => {
       this.setActiveClass();
     });
