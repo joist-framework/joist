@@ -87,7 +87,7 @@ class BarService {
   tagName: 'app-root',
 })
 class AppElement extends JoistElement {
-  @get(BarService) 
+  @get(BarService)
   private myService!: BarService;
 
   connectedCallback() {
@@ -114,7 +114,7 @@ import { component, State, JoistElement, get } from '@joist/component';
   }
 })
 class AppElement extends JoistElement {
-  @get(State) 
+  @get(State)
   private state!: State<number>;
 
   connectedCallback() {
@@ -209,7 +209,7 @@ import { reducer, ReducerState } from '@joist/component/extras';
   ]
 })
 class AppElement extends JoistElement {
-  @get(ReducerState) 
+  @get(ReducerState)
   private state!: ReducerState<number>;
 
   increment() {
@@ -228,7 +228,7 @@ Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement, property, OnPropChanges, get } from '@joist/component';
+import { component, State, JoistElement, property, OnPropChanges, get, PropChange } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -238,12 +238,12 @@ import { component, State, JoistElement, property, OnPropChanges, get } from '@j
   },
 })
 class AppElement extends JoistElement implements OnPropChanges {
-  @get(State) 
+  @get(State)
   private state!: State<string>;
 
   @property() greeting = '';
 
-  onPropChanges(_name: string, _oldVal: string, _newVal: string) {
+  onPropChanges(_change: PropChange) {
     this.state.setValue(this.greeting);
   }
 }
@@ -274,7 +274,7 @@ import { html } from 'lit-html';
   })
 })
 class AppElement extends JoistElement {
-  @get(State) 
+  @get(State)
   private state!: State<number>;
 
   @handle('INCREMENT') onIncrement(_: Event) {
@@ -284,7 +284,7 @@ class AppElement extends JoistElement {
   @handle('DECREMENT') onDecrement(_: Event) {
     this.state.setValue(this.state.value - 1);
   }
-  
+
   @handle('INCREMENT')
   @handle('DECREMENT')
   onEither() {
@@ -394,7 +394,7 @@ class Fooservice {
 
 @customElement('simple-greeting')
 export class SimpleGreeting extends LitElement {
-  @get(Fooservice) 
+  @get(Fooservice)
   private foo: Fooservice;
 
   @property() name = 'World';
