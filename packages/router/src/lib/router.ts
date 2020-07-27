@@ -9,6 +9,14 @@ export interface Route {
 
 export class RouteCtx extends State<MatchResult<any>> {}
 
+export function normalize(path: Path) {
+  return path.toString().replace(/^\/|\/$/g, '');
+}
+
+export function match(path: Path) {
+  return ogMatch(normalize(path), { decode: decodeURIComponent });
+}
+
 @service()
 export class Location {
   getPath() {
@@ -30,50 +38,45 @@ export class Location {
   }
 }
 
-export function normalize(path: Path) {
-  return path.toString().replace(/^\/|\/$/g, '');
-}
-
-export function match(path: Path) {
-  return ogMatch(normalize(path), { decode: decodeURIComponent });
+@service()
+export class RouterConfig {
+  root: string = '/';
+  navigateEventName: string = 'joist_router_navigate';
 }
 
 @service()
 export class Router {
-  private listeners: Function[] = [];
+  detach = this.location.onPopState(this.notify.bind(this));
 
-  root: string = '/';
-
-  detach = this.location.onPopState(this.notifyListeners.bind(this));
-
-  constructor(@inject(Location) private location: Location) {}
+  constructor(
+    @inject(Location) private location: Location,
+    @inject(RouterConfig) private config: RouterConfig
+  ) {}
 
   getFragment() {
     let fragment = '';
 
     fragment = normalize(this.location.getPath());
-    fragment = this.root !== '/' ? fragment.replace(this.root, '') : fragment;
+    fragment = this.config.root !== '/' ? fragment.replace(this.config.root, '') : fragment;
 
     return normalize(fragment);
   }
 
   navigate(path: string) {
-    this.location.goTo(this.root + normalize(path));
+    this.location.goTo(this.config.root + normalize(path));
 
-    this.notifyListeners();
+    this.notify();
   }
 
-  listen(cb: Function) {
-    this.listeners.push(cb);
+  listen(cb: () => unknown) {
+    addEventListener(this.config.navigateEventName, cb);
 
     return () => {
-      const index = this.listeners.indexOf(cb);
-
-      this.listeners.splice(index, 1);
+      removeEventListener(this.config.navigateEventName, cb);
     };
   }
 
-  private notifyListeners() {
-    this.listeners.forEach((cb) => cb());
+  private notify() {
+    dispatchEvent(new CustomEvent(this.config.navigateEventName));
   }
 }

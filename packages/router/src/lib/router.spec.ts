@@ -1,4 +1,4 @@
-import { Router, Location } from './router';
+import { Router, Location, RouterConfig } from './router';
 
 describe('Router', () => {
   it('should return a normalized path', () => {
@@ -18,7 +18,7 @@ describe('Router', () => {
       }
     }
 
-    const router = new Router(new MockLocation());
+    const router = new Router(new MockLocation(), new RouterConfig());
 
     expect(router.getFragment()).toBe('foo/bar');
   });
