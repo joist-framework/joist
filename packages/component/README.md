@@ -87,7 +87,8 @@ class Barservice {
   tagName: 'app-root',
 })
 class AppElement extends Joistcomponent {
-  @get(Myservice) private myservice!: Myservice;
+  @get(Myservice) 
+  private myservice!: Myservice;
 
   connectedCallback() {
     super.connectedCallback();
@@ -113,7 +114,8 @@ import { component, State, JoistElement, get } from '@joist/component';
   }
 })
 class AppElement extends JoistElement {
-  @get(State) private state!: State<number>;
+  @get(State) 
+  private state!: State<number>;
 
   connectedCallback() {
     super.connectedCallback();
@@ -207,7 +209,8 @@ import { reducer, ReducerState } from '@joist/component/extras';
   ]
 })
 class AppElement extends JoistElement {
-  @get(ReducerState) private state!: ReducerState<number>;
+  @get(ReducerState) 
+  private state!: ReducerState<number>;
 
   increment() {
     return this.state.dispatch({ type: 'INCREMENT' });
@@ -235,7 +238,8 @@ import { component, State, JoistElement, property, OnPropChanges, get } from '@j
   },
 })
 class AppElement extends JoistElement implements OnPropChanges {
-  @get(State) private state!: State<string>;
+  @get(State) 
+  private state!: State<string>;
 
   @property() greeting = '';
 
@@ -270,7 +274,8 @@ import { html } from 'lit-html';
   })
 })
 class AppElement extends JoistElement {
-  @get(State) private state!: State<number>;
+  @get(State) 
+  private state!: State<number>;
 
   @handle('INCREMENT') onIncrement(_: Event) {
     this.state.setValue(this.state.value + 1);
@@ -383,7 +388,8 @@ class Fooservice {
 
 @customElement('simple-greeting')
 export class SimpleGreeting extends LitElementDi {
-  @get(Fooservice) private foo: Fooservice;
+  @get(Fooservice) 
+  private foo: Fooservice;
 
   @property() name = 'World';
 
