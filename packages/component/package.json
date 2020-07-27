@@ -6,8 +6,7 @@
   "files": [
     "target",
     "lit-html/package.json",
-    "extras/package.json",
-    "testing/package.json"
+    "extras/package.json"
   ],
   "sideEffects": false,
   "description": "Framework around Lit-Html",

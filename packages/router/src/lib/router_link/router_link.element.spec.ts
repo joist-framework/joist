@@ -3,7 +3,7 @@ import { defineEnvironment } from '@joist/component';
 import { Location } from '../router';
 import { RouterLinkElement } from './router_link.element';
 
-fdescribe('RouterLinkComponent', () => {
+describe('RouterLinkComponent', () => {
   customElements.define('router-link', RouterLinkElement);
 
   it('should mark the router outlet with the default active class if the path matches', () => {

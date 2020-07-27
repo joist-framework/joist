@@ -78,29 +78,6 @@ describe('JoistElement', () => {
 
       clearEnvironment();
     });
-
-    it('should use find and use the parent injector scope if available', () => {
-      @component()
-      class Parent extends JoistElement {}
-      customElements.define('di-3-parent', Parent);
-
-      @component()
-      class Child extends JoistElement {}
-      customElements.define('di-3-child', Child);
-
-      const host = document.createElement('div');
-
-      host.innerHTML = `
-        <di-3-parent>
-          <di-3-child></di-3-child>
-        </di-3-parent>
-      `;
-
-      const parent = host.querySelector('di-3-parent') as JoistElement;
-      const child = host.querySelector('di-3-child') as JoistElement;
-
-      expect(child.injector.parent).toBe(parent.injector);
-    });
   });
 
   describe('handlers', () => {

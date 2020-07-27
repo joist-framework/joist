@@ -29,8 +29,6 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
   constructor() {
     super();
 
-    this.setAttribute('__joist-component__', '');
-
     const state = this.componentDef.state;
     const providers = this.componentDef.providers || [];
 
@@ -45,7 +43,7 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
         providers: [...providers, { provide: State, use: ComponentState }],
         bootstrap: providers.map((p) => p.provide),
       },
-      this.getParentInjector()
+      getEnvironmentRef()
     );
 
     if (this.componentDef.shadowDom) {
@@ -54,8 +52,6 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
   }
 
   connectedCallback() {
-    this.injector.parent = this.getParentInjector();
-
     const state = this.injector.get(State);
 
     const ctx: RenderCtx<any> = {
@@ -89,13 +85,13 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
     });
   }
 
-  private getParentInjector() {
-    let parent: JoistElement | null = null;
+  // private getParentInjector() {
+  //   let parent: JoistElement | null = null;
 
-    if (this.parentElement) {
-      parent = this.parentElement.closest('[__joist-component__]');
-    }
+  //   if (this.parentElement) {
+  //     parent = this.parentElement.closest('[__joist-component__]');
+  //   }
 
-    return parent ? parent.injector : getEnvironmentRef();
-  }
+  //   return parent ? parent.injector : getEnvironmentRef();
+  // }
 }
