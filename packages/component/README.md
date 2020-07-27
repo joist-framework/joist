@@ -140,7 +140,7 @@ import { component, State, JoistElement, get } from '@joist/component';
 import { service } from '@joist/di';
 
 @service()
-class Userservice {
+class UserService {
   fetchUsers() {
     return fetch('https://reqres.in/api/users').then(res => res.json());
   }
@@ -165,8 +165,8 @@ class AppElement extends JoistElement {
   @get(State)
   private state!: State<AppState>;
 
-  @get(Userservice)
-  private user!: Userservice;
+  @get(UserService)
+  private user!: UserService;
 
   connectedCallback() {
     super.connectedCallback();
@@ -284,6 +284,12 @@ class AppElement extends JoistElement {
   @handle('DECREMENT') onDecrement(_: Event) {
     this.state.setValue(this.state.value - 1);
   }
+  
+  @handle('INCREMENT')
+  @handle('DECREMENT')
+  onEither() {
+    console.log('CALLED WHEN EITHER IS RUN')
+  }
 }
 ```
 
@@ -387,7 +393,7 @@ class Fooservice {
 }
 
 @customElement('simple-greeting')
-export class SimpleGreeting extends LitElementDi {
+export class SimpleGreeting extends LitElement {
   @get(Fooservice) 
   private foo: Fooservice;
 
