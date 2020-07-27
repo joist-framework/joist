@@ -284,6 +284,12 @@ class AppElement extends JoistElement {
   @handle('DECREMENT') onDecrement(_: Event) {
     this.state.setValue(this.state.value - 1);
   }
+  
+  @handle('INCREMENT')
+  @handle('DECREMENT')
+  onEither() {
+    console.log('CALLED WHEN EITHER IS RUN')
+  }
 }
 ```
 
