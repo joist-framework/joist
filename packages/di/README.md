@@ -88,15 +88,13 @@ class FooService {
 ```TS
 import { Injector, inject } from '@joist/di';
 
-function fooRef(c: any, k: string, i: number) {
-  inject(FooService)(c, k, i)
-}
-
 class FooService {
   sayHello() {
     return 'Hello From FooService';
   }
 }
+
+const fooRef = inject(FooService)
 
 class BarService {
   constructor(@fooRef private foo: FooService) {}
