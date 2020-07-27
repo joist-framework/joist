@@ -373,16 +373,17 @@ describe('AppElement', () => {
 
 ### Use with LitElement
 
-Joist components are an opinionated way to writing elements,
+Joist components are an opinionated way to write elements,
 If you want to use the Joist DI system by don't want to use Joist components it is easy enough to use something like LitElement instead.
+As long as your element implements InjectorBase you can use Joist DI.
 
 ```TS
-import { injectorBase, getEnvironmentRef, get } from '@joist/component';
-import { injector, service } from '@joist/di';
+import { InjectorBase, getEnvironmentRef, get } from '@joist/component';
+import { Injector, service } from '@joist/di';
 import { LitElement as LitElementOg, html, property, customElement } from 'lit-element';
 
-class LitElement extends LitElementOg implements injectorBase {
-  public injector = new injector({}, getEnvironmentRef());
+class LitElement extends LitElementOg implements InjectorBase {
+  public injector = new Injector({}, getEnvironmentRef());
 }
 
 @service()
