@@ -68,15 +68,15 @@ import { component, JoistElement, get } from '@joist/component';
 import { service, inject } from '@joist/di'
 
 @service()
-class Fooservice {
+class FooService {
   sayHello() {
     return 'Hello World';
   }
 }
 
 @service()
-class Barservice {
-  constructor(@inject(Fooservice) private foo: Fooservice) {}
+class BarService {
+  constructor(@inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return this.foo.sayHello();
@@ -86,9 +86,9 @@ class Barservice {
 @component({
   tagName: 'app-root',
 })
-class AppElement extends Joistcomponent {
-  @get(Myservice) 
-  private myservice!: Myservice;
+class AppElement extends JoistElement {
+  @get(BarService) 
+  private myService!: BarService;
 
   connectedCallback() {
     super.connectedCallback();
