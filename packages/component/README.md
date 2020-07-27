@@ -140,7 +140,7 @@ import { component, State, JoistElement, get } from '@joist/component';
 import { service } from '@joist/di';
 
 @service()
-class Userservice {
+class UserService {
   fetchUsers() {
     return fetch('https://reqres.in/api/users').then(res => res.json());
   }
@@ -165,8 +165,8 @@ class AppElement extends JoistElement {
   @get(State)
   private state!: State<AppState>;
 
-  @get(Userservice)
-  private user!: Userservice;
+  @get(UserService)
+  private user!: UserService;
 
   connectedCallback() {
     super.connectedCallback();
