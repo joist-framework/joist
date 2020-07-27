@@ -387,7 +387,7 @@ class LitElement extends LitElementOg implements InjectorBase {
 }
 
 @service()
-class Fooservice {
+class FooService {
   sayHello(name: string) {
     return `Hello, ${name}`;
   }
@@ -395,8 +395,8 @@ class Fooservice {
 
 @customElement('simple-greeting')
 export class SimpleGreeting extends LitElement {
-  @get(Fooservice)
-  private foo: Fooservice;
+  @get(FooService)
+  private foo: FooService;
 
   @property() name = 'World';
 
