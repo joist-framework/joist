@@ -47,9 +47,12 @@ const routes: Route[] = [
   })
 })
 export class AppElement extends JoistElement {
-  @get(RouteCtx) private route: RouteCtx;
+  @get(RouteCtx) 
+  private route: RouteCtx;
 
   connectedCallback() {
+    super.connectedCallback();
+    
     console.log(this.route.value);
 
     this.route.onChanges(ctx => {
