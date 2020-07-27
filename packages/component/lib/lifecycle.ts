@@ -1,7 +1,3 @@
-export interface OnPropChanges {
-  onPropChanges(prop: string, oldVal: any, newVal: any): void;
-}
-
 export interface OnConnected {
   connectedCallback(): void;
 }
@@ -14,12 +10,20 @@ export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
 
+export class PropChange<T = any> {
+  constructor(
+    public key: string,
+    public newValue: T,
+    public firstChange: boolean,
+    public oldValue?: T
+  ) {}
+}
+
 export interface OnPropChanges {
-  onPropChanges(name: string, oldValue: any, newValue: any): void;
+  onPropChanges(change: PropChange): void;
 }
 
 export type Lifecycle = Partial<OnPropChanges> &
   Partial<OnConnected> &
   Partial<OnDisconnected> &
-  Partial<OnAttributeChanged> &
-  Partial<OnPropChanges>;
+  Partial<OnAttributeChanged>;

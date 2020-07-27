@@ -5,6 +5,7 @@ import {
   get,
   property,
   OnPropChanges,
+  PropChange,
 } from '@joist/component';
 
 import { Router, normalize } from '../router';
@@ -27,8 +28,10 @@ export class RouterLinkElement extends JoistElement implements RouterLinkLifecyc
   private normalizedPath: string = normalize(this.path);
   private removeListener?: Function;
 
-  onPropChanges(key: string, o: string, n: string) {
-    if (key === 'path' && o !== n) {
+  onPropChanges(change: PropChange) {
+    const { key, oldValue, newValue } = change;
+
+    if (key === 'path' && oldValue !== newValue) {
       this.normalizedPath = normalize(this.path);
     }
   }
