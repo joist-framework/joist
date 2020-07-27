@@ -1,6 +1,6 @@
 {
   "name": "@joist-examples/hello-world-lit-html",
-  "version": "1.0.0-alpha.30",
+  "version": "1.0.0-beta.0",
   "description": "Hello World",
   "private": true,
   "scripts": {
