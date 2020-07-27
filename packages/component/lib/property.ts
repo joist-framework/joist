@@ -10,9 +10,11 @@ export function property() {
         if (this.onPropChanges) {
           const oldValue = this[key];
 
-          this[valueKey] = val;
+          if (val !== oldValue) {
+            this[valueKey] = val;
 
-          this.onPropChanges(new PropChange(key, val, !this[initKey], oldValue));
+            this.onPropChanges(new PropChange(key, val, !this[initKey], oldValue));
+          }
         }
 
         this[initKey] = true;
