@@ -387,7 +387,7 @@ class Fooservice {
 }
 
 @customElement('simple-greeting')
-export class SimpleGreeting extends LitElementDi {
+export class SimpleGreeting extends LitElement {
   @get(Fooservice) 
   private foo: Fooservice;
 
