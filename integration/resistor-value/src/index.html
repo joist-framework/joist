@@ -49,6 +49,60 @@
         position: relative;
         z-index: 1001;
       }
+
+      select-band-color {
+        position: absolute;
+        top: 20rem;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      resistor-value {
+        margin: 1.3rem 0;
+      }
+
+      select-band-count {
+        margin: 0 1rem;
+      }
+
+      .value {
+        text-align: center;
+        font-size: 2rem;
+      }
+
+      .slide-up {
+        animation: slide-up 0.2s;
+        transform: translateY(0);
+        display: block;
+      }
+
+      .slide-down {
+        animation: slide-down 0.2s;
+        transform: translateY(150%);
+      }
+
+      @keyframes slide-up {
+        0% {
+          transform: translateY(100%);
+        }
+
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slide-down {
+        0% {
+          display: block;
+          transform: translateY(0);
+        }
+
+        100% {
+          display: none;
+          transform: translateY(100%);
+        }
+      }
     </style>
 
     <header>Resistor Value</header>

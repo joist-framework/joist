@@ -1,4 +1,5 @@
-import { component, State, JoistElement, get } from '@joist/component';
+import { component, State, JoistElement, get, property, OnPropChanges } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -7,7 +8,7 @@ import { ResistorBand } from './resistor.service';
   tagName: 'resistor-value',
   shadowDom: 'open',
   state: [],
-  render({ state }) {
+  render: template(({ state }) => {
     return html`
       <style>
         :host {
@@ -72,19 +73,21 @@ import { ResistorBand } from './resistor.service';
       <section class="start"></section>
 
       <section class="middle">
-        ${state.map((band) => {
-          return html` <div class="band" .style="background: ${band.color}"></div> `;
-        })}
+        ${state.map((band) => html`<div class="band" .style="background: ${band.color}"></div>`)}
       </section>
 
       <section class="end"></section>
     `;
-  },
+  }),
 })
-export class ResistorElement extends JoistElement {
-  @get(State) private state!: State<ResistorBand[]>;
+export class ResistorElement extends JoistElement implements OnPropChanges {
+  @get(State)
+  private state!: State<ResistorBand[]>;
 
-  set bands(value: ResistorBand[]) {
-    this.state.setValue(value);
+  @property()
+  public bands: ResistorBand[] = [];
+
+  onPropChanges() {
+    this.state.setValue(this.bands);
   }
 }

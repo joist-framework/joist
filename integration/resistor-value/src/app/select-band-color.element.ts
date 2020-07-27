@@ -1,4 +1,4 @@
-import { State, component, JoistElement, get } from '@joist/component';
+import { State, component, JoistElement, get, OnPropChanges, property } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -58,10 +58,14 @@ export interface SelectBandColorState {
     `;
   }),
 })
-export class SelectBandColorElement extends JoistElement implements SelectBandColorState {
-  @get(State) private state!: State<SelectBandColorState>;
+export class SelectBandColorElement extends JoistElement implements OnPropChanges {
+  @get(State)
+  private state!: State<SelectBandColorState>;
 
-  set bands(bands: ResistorBand[]) {
-    this.state.setValue({ bands });
+  @property()
+  public bands: ResistorBand[] = [];
+
+  onPropChanges() {
+    this.state.setValue({ bands: this.bands });
   }
 }

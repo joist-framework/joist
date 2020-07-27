@@ -3,6 +3,7 @@ import './resistor.element';
 import './select-band-color.element';
 
 import { State, handle, OnConnected, component, JoistElement, get } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
 import { ResistorService, ResistorBand } from './resistor.service';
@@ -25,64 +26,8 @@ export interface AppState {
     availableBands: [],
     displayColors: false,
   },
-  render({ state, run }) {
+  render: template(({ state, run }) => {
     return html`
-      <style>
-        select-band-color {
-          position: absolute;
-          top: 20rem;
-          left: 0;
-          right: 0;
-          bottom: 0;
-        }
-
-        resistor-value {
-          margin: 1.3rem 0;
-        }
-
-        select-band-count {
-          margin: 0 1rem;
-        }
-
-        .value {
-          text-align: center;
-          font-size: 2rem;
-        }
-
-        .slide-up {
-          animation: slide-up 0.2s;
-          transform: translateY(0);
-          display: block;
-        }
-
-        .slide-down {
-          animation: slide-down 0.2s;
-          transform: translateY(150%);
-        }
-
-        @keyframes slide-up {
-          0% {
-            transform: translateY(100%);
-          }
-
-          100% {
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slide-down {
-          0% {
-            display: block;
-            transform: translateY(0);
-          }
-
-          100% {
-            display: none;
-            transform: translateY(100%);
-          }
-        }
-      </style>
-
       <div class="value">
         ${state.displayColors
           ? state.selectedBands.length < state.bandLimit
@@ -105,7 +50,7 @@ export interface AppState {
         @band_selected=${run('BAND_SELECTED')}
       ></select-band-color>
     `;
-  },
+  }),
 })
 export class AppElement extends JoistElement implements OnConnected {
   @get(State)

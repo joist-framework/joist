@@ -1,6 +1,6 @@
 import { State } from '@joist/component';
 import { service, inject } from '@joist/di';
-import { match, Path, MatchResult } from 'path-to-regexp';
+import { match as ogMatch, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
@@ -30,6 +30,14 @@ export class Location {
   }
 }
 
+export function normalize(path: Path) {
+  return path.toString().replace(/^\/|\/$/g, '');
+}
+
+export function match(path: Path) {
+  return ogMatch(normalize(path), { decode: decodeURIComponent });
+}
+
 @service()
 export class Router {
   private listeners: Function[] = [];
@@ -43,14 +51,14 @@ export class Router {
   getFragment() {
     let fragment = '';
 
-    fragment = this.normalize(this.location.getPath());
+    fragment = normalize(this.location.getPath());
     fragment = this.root !== '/' ? fragment.replace(this.root, '') : fragment;
 
-    return this.normalize(fragment);
+    return normalize(fragment);
   }
 
   navigate(path: string) {
-    this.location.goTo(this.root + this.normalize(path));
+    this.location.goTo(this.root + normalize(path));
 
     this.notifyListeners();
   }
@@ -63,14 +71,6 @@ export class Router {
 
       this.listeners.splice(index, 1);
     };
-  }
-
-  match(path: Path) {
-    return match(this.normalize(path), { decode: decodeURIComponent });
-  }
-
-  normalize(path: Path) {
-    return path.toString().replace(/^\/|\/$/g, '');
   }
 
   private notifyListeners() {

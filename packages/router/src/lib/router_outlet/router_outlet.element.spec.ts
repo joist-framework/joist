@@ -17,10 +17,6 @@ describe('RouterOutletComponent', () => {
     getPath() {
       return '/foo';
     }
-
-    onPopState() {
-      return () => {};
-    }
   }
 
   beforeEach(() => {

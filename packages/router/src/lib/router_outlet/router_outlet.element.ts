@@ -12,7 +12,7 @@ import {
 import { Injector } from '@joist/di';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
 
-import { Route, Router, RouteCtx } from '../router';
+import { Route, Router, RouteCtx, match } from '../router';
 
 export interface RouterOutletState {
   element?: HTMLElement & { [key: string]: any };
@@ -51,7 +51,7 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   private removeListener?: Function;
 
   onPropChanges() {
-    this.matchers = this.routes.map((route) => this.router.match(route.path));
+    this.matchers = this.routes.map((route) => match(route.path));
 
     this.check();
   }

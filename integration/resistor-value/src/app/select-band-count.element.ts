@@ -1,4 +1,4 @@
-import { State, component, JoistElement, get } from '@joist/component';
+import { State, component, JoistElement, get, property, OnPropChanges } from '@joist/component';
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
@@ -92,14 +92,20 @@ interface SelectBandCountState {
     `;
   }),
 })
-export class SelectBandCountElement extends JoistElement implements SelectBandCountState {
-  @get(State) private state!: State<SelectBandCountState>;
+export class SelectBandCountElement extends JoistElement implements OnPropChanges {
+  @get(State)
+  private state!: State<SelectBandCountState>;
 
-  set bandLimit(bandLimit: number) {
-    this.state.patchValue({ bandLimit });
-  }
+  @property()
+  public bandLimit: number = 0;
 
-  set selectedBands(selectedBands: ResistorBand[]) {
-    this.state.patchValue({ selectedBands });
+  @property()
+  public selectedBands: ResistorBand[] = [];
+
+  onPropChanges() {
+    this.state.setValue({
+      bandLimit: this.bandLimit,
+      selectedBands: this.selectedBands,
+    });
   }
 }

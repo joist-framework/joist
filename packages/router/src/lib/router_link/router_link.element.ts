@@ -7,7 +7,7 @@ import {
   OnPropChanges,
 } from '@joist/component';
 
-import { Router } from '../router';
+import { Router, normalize } from '../router';
 
 type RouterLinkLifecycle = OnConnected & OnDisconnected & OnPropChanges;
 
@@ -24,12 +24,12 @@ export class RouterLinkElement extends JoistElement implements RouterLinkLifecyc
   @property()
   public activeClass: string = this.getAttribute('active-class') || 'active';
 
-  private normalizedPath: string = this.router.normalize(this.path);
+  private normalizedPath: string = normalize(this.path);
   private removeListener?: Function;
 
   onPropChanges(key: string, o: string, n: string) {
     if (key === 'path' && o !== n) {
-      this.normalizedPath = this.router.normalize(this.path);
+      this.normalizedPath = normalize(this.path);
     }
   }
 
@@ -44,7 +44,7 @@ export class RouterLinkElement extends JoistElement implements RouterLinkLifecyc
 
     if (child && child instanceof HTMLAnchorElement) {
       this.path = child.pathname;
-      this.normalizedPath = this.router.normalize(this.path);
+      this.normalizedPath = normalize(this.path);
     }
 
     this.onclick = (e) => {
