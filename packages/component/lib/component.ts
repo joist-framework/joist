@@ -25,14 +25,14 @@ export function getComponentDef<T>(provider: any): ComponentDef<T> {
 
 export function component<T>(componentDef: ComponentDef<T> = {}) {
   return function (component: CustomElementConstructor) {
-    if (componentDef.tagName) {
-      customElements.define(componentDef.tagName, component);
-    }
-
     Object.defineProperty(component, COMPONENT_DEF_KEY, {
       get() {
         return componentDef;
       },
     });
+
+    if (componentDef.tagName) {
+      customElements.define(componentDef.tagName, component);
+    }
   };
 }

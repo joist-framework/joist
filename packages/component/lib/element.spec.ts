@@ -9,14 +9,15 @@ import { handle } from './handle';
 describe('JoistElement', () => {
   describe('state', () => {
     @component({
-      tagName: 'state-1',
+      tagName: 'state-test-1',
       state: 0,
       render({ state, host }) {
         host.innerHTML = state.toString();
       },
     })
     class MyElement extends JoistElement {
-      @get(State) state!: State<number>;
+      @get(State)
+      public state!: State<number>;
     }
 
     it('should update the view when state is updated', async () => {
