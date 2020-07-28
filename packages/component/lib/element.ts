@@ -35,8 +35,11 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  * Applies an Injector and sets up state and render pipeline.
  */
 export class JoistElement extends withInjector(HTMLElement) implements Lifecycle {
-  private componentDef = getComponentDef<any>(this.constructor);
-  private handlers = getComponentHandlers(this.constructor);
+  private componentDef = getComponentDef<any>(this.constructor); // read the component definition
+                             
+  private handlers = getComponentHandlers(this.constructor); // read the component handlers
+  
+  // define the render context for the instance
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
     run: (eventName: string, payload: unknown) => (e: Event) => {
