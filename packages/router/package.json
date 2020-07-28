@@ -6,7 +6,7 @@
   "files": [
     "target"
   ],
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "Simple JS router",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
