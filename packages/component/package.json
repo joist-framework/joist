@@ -9,7 +9,7 @@
     "extras/package.json"
   ],
   "sideEffects": false,
-  "description": "Framework around Lit-Html",
+  "description": "A framework for building web components, and applications with web components.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
