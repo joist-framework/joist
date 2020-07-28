@@ -20,11 +20,38 @@ export function get<T>(token: ProviderToken<T>) {
   };
 }
 
-export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle {
-  public injector: Injector;
+/**
+ * Mixin that applies an injector to a base class
+ */
+export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
+  return class Injected extends Base implements InjectorBase {
+    public injector: Injector = new Injector({}, getEnvironmentRef());
+  };
+}
 
+/**
+ * Base Element for Joist.
+ *
+ * Applies an Injector and sets up state and render pipeline.
+ */
+export class JoistElement extends withInjector(HTMLElement) implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor);
   private handlers = getComponentHandlers(this.constructor);
+  private renderCtx: RenderCtx = {
+    state: this.componentDef.state,
+    run: (eventName: string, payload: unknown) => (e: Event) => {
+      if (eventName in this.handlers) {
+        this.handlers[eventName].forEach((methodName) => {
+          // eww
+          ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
+        });
+      }
+    },
+    dispatch: (eventName: string, init?: CustomEventInit) => () => {
+      this.dispatchEvent(new CustomEvent(eventName, init));
+    },
+    host: this,
+  };
 
   constructor() {
     super();
@@ -38,13 +65,10 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
       }
     }
 
-    this.injector = new Injector(
-      {
-        providers: [...providers, { provide: State, use: ComponentState }],
-        bootstrap: providers.map((p) => p.provide),
-      },
-      getEnvironmentRef()
-    );
+    const options = this.injector.options;
+
+    options.providers = [...providers, { provide: State, use: ComponentState }];
+    options.bootstrap = providers.map((p) => p.provide);
 
     if (this.componentDef.shadowDom) {
       this.attachShadow({ mode: this.componentDef.shadowDom });
@@ -54,44 +78,18 @@ export class JoistElement extends HTMLElement implements InjectorBase, Lifecycle
   connectedCallback() {
     const state = this.injector.get(State);
 
-    const ctx: RenderCtx<any> = {
-      state: state.value,
-      run: (eventName: string, payload: unknown) => (e: Event) => {
-        if (eventName in this.handlers) {
-          this.handlers[eventName].forEach((methodName) => {
-            // eww
-            ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
-          });
-        }
-      },
-      dispatch: (eventName: string, init?: CustomEventInit) => () => {
-        this.dispatchEvent(new CustomEvent(eventName, init));
-      },
-      host: this,
-    };
+    this.renderCtx.state = state.value;
 
-    const componentRender = (state: any) => {
-      ctx.state = state;
+    this.render(state.value);
 
-      if (this.componentDef.render) {
-        this.componentDef.render(ctx);
-      }
-    };
-
-    componentRender(state.value);
-
-    state.onChange((state) => {
-      componentRender(state);
-    });
+    state.onChange(this.render.bind(this));
   }
 
-  // private getParentInjector() {
-  //   let parent: JoistElement | null = null;
+  private render(state: any) {
+    this.renderCtx.state = state;
 
-  //   if (this.parentElement) {
-  //     parent = this.parentElement.closest('[__joist-component__]');
-  //   }
-
-  //   return parent ? parent.injector : getEnvironmentRef();
-  // }
+    if (this.componentDef.render) {
+      this.componentDef.render(this.renderCtx);
+    }
+  }
 }

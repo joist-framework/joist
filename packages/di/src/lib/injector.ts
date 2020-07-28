@@ -11,15 +11,15 @@ export interface InjectorOptions {
  * Create an instance of a Dependency injector.
  * Can be used to create a singleton of any class that is property annotated with dependencies.
  *
- * @param opts configuration options for the current instance of Injector
+ * @param options configuration options for the current instance of Injector
  * @param parent a parent instance of Injector
  */
 export class Injector {
   private providerMap = new WeakMap<ProviderToken<any>, any>();
 
-  constructor(private opts: InjectorOptions = {}, public parent?: Injector) {
-    if (this.opts.bootstrap) {
-      this.opts.bootstrap.forEach((provider) => this.get(provider));
+  constructor(public options: InjectorOptions = {}, public parent?: Injector) {
+    if (this.options.bootstrap) {
+      this.options.bootstrap.forEach((provider) => this.get(provider));
     }
   }
 
@@ -78,10 +78,10 @@ export class Injector {
   }
 
   private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
-    if (!this.opts.providers) {
+    if (!this.options.providers) {
       return undefined;
     }
 
-    return this.opts.providers.find((provider) => provider.provide === token);
+    return this.options.providers.find((provider) => provider.provide === token);
   }
 }

@@ -241,7 +241,8 @@ class AppElement extends JoistElement implements OnPropChanges {
   @get(State)
   private state!: State<string>;
 
-  @property() greeting = '';
+  @property()
+  public greeting = '';
 
   onPropChanges(_change: PropChange) {
     this.state.setValue(this.greeting);
@@ -348,19 +349,20 @@ import { AppElement } from './app.element';
 import { Myservice } from './my.service'
 
 describe('AppElement', () => {
-  class MockMyservice implements Myservice {
-    sayHello() {
-      return 'GOTCHA!';
-    }
-  }
-
   beforeEach(() => {
-    defineEnvironment([{ provide: Myservice, use: MockMyservice }]);
+    defineEnvironment([
+      {
+        provide: MyService,
+        use: class implements Myservice {
+          sayHello() {
+            return 'GOTCHA!';
+          }
+        }
+      },
+    ]);
   });
 
-  afterEach(() => {
-    clearEnvironment();
-  });
+  afterEach(clearEnvironment);
 
   it('should work', () => {
     const el = new AppElement();
@@ -378,13 +380,9 @@ If you want to use the Joist DI system by don't want to use Joist components it 
 As long as your element implements InjectorBase you can use Joist DI.
 
 ```TS
-import { InjectorBase, getEnvironmentRef, get } from '@joist/component';
-import { Injector, service } from '@joist/di';
-import { LitElement as LitElementOg, html, property, customElement } from 'lit-element';
-
-class LitElement extends LitElementOg implements InjectorBase {
-  public injector = new Injector({}, getEnvironmentRef());
-}
+import { withInjector, get } from '@joist/component';
+import { service } from '@joist/di';
+import { LitElement, html, property, customElement } from 'lit-element';
 
 @service()
 class FooService {
@@ -394,7 +392,7 @@ class FooService {
 }
 
 @customElement('simple-greeting')
-export class SimpleGreeting extends LitElement {
+export class SimpleGreeting extends withInjector(LitElement) {
   @get(FooService)
   private foo: FooService;
 
