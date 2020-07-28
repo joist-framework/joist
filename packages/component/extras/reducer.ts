@@ -11,7 +11,8 @@ export abstract class Reducer<T> {
 }
 
 export class ReducerState<T> {
-  static deps = [Reducer, State];
+  // Avoid decorators in core lib to avoid codegen
+  static deps = [Reducer, State]; 
 
   get value() {
     return this.state.value;
