@@ -4,6 +4,10 @@
 
 A small (~2kb) library to help with the creation of web components and web component based applications. Support for [lit-html](https://lit-html.polymer-project.org/) is baked in but can work with whatever view library you like.
 
+# Getting Started
+The easiest way to play around with Joist is to go to [webcomponents.dev](https://webcomponents.dev/new/) and select the `Joist` as your starter.
+There you can play around with Joist (and other frameworks) with 0 setup required. (You can even test and publish!)
+
 | Package                                | Description           |
 | -------------------------------------- | --------------------- |
 | [@joist/component](packages/component) | Create Web Components |
