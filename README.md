@@ -7,7 +7,7 @@ A small (~2kb) library to help with the creation of web components and web compo
 ## Getting Started
 
 ### [webcomponents.dev](https://webcomponents.dev/new/)
-The easiest way to play around with Joist is to go to use the Joist starter on. [webcomponents.dev](https://webcomponents.dev/create/joist).
+The easiest way to play around with Joist is to go to use the Joist starter on [webcomponents.dev](https://webcomponents.dev/create/joist).
 There you can play around with Joist (and other frameworks) with 0 setup required. (You can even test and publish!)
 
 ### [starter-app-webpack](https://github.com/joist-framework/starter-app-webpack)
