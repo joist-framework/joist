@@ -1,12 +1,29 @@
 import { service } from '@joist/di';
 
-import { JoistElement, get } from './element';
+import { JoistElement, get, withInjector } from './element';
 import { component } from './component';
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { State } from './state';
 import { handle } from './handle';
 
 describe('JoistElement', () => {
+  describe('withInjector', () => {
+    it('should add an injector to any CustomElementConstructor', () => {
+      class MyService {}
+
+      class MyElement extends withInjector(HTMLElement) {
+        @get(MyService)
+        public myService!: MyService;
+      }
+
+      customElements.define('withinjector-test-1', MyElement);
+
+      const el = new MyElement();
+
+      expect(el.myService.constructor).toBe(MyService);
+    });
+  });
+
   describe('state', () => {
     @component({
       tagName: 'state-test-1',

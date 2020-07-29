@@ -373,16 +373,15 @@ describe('AppElement', () => {
 
 ```
 
-### Use with LitElement
+### Use with Vanilla Custom ELements
 
 Joist components are an opinionated way to write elements,
-If you want to use the Joist DI system by don't want to use Joist components it is easy enough to use something like LitElement instead.
+If you want to use the Joist DI system by don't want to use Joist components it is easy enough to use vanilla custom elements or whatever else you like.
 As long as your element implements InjectorBase you can use Joist DI.
 
 ```TS
 import { withInjector, get } from '@joist/component';
 import { service } from '@joist/di';
-import { LitElement, html, property, customElement } from 'lit-element';
 
 @service()
 class FooService {
@@ -391,15 +390,14 @@ class FooService {
   }
 }
 
-@customElement('simple-greeting')
-export class SimpleGreeting extends withInjector(LitElement) {
+export class MyElement extends withInjector(HTMLElement) {
   @get(FooService)
   private foo: FooService;
 
-  @property() name = 'World';
+  name = 'World';
 
-  render() {
-    return html`<p>${this.foo.sayHello(this.name)}!</p>`;
+  connectedCallback() {
+    this.innerHTML = html`<p>${this.foo.sayHello(this.name)}!</p>`
   }
 }
 ```
