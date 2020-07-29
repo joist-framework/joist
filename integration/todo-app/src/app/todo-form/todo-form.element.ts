@@ -2,19 +2,13 @@ import { State, component, JoistElement, get, OnConnected } from '@joist/compone
 import { template } from '@joist/component/lit-html';
 import { html } from 'lit-html';
 
-export interface TodoFormState {
-  todo: string;
-}
-
-@component<TodoFormState>({
+@component({
   tagName: 'todo-form',
-  state: {
-    todo: '',
-  },
+  state: '',
   render: template(({ state }) => {
     return html`
       <form>
-        <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state.todo} />
+        <input autocomplete="off" name="todo" placeholder="Add New Todo" .value=${state} />
 
         <button>Add Todo</button>
       </form>
@@ -22,7 +16,8 @@ export interface TodoFormState {
   }),
 })
 export class TodoFormElement extends JoistElement implements OnConnected {
-  @get(State) private state!: State<TodoFormState>;
+  @get(State)
+  private state!: State<string>;
 
   constructor() {
     super();
@@ -38,14 +33,14 @@ export class TodoFormElement extends JoistElement implements OnConnected {
     const form = new FormData(el);
     const todo = form.get('todo') as string;
 
-    this.state.setValue({ todo });
+    this.state.setValue(todo);
 
     if (todo.length) {
       this.dispatchEvent(
         new CustomEvent<string>('add_todo', { detail: todo })
       );
 
-      this.state.setValue({ todo: '' });
+      this.state.setValue('');
     }
   }
 }

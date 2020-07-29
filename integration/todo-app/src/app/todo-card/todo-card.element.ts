@@ -55,12 +55,13 @@ export interface TodoCardState {
 
             <button @click=${dispatch('remove_todo')}>REMOVE</button>
           </div>`
-        : ''}
+        : null}
     `;
   }),
 })
 export class TodoCardElement extends JoistElement {
-  @get(State) private state!: State<TodoCardState>;
+  @get(State)
+  private state!: State<TodoCardState>;
 
   set todo(todo: Todo | undefined) {
     this.state.setValue({ todo });

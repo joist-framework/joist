@@ -1,12 +1,10 @@
-import './page-2.element';
-
 import { JoistElement, component } from '@joist/component';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
-const routes: Route[] = [
-  { path: '/foo/bar', component: () => document.createElement('page-2-element') },
-];
+import { Page2Element } from './page-2.element';
+
+const routes: Route[] = [{ path: '/foo/bar', component: () => new Page2Element() }];
 
 export interface AppState {
   title: string;
