@@ -397,7 +397,7 @@ export class MyElement extends withInjector(HTMLElement) {
   name = 'World';
 
   connectedCallback() {
-    this.innerHTML = html`<p>${this.foo.sayHello(this.name)}!</p>`
+    this.innerHTML = `<p>${this.foo.sayHello(this.name)}!`
   }
 }
 ```
