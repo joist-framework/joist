@@ -25,11 +25,7 @@ export function getComponentDef<T>(provider: any): ComponentDef<T> {
 
 export function component<T>(componentDef: ComponentDef<T> = {}) {
   return function (component: CustomElementConstructor) {
-    Object.defineProperty(component, COMPONENT_DEF_KEY, {
-      get() {
-        return componentDef;
-      },
-    });
+    Object.defineProperty(component, COMPONENT_DEF_KEY, { value: componentDef });
 
     if (componentDef.tagName) {
       customElements.define(componentDef.tagName, component);

@@ -10,6 +10,9 @@ export interface InjectorBase {
   injector: Injector;
 }
 
+/**
+ * Takes an InjectionToken and resolves that token to a service
+ */
 export function get<T>(token: ProviderToken<T>) {
   return function (target: InjectorBase, key: string) {
     Object.defineProperty(target, key, {
@@ -36,9 +39,9 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  */
 export class JoistElement extends withInjector(HTMLElement) implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor); // read the component definition
-                             
+
   private handlers = getComponentHandlers(this.constructor); // read the component handlers
-  
+
   // define the render context for the instance
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
@@ -46,7 +49,7 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
       if (eventName in this.handlers) {
         this.handlers[eventName].forEach((methodName) => {
           // eww
-          ((this[methodName as keyof this] as any) as Function).call(this, e, payload);
+          ((this[methodName as keyof this] as unknown) as Function).call(this, e, payload);
         });
       }
     },
