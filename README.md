@@ -24,7 +24,7 @@ If you want to build an application or just run everything yourself you can use 
 | [@joist/di](packages/di)               | IOC container         |
 | [@joist/router](packages/router)       | simple router         |
 
-### Example
+### Integration
 
 | Project                                                  | Description                                                       |
 | -------------------------------------------------------- | ----------------------------------------------------------------- |
