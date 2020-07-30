@@ -209,6 +209,21 @@ class AppElement extends JoistElement implements OnPropChanges {
 }
 ```
 
+You can also provide validation functions to proeprty decorators for runtime safety.
+
+```TS
+import { component, JoistElement, property, get } from '@joist/component';
+
+const isString = (val: unknown) => typeof val === 'string';
+const isLongerThan = (length: number) => (val: string) => val.length > length;
+
+@component()
+class MyElement extends JoistElement {
+  @property(isString, isLongerThan(2))
+  public hello = 'Hello World';
+}
+```
+
 ### Component Handlers
 
 Component handlers allow components to respond to actions in a components view.
