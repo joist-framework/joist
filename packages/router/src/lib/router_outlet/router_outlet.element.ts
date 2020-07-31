@@ -51,11 +51,9 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   private removeListener?: Function;
 
   onPropChanges() {
-    if (this.isConnected) {
-      this.matchers = this.routes.map((route) => match(route.path));
+    this.matchers = this.routes.map((route) => match(route.path));
 
-      this.check();
-    }
+    this.check();
   }
 
   connectedCallback() {
@@ -100,7 +98,15 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
 
   private resolve(activeRoute: Route, ctx: MatchResult<object>): Promise<void> {
     return Promise.resolve(activeRoute.component()).then((element) => {
-      const state = this.state.setValue({ element, activeRoute });
+      let el: HTMLElement;
+
+      if (typeof element === 'function') {
+        el = new element();
+      } else {
+        el = element;
+      }
+
+      const state = this.state.setValue({ element: el, activeRoute });
 
       // Only set route context if the HTMLElement has am injector attached
       if ('injector' in element) {

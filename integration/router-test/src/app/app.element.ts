@@ -18,7 +18,7 @@ const routes: Route[] = [
       return el;
     },
   },
-  { path: '/foo(.*)', component: () => new Page1Element() },
+  { path: '/foo(.*)', component: () => Page1Element },
 ];
 
 export interface AppState {

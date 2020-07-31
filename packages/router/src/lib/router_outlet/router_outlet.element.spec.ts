@@ -1,4 +1,4 @@
-import { State, defineEnvironment } from '@joist/component';
+import { State, defineEnvironment, component, JoistElement } from '@joist/component';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
 import { Location } from '../router';
@@ -36,6 +36,24 @@ describe('RouterOutletComponent', () => {
 
     const removeListener = state.onChange((val) => {
       expect(val.element!.tagName).toBe('FOO-BAR');
+
+      removeListener();
+      done();
+    });
+  });
+
+  it('should render a routen when passed a CustomElementConstructor', (done) => {
+    @component({
+      tagName: 'router-outlet-test-2',
+    })
+    class MyElement extends JoistElement {}
+
+    el.routes = [{ path: '/foo', component: () => MyElement }];
+
+    const state: State<RouterOutletState> = el.injector.get(State);
+
+    const removeListener = state.onChange((val) => {
+      expect(val.element!.tagName.toLowerCase()).toBe('router-outlet-test-2');
 
       removeListener();
       done();
