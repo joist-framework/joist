@@ -11,7 +11,7 @@ The easiest way get started with Joist is to go to use the Joist starter on [web
 There you can play around with Joist (and other frameworks) with 0 setup required. (You can even test and publish!)
 
 ### [starter-app-snowpack](https://github.com/joist-framework/starter-app-snowpack)
-If you want to build an application or just run everything yourself you can use the [rollup starter snowpack](https://github.com/joist-framework/starter-app-snowpack). This starter uses snowpack for dev and rollup for creating your production bundle.
+If you want to build an application or just run everything yourself you can use the [snowpack starter app](https://github.com/joist-framework/starter-app-snowpack). This starter uses snowpack for dev and rollup for creating your production bundle.
 
 ### [starter-app-rollup](https://github.com/joist-framework/starter-app-rollup)
 If you want to build an application or just run everything yourself you can use the [rollup starter app](https://github.com/joist-framework/starter-app-rollup).
