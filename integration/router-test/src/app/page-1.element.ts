@@ -1,4 +1,5 @@
 import { JoistElement, component } from '@joist/component';
+import { template } from '@joist/component/lit-html';
 import { Route } from '@joist/router';
 import { html } from 'lit-html';
 
@@ -15,12 +16,12 @@ export interface AppState {
   state: {
     title: 'Page1Component Works!',
   },
-  render({ state }) {
+  render: template(({ state }) => {
     return html`
       <h2>${state.title}</h2>
 
       <router-outlet .routes=${routes}></router-outlet>
     `;
-  },
+  }),
 })
 export class Page1Element extends JoistElement {}
