@@ -28,7 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "9.1.2",
     "@commitlint/config-conventional": "9.1.1",
-    "@types/jasmine": "3.5.11",
+    "@types/jasmine": "3.5.12",
     "@types/node": "8.10.62",
     "husky": "4.2.5",
     "jasmine": "3.6.1",
