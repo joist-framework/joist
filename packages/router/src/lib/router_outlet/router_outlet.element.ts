@@ -100,7 +100,15 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
 
   private resolve(activeRoute: Route, ctx: MatchResult<object>): Promise<void> {
     return Promise.resolve(activeRoute.component()).then((element) => {
-      const state = this.state.setValue({ element, activeRoute });
+      let el: HTMLElement;
+
+      if (typeof element === 'function') {
+        el = new element();
+      } else {
+        el = element;
+      }
+
+      const state = this.state.setValue({ element: el, activeRoute });
 
       // Only set route context if the HTMLElement has am injector attached
       if ('injector' in element) {

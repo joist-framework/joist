@@ -4,7 +4,11 @@ import { match as ogMatch, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
-  component: () => HTMLElement | Promise<HTMLElement>;
+  component: () =>
+    | HTMLElement
+    | Promise<HTMLElement>
+    | CustomElementConstructor
+    | Promise<CustomElementConstructor>;
 }
 
 export class RouteCtx extends State<MatchResult<any>> {}
