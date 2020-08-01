@@ -1,6 +1,6 @@
 {
   "name": "@joist/router",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "target/main.js",
   "module": "target/main.js",
   "files": [
@@ -39,8 +39,8 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@joist/component": "^1.0.2",
-    "@joist/di": "^1.0.2"
+    "@joist/component": "^1.0.3",
+    "@joist/di": "^1.0.3"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
