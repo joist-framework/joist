@@ -7,6 +7,7 @@ describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', RouterOutletElement);
 
   let el: RouterOutletElement;
+  let state: State<RouterOutletState>;
 
   beforeEach(() => {
     defineEnvironment([
@@ -21,6 +22,7 @@ describe('RouterOutletComponent', () => {
     ]);
 
     el = new RouterOutletElement();
+    state = el.injector.get(State);
 
     document.body.appendChild(el);
   });
@@ -30,8 +32,6 @@ describe('RouterOutletComponent', () => {
   });
 
   it('should render the correct initial route', (done) => {
-    const state: State<RouterOutletState> = el.injector.get(State);
-
     state.onChange((val) => {
       expect(val.element!.tagName).toBe('FOO-BAR');
 
@@ -46,8 +46,6 @@ describe('RouterOutletComponent', () => {
       tagName: 'router-outlet-test-2',
     })
     class MyElement extends JoistElement {}
-
-    const state: State<RouterOutletState> = el.injector.get(State);
 
     state.onChange((val) => {
       expect(val.element!.tagName.toLowerCase()).toBe('router-outlet-test-2');
