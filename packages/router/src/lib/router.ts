@@ -6,9 +6,8 @@ export interface Route {
   path: Path;
   component: () =>
     | HTMLElement
-    | Promise<HTMLElement>
     | CustomElementConstructor
-    | Promise<CustomElementConstructor>;
+    | Promise<HTMLElement | CustomElementConstructor>;
 }
 
 export class RouteCtx extends State<MatchResult<any>> {}

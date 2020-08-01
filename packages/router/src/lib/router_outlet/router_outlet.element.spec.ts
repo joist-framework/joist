@@ -1,10 +1,25 @@
 import { State, defineEnvironment, component, JoistElement } from '@joist/component';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
-import { Location } from '../router';
+import { Location, Router } from '../router';
 
 describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', RouterOutletElement);
+
+  @component({ tagName: 'router-outlet-test-1' })
+  class MyElement extends JoistElement {}
+
+  class MockLocation extends Location {
+    private path = '/foo';
+
+    getPath() {
+      return this.path;
+    }
+
+    goTo(path: string) {
+      this.path = path;
+    }
+  }
 
   let el: RouterOutletElement;
   let state: State<RouterOutletState>;
@@ -13,11 +28,7 @@ describe('RouterOutletComponent', () => {
     defineEnvironment([
       {
         provide: Location,
-        use: class MockLocation extends Location {
-          getPath() {
-            return '/foo';
-          }
-        },
+        use: MockLocation,
       },
     ]);
 
@@ -31,7 +42,7 @@ describe('RouterOutletComponent', () => {
     document.body.removeChild(el);
   });
 
-  it('should render the correct initial route', (done) => {
+  it('should render the html element when the path matches', (done) => {
     state.onChange((val) => {
       expect(val.element!.tagName).toBe('FOO-BAR');
 
@@ -41,18 +52,53 @@ describe('RouterOutletComponent', () => {
     el.routes = [{ path: '/foo', component: () => document.createElement('foo-bar') }];
   });
 
-  it('should render a routen when passed a CustomElementConstructor', (done) => {
-    @component({
-      tagName: 'router-outlet-test-2',
-    })
-    class MyElement extends JoistElement {}
-
+  it('should render the html element from a promise when the path matches', (done) => {
     state.onChange((val) => {
-      expect(val.element!.tagName.toLowerCase()).toBe('router-outlet-test-2');
+      expect(val.element!.tagName).toBe('FOO-BAR');
+
+      done();
+    });
+
+    el.routes = [
+      { path: '/foo', component: () => Promise.resolve(document.createElement('foo-bar')) },
+    ];
+  });
+
+  it('should render a route when passed a CustomElementConstructor', (done) => {
+    state.onChange((val) => {
+      expect(val.element).toBeInstanceOf(MyElement);
 
       done();
     });
 
     el.routes = [{ path: '/foo', component: () => MyElement }];
+  });
+
+  it('should render a route when passed a promise resolves to a CustomElementConstructor', (done) => {
+    state.onChange((val) => {
+      expect(val.element).toBeInstanceOf(MyElement);
+
+      done();
+    });
+
+    el.routes = [{ path: '/foo', component: () => Promise.resolve(MyElement) }];
+  });
+
+  it('should update the active element when the route changes', (done) => {
+    let callCount = 0;
+
+    state.onChange((val) => {
+      callCount++;
+
+      if (callCount === 2) {
+        expect(val.element).toBeInstanceOf(MyElement);
+
+        done();
+      }
+    });
+
+    el.routes = [{ path: '/bar', component: () => Promise.resolve(MyElement) }];
+
+    el.injector.get(Router).navigate('/bar');
   });
 });

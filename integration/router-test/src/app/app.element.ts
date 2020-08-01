@@ -9,7 +9,7 @@ import { Page1Element } from './page-1.element';
 
 const routes: Route[] = [
   {
-    path: '/test',
+    path: '/',
     component: () => {
       const el = document.createElement('div');
 
@@ -42,10 +42,6 @@ export interface AppState {
 
       <router-link>
         <a href="/foo">FOO</a>
-      </router-link>
-
-      <router-link>
-        <a href="/foo/bar">BAR</a>
       </router-link>
 
       <router-outlet .routes=${routes}></router-outlet>
