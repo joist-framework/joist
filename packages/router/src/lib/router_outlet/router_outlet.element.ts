@@ -53,7 +53,9 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   onPropChanges() {
     this.matchers = this.routes.map((route) => match(route.path));
 
-    this.check();
+    if (this.routes.length) {
+      this.check();
+    }
   }
 
   connectedCallback() {
@@ -70,6 +72,8 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
 
   private check(): Promise<void> {
     const fragment = this.router.getFragment();
+
+    console.log('CHECKED', fragment);
 
     let route: Route | null = null;
     let matcher: MatchFunction | null = null;

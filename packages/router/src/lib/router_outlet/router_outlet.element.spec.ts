@@ -30,16 +30,15 @@ describe('RouterOutletComponent', () => {
   });
 
   it('should render the correct initial route', (done) => {
-    el.routes = [{ path: '/foo', component: () => document.createElement('foo-bar') }];
-
     const state: State<RouterOutletState> = el.injector.get(State);
 
-    const removeListener = state.onChange((val) => {
+    state.onChange((val) => {
       expect(val.element!.tagName).toBe('FOO-BAR');
 
-      removeListener();
       done();
     });
+
+    el.routes = [{ path: '/foo', component: () => document.createElement('foo-bar') }];
   });
 
   it('should render a routen when passed a CustomElementConstructor', (done) => {
@@ -48,15 +47,14 @@ describe('RouterOutletComponent', () => {
     })
     class MyElement extends JoistElement {}
 
-    el.routes = [{ path: '/foo', component: () => MyElement }];
-
     const state: State<RouterOutletState> = el.injector.get(State);
 
-    const removeListener = state.onChange((val) => {
+    state.onChange((val) => {
       expect(val.element!.tagName.toLowerCase()).toBe('router-outlet-test-2');
 
-      removeListener();
       done();
     });
+
+    el.routes = [{ path: '/foo', component: () => MyElement }];
   });
 });
