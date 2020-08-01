@@ -73,8 +73,6 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
   private check(): Promise<void> {
     const fragment = this.router.getFragment();
 
-    console.log('CHECKED', fragment);
-
     let route: Route | null = null;
     let matcher: MatchFunction | null = null;
     let match: Match<object> | null = null;
