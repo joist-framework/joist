@@ -254,8 +254,11 @@ class AppElement extends JoistElement {
   }
 
   @handle('.*')
-  onEither() {
-    console.log('CALLED WHEN REGEX MATCHES')
+  onEither(e: Event, payload: any, name: string) {
+    console.log('CALLED WHEN REGEX MATCHES');
+    console.log('TRIGGERING EVENT', e);
+    console.log('payload', payload);
+    console.log('matched name', name);
   }
 }
 ```

@@ -111,7 +111,7 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @handle('TEST_RUN') onTestRun(_e: Event, _payload: string) {}
+        @handle('TEST_RUN') onTestRun(..._: any[]) {}
       }
 
       const el = new MyElement();
@@ -125,7 +125,7 @@ describe('JoistElement', () => {
       button.click();
 
       expect(el.onTestRun).toHaveBeenCalledTimes(1);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'Hello World');
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'Hello World', 'TEST_RUN');
     });
 
     it('should handle multiple functions', () => {
@@ -174,7 +174,7 @@ describe('JoistElement', () => {
       class MyElement extends JoistElement {
         @handle('FOO')
         @handle('BAR')
-        onTestRun(_e: Event, _payload: string) {}
+        onTestRun(..._: any[]) {}
       }
 
       const el = new MyElement();
@@ -188,8 +188,8 @@ describe('JoistElement', () => {
       button.click();
 
       expect(el.onTestRun).toHaveBeenCalledTimes(2);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo');
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar');
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo', 'FOO');
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar', 'BAR');
     });
 
     it('should allow a user to match on a Regex', () => {
@@ -205,7 +205,7 @@ describe('JoistElement', () => {
       })
       class MyElement extends JoistElement {
         @handle('foo-*')
-        onTestRun(_e: Event, _p: any) {}
+        onTestRun(..._: any[]) {}
       }
 
       const el = new MyElement();
@@ -219,7 +219,7 @@ describe('JoistElement', () => {
       button.click();
 
       expect(el.onTestRun).toHaveBeenCalledTimes(1);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), undefined);
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), undefined, 'foo-bar');
     });
   });
 });

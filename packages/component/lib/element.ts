@@ -52,7 +52,7 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
         const key = handler.key as keyof this;
         const fn = (this[key] as any) as Function;
 
-        fn.apply(this, [e, payload]);
+        fn.apply(this, [e, payload, name]);
       });
     },
     dispatch: (eventName: string, init?: CustomEventInit) => () => {

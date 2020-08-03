@@ -24,9 +24,9 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
     return html`
       <todo-card
         .todo=${todo}
-        @remove_todo=${run('REMOVE_TODO', index)}
-        @complete_todo=${run('COMPLETE_TODO', index)}
-        @undo_complete=${run('UNDO_COMPLETE', index)}
+        @remove_todo=${run('remove_todo', index)}
+        @complete_todo=${run('complete_todo', index)}
+        @undo_complete=${run('undo_complete', index)}
       ></todo-card>
     `;
   });
@@ -41,9 +41,11 @@ function createTodoList({ state, run }: RenderCtx<AppState>) {
     const { state, run } = ctx;
 
     return html`
-      <todo-form @add_todo=${run('ADD_TODO')}></todo-form>
+      <todo-form @add_todo=${run('add_todo')}></todo-form>
 
-      ${!state.todos.length && html`<div class="placeholder">Looks Like Everything is Done!</div>`}
+      ${!state.todos.length
+        ? html`<div class="placeholder">Looks Like Everything is Done!</div>`
+        : null}
 
       <section>${createTodoList(ctx)}</section>
     `;
@@ -66,19 +68,19 @@ export class AppElement extends JoistElement implements OnConnected {
     });
   }
 
-  @handle('ADD_TODO') onAddTodo(e: CustomEvent<string>): void {
+  @handle('add_todo') onAddTodo(e: CustomEvent<string>): void {
     this.todo.addTodo(new Todo(e.detail, false));
   }
 
-  @handle('REMOVE_TODO') onRemoveTodo(_: Event, payload: number): void {
+  @handle('remove_todo') onRemoveTodo(_: Event, payload: number): void {
     this.todo.removeTodo(payload);
   }
 
-  @handle('COMPLETE_TODO') onCompleteTodo(_: Event, payload: number): void {
+  @handle('complete_todo') onCompleteTodo(_: Event, payload: number): void {
     this.todo.markTodoAsComplete(payload);
   }
 
-  @handle('UNDO_COMPLETE') onUndoComplete(_: Event, payload: number): void {
+  @handle('undo_complete') onUndoComplete(_: Event, payload: number): void {
     this.todo.markTodoAsComplete(payload, false);
   }
 }
