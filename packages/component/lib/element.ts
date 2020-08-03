@@ -46,15 +46,7 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
     run: (name: string, payload: unknown) => (e: Event) => {
-      const matches = this.handlers.filter((handler) => {
-        if (handler.pattern instanceof RegExp) {
-          console.log(handler.pattern.test(name));
-
-          return handler.pattern.test(name);
-        }
-
-        return name === handler.pattern;
-      });
+      const matches = this.handlers.filter((handler) => new RegExp(handler.pattern).test(name));
 
       matches.forEach((handler) => {
         const key = handler.key as keyof this;
