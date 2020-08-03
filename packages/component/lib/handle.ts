@@ -1,15 +1,17 @@
-export const COMPONENT_HANDLERS_KEY = 'handlers';
-
-export function getComponentHandlers(provider: any): Record<string, string[]> {
-  return provider[COMPONENT_HANDLERS_KEY] || {};
+export function getComponentHandlers(provider: any): Handler[] {
+  return provider.handlers || [];
 }
 
-export function handle(action: string) {
-  return function (instance: { constructor: any; [key: string]: any }, key: string) {
-    const provider = instance.constructor;
+export interface Handler {
+  pattern: string | RegExp;
+  key: string;
+}
 
-    provider[COMPONENT_HANDLERS_KEY] = provider[COMPONENT_HANDLERS_KEY] || {};
-    provider[COMPONENT_HANDLERS_KEY][action] = provider[COMPONENT_HANDLERS_KEY][action] || [];
-    provider[COMPONENT_HANDLERS_KEY][action].push(key);
+export function handle(pattern: string | RegExp) {
+  return function (instance: any, key: string) {
+    const constructor = instance.constructor;
+
+    constructor.handlers = constructor.handlers || [];
+    constructor.handlers.push({ pattern, key });
   };
 }
