@@ -182,46 +182,6 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Reducer component State
-
-You can optionally use reducers to manage your state.
-Using the joist dependency injector you can use whatever sort of state management you would like.
-
-```TS
-import { component, JoistElement, get } from '@joist/component';
-import { reducer, ReducerState } from '@joist/component/extras';
-
-@component({
-  tagName: 'app-root',
-  state: 0,
-  render({ state, host }) {
-    host.innerHTML = state.toString();
-  },
-  providers: [
-    reducer<number>((action, state) => {
-      switch (action.type) {
-        case 'INCREMENT': return state + 1;
-        case 'DECREMENT': return state - 1;
-      }
-
-      return state;
-    })
-  ]
-})
-class AppElement extends JoistElement {
-  @get(ReducerState)
-  private state!: ReducerState<number>;
-
-  increment() {
-    return this.state.dispatch({ type: 'INCREMENT' });
-  }
-
-  decrement() {
-    return this.state.dispatch({ type: 'DECREMENT' });
-  }
-}
-```
-
 ### Component Props
 
 Since joist just uses custom elements any properties on your element will work.
