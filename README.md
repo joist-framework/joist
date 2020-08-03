@@ -31,8 +31,7 @@ If you want to build an application or just run everything yourself you can use 
 
 | Project                                                  | Description                                                       |
 | -------------------------------------------------------- | ----------------------------------------------------------------- |
-| [hello-world](integration/hello-world)                   | Hello World no view lib                                           |
-| [hello-world-js](integration/hello-world-js)             | Hello World vanilla js                                            |
+| [hello-world](integration/hello-world)                   | Hello World no view lib                                           |                               
 | [hello-world-lit-html](integration/hello-world-lit-html) | Hello World lit-html                                              |
 | [todo-app](integration/todo-app)                         | Todo app                                                          |
 | [hacker-news](integration/hacker-news)                   | Hacker news PWA                                                   |
