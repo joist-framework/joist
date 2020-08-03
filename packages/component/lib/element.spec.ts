@@ -50,6 +50,23 @@ describe('JoistElement', () => {
     });
   });
 
+  describe('host', () => {
+    it('should set host to the custom element instance', (done) => {
+      @component({
+        tagName: 'host-test-1',
+        state: 0,
+        render({ host }) {
+          expect(host).toBeInstanceOf(MyElement);
+
+          done();
+        },
+      })
+      class MyElement extends JoistElement {}
+
+      new MyElement().connectedCallback();
+    });
+  });
+
   describe('dependency injection', () => {
     it('should map a service to a property', () => {
       @service()

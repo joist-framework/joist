@@ -23,8 +23,10 @@ export function getComponentDef<T>(component: any): ComponentDef<T> {
   return component[COMPONENT_DEF_KEY] || {};
 }
 
-export function component<T>(componentDef: ComponentDef<T> = {}) {
-  return function (component: CustomElementConstructor) {
+export function component<T, H extends HTMLElement = HTMLElement>(
+  componentDef: ComponentDef<T, H> = {}
+) {
+  return function (component: new () => H) {
     Object.defineProperty(component, COMPONENT_DEF_KEY, { value: componentDef });
 
     if (componentDef.tagName) {

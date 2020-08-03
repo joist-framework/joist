@@ -1,15 +1,10 @@
-import { Injector } from '@joist/di';
-
-import './comments-drawer.element';
 import { CommentsDrawerElement } from './comments-drawer.element';
 
 describe('TodoFormElement', () => {
   let el: CommentsDrawerElement;
 
   beforeEach(() => {
-    el = document.createElement('comments-drawer') as CommentsDrawerElement;
-
-    el.injector.parent = new Injector();
+    el = new CommentsDrawerElement();
 
     document.body.appendChild(el);
   });
