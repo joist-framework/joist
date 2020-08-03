@@ -204,7 +204,7 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @handle(/foo-*/)
+        @handle('foo-*')
         onTestRun(_e: Event, _p: any) {}
       }
 

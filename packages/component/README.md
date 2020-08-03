@@ -215,6 +215,7 @@ class AppElement extends JoistElement implements OnPropChanges {
 In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@handle('NAME')` to handle whatever is run.
 Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
+A handler can also match using a RegExp.
 
 ```TS
 import { component, State, handle, JoistElement, get } from '@joist/component';
@@ -250,6 +251,11 @@ class AppElement extends JoistElement {
   @handle('DECREMENT')
   onEither() {
     console.log('CALLED WHEN EITHER IS RUN')
+  }
+
+  @handle('.*')
+  onEither() {
+    console.log('CALLED WHEN REGEX MATCHES')
   }
 }
 ```
