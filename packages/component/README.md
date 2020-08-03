@@ -100,8 +100,8 @@ class AppElement extends JoistElement {
 
 ### Component State
 
-A component view can ONLY be updated by updating the component's state.
-A component's state can be accessed and updated via it's `State` instance which is available via `@get`
+A component render function is only run when a component's state is updated.
+A component's state can be accessed and updated via it's `State` instance which is available using `@get`
 
 ```TS
 import { component, State, JoistElement, get } from '@joist/component';
@@ -133,7 +133,7 @@ class AppElement extends JoistElement {
 
 ### Async Component State
 
-component state can be set asynchronously.
+Component state can be set asynchronously. This means that you can pass a Promise to `setState` and `patchState`.
 
 ```TS
 import { component, State, JoistElement, get } from '@joist/component';
@@ -212,8 +212,8 @@ class AppElement extends JoistElement implements OnPropChanges {
 
 ### Component Handlers
 
-In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
-Decorate component methods with `@handle('NAME')` to handle whatever is run.
+Component handlers allow components to respond to actions in a components view.
+Decorate component methods with `@handle('name')` to handle whatever is run.
 Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
 A handler can also match using a RegExp.
 
@@ -265,7 +265,7 @@ class AppElement extends JoistElement {
 
 ### Dispatching Events
 
-IN addition to calling HTMLElement.dispatchEvent you can also use the dispatch function passed to your render function.
+In addition to calling `this.dispatchEvent` you can also use the dispatch function passed to your render function.
 
 ```TS
 import { component, handle, JoistElement } from '@joist/component';
@@ -274,19 +274,13 @@ import { html } from 'lit-html';
 
 @component({
   tagName: 'app-root',
-  render: template(({ run, dispatch }) => {
+  render: template(({ dispatch }) => {
     return html`
-      <button @click=${dispatch('first_custom_event')}>First</button>
-
-      <button @click=${run('foo')}>Second</button>
+      <button @click=${dispatch('custom_event')}>Custom Event</button>
     `
   })
 })
-class AppElement extends JoistElement {
-  @handle('foo') second() {
-    this.dispatchEvent(new CustomEvent('second_custom_event'));
-  }
-}
+class AppElement extends JoistElement {}
 ```
 
 ### Testing
