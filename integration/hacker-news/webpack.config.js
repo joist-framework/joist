@@ -32,7 +32,7 @@ module.exports = (_env, argv) => {
   }
 
   if (argv.mode === 'production') {
-    config.performance = { hints: 'error', maxEntrypointSize: 28500 };
+    config.performance = { hints: 'error', maxEntrypointSize: 29000 };
     config.plugins.push(new GenerateSW());
   }
 
