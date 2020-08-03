@@ -182,46 +182,6 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Reducer component State
-
-You can optionally use reducers to manage your state.
-Using the joist dependency injector you can use whatever sort of state management you would like.
-
-```TS
-import { component, JoistElement, get } from '@joist/component';
-import { reducer, ReducerState } from '@joist/component/extras';
-
-@component({
-  tagName: 'app-root',
-  state: 0,
-  render({ state, host }) {
-    host.innerHTML = state.toString();
-  },
-  providers: [
-    reducer<number>((action, state) => {
-      switch (action.type) {
-        case 'INCREMENT': return state + 1;
-        case 'DECREMENT': return state - 1;
-      }
-
-      return state;
-    })
-  ]
-})
-class AppElement extends JoistElement {
-  @get(ReducerState)
-  private state!: ReducerState<number>;
-
-  increment() {
-    return this.state.dispatch({ type: 'INCREMENT' });
-  }
-
-  decrement() {
-    return this.state.dispatch({ type: 'DECREMENT' });
-  }
-}
-```
-
 ### Component Props
 
 Since joist just uses custom elements any properties on your element will work.
@@ -255,6 +215,7 @@ class AppElement extends JoistElement implements OnPropChanges {
 In order to trigger methods in a component you can use the `run` function that is provided by RenderCtx
 Decorate component methods with `@handle('NAME')` to handle whatever is run.
 Multiple methods can be mapped to the same key. And a single method can be mappped to multiple 'actions'.
+A handler can also match using a RegExp.
 
 ```TS
 import { component, State, handle, JoistElement, get } from '@joist/component';
@@ -290,6 +251,11 @@ class AppElement extends JoistElement {
   @handle('DECREMENT')
   onEither() {
     console.log('CALLED WHEN EITHER IS RUN')
+  }
+
+  @handle('.*')
+  onEither() {
+    console.log('CALLED WHEN REGEX MATCHES')
   }
 }
 ```

@@ -4,15 +4,18 @@ describe('handle', () => {
   it('should return an empy object by default', () => {
     class MyComponent {}
 
-    expect(getComponentHandlers(MyComponent)).toEqual({});
+    expect(getComponentHandlers(MyComponent)).toEqual([]);
   });
 
   it('should add methods to the handlers map', () => {
     class MyComponent {
-      @handle('FOO') onFoo() {}
-      @handle('BAR') onBar() {}
+      @handle('foo') onFoo() {}
+      @handle('bar') onBar() {}
     }
 
-    expect(Object.keys(getComponentHandlers(MyComponent))).toEqual(['FOO', 'BAR']);
+    expect(getComponentHandlers(MyComponent)).toEqual([
+      { pattern: 'foo', key: 'onFoo' },
+      { pattern: 'bar', key: 'onBar' },
+    ]);
   });
 });

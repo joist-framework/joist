@@ -191,5 +191,35 @@ describe('JoistElement', () => {
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo');
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar');
     });
+
+    it('should allow a user to match on a Regex', () => {
+      @component({
+        tagName: 'handlers-4',
+        render({ run, host }) {
+          const button = document.createElement('button');
+
+          button.addEventListener('click', run('foo-bar'));
+
+          host.append(button);
+        },
+      })
+      class MyElement extends JoistElement {
+        @handle('foo-*')
+        onTestRun(_e: Event, _p: any) {}
+      }
+
+      const el = new MyElement();
+
+      spyOn(el, 'onTestRun');
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+
+      expect(el.onTestRun).toHaveBeenCalledTimes(1);
+      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), undefined);
+    });
   });
 });
