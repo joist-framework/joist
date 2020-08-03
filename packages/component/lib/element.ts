@@ -95,7 +95,13 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
   }
 
   private notifyHandlers(...args: [Event, any, string]) {
-    const matches = this.handlers.filter((handler) => new RegExp(handler.pattern).test(args[2]));
+    const matches = this.handlers.filter((handler) => {
+      if (handler.pattern instanceof RegExp) {
+        return handler.pattern.test(args[2]);
+      }
+
+      return handler.pattern === args[2];
+    });
 
     matches.forEach((handler) => {
       const key = handler.key as keyof this;

@@ -221,13 +221,17 @@ describe('JoistElement', () => {
         },
       })
       class MyElement extends JoistElement {
-        @handle('foo-*')
+        @handle(/foo-*/)
         onTestRun(..._: any[]) {}
+
+        @handle('foo')
+        badFn(..._: any[]) {}
       }
 
       const el = new MyElement();
 
       spyOn(el, 'onTestRun');
+      spyOn(el, 'badFn');
 
       el.connectedCallback();
 
@@ -237,6 +241,8 @@ describe('JoistElement', () => {
 
       expect(el.onTestRun).toHaveBeenCalledTimes(1);
       expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), undefined, 'foo-bar');
+
+      expect(el.badFn).not.toHaveBeenCalledTimes(1);
     });
   });
 });
