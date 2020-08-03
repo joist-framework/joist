@@ -46,14 +46,7 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
     run: (name: string, payload: unknown) => (e: Event) => {
-      const matches = this.handlers.filter((handler) => new RegExp(handler.pattern).test(name));
-
-      matches.forEach((handler) => {
-        const key = handler.key as keyof this;
-        const fn = (this[key] as any) as Function;
-
-        fn.apply(this, [e, payload, name]);
-      });
+      this.notifyHandlers(e, payload, name);
     },
     dispatch: (eventName: string, init?: CustomEventInit) => () => {
       this.dispatchEvent(new CustomEvent(eventName, init));
@@ -99,5 +92,16 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
     if (this.componentDef.render) {
       this.componentDef.render(this.renderCtx);
     }
+  }
+
+  private notifyHandlers(...args: [Event, any, string]) {
+    const matches = this.handlers.filter((handler) => new RegExp(handler.pattern).test(args[2]));
+
+    matches.forEach((handler) => {
+      const key = handler.key as keyof this;
+      const fn = (this[key] as any) as Function;
+
+      fn.apply(this, args);
+    });
   }
 }
