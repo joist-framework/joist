@@ -227,11 +227,11 @@ import { html } from 'lit-html';
   state: 0,
   render: template(({ state, run }) => {
     return html`
-      <button @click=${run('DECREMENT')}>Decrement</button>
+      <button @click=${run('dec')}>Decrement</button>
 
       ${state}
 
-      <button @click=${run('INCREMENT')}>Increment</button>
+      <button @click=${run('inc')}>Increment</button>
     `
   })
 })
@@ -239,16 +239,16 @@ class AppElement extends JoistElement {
   @get(State)
   private state!: State<number>;
 
-  @handle('INCREMENT') onIncrement(_: Event) {
+  @handle('inc') increment() {
     this.state.setValue(this.state.value + 1);
   }
 
-  @handle('DECREMENT') onDecrement(_: Event) {
+  @handle('dec') decrement() {
     this.state.setValue(this.state.value - 1);
   }
 
-  @handle('INCREMENT')
-  @handle('DECREMENT')
+  @handle('inc')
+  @handle('dec')
   onEither() {
     console.log('CALLED WHEN EITHER IS RUN')
   }
@@ -276,15 +276,15 @@ import { html } from 'lit-html';
   tagName: 'app-root',
   render: template(({ run, dispatch }) => {
     return html`
-      <button @click=${dispatch('FIRST_EVENT')}>First</button>
+      <button @click=${dispatch('first_custom_event')}>First</button>
 
-      <button @click=${run('SECOND')}>Second</button>
+      <button @click=${run('foo')}>Second</button>
     `
   })
 })
 class AppElement extends JoistElement {
-  @handle('SECOND') onSecond() {
-    this.dispatchEvent(new CustomEvent('SECOND_EVENT'));
+  @handle('foo') second() {
+    this.dispatchEvent(new CustomEvent('second_custom_event'));
   }
 }
 ```
