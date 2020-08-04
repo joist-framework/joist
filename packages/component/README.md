@@ -212,10 +212,13 @@ class AppElement extends JoistElement implements OnPropChanges {
 You can also provide validation functions to proeprty decorators for runtime safety.
 
 ```TS
-import { component, JoistElement, property, get } from '@joist/component';
+import { component, JoistElement, property, get, PropValidator } from '@joist/component';
 
-const isString = (val: unknown) => typeof val === 'string';
-const isLongerThan = (length: number) => (val: string) => val.length > length;
+const isString: PropValidator = (val: unknown) => typeof val === 'string' ? null : {};
+const isLongerThan = (length: number): PropValidator => (val: string) =>
+  val.length > length
+    ? null
+    : { message: `Length should have been longer than ${length} but was ${val.length}` };
 
 @component()
 class MyElement extends JoistElement {
