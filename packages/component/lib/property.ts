@@ -1,10 +1,10 @@
 import { PropChange } from './lifecycle';
 
-export interface PropEValidationError {
+export interface PropValidationError {
   message?: string;
 }
 
-export type PropValidator = (val: any) => null | PropEValidationError;
+export type PropValidator = (val: any) => null | PropValidationError;
 
 export function property(...validators: PropValidator[]) {
   return function (target: any, key: string) {
