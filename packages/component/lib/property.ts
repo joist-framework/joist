@@ -1,6 +1,10 @@
 import { PropChange } from './lifecycle';
 
-export type PropValidator = (val: any) => boolean;
+export interface PropEValidationError {
+  message?: string;
+}
+
+export type PropValidator = (val: any) => null | PropEValidationError;
 
 export function property(...validators: PropValidator[]) {
   return function (target: any, key: string) {
@@ -11,8 +15,13 @@ export function property(...validators: PropValidator[]) {
       set(val) {
         if (validators.length) {
           validators.forEach((validator) => {
-            if (!validator(val)) {
-              throw new Error(`Validation failed when assigning ${val} to key ${key}`);
+            const res = validator(val);
+            if (res !== null) {
+              throw new Error(
+                `Validation failed when assigning ${val} to key ${key}.${
+                  res.message ? ' ' + res.message : ''
+                }`
+              );
             }
           });
         }
