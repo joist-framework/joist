@@ -70,7 +70,7 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 
 #### Root Service
 
-If you have nested injectors and you still want singleton instances decorator your services with `@Service()`
+If you have nested injectors and you still want singleton instances decorator your services with `@service()`
 
 ```TS
 import { service } from '@joist/di';
@@ -81,31 +81,4 @@ class FooService {
     return 'Hello From FooService';
   }
 }
-```
-
-#### Inject services with custom decorators:
-
-```TS
-import { Injector, inject } from '@joist/di';
-
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-
-const fooRef = inject(FooService)
-
-class BarService {
-  constructor(@fooRef private foo: FooService) {}
-
-  sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
-  }
-}
-
-// create a new instance of our injector
-const app = new Injector();
-
-app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
 ```
