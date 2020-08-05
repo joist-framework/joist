@@ -50,11 +50,11 @@ export class RouterLinkElement extends JoistElement implements RouterLinkLifecyc
       this.normalizedPath = normalize(this.path);
     }
 
-    this.onclick = (e) => {
+    this.addEventListener('click', (e) => {
       e.preventDefault();
 
       this.router.navigate(this.normalizedPath);
-    };
+    });
 
     this.setActiveClass();
   }
