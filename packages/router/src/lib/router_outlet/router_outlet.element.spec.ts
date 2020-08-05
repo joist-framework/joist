@@ -1,7 +1,7 @@
-import { State, defineEnvironment, component, JoistElement } from '@joist/component';
+import { State, defineEnvironment, component, JoistElement, get } from '@joist/component';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
-import { Location, Router } from '../router';
+import { Location, Router, RouteCtx } from '../router';
 
 describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', RouterOutletElement);
@@ -85,12 +85,8 @@ describe('RouterOutletComponent', () => {
   });
 
   it('should update the active element when the route changes', (done) => {
-    let callCount = 0;
-
     state.onChange((val) => {
-      callCount++;
-
-      if (callCount === 2) {
+      if (val.element) {
         expect(val.element).toBeInstanceOf(MyElement);
 
         done();
@@ -100,5 +96,35 @@ describe('RouterOutletComponent', () => {
     el.routes = [{ path: '/bar', component: () => Promise.resolve(MyElement) }];
 
     el.injector.get(Router).navigate('/bar');
+  });
+
+  it('should pass an injectable element the new RouteCtx', (done) => {
+    @component({
+      tagName: 'router-outlet-test-2',
+    })
+    class ChildElement extends JoistElement {
+      @get(RouteCtx)
+      public route!: RouteCtx;
+    }
+
+    state.onChange((val) => {
+      if (val.element) {
+        const el = val.element as ChildElement;
+
+        el.route.onChange((ctx) => {
+          expect(ctx).toEqual({
+            path: 'hello/first/second',
+            index: 0,
+            params: { foo: 'first', bar: 'second' },
+          });
+
+          done();
+        });
+      }
+    });
+
+    el.routes = [{ path: '/hello/:foo/:bar', component: () => Promise.resolve(ChildElement) }];
+
+    el.injector.get(Router).navigate('/hello/first/second');
   });
 });

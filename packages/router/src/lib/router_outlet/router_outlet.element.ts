@@ -117,7 +117,7 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
         if (injectorBase.injector instanceof Injector) {
           const routeCtx = injectorBase.injector.get(RouteCtx);
 
-          return routeCtx.setValue(ctx).then(() => state);
+          return state.then(() => routeCtx.setValue(ctx));
         }
       }
 
