@@ -1,6 +1,6 @@
 # @joist/router
 
-A simple router
+A simple, fairly naive router that can render and views it is given, whether they are JoistElements or not.
 
 #### Installation:
 
