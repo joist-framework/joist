@@ -23,6 +23,7 @@ describe('RouterOutletComponent', () => {
 
   let el: RouterOutletElement;
   let state: State<RouterOutletState>;
+  let router: Router;
 
   beforeEach(() => {
     defineEnvironment([
@@ -34,6 +35,7 @@ describe('RouterOutletComponent', () => {
 
     el = new RouterOutletElement();
     state = el.injector.get(State);
+    router = el.injector.get(Router);
 
     document.body.appendChild(el);
   });
@@ -93,9 +95,9 @@ describe('RouterOutletComponent', () => {
       }
     });
 
-    el.routes = [{ path: '/bar', component: () => Promise.resolve(MyElement) }];
+    el.routes = [{ path: '/bar', component: () => MyElement }];
 
-    el.injector.get(Router).navigate('/bar');
+    router.navigate('/bar');
   });
 
   it('should pass an injectable element the new RouteCtx', (done) => {
@@ -123,8 +125,8 @@ describe('RouterOutletComponent', () => {
       }
     });
 
-    el.routes = [{ path: '/hello/:foo/:bar', component: () => Promise.resolve(ChildElement) }];
+    el.routes = [{ path: '/hello/:foo/:bar', component: () => ChildElement }];
 
-    el.injector.get(Router).navigate('/hello/first/second');
+    router.navigate('/hello/first/second');
   });
 });
