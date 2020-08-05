@@ -38,7 +38,7 @@ const routes: Route[] = [
   { path: '/parent/child', component: () => document.createElement('child-component')  }
 ].
 
-@Component({
+@component({
   tagName: 'app-root',
   render: template(() => {
     return html`
