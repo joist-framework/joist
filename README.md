@@ -13,11 +13,10 @@ There you can play around with Joist (and other frameworks) with 0 setup require
 ### [starter-app-snowpack](https://github.com/joist-framework/starter-app-snowpack)
 If you want to build an application or just run everything yourself you can use the [snowpack starter app](https://github.com/joist-framework/starter-app-snowpack). This starter uses snowpack for dev and rollup for creating your production bundle.
 
-### [starter-app-rollup](https://github.com/joist-framework/starter-app-rollup)
-If you want to build an application or just run everything yourself you can use the [rollup starter app](https://github.com/joist-framework/starter-app-rollup).
+```BASH
+npx create-snowpack-app my-app --template @joist/starter-snowpack
+```
 
-### [starter-app-webpack](https://github.com/joist-framework/starter-app-webpack)
-If you want to build an application or just run everything yourself you can use the [webpack starter app](https://github.com/joist-framework/starter-app-webpack).
 
 ### Packages
 
