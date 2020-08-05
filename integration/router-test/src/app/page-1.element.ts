@@ -1,6 +1,6 @@
-import { JoistElement, component } from '@joist/component';
+import { JoistElement, component, get } from '@joist/component';
 import { template } from '@joist/component/lit-html';
-import { Route } from '@joist/router';
+import { Route, RouteCtx } from '@joist/router';
 import { html } from 'lit-html';
 
 const routes: Route[] = [
@@ -31,4 +31,17 @@ export interface AppState {
     `;
   }),
 })
-export class Page1Element extends JoistElement {}
+export class Page1Element extends JoistElement {
+  @get(RouteCtx)
+  private route!: RouteCtx;
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    console.log(this.route.value);
+
+    this.route.onChange((ctx) => {
+      console.log(ctx);
+    });
+  }
+}

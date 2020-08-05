@@ -63,7 +63,7 @@ export class AppElement extends JoistElement {
 
     console.log(this.route.value);
 
-    this.route.onChanges(ctx => {
+    this.route.onChange(ctx => {
       console.log(ctx);
     })
   }
