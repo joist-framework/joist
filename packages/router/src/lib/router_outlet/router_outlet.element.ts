@@ -108,7 +108,7 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
         el = element;
       }
 
-      const state = this.state.setValue({ element: el, activeRoute });
+      const state: RouterOutletState = { element: el, activeRoute };
 
       // Only set route context if the HTMLElement has am injector attached
       if ('injector' in el) {
@@ -117,11 +117,11 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
         if (injectorBase.injector instanceof Injector) {
           const routeCtx = injectorBase.injector.get(RouteCtx);
 
-          return state.then(() => routeCtx.setValue(ctx));
+          return routeCtx.setValue(ctx).then(() => this.state.setValue(state));
         }
       }
 
-      return state;
+      return this.state.setValue(state);
     });
   }
 }

@@ -113,15 +113,13 @@ describe('RouterOutletComponent', () => {
       if (val.element) {
         const el = val.element as ChildElement;
 
-        el.route.onChange((ctx) => {
-          expect(ctx).toEqual({
-            path: 'hello/first/second',
-            index: 0,
-            params: { foo: 'first', bar: 'second' },
-          });
-
-          done();
+        expect(el.injector.get(RouteCtx).value).toEqual({
+          path: 'hello/first/second',
+          index: 0,
+          params: { foo: 'first', bar: 'second' },
         });
+
+        done();
       }
     });
 
