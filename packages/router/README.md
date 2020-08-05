@@ -36,11 +36,30 @@ const routes: Route[] = [
 ];
 
 @component({
+  tagName: 'app-root',
+  render: template(() => {
+    return html`
+      <router-link path-match="full">
+        <a href="/">Go To Home</a>
+      </router-link>
+
+      <router-link>
+        <a href="/bar">Go To Bar</a>
+      </router-link>
+
+      <router-outlet .routes=${routes}></router-outlet>
+    `;
+  })
+})
+export class AppElement extends JoistElement {}
+
+
+@component({
   tagName: 'child-1',
   render: template(() => {
     return html`
       <h1>Hello From Child 1</h1>
-      
+
       <router-outlet .routes=$[
         { path: '/child-1/child-2', component: () => Child2Element }
       ]></router-outlet>
@@ -61,22 +80,4 @@ class Child1Element extends JoistElement {
     })
   }
 }
-
-@component({
-  tagName: 'app-root',
-  render: template(() => {
-    return html`
-      <router-link path-match="full">
-        <a href="/">Go To Home</a>
-      </router-link>
-
-      <router-link>
-        <a href="/bar">Go To Bar</a>
-      </router-link>
-
-      <router-outlet .routes=${routes}></router-outlet>
-    `;
-  })
-})
-export class AppElement extends JoistElement {}
 ```
