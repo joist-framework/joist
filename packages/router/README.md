@@ -39,6 +39,8 @@ const routes: Route[] = [
   tagName: 'child-1',
   render: template(() => {
     return html`
+      <h1>Hello From Child 1</h1>
+      
       <router-outlet .routes=$[
         { path: '/child-1/child-2', component: () => Child2Element }
       ]></router-outlet>
