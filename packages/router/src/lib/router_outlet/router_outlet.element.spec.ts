@@ -6,7 +6,9 @@ import { Location, Router, RouteCtx } from '../router';
 describe('RouterOutletComponent', () => {
   customElements.define('router-outlet', RouterOutletElement);
 
-  @component({ tagName: 'router-outlet-test-1' })
+  @component({
+    tagName: 'router-outlet-test-1',
+  })
   class MyElement extends JoistElement {}
 
   class MockLocation extends Location {
@@ -88,11 +90,9 @@ describe('RouterOutletComponent', () => {
 
   it('should update the active element when the route changes', (done) => {
     state.onChange((val) => {
-      if (val.element) {
-        expect(val.element).toBeInstanceOf(MyElement);
+      expect(val.element).toBeInstanceOf(MyElement);
 
-        done();
-      }
+      done();
     });
 
     el.routes = [{ path: '/bar', component: () => MyElement }];
@@ -110,17 +110,15 @@ describe('RouterOutletComponent', () => {
     }
 
     state.onChange((val) => {
-      if (val.element) {
-        const el = val.element as ChildElement;
+      const el = val.element as ChildElement;
 
-        expect(el.injector.get(RouteCtx).value).toEqual({
-          path: 'hello/first/second',
-          index: 0,
-          params: { foo: 'first', bar: 'second' },
-        });
+      expect(el.injector.get(RouteCtx).value).toEqual({
+        path: 'hello/first/second',
+        index: 0,
+        params: { foo: 'first', bar: 'second' },
+      });
 
-        done();
-      }
+      done();
     });
 
     el.routes = [{ path: '/hello/:foo/:bar', component: () => ChildElement }];
