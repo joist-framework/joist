@@ -60,9 +60,9 @@ export class AppElement extends JoistElement {}
     return html`
       <h1>Hello From Child 1</h1>
 
-      <router-outlet .routes=$[
+      <router-outlet .routes=${[
         { path: '/child-1/child-2', component: () => Child2Element }
-      ]></router-outlet>
+      ]}></router-outlet>
     `
   })
 })
