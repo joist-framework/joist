@@ -12,9 +12,8 @@ npm i @joist/di @joist/router @joist/component
 
 ```TS
 import { component, get, JoistElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
+import { template, html } from '@joist/component/lit-html';
 import { Route, RouteCtxRef, RouteCtx } from '@joist/router';
-import { html } from 'lit-html';
 
 import { Child2Element } from './child-2.element';
 
