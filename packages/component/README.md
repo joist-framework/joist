@@ -38,8 +38,7 @@ npm i lit-html
 
 ```TS
 import { component, JoistElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 @component({
   tagName: 'app-root',
@@ -219,8 +218,7 @@ A handler can also match using a RegExp.
 
 ```TS
 import { component, State, handle, JoistElement, get } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 @component<number>({
   tagName: 'app-root',
@@ -268,8 +266,7 @@ In addition to calling `this.dispatchEvent` you can also use the dispatch functi
 
 ```TS
 import { component, handle, JoistElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 @component({
   tagName: 'app-root',
