@@ -3,8 +3,7 @@ import './resistor.element';
 import './select-band-color.element';
 
 import { State, handle, OnConnected, component, JoistElement, get } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 import { ResistorService, ResistorBand } from './resistor.service';
 

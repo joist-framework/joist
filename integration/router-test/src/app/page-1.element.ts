@@ -1,7 +1,6 @@
 import { JoistElement, component, get } from '@joist/component';
-import { template } from '@joist/component/lit-html';
+import { template, html } from '@joist/component/lit-html';
 import { Route, RouteCtx } from '@joist/router';
-import { html } from 'lit-html';
 
 const routes: Route[] = [
   {

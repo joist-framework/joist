@@ -1,6 +1,5 @@
 import { State, component, JoistElement, get, property, OnPropChanges } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 import { ResistorBand } from './resistor.service';
 

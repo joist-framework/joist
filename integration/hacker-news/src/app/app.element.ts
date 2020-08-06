@@ -1,8 +1,7 @@
 import './loader/loader.element';
 
 import { component, State, handle, OnConnected, JoistElement, get } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 import { until } from 'lit-html/directives/until';
 
 import { HackerNewsService, HackerNewsItem, HackerNewsItemFull } from './hacker-news.service';

@@ -10,8 +10,7 @@ import {
   get,
   JoistElement,
 } from '@joist/component';
-import { template } from '@joist/component/lit-html';
-import { html } from 'lit-html';
+import { template, html } from '@joist/component/lit-html';
 
 import { TodoService, Todo } from './todo.service';
 

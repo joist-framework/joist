@@ -1,9 +1,8 @@
 import '@joist/router';
 
 import { component, JoistElement } from '@joist/component';
-import { template } from '@joist/component/lit-html';
+import { template, html } from '@joist/component/lit-html';
 import { Route } from '@joist/router';
-import { html } from 'lit-html';
 
 import { Page1Element } from './page-1.element';
 
