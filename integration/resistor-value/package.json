@@ -1,6 +1,6 @@
 {
   "name": "@joist-examples/resistor-value",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "PWA for calculating resistor values",
   "private": true,
   "scripts": {
