@@ -49,6 +49,8 @@ npm i
 
 #### Run Tests
 
+This repo uses [@open-wc/testing](https://open-wc.org/testing/testing.html) as the testing library and [@web/test-runner](https://github.com/modernweb-dev/web/tree/master/packages/test-runner) as the, well, test runner.
+
 ```BASH
 npm run test-libs
 ```
