@@ -7,7 +7,9 @@ export function getProviderDeps(provider: ProviderToken<any>): ProviderToken<any
 }
 
 export function inject(injectable: ProviderToken<any>) {
-  return function (provider: ProviderToken<any>, _: string, index: number) {
+  return function (target: any, _: string, index: number) {
+    const provider = target.contructor || target;
+
     provider[PROVIDER_DEPS_KEY] = provider[PROVIDER_DEPS_KEY] || [];
     provider[PROVIDER_DEPS_KEY][index] = injectable;
   };

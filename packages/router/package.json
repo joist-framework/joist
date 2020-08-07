@@ -28,7 +28,7 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "karma start",
-    "build": "../../node_modules/.bin/tsc"
+    "build": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
     "@joist/component": "^1.0.0",
