@@ -1,4 +1,5 @@
 import { Injector, service } from '@joist/di';
+import { expect } from '@open-wc/testing';
 
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { get, JoistElement } from './element';
@@ -10,7 +11,7 @@ describe('environment', () => {
   });
 
   it('should create a global Injector instance', () => {
-    expect(getEnvironmentRef() instanceof Injector).toBe(true);
+    expect(getEnvironmentRef()).to.be.instanceOf(Injector);
   });
 
   it('should use the root injector when creating services', () => {
@@ -26,6 +27,6 @@ describe('environment', () => {
 
     const el = new MyElement();
 
-    expect(el.myService).toBe(getEnvironmentRef()!.get(MyService));
+    expect(el.myService).to.equal(getEnvironmentRef().get(MyService));
   });
 });

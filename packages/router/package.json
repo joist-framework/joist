@@ -27,7 +27,7 @@
   },
   "scripts": {
     "prepare": "npm run build",
-    "test": "karma start",
+    "test": "wtr **/*.spec.ts",
     "build": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {

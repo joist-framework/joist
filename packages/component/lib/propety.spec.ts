@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { property } from './property';
 import { OnPropChanges, PropChange } from './lifecycle';
 
@@ -18,7 +20,7 @@ describe('property', () => {
 
     el.hello = 'Goodbye World';
 
-    expect(calls).toEqual([
+    expect(calls).to.deep.equal([
       new PropChange('hello', 'Hello World', true),
       new PropChange('hello', 'Goodbye World', false, 'Hello World'),
     ]);

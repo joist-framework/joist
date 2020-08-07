@@ -1,3 +1,6 @@
+import { Injector } from '@joist/di';
+import { expect } from '@open-wc/testing';
+
 import { CommentsDrawerElement } from './comments-drawer.element';
 
 describe('TodoFormElement', () => {
@@ -14,6 +17,6 @@ describe('TodoFormElement', () => {
   });
 
   it('should work', () => {
-    expect(el.injector).toBeTruthy();
+    expect(el.injector).instanceOf(Injector);
   });
 });

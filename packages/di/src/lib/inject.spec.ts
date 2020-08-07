@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { inject, getProviderDeps } from './inject';
 
 describe('inject', () => {
@@ -10,12 +12,12 @@ describe('inject', () => {
   it('should return an empty array by default', () => {
     const deps = getProviderDeps(A);
 
-    expect(deps).toEqual([]);
+    expect(deps).to.deep.equal([]);
   });
 
   it('should add deps to metadata', () => {
     const deps = getProviderDeps(C);
 
-    expect(deps).toEqual([A, B]);
+    expect(deps).to.deep.equal([A, B]);
   });
 });

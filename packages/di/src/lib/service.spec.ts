@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { service, isProvidedInRoot } from './service';
 
 describe('Service', () => {
@@ -7,10 +9,10 @@ describe('Service', () => {
   class B {}
 
   it('should be provided in root', () => {
-    expect(isProvidedInRoot(A)).toBe(true);
+    expect(isProvidedInRoot(A)).to.be.true;
   });
 
   it('should NOT be provided in root', () => {
-    expect(isProvidedInRoot(B)).toBe(false);
+    expect(isProvidedInRoot(B)).to.be.false;
   });
 });

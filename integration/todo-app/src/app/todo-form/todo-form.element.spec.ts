@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { TodoFormElement } from './todo-form.element';
 
 describe('TodoFormElement', () => {
@@ -22,7 +24,7 @@ describe('TodoFormElement', () => {
     el.addEventListener('add_todo', (e) => {
       const event = e as CustomEvent<string>;
 
-      expect(event.detail).toBe('Hello World');
+      expect(event.detail).to.equal('Hello World');
 
       done();
     });
