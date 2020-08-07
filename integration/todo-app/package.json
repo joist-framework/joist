@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "test": "wtr **/*.spec.ts",
+    "test": "wtr **/*.spec.ts --config ../../web-test-runner.config.js",
     "build": "webpack --mode production"
   },
   "repository": {

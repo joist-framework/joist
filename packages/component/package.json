@@ -29,7 +29,7 @@
   },
   "scripts": {
     "prepare": "npm run build",
-    "test": "wtr **/*.spec.ts",
+    "test": "wtr **/*.spec.ts --config ../../web-test-runner.config.js",
     "build": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
