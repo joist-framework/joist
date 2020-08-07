@@ -1,4 +1,5 @@
 import { defineEnvironment } from '@joist/component';
+import { expect } from '@open-wc/testing';
 
 import { Location } from '../router';
 import { RouterLinkElement } from './router_link.element';
@@ -24,7 +25,7 @@ describe('RouterLinkComponent', () => {
 
     el.connectedCallback();
 
-    expect(el.classList.contains('active')).toBeTrue();
+    expect(el.classList.contains('active')).to.be.true;
   });
 
   it('should use the path if the first child is an anchor', () => {
@@ -45,7 +46,7 @@ describe('RouterLinkComponent', () => {
 
     el.connectedCallback();
 
-    expect(el.path).toBe('/bar');
-    expect(el.classList.contains('active')).toBeTrue();
+    expect(el.path).to.equal('/bar');
+    expect(el.classList.contains('active')).to.be.true;
   });
 });

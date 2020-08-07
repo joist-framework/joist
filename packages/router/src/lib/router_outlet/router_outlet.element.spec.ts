@@ -1,4 +1,5 @@
 import { State, defineEnvironment, component, JoistElement, get } from '@joist/component';
+import { expect } from '@open-wc/testing';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
 import { Location, Router, RouteCtx } from '../router';
@@ -48,7 +49,7 @@ describe('RouterOutletComponent', () => {
 
   it('should render the html element when the path matches', (done) => {
     state.onChange((val) => {
-      expect(val.element!.tagName).toBe('FOO-BAR');
+      expect(val.element!.tagName).to.equal('FOO-BAR');
 
       done();
     });
@@ -58,7 +59,7 @@ describe('RouterOutletComponent', () => {
 
   it('should render the html element from a promise when the path matches', (done) => {
     state.onChange((val) => {
-      expect(val.element!.tagName).toBe('FOO-BAR');
+      expect(val.element!.tagName).to.equal('FOO-BAR');
 
       done();
     });
@@ -70,7 +71,7 @@ describe('RouterOutletComponent', () => {
 
   it('should render a route when passed a CustomElementConstructor', (done) => {
     state.onChange((val) => {
-      expect(val.element).toBeInstanceOf(MyElement);
+      expect(val.element).to.be.instanceOf(MyElement);
 
       done();
     });
@@ -80,7 +81,7 @@ describe('RouterOutletComponent', () => {
 
   it('should render a route when passed a promise resolves to a CustomElementConstructor', (done) => {
     state.onChange((val) => {
-      expect(val.element).toBeInstanceOf(MyElement);
+      expect(val.element).to.be.instanceOf(MyElement);
 
       done();
     });
@@ -90,7 +91,7 @@ describe('RouterOutletComponent', () => {
 
   it('should update the active element when the route changes', (done) => {
     state.onChange((val) => {
-      expect(val.element).toBeInstanceOf(MyElement);
+      expect(val.element).to.be.instanceOf(MyElement);
 
       done();
     });
@@ -112,7 +113,7 @@ describe('RouterOutletComponent', () => {
     state.onChange((val) => {
       const el = val.element as ChildElement;
 
-      expect(el.injector.get(RouteCtx).value).toEqual({
+      expect(el.injector.get(RouteCtx).value).to.deep.equal({
         path: 'hello/first/second',
         index: 0,
         params: { foo: 'first', bar: 'second' },

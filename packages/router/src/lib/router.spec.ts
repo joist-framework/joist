@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { Router, Location, RouterConfig } from './router';
 
 describe('Router', () => {
@@ -20,7 +22,7 @@ describe('Router', () => {
 
     const router = new Router(new MockLocation(), new RouterConfig());
 
-    expect(router.getFragment()).toBe('foo/bar');
+    expect(router.getFragment()).to.equal('foo/bar');
   });
 
   it('should listen for navigation changes', (done) => {
@@ -45,7 +47,7 @@ describe('Router', () => {
     const removeListener = router.listen(() => {
       removeListener();
 
-      expect(router.getFragment()).toBe('foo/bar');
+      expect(router.getFragment()).to.equal('foo/bar');
 
       done();
     });
