@@ -41,13 +41,13 @@ npx create-snowpack-app my-app --template @joist/starter-snowpack
 
 ### Development
 
-### Install Dependencies
+#### Install Dependencies
 
 ```BASH
 npm i
 ```
 
-### Run Tests
+#### Run Tests
 
 ```BASH
 npm run test-libs
