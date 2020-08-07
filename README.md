@@ -38,3 +38,29 @@ npx create-snowpack-app my-app --template @joist/starter-snowpack
 | [hacker-news](integration/hacker-news)                   | Hacker news PWA                                                   |
 | [resistor-value](integration/resistor-value)             | PWA for calculating the value of resistors from their color bands |
 | [router-test](integration/router-test)                   | small routing example                                             |
+
+### Development
+
+### Install dependencies
+
+```BASH
+npm i
+```
+
+### Run tests
+
+```BASH
+npm run test-libs
+```
+
+```BASH
+npm run test-integration
+```
+
+```BASH
+npm run test-all
+```
+
+```BASH
+npx lerna run test --scope @joist/{package-name}
+```
