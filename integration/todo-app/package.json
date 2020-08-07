@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "test": "karma start",
+    "test": "wtr **/*.spec.ts",
     "build": "webpack --mode production"
   },
   "repository": {

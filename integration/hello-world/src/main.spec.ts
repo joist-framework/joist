@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { AppElement } from './main';
 
 describe('AppElement', () => {
@@ -6,16 +8,16 @@ describe('AppElement', () => {
   beforeEach(() => {
     el = new AppElement();
 
-    document.body.append(el);
+    document.body.appendChild(el);
   });
 
   afterEach(() => {
-    el.remove();
+    document.body.removeChild(el);
   });
 
   it('should have the correct title', () => {
     const title = el.querySelector('h1');
 
-    expect(title!.innerHTML).toBe('Hello World');
+    expect(title!.innerHTML).to.equal('Hello World');
   });
 });
