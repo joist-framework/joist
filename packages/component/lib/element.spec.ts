@@ -1,4 +1,6 @@
 import { service } from '@joist/di';
+import { expect } from '@open-wc/testing';
+import { spy } from 'sinon';
 
 import { JoistElement, get, withInjector } from './element';
 import { component } from './component';
@@ -20,7 +22,7 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      expect(el.myService.constructor).toBe(MyService);
+      expect(el.myService.constructor).to.equal(MyService);
     });
   });
 
@@ -42,11 +44,11 @@ describe('JoistElement', () => {
 
       el.connectedCallback();
 
-      expect(el.innerHTML.trim()).toBe('0');
+      expect(el.innerHTML.trim()).to.equal('0');
 
       await el.state.setValue(el.state.value + 1);
 
-      expect(el.innerHTML.trim()).toBe('1');
+      expect(el.innerHTML.trim()).to.equal('1');
     });
   });
 
@@ -56,7 +58,7 @@ describe('JoistElement', () => {
         tagName: 'host-test-1',
         state: 0,
         render({ host }) {
-          expect(host).toBeInstanceOf(MyElement);
+          expect(host).to.be.instanceOf(MyElement);
 
           done();
         },
@@ -85,8 +87,8 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      expect(el.injector.get(MyService)).toBe(el.service);
-      expect(el.service.helloWorld()).toBe('Hello World');
+      expect(el.injector.get(MyService)).to.equal(el.service);
+      expect(el.service.helloWorld()).to.equal('Hello World');
     });
 
     it('should use scoped providers', () => {
@@ -107,9 +109,9 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      expect(el.service).toBeInstanceOf(MyService);
+      expect(el.service).to.be.instanceOf(MyService);
 
-      expect(getEnvironmentRef().get(MyService)).not.toBe(el.service);
+      expect(getEnvironmentRef().get(MyService)).not.to.equal(el.service);
 
       clearEnvironment();
     });
@@ -133,7 +135,7 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      spyOn(el, 'onTestRun');
+      spy(el, 'onTestRun');
 
       el.connectedCallback();
 
@@ -141,8 +143,7 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).toHaveBeenCalledTimes(1);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'Hello World', 'TEST_RUN');
+      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'Hello World', 'TEST_RUN');
     });
 
     it('should handle multiple functions', () => {
@@ -163,8 +164,8 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      spyOn(el, 'onTestRun');
-      spyOn(el, 'onTestRun2');
+      spy(el, 'onTestRun');
+      spy(el, 'onTestRun2');
 
       el.connectedCallback();
 
@@ -172,8 +173,8 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).toHaveBeenCalledTimes(1);
-      expect(el.onTestRun2).toHaveBeenCalledTimes(1);
+      expect(el.onTestRun).calledOnce;
+      expect(el.onTestRun2).calledOnce;
     });
 
     it('should let one function handle multiple actions', () => {
@@ -196,7 +197,7 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      spyOn(el, 'onTestRun');
+      spy(el, 'onTestRun');
 
       el.connectedCallback();
 
@@ -204,9 +205,9 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).toHaveBeenCalledTimes(2);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'foo', 'FOO');
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), 'bar', 'BAR');
+      expect(el.onTestRun).calledTwice;
+      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'foo', 'FOO');
+      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'bar', 'BAR');
     });
 
     it('should allow a user to match on a Regex', () => {
@@ -230,8 +231,8 @@ describe('JoistElement', () => {
 
       const el = new MyElement();
 
-      spyOn(el, 'onTestRun');
-      spyOn(el, 'badFn');
+      spy(el, 'onTestRun');
+      spy(el, 'badFn');
 
       el.connectedCallback();
 
@@ -239,10 +240,10 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).toHaveBeenCalledTimes(1);
-      expect(el.onTestRun).toHaveBeenCalledWith(new MouseEvent('click'), undefined, 'foo-bar');
+      expect(el.onTestRun).calledOnce;
+      expect(el.onTestRun).calledWith(new MouseEvent('click'), undefined, 'foo-bar');
 
-      expect(el.badFn).not.toHaveBeenCalledTimes(1);
+      expect(el.badFn).not.called;
     });
   });
 });

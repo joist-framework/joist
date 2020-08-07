@@ -1,17 +1,19 @@
+import { expect } from '@open-wc/testing';
+
 import { State } from './state';
 
 describe('state', () => {
   it('should correctly set the default state', () => {
     const state = new State<string>('Hello');
 
-    expect(state.value).toBe('Hello');
+    expect(state.value).to.equal('Hello');
   });
 
   it('should correctly run the callback when there is a state change', (done) => {
     const state = new State<string>('Hello');
 
     state.onChange((state) => {
-      expect(state).toBe('Hello World');
+      expect(state).to.equal('Hello World');
 
       done();
     });
@@ -23,7 +25,7 @@ describe('state', () => {
     const state = new State<string>('Hello');
 
     state.onChange((state) => {
-      expect(state).toBe('Hello World');
+      expect(state).to.equal('Hello World');
 
       done();
     });
@@ -35,7 +37,7 @@ describe('state', () => {
     const state = new State({ title: 'Hello World', foo: true });
 
     state.onChange((state) => {
-      expect(state.foo).toBe(false);
+      expect(state.foo).to.equal(false);
 
       done();
     });
@@ -47,7 +49,7 @@ describe('state', () => {
     const state = new State({ title: 'Hello World', foo: true });
 
     state.onChange((state) => {
-      expect(state.foo).toBe(false);
+      expect(state.foo).to.be.false;
 
       done();
     });

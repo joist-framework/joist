@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { component, getComponentDef, ComponentDef } from './component';
 import { JoistElement } from './element';
 
@@ -7,19 +9,19 @@ describe('Component', () => {
   };
 
   @component(def)
-  class MyComponent extends JoistElement {
+  class MyElement extends JoistElement {
     foo = getComponentDef(this.constructor);
   }
 
   it('should add component definition to class', () => {
-    expect(getComponentDef(MyComponent)).toBe(def);
+    expect(getComponentDef(MyElement)).to.equal(def);
   });
 
   it('should define a custom element if a tagName is provided', async () => {
-    expect(customElements.get('component-test-1')).toBeTruthy();
+    expect(customElements.get('component-test-1')).to.equal(MyElement);
   });
 
   it('should be able to see metadata internally', async () => {
-    expect(new MyComponent().foo).toBe(def);
+    expect(new MyElement().foo).to.equal(def);
   });
 });

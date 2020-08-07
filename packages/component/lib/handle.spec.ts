@@ -1,10 +1,12 @@
+import { expect } from '@open-wc/testing';
+
 import { handle, getComponentHandlers } from './handle';
 
 describe('handle', () => {
   it('should return an empy object by default', () => {
     class MyComponent {}
 
-    expect(getComponentHandlers(MyComponent)).toEqual([]);
+    expect(getComponentHandlers(MyComponent)).to.deep.equal([]);
   });
 
   it('should add methods to the handlers map', () => {
@@ -13,7 +15,7 @@ describe('handle', () => {
       @handle('bar') onBar() {}
     }
 
-    expect(getComponentHandlers(MyComponent)).toEqual([
+    expect(getComponentHandlers(MyComponent)).to.deep.equal([
       { pattern: 'foo', key: 'onFoo' },
       { pattern: 'bar', key: 'onBar' },
     ]);
