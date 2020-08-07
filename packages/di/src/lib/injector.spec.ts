@@ -1,3 +1,5 @@
+import { expect } from '@open-wc/testing';
+
 import { service } from './service';
 import { Injector } from './injector';
 import { inject } from './inject';
@@ -11,7 +13,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(A).foo).toBe('Hello World');
+    expect(app.get(A).foo).to.equal('Hello World');
   });
 
   it('should inject providers in the correct order', () => {
@@ -34,7 +36,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(MyService).value).toBe('FOOBAR');
+    expect(app.get(MyService).value).to.equal('FOOBAR');
   });
 
   it('should create a new instance of a provider that has a full dep tree', () => {
@@ -78,7 +80,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(E).sayHello()).toBe('|||||||||');
+    expect(app.get(E).sayHello()).to.equal('|||||||||');
   });
 
   it('should override a provider if explicitly instructed', () => {
@@ -94,7 +96,7 @@ describe('Injector', () => {
       }
     }
 
-    expect(new Injector().get(FooService).sayHello()).toBe('Hello World');
+    expect(new Injector().get(FooService).sayHello()).to.equal('Hello World');
 
     expect(
       new Injector({
@@ -109,7 +111,7 @@ describe('Injector', () => {
       })
         .get(FooService)
         .sayHello()
-    ).toBe('Goodbye World');
+    ).to.equal('Goodbye World');
   });
 
   it('immediately initialize specified providers', () => {
@@ -129,7 +131,7 @@ describe('Injector', () => {
 
     new Injector({ bootstrap: [FooService, BarService] });
 
-    expect(initialized).toEqual([FooService, BarService]);
+    expect(initialized).to.deep.equal([FooService, BarService]);
   });
 
   it('should return the same instance when called', () => {
@@ -141,7 +143,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(FooService).bar).toBe(app.get(BarService));
+    expect(app.get(FooService).bar).to.equal(app.get(BarService));
   });
 
   it('should return different instances', () => {
@@ -153,7 +155,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.create(FooService)).not.toBe(app.get(FooService));
+    expect(app.create(FooService)).not.to.equal(app.get(FooService));
   });
 
   it('should return an instance from a parent injector', () => {
@@ -169,7 +171,7 @@ describe('Injector', () => {
 
     const app = new Injector({}, child2);
 
-    expect(parent.get(FooService)).toBe(app.get(FooService));
+    expect(parent.get(FooService)).to.equal(app.get(FooService));
   });
 
   it('should use the override in scope over everything else', () => {
@@ -195,7 +197,7 @@ describe('Injector', () => {
       child2
     );
 
-    expect(parent.get(FooService)).not.toBe(app.get(FooService));
+    expect(parent.get(FooService)).not.to.equal(app.get(FooService));
   });
 
   it('should be able to use an abstract class as an injection token', () => {
@@ -216,7 +218,7 @@ describe('Injector', () => {
       ],
     });
 
-    expect(app.get(MyService).sayHello()).toBe('TESTING');
+    expect(app.get(MyService).sayHello()).to.equal('TESTING');
   });
 
   it('should world with custom decortors', () => {
@@ -239,7 +241,7 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(MyService).sayHello()).toBe('HELLO WORLD TESTING');
+    expect(app.get(MyService).sayHello()).to.equal('HELLO WORLD TESTING');
   });
 
   it('should use the root Injector if specified', () => {
@@ -256,6 +258,6 @@ describe('Injector', () => {
 
     const app = new Injector({}, child2);
 
-    expect(app.get(FooService).bar).toBe(parent.get(BarService));
+    expect(app.get(FooService).bar).to.equal(parent.get(BarService));
   });
 });
