@@ -19,6 +19,4 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - run: npm ci
-      - run: npx lerna publish --preid $(git rev-parse HEAD) --yes
-        env:
-          SHA: $GITHUB_SHA
+      - run: npx lerna publish --git-head canary --preid canary-$(git rev-parse HEAD) --yes
