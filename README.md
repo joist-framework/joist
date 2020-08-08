@@ -4,7 +4,7 @@
 
 [Read introduction](https://dev.to/deebloo/introducing-joist-4724)
 
-A small (~2kb or ~5kb with lit-html) library to help with the creation of web components and web component based applications. Support for [lit-html](https://lit-html.polymer-project.org/) is baked in but can work with whatever view library you like. [See it in action.](https://webcomponents.dev/edit/ZwmxGJSHldWQH5T7j8fH).
+A small (~2kb or ~5kb with lit-html) library to help with the creation of web components and web component based applications. Support for [lit-html](https://lit-html.polymer-project.org/) is baked in but can work with whatever view library you like. [See it in action](https://webcomponents.dev/edit/ZwmxGJSHldWQH5T7j8fH).
 
 ## Getting Started
 
