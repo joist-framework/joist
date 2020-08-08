@@ -8,10 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
       - run: npm ci
       - run: npx lerna publish --canary --preid next --no-git-reset --yes
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
