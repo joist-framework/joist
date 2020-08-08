@@ -65,6 +65,8 @@ export class AppElement extends JoistElement implements OnConnected {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     const bands = this.resistor.getResistorBands();
 
     this.state.patchValue({ bands });
