@@ -8,6 +8,7 @@ export type NewsCardState = HackerNewsItem | null;
 @component<NewsCardState>({
   tagName: 'news-card',
   state: null,
+  shadowDom: 'open',
   render: template(({ state }) => {
     if (!state) {
       return html``;

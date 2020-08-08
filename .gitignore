@@ -34,6 +34,7 @@ yarn-error.log
 testem.log
 *.map
 lerna-debug.log
+firebase-debug.log
 
 # System Files
 .DS_Store
