@@ -1,6 +1,6 @@
 import { State } from '@joist/component';
 import { service, inject } from '@joist/di';
-import { match as ogMatch, Path, MatchResult } from 'path-to-regexp';
+import { match as ptrMatch, Path, MatchResult } from 'path-to-regexp';
 
 export interface Route {
   path: Path;
@@ -17,7 +17,7 @@ export function normalize(path: Path) {
 }
 
 export function match(path: Path) {
-  return ogMatch(normalize(path), { decode: decodeURIComponent });
+  return ptrMatch(normalize(path), { decode: decodeURIComponent });
 }
 
 @service()
