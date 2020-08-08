@@ -21,4 +21,4 @@ jobs:
       - run: npm ci
       - run: npx lerna publish --canary --no-git-reset --yes
         env:
-          SHA: ${{ env.GITHUB_SHA }}
+          SHA: $GITHUB_SHA
