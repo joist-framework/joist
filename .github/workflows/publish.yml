@@ -10,8 +10,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
-      - run: npm ci
-      - run: npx lerna publish --canary --preid next --no-git-reset --yes
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - run: npm ci
+      - run: npx lerna publish --canary --preid next --no-git-reset --yes
