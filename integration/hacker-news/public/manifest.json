@@ -1,11 +1,11 @@
 {
-  "name": "joist Hacker News PwA",
+  "name": "Joist Hacker News PwA",
   "short_name": "joist-hn",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ff6600",
   "background_color": "#fff",
-  "description": "Web Components PWA build with joist",
+  "description": "Web Components PWA build with Joist",
   "icons": [
     {
       "src": "assets/icons/icon-48.png",

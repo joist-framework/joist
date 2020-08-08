@@ -1,3 +1,5 @@
 node_modules
 public/target
 stats.json
+public/*.js
+.firebase
