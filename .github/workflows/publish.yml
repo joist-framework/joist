@@ -14,4 +14,4 @@ jobs:
       - run: npm ci
       - run: npx lerna publish --canary --preid next --no-git-reset --yes
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
