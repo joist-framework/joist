@@ -6,8 +6,11 @@ on:
       - 'master'
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+
+    env:
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} # You need to set this in your repo settings
 
     steps:
       - uses: actions/checkout@v1
