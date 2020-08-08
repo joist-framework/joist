@@ -1,9 +1,6 @@
-name: CI
+name: Pull Request
 
-on:
-  push:
-    paths-ignore:
-      - '*.md'
+on: [pull_request]
 
 jobs:
   build:

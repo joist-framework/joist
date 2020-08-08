@@ -1,8 +1,11 @@
-name: Node.js Package
+name: Publish
+
 on:
   push:
     branches:
       - 'master'
+    paths-ignore:
+      - '*.md'
 
 jobs:
   build:
