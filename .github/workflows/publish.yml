@@ -19,4 +19,4 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - run: npm ci
-      - run: npx lerna publish --canary --no-git-reset --yes
+      - run: npx lerna publish --dist-tag canary --no-git-reset --yes
