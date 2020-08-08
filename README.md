@@ -32,10 +32,10 @@ npx create-snowpack-app my-app --template @joist/starter-snowpack
 
 | Project                                                  | Description                                                       |
 | -------------------------------------------------------- | ----------------------------------------------------------------- |
-| [hello-world](integration/hello-world)                   | Hello World no view lib                                           |                               
+| [hello-world](integration/hello-world)                   | Hello World no view lib                                           |                             
 | [hello-world-lit-html](integration/hello-world-lit-html) | Hello World lit-html                                              |
 | [todo-app](integration/todo-app)                         | Todo app                                                          |
-| [hacker-news](integration/hacker-news)                   | Hacker news PWA                                                   |
+| [hacker-news](integration/hacker-news)                   | Hacker news PWA. (Link)[joist-hn.web.app]                         |
 | [resistor-value](integration/resistor-value)             | PWA for calculating the value of resistors from their color bands |
 | [router-test](integration/router-test)                   | small routing example                                             |
 
