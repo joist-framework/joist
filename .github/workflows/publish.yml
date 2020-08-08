@@ -1,0 +1,19 @@
+name: PUBLISH
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Bootstrap
+        run: npm ci
+
+      - name: Publish
+        run: npx lerna publish --canary --preid next --no-git-reset --yes
