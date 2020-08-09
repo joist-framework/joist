@@ -1,13 +1,12 @@
-import { State, component, get, JoistElement } from '@joist/component';
+import { State, component, get, JoistElement, property, OnPropChanges } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { HackerNewsItem } from '../hacker-news.service';
 
-export type NewsCardState = HackerNewsItem | null;
+export type NewsCardState = HackerNewsItem | undefined;
 
 @component<NewsCardState>({
   tagName: 'news-card',
-  state: null,
   shadowDom: 'open',
   render: template(({ state }) => {
     if (!state) {
@@ -62,10 +61,14 @@ export type NewsCardState = HackerNewsItem | null;
     `;
   }),
 })
-export class NewsCardElement extends JoistElement {
-  @get(State) private state!: State<NewsCardState>;
+export class NewsCardElement extends JoistElement implements OnPropChanges {
+  @get(State)
+  private state!: State<NewsCardState>;
 
-  set newsItem(value: NewsCardState) {
-    this.state.setValue(value);
+  @property()
+  public newsItem?: NewsCardState;
+
+  onPropChanges() {
+    this.state.setValue(this.newsItem);
   }
 }

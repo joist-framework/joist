@@ -1,6 +1,4 @@
-import './loader/loader.element';
-
-import { component, State, handle, OnConnected, JoistElement, get } from '@joist/component';
+import { component, State, handle, JoistElement, get } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 import { until } from 'lit-html/directives/until';
 
@@ -103,7 +101,7 @@ export interface AppState {
     `;
   }),
 })
-export class AppElement extends JoistElement implements OnConnected {
+export class AppElement extends JoistElement {
   @get(State)
   private state!: State<AppState>;
 
@@ -115,7 +113,8 @@ export class AppElement extends JoistElement implements OnConnected {
 
     this.state.patchValue({ loadingNews: true });
 
-    const state = this.hackerNews.getNews().then((news) => ({ news, loadingNews: false }));
+    const news = this.hackerNews.getNews();
+    const state = news.then((news) => ({ news, loadingNews: false }));
 
     this.state.patchValue(state);
   }
@@ -123,19 +122,21 @@ export class AppElement extends JoistElement implements OnConnected {
   @handle('card_clicked') onCardClicked(_: Event, news: HackerNewsItemFull): void {
     this.state.patchValue({ loadingCurrentNewsItem: true });
 
-    const state = this.hackerNews.getNewsItem(news.id).then((currentNewsItem) => ({
-      currentNewsItem,
-      loadingCurrentNewsItem: false,
-    }));
-
-    this.state.patchValue(
-      Promise.all([state, import('./comments-drawer/comments-drawer.element')]).then(
-        ([state]) => state
-      )
-    );
+    this.state.patchValue(this.loadDrawerElement().then(() => this.getNewsItem(news.id)));
   }
 
   @handle('close_drawer') onCloseDrawer(_: CustomEvent): void {
     this.state.patchValue({ currentNewsItem: undefined });
+  }
+
+  private loadDrawerElement() {
+    return import('./comments-drawer/comments-drawer.element');
+  }
+
+  private getNewsItem(id: number) {
+    return this.hackerNews.getNewsItem(id).then((currentNewsItem) => ({
+      currentNewsItem,
+      loadingCurrentNewsItem: false,
+    }));
   }
 }

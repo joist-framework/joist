@@ -1,3 +1,4 @@
+import './app/loader/loader.element';
 import './app/app.element';
 
 if (process.env.NODE_ENV === 'production') {
