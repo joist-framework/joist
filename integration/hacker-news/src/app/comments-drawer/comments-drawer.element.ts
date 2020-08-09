@@ -1,18 +1,24 @@
-import { State, JoistElement, component, get } from '@joist/component';
+import { State, JoistElement, component, get, OnPropChanges, property } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { HackerNewsItemComment } from '../hacker-news.service';
 
-export interface CommentsDrawerState {
-  comments: HackerNewsItemComment[];
+function createComment(comment: HackerNewsItemComment) {
+  return html`
+    <div>
+      <div><b>${comment.user}</b> ${comment.time_ago}</div>
+
+      <div .innerHTML=${comment.content}></div>
+
+      <hr />
+    </div>
+  `;
 }
 
-@component<CommentsDrawerState>({
+@component<HackerNewsItemComment[]>({
   tagName: 'comments-drawer',
   shadowDom: 'open',
-  state: {
-    comments: [],
-  },
+  state: [],
   render: template(({ state, dispatch }) => {
     return html`
       <style>
@@ -65,28 +71,18 @@ export interface CommentsDrawerState {
         <button @click=${dispatch('close_drawer')}>close</button>
       </div>
 
-      <div class="drawer-content">
-        ${state.comments.map(
-          (comment) =>
-            html`
-              <div>
-                <div><b>${comment.user}</b> ${comment.time_ago}</div>
-
-                <div .innerHTML=${comment.content}></div>
-
-                <hr />
-              </div>
-            `
-        )}
-      </div>
+      <div class="drawer-content">${state.map(createComment)}</div>
     `;
   }),
 })
-export class CommentsDrawerElement extends JoistElement {
+export class CommentsDrawerElement extends JoistElement implements OnPropChanges {
   @get(State)
-  private state!: State<CommentsDrawerState>;
+  private state!: State<HackerNewsItemComment[]>;
 
-  set comments(comments: HackerNewsItemComment[]) {
-    this.state.setValue({ comments });
+  @property()
+  public comments?: HackerNewsItemComment[];
+
+  onPropChanges() {
+    this.state.setValue(this.comments || []);
   }
 }
