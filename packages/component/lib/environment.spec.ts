@@ -6,9 +6,7 @@ import { get, JoistElement } from './element';
 import { component } from './component';
 
 describe('environment', () => {
-  afterEach(() => {
-    clearEnvironment();
-  });
+  afterEach(clearEnvironment);
 
   it('should create a global Injector instance', () => {
     expect(getEnvironmentRef()).to.be.instanceOf(Injector);

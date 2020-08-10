@@ -1,21 +1,21 @@
 import { Injector, Provider } from '@joist/di';
 
-let ROOT_INJECTOR: Injector | undefined;
+let rootInjector: Injector | undefined;
 
 export function defineEnvironment(providers: Provider<any>[] = []): Injector {
-  ROOT_INJECTOR = new Injector({ providers });
+  rootInjector = new Injector({ providers });
 
-  return ROOT_INJECTOR;
+  return rootInjector;
 }
 
 export function getEnvironmentRef(): Injector {
-  if (ROOT_INJECTOR) {
-    return ROOT_INJECTOR;
+  if (rootInjector) {
+    return rootInjector;
   }
 
   return defineEnvironment();
 }
 
 export function clearEnvironment(): void {
-  ROOT_INJECTOR = undefined;
+  rootInjector = undefined;
 }

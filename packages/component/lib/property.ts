@@ -6,23 +6,31 @@ export interface PropValidationError {
 
 export type PropValidator = (val: any) => null | PropValidationError;
 
-export function property(...validators: PropValidator[]) {
+function createValidator(validator: PropValidator, key: string) {
+  return function (val: any) {
+    const res = validator(val);
+
+    if (res !== null) {
+      throw new Error(
+        `Validation failed when assigning ${val} to key ${key}.${
+          res.message ? ' ' + res.message : ''
+        }`
+      );
+    }
+  };
+}
+
+export function property(...validatorFns: PropValidator[]) {
   return function (target: any, key: string) {
     const valueKey = `__prop__${key}__value`;
     const initKey = `__prop__${key}__initialized`;
+    const validators = validatorFns.map((v) => createValidator(v, key));
 
     Object.defineProperty(target, key, {
       set(val) {
         if (validators.length) {
           validators.forEach((validator) => {
-            const res = validator(val);
-            if (res !== null) {
-              throw new Error(
-                `Validation failed when assigning ${val} to key ${key}.${
-                  res.message ? ' ' + res.message : ''
-                }`
-              );
-            }
+            validator(val);
           });
         }
 
