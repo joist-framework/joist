@@ -314,6 +314,8 @@ class AppElement extends JoistElement {}
 The simplest way to test your components is to just create a new instance using `document.createElement`
 
 ```TS
+import { expect } from '@open-wc/testing'
+
 import { AppElement } from './app.element';
 
 describe('AppElement', () => {
@@ -324,7 +326,7 @@ describe('AppElement', () => {
   });
 
   it('should work', () => {
-    expect(el).toBeTruthy();
+    expect(el).to.be.instanceOf(AppElement);
   });
 });
 ```
