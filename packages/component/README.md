@@ -333,6 +333,7 @@ If you want to make use of mock providers you can manually bootstrap your enviro
 
 ```TS
 import { defineEnvironment, clearEnvironment } from '@joist/component';
+import { expect } from '@open-wc/testing'
 
 import { AppElement } from './app.element';
 import { Myservice } from './my.service'
@@ -356,7 +357,7 @@ describe('AppElement', () => {
   it('should work', () => {
     const el = new AppElement();
 
-    expect(el.service.sayHello()).toBe('GOTCHA!');
+    expect(el.service.sayHello()).to.equal('GOTCHA!');
   });
 });
 
