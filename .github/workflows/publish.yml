@@ -19,4 +19,4 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - run: npm ci
-      - run: npx lerna publish --canary --preid canary --yes
+      - run: npx lerna publish --canary --preid canary.$(date +"%s") --yes
