@@ -19,6 +19,11 @@ If you want to build an application or just run everything yourself you can use 
 npx create-snowpack-app my-app --template @joist/starter-snowpack
 ```
 
+Joist also publishes a canary version. If you use canary expect bugs.
+
+```
+npm i @joist/{component,di,router}@canary
+```
 
 ### Packages
 
