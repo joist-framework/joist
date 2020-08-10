@@ -390,3 +390,26 @@ export class MyElement extends withInjector(HTMLElement) {
   }
 }
 ```
+
+You can also use Joist's property decorator to handle property validation and handle property changes.
+
+
+```TS
+import { property, OnPropChanges } from '@joist/component';
+
+export class MyElement extends HTMLElement implements OnPropChanges {
+  @property() count = 0
+
+  connectedCallback() {
+    this.innerHTML = this.count.toString();
+      
+    setInterval(() => {
+      this.count++;
+    }, 1000) 
+  }
+  
+  onPropChanges() {
+    this.innerHTML = this.count.toString();
+  }
+}
+```
