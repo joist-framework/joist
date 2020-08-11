@@ -28,10 +28,8 @@ export function property(...validatorFns: PropValidator[]) {
 
     Object.defineProperty(target, key, {
       set(val) {
-        if (validators.length) {
-          validators.forEach((validator) => {
-            validator(val);
-          });
+        for (let i = 0; i < validators.length; i++) {
+          validators[i](val);
         }
 
         if (this.onPropChanges) {
