@@ -46,17 +46,21 @@ const styles = html`
   tagName: 'news-card',
   shadowDom: 'open',
   render: template(({ state }) => {
+    if (!state) {
+      return html``;
+    }
+
     return html`
       ${styles}
 
       <h3>
-        <a href=${state?.url}>${state?.title}</a>
+        <a href=${state.url}>${state.title}</a>
       </h3>
 
       <div class="card-content">
-        <p>${state?.points} <b>points</b> by <b>${state?.user}</b> ${state?.time_ago}</p>
+        <p>${state.points} <b>points</b> by <b>${state.user}</b> ${state.time_ago}</p>
 
-        ${state?.comments_count} comments
+        ${state.comments_count} comments
       </div>
     `;
   }),

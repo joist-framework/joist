@@ -1,16 +1,15 @@
 import { Provider } from '@joist/di';
-import { JoistElement } from './element';
 
 export const COMPONENT_DEF_KEY = 'componentDef';
 
-export interface RenderCtx<T = unknown, H extends HTMLElement = JoistElement> {
+export interface RenderCtx<T = unknown, H extends HTMLElement = HTMLElement> {
   state: T;
   run: (event: string, payload?: unknown) => (e: Event) => void;
   dispatch: (eventName: string, init?: CustomEventInit) => () => void;
   host: H;
 }
 
-export type RenderDef<T, H extends HTMLElement = JoistElement> = (ctx: RenderCtx<T, H>) => unknown;
+export type RenderDef<T, H extends HTMLElement = HTMLElement> = (ctx: RenderCtx<T, H>) => unknown;
 
 export interface ComponentDef<T, H extends HTMLElement = HTMLElement> {
   tagName?: string;
