@@ -4,7 +4,7 @@ import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers } from './handle';
-import { Lifecycle } from './lifecycle';
+import { Lifecycle, PropChange } from './lifecycle';
 
 export interface InjectorBase {
   injector: Injector;
@@ -39,8 +39,9 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  */
 export class JoistElement extends withInjector(HTMLElement) implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor); // read the component definition
-
   private handlers = getComponentHandlers(this.constructor); // read the component handlers
+  private propChangeQue: PropChange[] = [];
+  private markedForCheck: boolean = false;
 
   // define the render context for the instance
   private renderCtx: RenderCtx = {
@@ -84,6 +85,28 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
     this.render(state.value);
 
     state.onChange(this.render.bind(this));
+  }
+
+  onPropChanges(..._: PropChange[]) {}
+
+  /**
+   * Adds a PropChange to the que.
+   * PropChanges resolves as a micro task once a promise is resolved.
+   * This batches onPropChanges calls
+   */
+  quePropChange(propChange: PropChange) {
+    this.propChangeQue.push(propChange);
+
+    if (!this.markedForCheck) {
+      this.markedForCheck = true;
+
+      Promise.resolve().then(() => {
+        this.onPropChanges(...this.propChangeQue);
+
+        this.markedForCheck = false;
+        this.propChangeQue = [];
+      });
+    }
   }
 
   private render(state: any) {
