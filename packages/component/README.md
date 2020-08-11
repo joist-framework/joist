@@ -394,7 +394,7 @@ export class MyElement extends withInjector(HTMLElement) {
 
 ### Render however you want!
 ```TS
-import { component, OnPropChanges } from '@joist/component';
+import { component, OnPropChanges, property } from '@joist/component';
 import { render, html } from 'lit-html';
 
 @component({
