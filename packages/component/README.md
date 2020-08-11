@@ -367,12 +367,13 @@ describe('AppElement', () => {
 
 ### Use with Vanilla Custom ELements
 
-Joist components are an opinionated way to write elements,
-If you want to use the Joist DI system by don't want to use Joist components it is easy enough to use vanilla custom elements or whatever else you like.
-As long as your element implements InjectorBase you can use Joist DI.
+Joist components are an opinionated way to write elements.
+If you are not a fan of how it handles state management or anything else you can use the individual parts in any combination you like!
+
+### Use DI with any base class
 
 ```TS
-import { withInjector, get } from '@joist/component';
+import { component, withInjector, get } from '@joist/component';
 import { service } from '@joist/di';
 
 @service()
@@ -382,41 +383,41 @@ class FooService {
   }
 }
 
-export class MyElement extends withInjector(HTMLElement) {
+@component({
+  tagName: 'my-element'
+})
+export class MyElement extends HTMLElement {
   @get(FooService)
-  private foo: FooService;
-
-  name = 'World';
-
-  connectedCallback() {
-    this.innerHTML = `<p>${this.foo.sayHello(this.name)}!`
-  }
+  public foo: FooService;
 }
-
-customElements.define('my-element', MyElement);
 ```
 
-You can also use Joist's property decorator to handle property validation and handle property changes.
-
-
+### Render however you want!
 ```TS
-import { property, OnPropChanges } from '@joist/component';
+import { component, OnPropChanges } from '@joist/component';
+import { render, html } from 'lit-html';
 
+@component({
+  tagName: 'my-element'
+})
 export class MyElement extends HTMLElement implements OnPropChanges {
-  @property() count = 0
-
-  connectedCallback() {
-    this.innerHTML = this.count.toString();
-      
-    setInterval(() => {
-      this.count++;
-    }, 1000) 
-  }
+  @property()
+  public count = 0;
   
   onPropChanges() {
-    this.innerHTML = this.count.toString();
+    this.renderer();
+  }
+  
+  render() {
+    return html`
+      <button @click=${() => this.count--}>Decrement</button>
+      ${this.count}
+      <button @click=${() => this.count++}>Increment</button>
+    `
+  }
+  
+  renderer() {
+    render(this.render(), this);
   }
 }
-
-customElements.define('my-element', MyElement);
 ```
