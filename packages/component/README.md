@@ -386,7 +386,7 @@ class FooService {
 @component({
   tagName: 'my-element'
 })
-export class MyElement extends HTMLElement {
+export class MyElement extends withInjector(HTMLElement) {
   @get(FooService)
   public foo: FooService;
 }
