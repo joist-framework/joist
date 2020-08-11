@@ -187,7 +187,7 @@ Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement, property, OnPropChanges, get, PropChange } from '@joist/component';
+import { component, State, JoistElement, property, get, PropChange } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -196,7 +196,7 @@ import { component, State, JoistElement, property, OnPropChanges, get, PropChang
     host.innerHTML = state;
   },
 })
-class AppElement extends JoistElement implements OnPropChanges {
+class AppElement extends JoistElement {
   @get(State)
   private state!: State<string>;
 

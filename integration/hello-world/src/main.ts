@@ -1,4 +1,4 @@
-import { component, JoistElement, property, PropChange } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 
 export interface AppState {
   title: string;
@@ -17,19 +17,4 @@ export interface AppState {
     host.append(title);
   },
 })
-export class AppElement extends JoistElement {
-  @property() foo: string = 'foo';
-  @property() bar: string = 'bar';
-
-  constructor() {
-    super();
-
-    setTimeout(() => {
-      this.foo = '';
-    }, 1000);
-  }
-
-  onPropChanges(...changes: PropChange[]) {
-    console.log(changes);
-  }
-}
+export class AppElement extends JoistElement {}

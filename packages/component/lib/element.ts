@@ -13,7 +13,7 @@ export interface InjectorBase {
 export interface PropChangeBase {
   propChangeQue: PropChange[];
   markedForCheck: boolean;
-  onPropChanges(): void;
+  onPropChanges(...changes: PropChange[]): void;
   quePropChange(change: PropChange): void;
 }
 
@@ -50,7 +50,7 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
     onPropChanges(..._: PropChange[]) {}
 
     /**
-     * Adds a PropChange to the que.
+     * Adds a PropChange to the que.s
      * PropChanges resolves as a micro task once a promise is resolved.
      * This batches onPropChanges calls
      */
