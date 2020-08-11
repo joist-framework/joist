@@ -405,7 +405,7 @@ export class MyElement extends HTMLElement implements OnPropChanges {
   public count = 0;
   
   onPropChanges() {
-    this.renderer();
+    this.render();
   }
   
   private template() {
