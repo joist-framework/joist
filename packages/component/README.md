@@ -398,7 +398,8 @@ import { component, OnPropChanges, property } from '@joist/component';
 import { render, html } from 'lit-html';
 
 @component({
-  tagName: 'my-element'
+  tagName: 'my-element',
+  shadowDom: 'open'
 })
 export class MyElement extends HTMLElement implements OnPropChanges {
   @property()
@@ -417,7 +418,7 @@ export class MyElement extends HTMLElement implements OnPropChanges {
   }
   
   private render() {
-    render(this.template(), this);
+    render(this.template(), this.shadowRoot || this);
   }
 }
 ```
