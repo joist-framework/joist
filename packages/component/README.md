@@ -393,22 +393,23 @@ export class MyElement extends withInjector(HTMLElement) {
 ```
 
 ### Render however you want!
+
 ```TS
-import { component, OnPropChanges, property } from '@joist/component';
+import { component, property, withPropChanges } from '@joist/component';
 import { render, html } from 'lit-html';
 
 @component({
   tagName: 'my-element',
   shadowDom: 'open'
 })
-export class MyElement extends HTMLElement implements OnPropChanges {
+export class MyElement extends withPropChanges(HTMLElement) {
   @property()
   public count = 0;
-  
+
   onPropChanges() {
     this.render();
   }
-  
+
   private template() {
     return html`
       <button @click=${() => this.count--}>Decrement</button>
@@ -416,7 +417,7 @@ export class MyElement extends HTMLElement implements OnPropChanges {
       <button @click=${() => this.count++}>Increment</button>
     `
   }
-  
+
   private render() {
     render(this.template(), this.shadowRoot || this);
   }

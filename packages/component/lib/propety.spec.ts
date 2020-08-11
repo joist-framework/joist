@@ -2,12 +2,13 @@ import { expect } from '@open-wc/testing';
 
 import { property, PropValidator } from './property';
 import { OnPropChanges, PropChange } from './lifecycle';
+import { JoistElement } from './element';
 
 describe('property', () => {
   it('should call onPropChanges when marked properties are changed', () => {
     let calls: PropChange[] = [];
 
-    class MyElement implements OnPropChanges {
+    class MyElement extends JoistElement implements OnPropChanges {
       @property()
       public hello: string = 'Hello World';
 
@@ -27,7 +28,7 @@ describe('property', () => {
   });
 
   it('should throw and error if the validtor returns false', () => {
-    class MyElement {
+    class MyElement extends JoistElement {
       @property((val: unknown) => (typeof val === 'string' ? null : {}))
       public hello: any = 'Hello World';
     }
@@ -41,7 +42,7 @@ describe('property', () => {
     const isString: PropValidator = (val: unknown) =>
       typeof val === 'string' ? null : { message: 'Should be a string yo!' };
 
-    class MyElement {
+    class MyElement extends JoistElement {
       @property(isString)
       public hello: any = 'Hello World';
     }
@@ -57,7 +58,7 @@ describe('property', () => {
     const isString: PropValidator = (val: unknown) => (typeof val === 'string' ? null : {});
     const isLongerThan = (length: number) => (val: string) => (val.length > length ? null : {});
 
-    class MyElement {
+    class MyElement extends JoistElement {
       @property(isString, isLongerThan(2))
       public hello: any = 'Hello World';
     }
