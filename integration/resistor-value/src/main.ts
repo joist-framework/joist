@@ -1,3 +1,6 @@
+import './select-band-count.element';
+import './resistor.element';
+import './select-band-color.element';
 import './app/app.element';
 
 if (process.env.NODE_ENV === 'production') {

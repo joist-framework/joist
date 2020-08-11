@@ -1,4 +1,4 @@
-import { component, State, handle, JoistElement, get } from '@joist/component';
+import { component, State, handle, JoistElement, get, RenderCtx } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 import { until } from 'lit-html/directives/until';
 
@@ -11,84 +11,93 @@ export interface AppState {
   currentNewsItem?: HackerNewsItemFull;
 }
 
+function createNewsCards({ state, run }: RenderCtx<AppState>) {
+  return state.news.map((news) =>
+    until(
+      import('./news-card/news-card.element').then(
+        () => html`<news-card .newsItem=${news} @click=${run('card_clicked', news)}></news-card>`
+      ),
+      html`<div class="placeholder-card"></div>`
+    )
+  );
+}
+
+const styles = html`
+  <style>
+    :host {
+      display: block;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: var(--header-height);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      overflow-y: auto;
+    }
+
+    news-card,
+    .placeholder-card {
+      margin-bottom: 0.75rem;
+    }
+
+    app-loader {
+      position: fixed;
+      top: 24px;
+      z-index: 1000;
+      right: 24px;
+    }
+
+    .placeholder-card {
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      height: 130px;
+    }
+
+    comments-drawer {
+      animation: drawerEnter 0.2s;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      z-index: 1001;
+    }
+
+    @keyframes drawerEnter {
+      0% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+  </style>
+`;
+
 @component<AppState>({
   tagName: 'app-root',
   state: {
-    loadingNews: false,
+    loadingNews: true,
     news: [],
     loadingCurrentNewsItem: false,
   },
-  render: template(({ state, run }) => {
+  render: template((ctx) => {
+    const { state, run } = ctx;
+
     return html`
-      <style>
-        :host {
-          display: block;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding-top: var(--header-height);
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          top: 0;
-          overflow-y: auto;
-        }
+      ${styles}
 
-        news-card,
-        .placeholder-card {
-          margin-bottom: 0.75rem;
-        }
-
-        app-loader {
-          position: fixed;
-          top: 24px;
-          z-index: 1000;
-          right: 24px;
-        }
-
-        .placeholder-card {
-          background: rgba(255, 255, 255, 0.8);
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-          height: 130px;
-        }
-
-        comments-drawer {
-          animation: drawerEnter 0.2s;
-          max-width: 1200px;
-          margin: 0 auto;
-          position: fixed;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          top: 0;
-          z-index: 1001;
-        }
-
-        @keyframes drawerEnter {
-          0% {
-            transform: translateY(100%);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-      </style>
-
-      ${state.loadingNews || state.loadingCurrentNewsItem ? html`<app-loader></app-loader>` : null}
-
-      <div class="cards">
-        ${state.news.map((news) =>
-          until(
-            import('./news-card/news-card.element').then(
-              () =>
-                html`
-                  <news-card .newsItem=${news} @click=${run('card_clicked', news)}></news-card>
-                `
-            ),
-            html`<div class="placeholder-card"></div>`
-          )
-        )}
+      <div>
+        ${state.loadingNews || state.loadingCurrentNewsItem
+          ? html`<app-loader></app-loader>`
+          : null}
       </div>
+
+      <div class="cards">${createNewsCards(ctx)}</div>
 
       ${state.currentNewsItem
         ? html`
@@ -110,8 +119,6 @@ export class AppElement extends JoistElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-
-    this.state.patchValue({ loadingNews: true });
 
     const news = this.hackerNews.getNews();
     const state = news.then((news) => ({ news, loadingNews: false }));

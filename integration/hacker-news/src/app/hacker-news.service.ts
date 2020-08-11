@@ -1,4 +1,6 @@
-import { service } from '@joist/di';
+import { service, inject } from '@joist/di';
+
+import { HttpService } from './http.service';
 
 export interface HackerNewsItem {
   id: number;
@@ -28,11 +30,13 @@ export interface HackerNewsItemFull extends HackerNewsItem {
 
 @service()
 export class HackerNewsService {
-  getNews(): Promise<HackerNewsItem[]> {
-    return fetch('https://api.hackerwebapp.com/news').then((res) => res.json());
+  constructor(@inject(HttpService) private http: HttpService) {}
+
+  getNews() {
+    return this.http.get<HackerNewsItem[]>('https://api.hackerwebapp.com/news');
   }
 
-  getNewsItem(id: number): Promise<HackerNewsItemFull> {
-    return fetch(`https://api.hackerwebapp.com/item/${id}`).then((res) => res.json());
+  getNewsItem(id: number) {
+    return this.http.get<HackerNewsItemFull>(`https://api.hackerwebapp.com/item/${id}`);
   }
 }
