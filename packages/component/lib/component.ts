@@ -12,7 +12,7 @@ export interface RenderCtx<T = unknown, H extends HTMLElement = JoistElement> {
 
 export type RenderDef<T, H extends HTMLElement = JoistElement> = (ctx: RenderCtx<T, H>) => unknown;
 
-export interface ComponentDef<T, H extends HTMLElement = JoistElement> {
+export interface ComponentDef<T, H extends HTMLElement = HTMLElement> {
   tagName?: string;
   shadowDom?: 'open' | 'closed';
   render?: RenderDef<T, H>;
@@ -24,7 +24,7 @@ export function getComponentDef<T>(component: any): ComponentDef<T> {
   return component[COMPONENT_DEF_KEY] || {};
 }
 
-export function component<T, H extends HTMLElement = JoistElement>(
+export function component<T, H extends HTMLElement = HTMLElement>(
   componentDef: ComponentDef<T, H> = {}
 ) {
   return function (component: new () => H) {
