@@ -30,7 +30,7 @@
     "@commitlint/config-conventional": "9.1.1",
     "@open-wc/testing": "2.5.21",
     "@types/node": "8.10.62",
-    "@web/dev-server-esbuild": "0.1.5",
+    "@web/dev-server-esbuild": "0.2.1",
     "@web/test-runner": "0.6.65",
     "husky": "4.2.5",
     "lerna": "3.22.1",
