@@ -408,7 +408,7 @@ export class MyElement extends HTMLElement implements OnPropChanges {
     this.renderer();
   }
   
-  render() {
+  private template() {
     return html`
       <button @click=${() => this.count--}>Decrement</button>
       ${this.count}
@@ -416,8 +416,8 @@ export class MyElement extends HTMLElement implements OnPropChanges {
     `
   }
   
-  renderer() {
-    render(this.render(), this);
+  private render() {
+    render(this.template(), this);
   }
 }
 ```
