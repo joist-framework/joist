@@ -302,7 +302,9 @@ import { template, html } from '@joist/component/lit-html';
   tagName: 'app-root',
   render: template(({ dispatch }) => {
     return html`
-      <button @click=${dispatch('custom_event')}>Custom Event</button>
+      <button @click=${dispatch('custom_event')}>
+        Custom Event
+      </button>
     `
   })
 })
