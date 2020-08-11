@@ -49,6 +49,8 @@ export function property(...validatorFns: PropValidator[]) {
       get() {
         return this[valueKey];
       },
+      configurable: true,
+      enumerable: true,
     });
   };
 }
