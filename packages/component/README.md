@@ -392,6 +392,8 @@ export class MyElement extends withInjector(HTMLElement) {
     this.innerHTML = `<p>${this.foo.sayHello(this.name)}!`
   }
 }
+
+customElements.define('my-element', MyElement);
 ```
 
 You can also use Joist's property decorator to handle property validation and handle property changes.
@@ -415,4 +417,6 @@ export class MyElement extends HTMLElement implements OnPropChanges {
     this.innerHTML = this.count.toString();
   }
 }
+
+customElements.define('my-element', MyElement);
 ```
