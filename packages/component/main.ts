@@ -8,7 +8,6 @@ export {
   OnAttributeChanged,
   OnConnected,
   OnDisconnected,
-  OnPropChanges,
   Lifecycle,
   PropChange,
 } from './lib/lifecycle';
