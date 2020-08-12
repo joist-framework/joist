@@ -46,7 +46,9 @@ import { template, html } from '@joist/component/lit-html';
     title: 'Hello World'
   },
   render: template(({ state }) => {
-    return html`<h1>${state.title}</h1>`
+    return html`
+      <h1>${state.title}</h1>
+    `
   })
 })
 class AppElement extends JoistElement {}
