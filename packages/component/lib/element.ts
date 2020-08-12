@@ -3,7 +3,7 @@ import { Injector, ProviderToken } from '@joist/di';
 import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
-import { getComponentHandlers } from './handle';
+import { getComponentHandlers, Handler } from './handle';
 import { Lifecycle, PropChange } from './lifecycle';
 
 export interface InjectorBase {
@@ -140,19 +140,21 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   private notifyHandlers(...args: [Event, any, string]) {
-    const matches = this.handlers.filter((handler) => {
-      if (handler.pattern instanceof RegExp) {
-        return handler.pattern.test(args[2]);
+    for (let i = 0; i < this.handlers.length; i++) {
+      if (this.handlerMatches(this.handlers[i], args[2])) {
+        const key = this.handlers[i].key as keyof this;
+        const fn = (this[key] as any) as Function;
+
+        fn.apply(this, args);
       }
+    }
+  }
 
-      return handler.pattern === args[2];
-    });
+  private handlerMatches(handler: Handler, action: string) {
+    if (handler.pattern instanceof RegExp) {
+      return handler.pattern.test(action);
+    }
 
-    matches.forEach((handler) => {
-      const key = handler.key as keyof this;
-      const fn = (this[key] as any) as Function;
-
-      fn.apply(this, args);
-    });
+    return handler.pattern === action;
   }
 }
