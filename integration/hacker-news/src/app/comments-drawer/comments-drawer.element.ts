@@ -1,4 +1,4 @@
-import { State, JoistElement, component, get, OnPropChanges, property } from '@joist/component';
+import { State, JoistElement, component, get, property } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { HackerNewsItemComment } from '../hacker-news.service';
@@ -75,7 +75,7 @@ function createComment(comment: HackerNewsItemComment) {
     `;
   }),
 })
-export class CommentsDrawerElement extends JoistElement implements OnPropChanges {
+export class CommentsDrawerElement extends JoistElement {
   @get(State)
   private state!: State<HackerNewsItemComment[]>;
 

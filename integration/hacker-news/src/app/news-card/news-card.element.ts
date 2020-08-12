@@ -1,4 +1,4 @@
-import { State, component, get, JoistElement, property, OnPropChanges } from '@joist/component';
+import { State, component, get, JoistElement, property } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { HackerNewsItem } from '../hacker-news.service';
@@ -65,7 +65,7 @@ const styles = html`
     `;
   }),
 })
-export class NewsCardElement extends JoistElement implements OnPropChanges {
+export class NewsCardElement extends JoistElement {
   @get(State)
   private state!: State<NewsCardState>;
 

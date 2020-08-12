@@ -1,4 +1,4 @@
-import { State, component, JoistElement, get, property, OnPropChanges } from '@joist/component';
+import { State, component, JoistElement, get, property } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -91,7 +91,7 @@ interface SelectBandCountState {
     `;
   }),
 })
-export class SelectBandCountElement extends JoistElement implements OnPropChanges {
+export class SelectBandCountElement extends JoistElement {
   @get(State)
   private state!: State<SelectBandCountState>;
 
