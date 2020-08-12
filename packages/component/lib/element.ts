@@ -40,7 +40,7 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
 }
 
 /**
- * Mixin that applies an injector to a base class
+ * Mixin that applies an prop change to a base class
  */
 export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
@@ -50,19 +50,23 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
     onPropChanges(..._: PropChange[]) {}
 
     /**
-     * Adds a PropChange to the que.s
+     * Adds a PropChange to the que.
      * PropChanges resolves as a micro task once a promise is resolved.
      * This batches onPropChanges calls
      */
     quePropChange(propChange: PropChange) {
+      // push change onto the  que
       this.propChangeQue.push(propChange);
 
       if (!this.markedForCheck) {
+        // mark that component props have changed and need to be process
         this.markedForCheck = true;
 
         Promise.resolve().then(() => {
+          // run onPropChanges here. This makes sure we capture all changes
           this.onPropChanges(...this.propChangeQue);
 
+          // reset for next time
           this.markedForCheck = false;
           this.propChangeQue = [];
         });
@@ -121,8 +125,10 @@ export class JoistElement extends Base implements Lifecycle {
 
     this.renderCtx.state = state.value;
 
+    // render initial state
     this.render(state.value);
 
+    // re-render when state changes
     state.onChange(this.render.bind(this));
   }
 
