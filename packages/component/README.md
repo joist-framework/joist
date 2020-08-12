@@ -371,6 +371,7 @@ describe('AppElement', () => {
 
 Joist components are an opinionated way to write elements.
 If you are not a fan of how it handles state management or anything else you can use the individual parts in any combination you like!
+Individual features of JoistElement are exposed as mixins making it easy to apply functionality to other classes.
 
 #### Use DI with any base class
 
