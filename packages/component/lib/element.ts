@@ -13,7 +13,7 @@ export interface InjectorBase {
 export interface PropChangeBase {
   propChanges: Record<string, PropChange>;
   propHasChanged: boolean;
-  onPropChanges(...changes: PropChange[]): void;
+  onPropChanges(changes: PropChange[]): void;
   quePropChange(change: PropChange): void;
 }
 
@@ -47,7 +47,7 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
     propChanges: Record<string, PropChange> = {};
     propHasChanged: boolean = false;
 
-    onPropChanges(..._: PropChange[]) {}
+    onPropChanges(_: PropChange[]) {}
 
     /**
      * Adds a PropChange to the que.
@@ -63,7 +63,7 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
 
         Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
-          this.onPropChanges.apply(this, Object.values(this.propChanges));
+          this.onPropChanges(Object.values(this.propChanges));
 
           // reset for next time
           this.propHasChanged = false;

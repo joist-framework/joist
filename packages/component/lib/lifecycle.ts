@@ -20,7 +20,7 @@ export class PropChange<T = any> {
 }
 
 export interface OnPropChanges {
-  onPropChanges(change: PropChange): void;
+  onPropChanges(changes: PropChange[]): void;
 }
 
 export type Lifecycle = Partial<OnPropChanges> &

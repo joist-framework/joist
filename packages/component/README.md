@@ -203,7 +203,7 @@ class AppElement extends JoistElement {
   @property()
   public greeting = '';
 
-  onPropChanges(_change: PropChange) {
+  onPropChanges(changes: PropChange[]) {
     this.state.setValue(this.greeting);
   }
 }

@@ -10,8 +10,8 @@ describe('property', () => {
       @property()
       public hello?: string;
 
-      onPropChanges(change: PropChange) {
-        expect(change).to.deep.equal(new PropChange('hello', 'Hello World', true));
+      onPropChanges(changes: PropChange[]) {
+        expect(changes).to.deep.equal([new PropChange('hello', 'Hello World', true)]);
 
         done();
       }
@@ -25,7 +25,7 @@ describe('property', () => {
       @property()
       public hello: string = 'Hello World';
 
-      onPropChanges(...changes: PropChange[]) {
+      onPropChanges(changes: PropChange[]) {
         expect(changes).to.deep.equal([new PropChange('hello', 'Final', false, 'Goodbye World')]);
 
         done();
@@ -45,7 +45,7 @@ describe('property', () => {
       @property()
       public bar = 'BAR';
 
-      onPropChanges(...changes: PropChange[]) {
+      onPropChanges(changes: PropChange[]) {
         expect(changes).to.deep.equal([
           new PropChange('foo', 'Hello', false, 'FOO'),
           new PropChange('bar', 'World', false, 'BAR'),
