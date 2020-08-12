@@ -372,7 +372,7 @@ describe('AppElement', () => {
 Joist components are an opinionated way to write elements.
 If you are not a fan of how it handles state management or anything else you can use the individual parts in any combination you like!
 
-### Use DI with any base class
+#### Use DI with any base class
 
 ```TS
 import { component, withInjector, get } from '@joist/component';
@@ -394,7 +394,7 @@ export class MyElement extends withInjector(HTMLElement) {
 }
 ```
 
-### Render however you want!
+#### Render however you want!
 
 ```TS
 import { component, property, withPropChanges } from '@joist/component';
