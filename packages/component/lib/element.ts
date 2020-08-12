@@ -3,11 +3,18 @@ import { Injector, ProviderToken } from '@joist/di';
 import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
-import { getComponentHandlers } from './handle';
-import { Lifecycle } from './lifecycle';
+import { getComponentHandlers, Handler } from './handle';
+import { Lifecycle, PropChange } from './lifecycle';
 
 export interface InjectorBase {
   injector: Injector;
+}
+
+export interface PropChangeBase {
+  propChanges: Record<string, PropChange>;
+  propHasChanged: boolean;
+  onPropChanges(changes: PropChange[]): void;
+  quePropChange(change: PropChange): void;
 }
 
 /**
@@ -33,13 +40,49 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
 }
 
 /**
+ * Mixin that applies an prop change to a base class
+ */
+export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
+  return class PropChanges extends Base implements PropChangeBase {
+    propChanges: Record<string, PropChange> = {};
+    propHasChanged: boolean = false;
+
+    onPropChanges(_: PropChange[]) {}
+
+    /**
+     * Adds a PropChange to the que.
+     * PropChanges resolves as a micro task once a promise is resolved.
+     * This batches onPropChanges calls
+     */
+    quePropChange(propChange: PropChange) {
+      this.propChanges[propChange.key] = propChange;
+
+      if (!this.propHasChanged) {
+        // mark that component props have changed and need to be process
+        this.propHasChanged = true;
+
+        Promise.resolve().then(() => {
+          // run onPropChanges here. This makes sure we capture all changes
+          this.onPropChanges(Object.values(this.propChanges));
+
+          // reset for next time
+          this.propHasChanged = false;
+          this.propChanges = {};
+        });
+      }
+    }
+  };
+}
+
+const Base = withPropChanges(withInjector(HTMLElement));
+
+/**
  * Base Element for Joist.
  *
  * Applies an Injector and sets up state and render pipeline.
  */
-export class JoistElement extends withInjector(HTMLElement) implements Lifecycle {
+export class JoistElement extends Base implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor); // read the component definition
-
   private handlers = getComponentHandlers(this.constructor); // read the component handlers
 
   // define the render context for the instance
@@ -81,8 +124,10 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
 
     this.renderCtx.state = state.value;
 
+    // render initial state
     this.render(state.value);
 
+    // re-render when state changes
     state.onChange(this.render.bind(this));
   }
 
@@ -95,19 +140,21 @@ export class JoistElement extends withInjector(HTMLElement) implements Lifecycle
   }
 
   private notifyHandlers(...args: [Event, any, string]) {
-    const matches = this.handlers.filter((handler) => {
-      if (handler.pattern instanceof RegExp) {
-        return handler.pattern.test(args[2]);
+    for (let i = 0; i < this.handlers.length; i++) {
+      if (this.handlerMatches(this.handlers[i], args[2])) {
+        const key = this.handlers[i].key as keyof this;
+        const fn = (this[key] as any) as Function;
+
+        fn.apply(this, args);
       }
+    }
+  }
 
-      return handler.pattern === args[2];
-    });
+  private handlerMatches(handler: Handler, action: string) {
+    if (handler.pattern instanceof RegExp) {
+      return handler.pattern.test(action);
+    }
 
-    matches.forEach((handler) => {
-      const key = handler.key as keyof this;
-      const fn = (this[key] as any) as Function;
-
-      fn.apply(this, args);
-    });
+    return handler.pattern === action;
   }
 }

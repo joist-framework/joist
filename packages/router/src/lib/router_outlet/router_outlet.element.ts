@@ -7,7 +7,6 @@ import {
   get,
   InjectorBase,
   property,
-  OnPropChanges,
 } from '@joist/component';
 import { Injector } from '@joist/di';
 import { MatchFunction, Match, MatchResult } from 'path-to-regexp';
@@ -19,7 +18,7 @@ export interface RouterOutletState {
   activeRoute?: Route;
 }
 
-type RouterOutletLifecycle = OnConnected & OnDisconnected & OnPropChanges;
+type RouterOutletLifecycle = OnConnected & OnDisconnected;
 
 @component<RouterOutletState>({
   state: {},

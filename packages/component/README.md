@@ -187,7 +187,7 @@ Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement, property, OnPropChanges, get, PropChange } from '@joist/component';
+import { component, State, JoistElement, property, get, PropChange } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -196,14 +196,14 @@ import { component, State, JoistElement, property, OnPropChanges, get, PropChang
     host.innerHTML = state;
   },
 })
-class AppElement extends JoistElement implements OnPropChanges {
+class AppElement extends JoistElement {
   @get(State)
   private state!: State<string>;
 
   @property()
   public greeting = '';
 
-  onPropChanges(_change: PropChange) {
+  onPropChanges(changes: PropChange[]) {
     this.state.setValue(this.greeting);
   }
 }
@@ -395,22 +395,23 @@ export class MyElement extends withInjector(HTMLElement) {
 ```
 
 ### Render however you want!
+
 ```TS
-import { component, OnPropChanges, property } from '@joist/component';
+import { component, property, withPropChanges } from '@joist/component';
 import { render, html } from 'lit-html';
 
 @component({
   tagName: 'my-element',
   shadowDom: 'open'
 })
-export class MyElement extends HTMLElement implements OnPropChanges {
+export class MyElement extends withPropChanges(HTMLElement) {
   @property()
   public count = 0;
-  
+
   onPropChanges() {
     this.render();
   }
-  
+
   private template() {
     return html`
       <button @click=${() => this.count--}>Decrement</button>
@@ -418,7 +419,7 @@ export class MyElement extends HTMLElement implements OnPropChanges {
       <button @click=${() => this.count++}>Increment</button>
     `
   }
-  
+
   private render() {
     render(this.template(), this.shadowRoot || this);
   }

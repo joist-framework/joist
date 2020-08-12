@@ -27,7 +27,11 @@ export function component<T, H extends HTMLElement = HTMLElement>(
   componentDef: ComponentDef<T, H> = {}
 ) {
   return function (component: new () => H) {
-    Object.defineProperty(component, COMPONENT_DEF_KEY, { value: componentDef });
+    Object.defineProperty(component, COMPONENT_DEF_KEY, {
+      get() {
+        return componentDef;
+      },
+    });
 
     if (componentDef.tagName) {
       customElements.define(componentDef.tagName, component);

@@ -1,4 +1,5 @@
 import { PropChange } from './lifecycle';
+import { PropChangeBase } from './element';
 
 export interface PropValidationError {
   message?: string;
@@ -21,34 +22,34 @@ function createValidator(validator: PropValidator, key: string) {
 }
 
 export function property(...validatorFns: PropValidator[]) {
-  return function (target: any, key: string) {
+  return function (target: PropChangeBase, key: string) {
     const valueKey = `__prop__${key}__value`;
     const initKey = `__prop__${key}__initialized`;
     const validators = validatorFns.map((v) => createValidator(v, key));
 
-    Object.defineProperty(target, key, {
-      set(val) {
+    const descriptor: PropertyDescriptor = {
+      set(this: PropChangeBase & { [key: string]: any }, val) {
         for (let i = 0; i < validators.length; i++) {
           validators[i](val);
         }
 
-        if (this.onPropChanges) {
-          const oldValue = this[key];
+        const oldValue = this[key];
 
-          if (val !== oldValue) {
-            this[valueKey] = val;
+        if (val !== oldValue) {
+          this[valueKey] = val;
 
-            this.onPropChanges(new PropChange(key, val, !this[initKey], oldValue));
-          }
+          this.quePropChange(new PropChange(key, val, !this[initKey], oldValue));
         }
 
         this[initKey] = true;
       },
-      get() {
+      get(this: PropChangeBase & { [key: string]: any }) {
         return this[valueKey];
       },
       configurable: true,
       enumerable: true,
-    });
+    };
+
+    Object.defineProperty(target, key, descriptor);
   };
 }

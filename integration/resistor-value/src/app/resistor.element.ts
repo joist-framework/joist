@@ -1,4 +1,4 @@
-import { component, State, JoistElement, get, property, OnPropChanges } from '@joist/component';
+import { component, State, JoistElement, get, property } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 import { ResistorBand } from './resistor.service';
@@ -79,7 +79,7 @@ import { ResistorBand } from './resistor.service';
     `;
   }),
 })
-export class ResistorElement extends JoistElement implements OnPropChanges {
+export class ResistorElement extends JoistElement {
   @get(State)
   private state!: State<ResistorBand[]>;
 
