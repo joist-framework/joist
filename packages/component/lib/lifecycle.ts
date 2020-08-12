@@ -19,11 +19,6 @@ export class PropChange<T = any> {
   ) {}
 }
 
-export interface OnPropChanges {
-  onPropChanges(changes: PropChange[]): void;
-}
-
-export type Lifecycle = Partial<OnPropChanges> &
-  Partial<OnConnected> &
+export type Lifecycle = Partial<OnConnected> &
   Partial<OnDisconnected> &
   Partial<OnAttributeChanged>;
