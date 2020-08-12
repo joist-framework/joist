@@ -14,7 +14,7 @@ export interface PropChangeBase {
   propChanges: Record<string, PropChange>;
   propHasChanged: boolean;
   onPropChanges(changes: PropChange[]): void;
-  quePropChange(change: PropChange): void;
+  queuePropChange(change: PropChange): void;
 }
 
 /**
@@ -50,11 +50,11 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
     onPropChanges(_: PropChange[]) {}
 
     /**
-     * Adds a PropChange to the que.
+     * Adds a PropChange to the queue.
      * PropChanges resolves as a micro task once a promise is resolved.
      * This batches onPropChanges calls
      */
-    quePropChange(propChange: PropChange) {
+    queuePropChange(propChange: PropChange) {
       this.propChanges[propChange.key] = propChange;
 
       if (!this.propHasChanged) {

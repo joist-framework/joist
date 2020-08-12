@@ -38,7 +38,7 @@ export function property(...validatorFns: PropValidator[]) {
         if (val !== oldValue) {
           this[valueKey] = val;
 
-          this.quePropChange(new PropChange(key, val, !this[initKey], oldValue));
+          this.queuePropChange(new PropChange(key, val, !this[initKey], oldValue));
         }
 
         this[initKey] = true;
