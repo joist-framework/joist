@@ -1,6 +1,6 @@
 {
   "name": "@joist/component",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "main": "target/main.js",
   "module": "target/main.js",
   "files": [
@@ -39,7 +39,7 @@
     "lit-html": "^1.1.2"
   },
   "devDependencies": {
-    "@joist/di": "^1.2.1"
+    "@joist/di": "^1.3.0"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }
