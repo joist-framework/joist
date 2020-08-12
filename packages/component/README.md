@@ -375,6 +375,9 @@ Individual features of JoistElement are exposed as mixins making it easy to appl
 
 #### Use DI with any base class
 
+You can use Joist's DI immplementation with any base class that you like.
+The `withInjector` can be applied to a class which will make that class an `InjectorBase`.
+
 ```TS
 import { component, withInjector, get } from '@joist/component';
 import { service } from '@joist/di';
@@ -395,7 +398,10 @@ export class MyElement extends withInjector(HTMLElement) {
 }
 ```
 
-#### Render however you want!
+#### Use properties and render however you want!
+
+Much like DI, Joist's properties feature can be applied to any base class.
+This means you can define properties and define how you want to handler rendering.
 
 ```TS
 import { component, property, withPropChanges } from '@joist/component';
