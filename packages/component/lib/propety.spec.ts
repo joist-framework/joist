@@ -20,15 +20,35 @@ describe('property', () => {
     new MyElement().hello = 'Hello World';
   });
 
-  it('should call onPropChanges when marked properties are changed', (done) => {
+  it('should call batch calls to on propChanges so only the latest change is passed in', (done) => {
     class MyElement extends withPropChanges(class {}) {
       @property()
       public hello: string = 'Hello World';
 
       onPropChanges(...changes: PropChange[]) {
+        expect(changes).to.deep.equal([new PropChange('hello', 'Final', false, 'Goodbye World')]);
+
+        done();
+      }
+    }
+
+    const el = new MyElement();
+    el.hello = 'Goodbye World';
+    el.hello = 'Final';
+  });
+
+  it('should call batch calls to on propChanges so that onPropChanges is only called once for multiple changes', (done) => {
+    class MyElement extends withPropChanges(class {}) {
+      @property()
+      public foo = 'FOO';
+
+      @property()
+      public bar = 'BAR';
+
+      onPropChanges(...changes: PropChange[]) {
         expect(changes).to.deep.equal([
-          new PropChange('hello', 'Hello World', true),
-          new PropChange('hello', 'Goodbye World', false, 'Hello World'),
+          new PropChange('foo', 'Hello', false, 'FOO'),
+          new PropChange('bar', 'World', false, 'BAR'),
         ]);
 
         done();
@@ -36,8 +56,8 @@ describe('property', () => {
     }
 
     const el = new MyElement();
-
-    el.hello = 'Goodbye World';
+    el.foo = 'Hello';
+    el.bar = 'World';
   });
 
   it('should throw and error if the validtor returns false', () => {
