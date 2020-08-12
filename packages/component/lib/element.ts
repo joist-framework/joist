@@ -11,8 +11,8 @@ export interface InjectorBase {
 }
 
 export interface PropChangeBase {
-  propChanges: { [key: string]: PropChange };
-  markedForCheck: boolean;
+  propChanges: Record<string, PropChange>;
+  propHasChanged: boolean;
   onPropChanges(...changes: PropChange[]): void;
   quePropChange(change: PropChange): void;
 }
@@ -44,8 +44,8 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  */
 export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
-    propChanges: { [key: string]: PropChange } = {};
-    markedForCheck: boolean = false;
+    propChanges: Record<string, PropChange> = {};
+    propHasChanged: boolean = false;
 
     onPropChanges(..._: PropChange[]) {}
 
@@ -57,16 +57,16 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
     quePropChange(propChange: PropChange) {
       this.propChanges[propChange.key] = propChange;
 
-      if (!this.markedForCheck) {
+      if (!this.propHasChanged) {
         // mark that component props have changed and need to be process
-        this.markedForCheck = true;
+        this.propHasChanged = true;
 
         Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
           this.onPropChanges(...Object.values(this.propChanges));
 
           // reset for next time
-          this.markedForCheck = false;
+          this.propHasChanged = false;
           this.propChanges = {};
         });
       }
