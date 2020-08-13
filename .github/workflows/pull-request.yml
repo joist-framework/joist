@@ -20,3 +20,6 @@ jobs:
 
       - name: Build Integrations
         run: npx lerna run build --scope @joist-examples/*
+
+      - name: Check Bundle Sizes
+        run: npx lerna run size --scope @joist-examples/*

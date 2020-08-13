@@ -9,10 +9,12 @@ A small (~2kb or ~5kb with lit-html) library to help with the creation of web co
 ## Getting Started
 
 ### [webcomponents.dev](https://webcomponents.dev/new/)
+
 The easiest way get started with Joist is to go to use the Joist starter on [webcomponents.dev](https://webcomponents.dev/create/joist).
 There you can play around with Joist (and other frameworks) with 0 setup required. (You can even test and publish!)
 
 ### [starter-app-snowpack](https://github.com/joist-framework/starter-app-snowpack)
+
 If you want to build an application or just run everything yourself you can use the [snowpack starter app](https://github.com/joist-framework/starter-app-snowpack). This starter uses snowpack for dev and rollup for creating your production bundle.
 
 ```BASH
@@ -35,14 +37,12 @@ npm i @joist/{component,di,router}@canary
 
 ### Integration
 
-| Project                                                  | Description                                                       |
-| -------------------------------------------------------- | ----------------------------------------------------------------- |
-| [hello-world](integration/hello-world)                   | Hello World no view lib                                           |                             
-| [hello-world-lit-html](integration/hello-world-lit-html) | Hello World lit-html                                              |
-| [todo-app](integration/todo-app)                         | Todo app                                                          |
-| [hacker-news](integration/hacker-news)                   | Hacker news PWA. [Link](https://joist-hn.web.app)                         |
-| [resistor-value](integration/resistor-value)             | PWA for calculating the value of resistors from their color bands |
-| [router-test](integration/router-test)                   | small routing example                                             |
+| Project                                                  | Description                                       |
+| -------------------------------------------------------- | ------------------------------------------------- |
+| [hello-world](integration/hello-world)                   | Hello World no view lib                           |
+| [hello-world-lit-html](integration/hello-world-lit-html) | Hello World lit-html                              |
+| [todo-app](integration/todo-app)                         | Todo app                                          |
+| [hacker-news](integration/hacker-news)                   | Hacker news PWA. [Link](https://joist-hn.web.app) |
 
 ### Development
 
