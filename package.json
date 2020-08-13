@@ -32,7 +32,7 @@
     "@snowpack/plugin-webpack": "2.0.2",
     "@types/node": "8.10.62",
     "@web/dev-server-esbuild": "0.2.1",
-    "@web/test-runner": "0.7.2",
+    "@web/test-runner": "0.7.3",
     "bundlesize": "0.18.0",
     "husky": "4.2.5",
     "lerna": "3.22.1",
