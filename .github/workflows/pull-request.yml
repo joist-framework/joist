@@ -16,10 +16,10 @@ jobs:
         run: npx lerna run test --scope @joist/*
 
       - name: Integration Tests
-        run: npx lerna run test --scope @joist-examples/*
+        run: npx lerna run test --scope @joist-app/*
 
       - name: Build Integrations
-        run: npx lerna run build --scope @joist-examples/*
+        run: npx lerna run build --scope @joist-app/*
 
       - name: Check Bundle Sizes
-        run: npx lerna run size --scope @joist-examples/*
+        run: npx lerna run size --scope @joist-app/*

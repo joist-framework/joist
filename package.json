@@ -17,8 +17,8 @@
     "test-all": "lerna run test",
     "build-libs": "lerna run build --scope @joist/*",
     "test-libs": "lerna run test --scope @joist/*",
-    "build-integration": "lerna run build --scope @joist-examples/*",
-    "test-integration": "lerna run test --scope @joist-examples/*"
+    "build-integration": "lerna run build --scope @joist-app/*",
+    "test-integration": "lerna run test --scope @joist-app/*"
   },
   "dependencies": {
     "@joist/component": "file:packages/component",
