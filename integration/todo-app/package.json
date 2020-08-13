@@ -4,9 +4,11 @@
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "snowpack dev",
+    "build": "snowpack build --clean",
     "test": "wtr **/*.spec.ts --config ../../wtr.config.js",
-    "build": "webpack --mode production"
+    "test:watch": "wtr src/**/*.spec.ts --watch",
+    "size": "bundlesize -f build/js/main.js -s 6kB"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,13 @@
+{
+  "mount": {
+    "public": "/",
+    "src": "/__dist__"
+  },
+  "plugins": [
+    ["@snowpack/plugin-run-script", { "cmd": "tsc --noEmit", "watch": "$1 --watch" }],
+    ["../../tools/snowpack-plugin-rollup.js", {}]
+  ],
+  "installOptions": {
+    "installTypes": true
+  }
+}
