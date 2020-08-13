@@ -29,7 +29,6 @@
     "@commitlint/cli": "9.1.2",
     "@commitlint/config-conventional": "9.1.1",
     "@open-wc/testing": "2.5.21",
-    "@snowpack/plugin-webpack": "2.0.2",
     "@types/node": "8.10.62",
     "@web/dev-server-esbuild": "0.2.1",
     "@web/test-runner": "0.7.3",
@@ -44,7 +43,6 @@
     "rollup-plugin-terser": "7.0.0",
     "sinon": "9.0.3",
     "snowpack": "2.7.7",
-    "ts-loader": "7.0.5",
     "tslib": "2.0.1",
     "typescript": "4.0.0-dev.20200803"
   },
