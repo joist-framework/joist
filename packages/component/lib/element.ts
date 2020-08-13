@@ -23,7 +23,7 @@ export interface PropChangeBase {
 export function get<T>(token: ProviderToken<T>) {
   return function (target: InjectorBase, key: string) {
     Object.defineProperty(target, key, {
-      get() {
+      get(this: InjectorBase) {
         return this.injector.get(token);
       },
     });
