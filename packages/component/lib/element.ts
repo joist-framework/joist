@@ -11,8 +11,6 @@ export interface InjectorBase {
 }
 
 export interface PropChangeBase {
-  propChanges: Record<string, PropChange>;
-  propHasChanged: boolean;
   onPropChanges(changes: PropChange[]): void;
   queuePropChange(change: PropChange): void;
 }
