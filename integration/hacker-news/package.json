@@ -18,7 +18,6 @@
   "license": "ISC",
   "dependencies": {
     "@joist/component": "file:../../packages/component",
-    "@joist/di": "file:../../packages/di",
-    "lit-html": "1.2.1"
+    "@joist/di": "file:../../packages/di"
   }
 }

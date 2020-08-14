@@ -36,7 +36,7 @@
     "@joist/di": "^1.0.0"
   },
   "optionalPeerDependencies": {
-    "lit-html": "^1.1.2"
+    "lit-html": "^1.2.0"
   },
   "devDependencies": {
     "@joist/di": "^1.3.0"
