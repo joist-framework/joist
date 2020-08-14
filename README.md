@@ -1,6 +1,10 @@
 [![Actions Status](https://github.com/deebloo/joist/workflows/CI/badge.svg)](https://github.com/deebloo/joist/actions)
 
-<img height="250" src="images/logo.png" data-canonical-src="images/logo.png" />
+
+
+<p align="center">
+  <img height="350" src="images/logo.png" />
+</p
 
 ## [Read Introduction Here](https://dev.to/deebloo/introducing-joist-4724)
 
