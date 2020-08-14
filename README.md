@@ -4,7 +4,7 @@
 
 <p align="center">
   <img height="350" src="images/logo.png" />
-</p
+</p>
 
 ## [Read Introduction Here](https://dev.to/deebloo/introducing-joist-4724)
 
