@@ -44,6 +44,16 @@ npm i @joist/{component,di,router}@canary
 | [todo-app](integration/todo-app)                         | Todo app                                          |
 | [hacker-news](integration/hacker-news)                   | Hacker news PWA. [Link](https://joist-hn.web.app) |
 
+### Browser Support
+
+Joist targets evergreen browsers.
+
+<img width="56" src="images/chrome_128x128.png">
+<img width="56" src="images/edge_128x128.png">
+<img width="56" src="images/firefox_128x128.png">
+<img width="56" src="images/opera_128x128.png">
+<img width="56" src="images/safari_128x128.png">
+
 ### Development
 
 #### Install Dependencies
