@@ -28,7 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "9.1.2",
     "@commitlint/config-conventional": "9.1.1",
-    "@open-wc/testing": "2.5.21",
+    "@open-wc/testing": "2.5.22",
     "@types/node": "8.10.62",
     "@web/dev-server-esbuild": "0.2.1",
     "@web/test-runner": "0.7.3",
