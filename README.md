@@ -56,6 +56,11 @@ Joist targets evergreen browsers.
   <img width="56" src="images/safari_128x128.png">
 </div>
 
+### IE 11 Support
+
+IE 11 CAN be supported but will require some work on the users end and is not a priority for Joist.
+https://lit-html.polymer-project.org/guide/styling-templates#polyfilled-shadow-dom:-shadydom-and-shadycss
+
 ### Development
 
 #### Install Dependencies
