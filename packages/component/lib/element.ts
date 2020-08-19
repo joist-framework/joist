@@ -133,7 +133,7 @@ export class JoistElement extends Base implements Lifecycle {
     this.renderCtx.state = state;
 
     if (this.componentDef.render) {
-      this.componentDef.render(this.renderCtx);
+      this.componentDef.render(this.renderCtx, this.componentDef);
     }
   }
 

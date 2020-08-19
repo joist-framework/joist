@@ -1,6 +1,5 @@
 import { component, State, handle, JoistElement, get, RenderCtx } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
-import { until } from 'lit-html/directives/until';
 
 import { HackerNewsService, HackerNewsItem, HackerNewsItemFull } from './hacker-news.service';
 
@@ -12,13 +11,8 @@ export interface AppState {
 }
 
 function createNewsCards({ state, run }: RenderCtx<AppState>) {
-  return state.news.map((news) =>
-    until(
-      import('./news-card/news-card.element').then(
-        () => html`<news-card .newsItem=${news} @click=${run('card_clicked', news)}></news-card>`
-      ),
-      html`<div class="placeholder-card"></div>`
-    )
+  return state.news.map(
+    (news) => html`<news-card .newsItem=${news} @click=${run('card_clicked', news)}></news-card>`
   );
 }
 
@@ -80,6 +74,7 @@ const styles = html`
 
 @component<AppState>({
   tagName: 'app-root',
+  shadowDom: 'open',
   state: {
     loadingNews: true,
     news: [],
@@ -91,22 +86,24 @@ const styles = html`
     return html`
       ${styles}
 
-      <div>
-        ${state.loadingNews || state.loadingCurrentNewsItem
-          ? html`<app-loader></app-loader>`
-          : null}
+
+        ${
+          state.loadingNews || state.loadingCurrentNewsItem ? html`<app-loader></app-loader>` : null
+        }
+
+        <div class="cards">${createNewsCards(ctx)}</div>
+
+        ${
+          state.currentNewsItem
+            ? html`
+                <comments-drawer
+                  .comments=${state.currentNewsItem.comments}
+                  @close_drawer=${run('close_drawer')}
+                ></comments-drawer>
+              `
+            : null
+        }
       </div>
-
-      <div class="cards">${createNewsCards(ctx)}</div>
-
-      ${state.currentNewsItem
-        ? html`
-            <comments-drawer
-              .comments=${state.currentNewsItem.comments}
-              @close_drawer=${run('close_drawer')}
-            ></comments-drawer>
-          `
-        : null}
     `;
   }),
 })
@@ -127,8 +124,6 @@ export class AppElement extends JoistElement {
   }
 
   @handle('card_clicked') onCardClicked(_: Event, news: HackerNewsItemFull): void {
-    this.state.patchValue({ loadingCurrentNewsItem: true });
-
     this.state.patchValue(this.loadDrawerElement().then(() => this.getNewsItem(news.id)));
   }
 

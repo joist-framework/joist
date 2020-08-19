@@ -12,7 +12,7 @@ export class State<T> {
       if (res !== this.state) {
         this.state = res;
 
-        this.listeners.forEach((cb) => cb(res));
+        this.notifyListeners();
       }
     });
   }
@@ -20,7 +20,11 @@ export class State<T> {
   patchValue(state: Partial<T> | Promise<Partial<T>>) {
     return Promise.resolve(state).then((res) => {
       try {
-        this.setValue({ ...this.state, ...res });
+        this.state = { ...this.state, ...res };
+
+        this.notifyListeners();
+
+        return this.state;
       } catch (err) {
         throw new Error(`cannot patch state that is of type ${typeof state}`);
       }
@@ -33,5 +37,9 @@ export class State<T> {
     return () => {
       this.listeners = this.listeners.filter((currentCb) => currentCb !== cb);
     };
+  }
+
+  private notifyListeners() {
+    this.listeners.forEach((cb) => cb(this.state));
   }
 }

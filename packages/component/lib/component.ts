@@ -9,12 +9,16 @@ export interface RenderCtx<T = unknown, H extends HTMLElement = HTMLElement> {
   host: H;
 }
 
-export type RenderDef<T, H extends HTMLElement = HTMLElement> = (ctx: RenderCtx<T, H>) => unknown;
+export type RenderDef<T, H extends HTMLElement = HTMLElement> = (
+  ctx: RenderCtx<T, H>,
+  def: ComponentDef<any>
+) => unknown;
 
 export interface ComponentDef<T, H extends HTMLElement = HTMLElement> {
   tagName?: string;
   shadowDom?: 'open' | 'closed';
   render?: RenderDef<T, H>;
+  styles?: string[];
   state?: T;
   providers?: Provider<any>[];
 }
