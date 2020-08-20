@@ -5,9 +5,11 @@ import { HackerNewsItem } from '../hacker-news.service';
 
 export type NewsCardState = HackerNewsItem | undefined;
 
-const styles = html`
-  <style>
-    :host {
+@component<NewsCardState>({
+  tagName: 'news-card',
+  shadowDom: 'open',
+  styles: [
+    `:host {
       display: block;
       padding: 1rem 1.5rem;
       background: #fff;
@@ -38,21 +40,14 @@ const styles = html`
       color: #000;
       cursor: pointer;
       text-decoration: none;
-    }
-  </style>
-`;
-
-@component<NewsCardState>({
-  tagName: 'news-card',
-  shadowDom: 'open',
+    }`,
+  ],
   render: template(({ state }) => {
     if (!state) {
       return html``;
     }
 
     return html`
-      ${styles}
-
       <h3>
         <a href=${state.url}>${state.title}</a>
       </h3>

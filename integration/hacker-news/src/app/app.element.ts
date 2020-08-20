@@ -16,9 +16,16 @@ function createNewsCards({ state, run }: RenderCtx<AppState>) {
   );
 }
 
-const styles = html`
-  <style>
-    :host {
+@component<AppState>({
+  tagName: 'app-root',
+  shadowDom: 'open',
+  state: {
+    loadingNews: true,
+    news: [],
+    loadingCurrentNewsItem: false,
+  },
+  styles: [
+    `:host {
       display: block;
       max-width: 1200px;
       margin: 0 auto;
@@ -68,42 +75,26 @@ const styles = html`
       100% {
         transform: translateY(0);
       }
-    }
-  </style>
-`;
-
-@component<AppState>({
-  tagName: 'app-root',
-  shadowDom: 'open',
-  state: {
-    loadingNews: true,
-    news: [],
-    loadingCurrentNewsItem: false,
-  },
+    }`,
+  ],
   render: template((ctx) => {
     const { state, run } = ctx;
 
+    const showLoader = state.loadingNews || state.loadingCurrentNewsItem;
+
     return html`
-      ${styles}
+      ${showLoader ? html`<app-loader></app-loader>` : null}
 
+      <div class="cards">${createNewsCards(ctx)}</div>
 
-        ${
-          state.loadingNews || state.loadingCurrentNewsItem ? html`<app-loader></app-loader>` : null
-        }
+      ${state.currentNewsItem
+        ? html`<comments-drawer
+            .comments=${state.currentNewsItem.comments}
+            @close_drawer=${run('close_drawer')}
+          ></comments-drawer>`
+        : null}
 
-        <div class="cards">${createNewsCards(ctx)}</div>
-
-        ${
-          state.currentNewsItem
-            ? html`
-                <comments-drawer
-                  .comments=${state.currentNewsItem.comments}
-                  @close_drawer=${run('close_drawer')}
-                ></comments-drawer>
-              `
-            : null
-        }
-      </div>
+      <div class="cards">${createNewsCards(ctx)}</div>
     `;
   }),
 })
