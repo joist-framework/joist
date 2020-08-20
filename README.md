@@ -1,7 +1,5 @@
 [![Actions Status](https://github.com/deebloo/joist/workflows/CI/badge.svg)](https://github.com/deebloo/joist/actions)
 
-
-
 <p align="center">
   <img height="350" src="images/logo.png" />
 </p>
@@ -45,7 +43,7 @@ npm i @joist/{component,di,router}@canary
 | -------------------------------------------------------- | ------------------------------------------------- |
 | [hello-world](integration/hello-world)                   | Hello World no view lib                           |
 | [hello-world-lit-html](integration/hello-world-lit-html) | Hello World lit-html                              |
-| [todo-app](integration/todo-app)                         | Todo app                                          |
+| [todo-app](integration/todo-app)                         | Todo app. [Link](https://joist-todo.web.app)      |
 | [hacker-news](integration/hacker-news)                   | Hacker news PWA. [Link](https://joist-hn.web.app) |
 
 ### Browser Support
