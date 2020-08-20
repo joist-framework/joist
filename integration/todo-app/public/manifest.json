@@ -3,7 +3,7 @@
   "short_name": "joist-todo",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#ead8d9",
+  "theme_color": "#dcdcdc",
   "background_color": "#fff",
   "description": "Web Components todo app",
   "icons": [
