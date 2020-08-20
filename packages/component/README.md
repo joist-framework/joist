@@ -54,6 +54,39 @@ import { template, html } from '@joist/component/lit-html';
 class AppElement extends JoistElement {}
 ```
 
+### Component Styling
+
+When you are using shadow dom you can apply styles with the component `styles` property.
+
+```TS
+import { component, JoistElement } from '@joist/component';
+import { template, html } from '@joist/component/lit-html';
+
+@component({
+  tagName: 'app-root',
+  shadowDom: 'open',
+  state: {
+    title: 'Hello World'
+  },
+  styles: [`
+    :host {
+      display: block;
+    }
+    
+    h1 {
+      color: red;
+    }
+  `],
+  render: template(({ state }) => {
+    return html`
+      <h1>${state.title}</h1>
+    `
+  })
+})
+class AppElement extends JoistElement {}
+```
+
+
 ### Dependency injection (DI)
 
 Sometimes you have code that you want to share between elements.
