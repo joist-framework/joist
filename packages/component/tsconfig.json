@@ -10,6 +10,6 @@
       "lit-html": ["../../node_modules/lit-html/lit-html"]
     }
   },
-  "files": ["main.ts"],
+  "files": ["main.ts", "typings.d.ts"],
   "include": ["lib", "lit-html"]
 }
