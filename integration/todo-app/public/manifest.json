@@ -1,11 +1,11 @@
 {
-  "name": "Joist Hacker News PwA",
-  "short_name": "joist-hn",
+  "name": "Joist Todo App",
+  "short_name": "joist-todo",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#ff6600",
+  "theme_color": "#ead8d9",
   "background_color": "#fff",
-  "description": "Web Components PWA build with Joist",
+  "description": "Web Components todo app",
   "icons": [
     {
       "src": "assets/icons/icon-48.png",
