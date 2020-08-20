@@ -4,7 +4,7 @@
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
-    "start": "snowpack dev",
+    "start": "snowpack dev --clean",
     "build": "snowpack build --clean && workbox generateSW workbox-config.js",
     "test": "wtr **/*.spec.ts --config ../../wtr.config.js"
   },

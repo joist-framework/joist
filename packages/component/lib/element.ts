@@ -74,6 +74,9 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
 
 const Base = withPropChanges(withInjector(HTMLElement));
 
+// Cache computed constructable stylesheets
+const styleCache = new Map<string, CSSStyleSheet[]>();
+
 /**
  * Base Element for Joist.
  *
@@ -108,7 +111,6 @@ export class JoistElement extends Base implements Lifecycle {
     }
 
     const options = this.injector.options;
-
     options.providers = [...providers, { provide: State, use: ComponentState }];
     options.bootstrap = providers.map((p) => p.provide);
 
@@ -118,15 +120,23 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   connectedCallback() {
-    const state = this.injector.get(State);
+    this.applyStyles();
 
-    this.renderCtx.state = state.value;
+    const state = this.injector.get(State);
 
     // render initial state
     this.render(state.value);
 
     // re-render when state changes
     state.onChange(this.render.bind(this));
+  }
+
+  private createStyleSheet(styleString: string) {
+    const sheet = new CSSStyleSheet();
+
+    sheet.replaceSync(styleString);
+
+    return sheet;
   }
 
   private render(state: any) {
@@ -154,5 +164,25 @@ export class JoistElement extends Base implements Lifecycle {
     }
 
     return handler.pattern === action;
+  }
+
+  /**
+   * Apply styles using Constructable StyleSheets if supported.
+   * Individual renders will need to handle falling back for browsers without support.
+   */
+  private applyStyles() {
+    if (
+      this.componentDef.styles && // styles are defined
+      this.shadowRoot && // element has shadowRoot
+      this.shadowRoot.adoptedStyleSheets // element supports adoptedStyleSheets
+    ) {
+      if (!styleCache.has(this.tagName)) {
+        // if styles have not previously been computed do so now
+        styleCache.set(this.tagName, this.componentDef.styles.map(this.createStyleSheet));
+      }
+
+      // adpot calculated stylesheets
+      this.shadowRoot.adoptedStyleSheets = styleCache.get(this.tagName) || [];
+    }
   }
 }
