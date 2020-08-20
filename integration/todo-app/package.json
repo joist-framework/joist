@@ -6,8 +6,7 @@
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build --clean",
-    "test": "wtr **/*.spec.ts --config ../../wtr.config.js",
-    "size": "bundlesize -f build/js/main.js -s 6kB"
+    "test": "wtr **/*.spec.ts --config ../../wtr.config.js"
   },
   "repository": {
     "type": "git",
