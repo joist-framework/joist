@@ -8,7 +8,7 @@
     "build": "snowpack build --clean",
     "test": "wtr **/*.spec.ts --config ../../wtr.config.js",
     "test:watch": "wtr src/**/*.spec.ts --watch",
-    "size": "bundlesize -f build/js/main.js -s 5kB"
+    "size": "bundlesize -f build/js/main.js -s 5.5kB"
   },
   "repository": {
     "type": "git",

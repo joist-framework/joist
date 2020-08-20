@@ -1,7 +1,6 @@
 const { rollup } = require('rollup');
 const { readFile, writeFile } = require('fs');
 const { promisify } = require('util');
-const { terser } = require('rollup-plugin-terser');
 
 const read = promisify(readFile);
 const write = promisify(writeFile);
@@ -27,7 +26,6 @@ module.exports = function (snowpackConfig, _pluginOptions) {
           dir: `${buildDirectory}/js`,
           format: 'esm',
         },
-        plugins: [terser()],
       });
     },
   };
