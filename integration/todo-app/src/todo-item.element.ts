@@ -62,8 +62,6 @@ export class TodoItemElement extends JoistElement {
   public todo?: Todo;
 
   onPropChanges() {
-    const { todo } = this;
-
-    this.state.patchValue({ todo });
+    this.state.patchValue({ todo: this.todo });
   }
 }
