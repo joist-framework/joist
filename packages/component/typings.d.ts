@@ -10,5 +10,3 @@ declare interface Document {
 declare interface ShadowRoot {
   adoptedStyleSheets: readonly CSSStyleSheet[];
 }
-
-declare var __INITIAL_DATA__: string;
