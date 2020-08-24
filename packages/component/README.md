@@ -57,7 +57,7 @@ class AppElement extends JoistElement {}
 ### Component Styling
 
 When you are using shadow dom you can apply styles with the component `styles` property.
-Joist components will leverage [Constructable Stylessheets](https://github.com/joist-framework/joist) when available but allows renderers to fall back for browsers without support
+Joist components will leverage [Constructable Stylessheets](https://developers.google.com/web/updates/2019/02/constructable-stylesheets) when available but allows renderers to fall back for browsers without support
 
 ```TS
 import { component, JoistElement } from '@joist/component';
