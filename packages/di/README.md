@@ -56,7 +56,7 @@ const app = new Injector({
   providers: [
     {
       provide: FooService,
-      useClass: class extends FooService {
+      use: class extends FooService {
         sayHello() {
           return 'IT HAS BEEN OVERRIDEN'
         }
