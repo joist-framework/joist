@@ -222,7 +222,7 @@ Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
 
 ```TS
-import { component, State, JoistElement, property, get, PropChange } from '@joist/component';
+import { component, State, JoistElement, property, get } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -238,8 +238,43 @@ class AppElement extends JoistElement {
   @property()
   public greeting = '';
 
-  onPropChanges(changes: PropChange[]) {
+  onPropChanges() {
     this.state.setValue(this.greeting);
+  }
+}
+```
+
+When on prop changes is called you will get a list of current changes. This, coupled with explicit state updates, gives you give fine grained control over when your component updates.
+
+```TS
+import { component, State, JoistElement, property, get, PropChange } from '@joist/component';
+
+@component({
+  tagName: 'app-root',
+  state: ''
+  render({ state, host }) {
+    host.innerHTML = state;
+  },
+})
+class AppElement extends JoistElement {
+  @get(State)
+  private state!: State<string>;
+
+  @property()
+  public foo = '';
+  
+  @property()
+  public bar = '';
+  
+  @property()
+  public baz = '';
+
+  onPropChanges(changes: PropChange[]) {
+    const keys = changes.map((change) => change.key);
+
+    if (keys.includes('foo')) {
+      this.state.patchValue(this.foo);
+    }
   }
 }
 ```
