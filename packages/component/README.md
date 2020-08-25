@@ -216,7 +216,7 @@ class AppElement extends JoistElement {
 }
 ```
 
-### Component Props
+### Component Properties
 
 Since joist just uses custom elements any properties on your element will work.
 You can use custom getters and setters or decorate your props with `@property` which will cause `onPropChanges` to be called.
