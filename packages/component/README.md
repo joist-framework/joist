@@ -351,7 +351,8 @@ class AppElement extends JoistElement {
     console.log('CALLED WHEN EITHER IS RUN')
   }
 
-  @handle(/.*/) all(e: Event, payload: any, name: string) {
+  @handle(/.*/) 
+  debug(e: Event, payload: any, name: string) {
     console.log('CALLED WHEN REGEX MATCHES');
     console.log('TRIGGERING EVENT', e);
     console.log('payload', payload);
