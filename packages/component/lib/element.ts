@@ -90,7 +90,7 @@ export class JoistElement extends Base implements Lifecycle {
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
     run: (name: string, payload: unknown) => (e: Event) => {
-      this.notifyHandlers(e, payload, name);
+      this.notifyHandlers(e, payload, name).then((res) => this.onHandlersDone(name, res));
     },
     dispatch: (eventName: string, init?: CustomEventInit) => () => {
       this.dispatchEvent(new CustomEvent(eventName, init));
@@ -131,6 +131,8 @@ export class JoistElement extends Base implements Lifecycle {
     state.onChange(this.render.bind(this));
   }
 
+  onHandlersDone(_action: string, _res: any[]) {}
+
   private createStyleSheet(styleString: string) {
     const sheet = new CSSStyleSheet();
 
@@ -148,14 +150,18 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   private notifyHandlers(...args: [Event, any, string]) {
+    let responses: Promise<any>[] = [];
+
     for (let i = 0; i < this.handlers.length; i++) {
       if (this.handlerMatches(this.handlers[i], args[2])) {
         const key = this.handlers[i].key as keyof this;
         const fn = (this[key] as any) as Function;
 
-        fn.apply(this, args);
+        responses.push(Promise.resolve(fn.apply(this, args)));
       }
     }
+
+    return Promise.all(responses);
   }
 
   private handlerMatches(handler: Handler, action: string) {

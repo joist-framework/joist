@@ -10,6 +10,10 @@ export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
 
+export interface OnPropChanges {}
+
+export interface OnHandlersDone {}
+
 export class PropChange<T = any> {
   constructor(
     public key: string,
