@@ -387,7 +387,7 @@ class AppElement extends JoistElement {
 
   @handle('inc')
   @handle('dec')
-  either(_: Event, val: number) {
+  updateCount(_: Event, val: number) {
     return this.state.setValue(this.state.value + val);
   }
   
