@@ -23,9 +23,8 @@ class AppElement extends JoistElement {
     return this.state.setValue(this.state.value + val);
   }
 
-  onComplete({ action }: HandlerCtx, res: any[]) {
-    console.log(`${action} has been called and completed`);
-    console.log(`New state is ${this.state.value}`);
+  onComplete({ action, payload }: HandlerCtx, res: any[]) {
+    console.log({ action, payload, state: this.state.value });
   }
 }
 ```
