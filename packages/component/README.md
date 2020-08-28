@@ -262,10 +262,10 @@ class AppElement extends JoistElement {
 
   @property()
   public foo = '';
-  
+
   @property()
   public bar = '';
-  
+
   @property()
   public baz = '';
 
@@ -338,11 +338,11 @@ class AppElement extends JoistElement {
   private state!: State<number>;
 
   @handle('inc') increment() {
-    this.state.setValue(this.state.value + 1);
+    return this.state.setValue(this.state.value + 1);
   }
 
   @handle('dec') decrement() {
-    this.state.setValue(this.state.value - 1);
+    return this.state.setValue(this.state.value - 1);
   }
 
   @handle('inc')
@@ -351,12 +351,56 @@ class AppElement extends JoistElement {
     console.log('CALLED WHEN EITHER IS RUN')
   }
 
-  @handle(/.*/) 
+  @handle(/.*/)
   debug(e: Event, payload: any, name: string) {
     console.log('CALLED WHEN REGEX MATCHES');
     console.log('TRIGGERING EVENT', e);
     console.log('payload', payload);
     console.log('matched name', name);
+  }
+}
+```
+
+In addition to knowing WHEN something is being called sometimes you also want to know after your handlers are done doing whatever cool things they did.
+Joist handlers can return a Promise and you can listen for when handlers have "settled".
+The `onHandersDone` callback will be passed the initial action as well as any results from your various handlers.
+In the below example, since `State.setValue` returns a promise we can just return it. Now we can track when events are dispatched and when those action's handlers have been completed.
+
+```TS
+import { component, State, handle, JoistElement, get } from '@joist/component';
+import { template, html } from '@joist/component/lit-html';
+
+@component<number>({
+  tagName: 'app-root',
+  state: 0,
+  render: template(({ state, run }) => {
+    return html`
+      <button @click=${run('dec', -1)}>Decrement</button>
+      <span>${state}</span>
+      <button @click=${run('inc', 1)}>Increment</button>
+    `
+  })
+})
+class AppElement extends JoistElement {
+  @get(State)
+  private state!: State<number>;
+
+  @handle('inc')
+  @handle('dec')
+  either(_: Event, val: number) {
+    return this.state.setValue(this.state.value + val);
+  }
+
+  @handle(/.*/)
+  onActionDispatched(e: Event, payload: any, name: string) {
+    console.log('TRIGGERING EVENT', e);
+    console.log('payload', payload);
+    console.log('matched name', name);
+  }
+
+  onHandlersDone(action: string, res: any[]) {
+    console.log(`${action} has been called and completed`);
+    console.log(`New state is ${this.state.value}`);
   }
 }
 ```

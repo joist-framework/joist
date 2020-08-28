@@ -10,6 +10,14 @@ export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
 
+export interface OnPropChanges {
+  onPropChanges(changes: PropChange[]): void;
+}
+
+export interface OnHandlersDone {
+  onHandlersDone(action: string, res: any[]): void;
+}
+
 export class PropChange<T = any> {
   constructor(
     public key: string,
@@ -21,4 +29,6 @@ export class PropChange<T = any> {
 
 export type Lifecycle = Partial<OnConnected> &
   Partial<OnDisconnected> &
-  Partial<OnAttributeChanged>;
+  Partial<OnAttributeChanged> &
+  Partial<OnPropChanges> &
+  Partial<OnHandlersDone>;

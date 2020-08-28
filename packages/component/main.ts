@@ -10,4 +10,6 @@ export {
   OnDisconnected,
   Lifecycle,
   PropChange,
+  OnPropChanges,
+  OnHandlersDone,
 } from './lib/lifecycle';

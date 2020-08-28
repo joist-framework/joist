@@ -7,6 +7,7 @@ import { component } from './component';
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { State } from './state';
 import { handle } from './handle';
+import { OnHandlersDone } from './lifecycle';
 
 describe('JoistElement', () => {
   describe('withInjector', () => {
@@ -244,6 +245,53 @@ describe('JoistElement', () => {
       expect(el.onTestRun).calledWith(new MouseEvent('click'), undefined, 'foo-bar');
 
       expect(el.badFn).not.called;
+    });
+
+    it('should notify when all handlers are settled', (done) => {
+      @component({
+        tagName: 'handlers-5',
+        render({ run, host }) {
+          const button = document.createElement('button');
+
+          button.addEventListener('click', run('FOO', 'foo'));
+
+          host.append(button);
+        },
+      })
+      class MyElement extends JoistElement implements OnHandlersDone {
+        test?: string;
+
+        @handle('FOO')
+        first(..._: any[]) {}
+
+        @handle('FOO')
+        second(..._: any[]) {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              this.test = 'DONE';
+
+              resolve('Hello World');
+            }, 0);
+          });
+        }
+
+        onHandlersDone(action: string, res: any[]) {
+          expect(action).to.equal('FOO');
+          expect(res[0]).to.be.undefined;
+          expect(res[1]).to.equal('Hello World');
+          expect(this.test).to.equal('DONE');
+
+          done();
+        }
+      }
+
+      const el = new MyElement();
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
     });
   });
 });
