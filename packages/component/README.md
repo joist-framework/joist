@@ -370,7 +370,7 @@ In the below example, since `State.setValue` returns a promise we can just retur
 import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
-@component<number>({
+@component({
   tagName: 'app-root',
   state: 0,
   render: template(({ state, run }) => {
