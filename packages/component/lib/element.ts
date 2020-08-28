@@ -4,14 +4,13 @@ import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers, Handler } from './handle';
-import { Lifecycle, PropChange } from './lifecycle';
+import { Lifecycle, PropChange, OnPropChanges } from './lifecycle';
 
 export interface InjectorBase {
   injector: Injector;
 }
 
-export interface PropChangeBase {
-  onPropChanges(changes: PropChange[]): void;
+export interface PropChangeBase extends OnPropChanges {
   queuePropChange(change: PropChange): void;
 }
 
