@@ -14,8 +14,14 @@ export interface OnPropChanges {
   onPropChanges(changes: PropChange[]): void;
 }
 
-export interface OnHandlersDone {
-  onHandlersDone(action: string, res: any[]): void;
+export interface HandlerCtx {
+  event: Event;
+  action: string;
+  payload: any;
+}
+
+export interface OnComplete {
+  onComplete(ctx: HandlerCtx, res: any[]): void;
 }
 
 export class PropChange<T = any> {
@@ -31,4 +37,4 @@ export type Lifecycle = Partial<OnConnected> &
   Partial<OnDisconnected> &
   Partial<OnAttributeChanged> &
   Partial<OnPropChanges> &
-  Partial<OnHandlersDone>;
+  Partial<OnComplete>;

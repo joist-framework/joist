@@ -11,5 +11,6 @@ export {
   Lifecycle,
   PropChange,
   OnPropChanges,
-  OnHandlersDone,
+  OnComplete,
+  HandlerCtx,
 } from './lib/lifecycle';

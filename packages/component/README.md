@@ -363,11 +363,11 @@ class AppElement extends JoistElement {
 
 In addition to knowing WHEN something is being called sometimes you also want to know after your handlers are done doing whatever cool things they did.
 Joist handlers can return a Promise and you can listen for when handlers have "settled".
-The `onHandersDone` callback will be passed the initial action as well as any results from your various handlers.
+The `onComplete` callback will be passed the initial action as well as any results from your various handlers.
 In the below example, since `State.setValue` returns a promise we can just return it. Now we can track when events are dispatched and when those action's handlers have been completed.
 
 ```TS
-import { component, State, handle, JoistElement, get } from '@joist/component';
+import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
 
 @component<number>({
@@ -398,7 +398,7 @@ class AppElement extends JoistElement {
     console.log('matched name', name);
   }
 
-  onHandlersDone(action: string, res: any[]) {
+  onComplete({ action }: HandlerCtx, res: any[]) {
     console.log(`${action} has been called and completed`);
     console.log(`New state is ${this.state.value}`);
   }

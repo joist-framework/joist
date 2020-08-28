@@ -7,7 +7,7 @@ import { component } from './component';
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { State } from './state';
 import { handle } from './handle';
-import { OnHandlersDone } from './lifecycle';
+import { OnComplete, HandlerCtx } from './lifecycle';
 
 describe('JoistElement', () => {
   describe('withInjector', () => {
@@ -258,7 +258,7 @@ describe('JoistElement', () => {
           host.append(button);
         },
       })
-      class MyElement extends JoistElement implements OnHandlersDone {
+      class MyElement extends JoistElement implements OnComplete {
         test?: string;
 
         @handle('FOO')
@@ -275,7 +275,7 @@ describe('JoistElement', () => {
           });
         }
 
-        onHandlersDone(action: string, res: any[]) {
+        onComplete({ action }: HandlerCtx, res: any[]) {
           expect(action).to.equal('FOO');
           expect(res[0]).to.be.undefined;
           expect(res[1]).to.equal('Hello World');

@@ -4,7 +4,7 @@ import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers, Handler } from './handle';
-import { Lifecycle, PropChange, OnPropChanges } from './lifecycle';
+import { Lifecycle, PropChange, OnPropChanges, HandlerCtx } from './lifecycle';
 
 export interface InjectorBase {
   injector: Injector;
@@ -88,8 +88,10 @@ export class JoistElement extends Base implements Lifecycle {
   // define the render context for the instance
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
-    run: (name: string, payload: unknown) => (e: Event) => {
-      this.notifyHandlers(e, payload, name).then((res) => this.onHandlersDone(name, res));
+    run: (action: string, payload: unknown) => (event: Event) => {
+      this.notifyHandlers(event, payload, action).then((res) => {
+        this.onComplete({ action, payload, event }, res);
+      });
     },
     dispatch: (eventName: string, init?: CustomEventInit) => () => {
       this.dispatchEvent(new CustomEvent(eventName, init));
@@ -130,7 +132,7 @@ export class JoistElement extends Base implements Lifecycle {
     state.onChange(this.render.bind(this));
   }
 
-  onHandlersDone(_action: string, _res: any[]) {}
+  onComplete(_ctx: HandlerCtx, _res: any[]) {}
 
   private createStyleSheet(styleString: string) {
     const sheet = new CSSStyleSheet();
