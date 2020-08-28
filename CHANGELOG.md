@@ -8,7 +8,6 @@
 
 ```TS
 import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
-import { template, html } from '@joist/component/lit-html';
 
 @component<number>({
   tagName: 'app-root'
