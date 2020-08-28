@@ -11,15 +11,7 @@ import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/
 import { template, html } from '@joist/component/lit-html';
 
 @component<number>({
-  tagName: 'app-root',
-  state: 0,
-  render: template(({ state, run }) => {
-    return html`
-      <button @click=${run('dec', -1)}>Decrement</button>
-      <span>${state}</span>
-      <button @click=${run('inc', 1)}>Increment</button>
-    `
-  })
+  tagName: 'app-root'
 })
 class AppElement extends JoistElement {
   @get(State)
