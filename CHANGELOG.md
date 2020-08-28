@@ -9,7 +9,7 @@
 ```TS
 import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
 
-@component<number>({
+@component({
   tagName: 'app-root'
 })
 class AppElement extends JoistElement {
