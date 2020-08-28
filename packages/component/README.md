@@ -390,17 +390,9 @@ class AppElement extends JoistElement {
   either(_: Event, val: number) {
     return this.state.setValue(this.state.value + val);
   }
-
-  @handle(/.*/)
-  onActionDispatched(e: Event, payload: any, name: string) {
-    console.log('TRIGGERING EVENT', e);
-    console.log('payload', payload);
-    console.log('matched name', name);
-  }
-
+  
   onComplete({ action }: HandlerCtx, res: any[]) {
-    console.log(`${action} has been called and completed`);
-    console.log(`New state is ${this.state.value}`);
+    console.log({ action, payload, state: this.state.value });
   }
 }
 ```
