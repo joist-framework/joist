@@ -11,7 +11,7 @@ export interface InjectorBase {
 }
 
 export interface PropChangeBase extends OnPropChanges {
-  queuePropChange(change: PropChange): void;
+  definePropChange(change: PropChange): void;
 }
 
 /**
@@ -41,32 +41,32 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  */
 export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
-    propChanges: Record<string, PropChange> = {};
-    propHasChanged: boolean = false;
+    propChanges: Map<string, PropChange> = new Map();
+    propChange: Promise<void> | null = null;
 
     onPropChanges(_: PropChange[]) {}
 
     /**
-     * Adds a PropChange to the queue.
-     * PropChanges resolves as a micro task once a promise is resolved.
-     * This batches onPropChanges calls
+     * Marks a property as changed
+     * onPropChanges is called after all prop changes are defined.
+     * This batches onPropChanges calls.
      */
-    queuePropChange(propChange: PropChange) {
-      this.propChanges[propChange.key] = propChange;
+    definePropChange(propChange: PropChange): Promise<void> {
+      this.propChanges.set(propChange.key, propChange);
 
-      if (!this.propHasChanged) {
-        // mark that component props have changed and need to be process
-        this.propHasChanged = true;
-
-        Promise.resolve().then(() => {
+      if (!this.propChange) {
+        // If there is no previous change defined set it up
+        this.propChange = Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
           this.onPropChanges(Object.values(this.propChanges));
 
           // reset for next time
-          this.propHasChanged = false;
-          this.propChanges = {};
+          this.propChanges.clear();
+          this.propChange = null;
         });
       }
+
+      return this.propChange;
     }
   };
 }
