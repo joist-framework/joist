@@ -58,7 +58,7 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
         // If there is no previous change defined set it up
         this.propChange = Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
-          this.onPropChanges(Object.values(this.propChanges));
+          this.onPropChanges(Array.from(this.propChanges.values()));
 
           // reset for next time
           this.propChanges.clear();
