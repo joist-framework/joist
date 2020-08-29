@@ -41,8 +41,8 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  */
 export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
-    propChanges: Map<string, PropChange> = new Map();
-    propChange: Promise<void> | null = null;
+    $$propChanges: Map<string, PropChange> = new Map();
+    $$propChange: Promise<void> | null = null;
 
     onPropChanges(_: PropChange[]) {}
 
@@ -52,21 +52,21 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
      * This batches onPropChanges calls.
      */
     definePropChange(propChange: PropChange): Promise<void> {
-      this.propChanges.set(propChange.key, propChange);
+      this.$$propChanges.set(propChange.key, propChange);
 
-      if (!this.propChange) {
+      if (!this.$$propChange) {
         // If there is no previous change defined set it up
-        this.propChange = Promise.resolve().then(() => {
+        this.$$propChange = Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
-          this.onPropChanges(Array.from(this.propChanges.values()));
+          this.onPropChanges(Array.from(this.$$propChanges.values()));
 
           // reset for next time
-          this.propChanges.clear();
-          this.propChange = null;
+          this.$$propChanges.clear();
+          this.$$propChange = null;
         });
       }
 
-      return this.propChange;
+      return this.$$propChange;
     }
   };
 }
