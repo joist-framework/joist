@@ -150,6 +150,9 @@ export class JoistElement extends Base implements Lifecycle {
     }
   }
 
+  /**
+   * Call all handlers that match a given action
+   */
   private notifyHandlers(...args: [Event, any, string]) {
     let responses: Promise<any>[] = [];
 
@@ -165,6 +168,9 @@ export class JoistElement extends Base implements Lifecycle {
     return Promise.all(responses);
   }
 
+  /**
+   * Checks to see if a given handler matches the action
+   */
   private handlerMatches(handler: Handler, action: string) {
     if (handler.pattern instanceof RegExp) {
       return handler.pattern.test(action);

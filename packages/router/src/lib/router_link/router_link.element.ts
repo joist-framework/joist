@@ -1,4 +1,4 @@
-import { JoistElement, get, property } from '@joist/component';
+import { JoistElement, get, property, PropChange } from '@joist/component';
 
 import { Router, normalize } from '../router';
 
@@ -18,8 +18,12 @@ export class RouterLinkElement extends JoistElement {
   private normalizedPath: string = normalize(this.path);
   private removeListener?: Function;
 
-  onPropChanges() {
-    this.normalizedPath = normalize(this.path);
+  onPropChanges(changes: PropChange[]) {
+    const keys = changes.map((change) => change.key);
+
+    if (keys.includes('path')) {
+      this.normalizedPath = normalize(this.path);
+    }
   }
 
   connectedCallback() {
