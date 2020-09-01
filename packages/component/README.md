@@ -326,9 +326,7 @@ import { template, html } from '@joist/component/lit-html';
   render: template(({ state, run }) => {
     return html`
       <button @click=${run('dec')}>Decrement</button>
-
-      ${state}
-
+      <span>${state}</span>
       <button @click=${run('inc')}>Increment</button>
     `
   })
