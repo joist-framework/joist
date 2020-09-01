@@ -3,11 +3,11 @@ export function getComponentHandlers(provider: any): Handler[] {
 }
 
 export interface Handler {
-  pattern: string | RegExp;
+  pattern: string | Symbol | RegExp;
   key: string;
 }
 
-export function handle(pattern: string | RegExp) {
+export function handle(pattern: string | Symbol | RegExp) {
   return function (instance: any, key: string) {
     const constructor = instance.constructor;
 

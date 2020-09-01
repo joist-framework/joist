@@ -88,7 +88,7 @@ export class JoistElement extends Base implements Lifecycle {
   // define the render context for the instance
   private renderCtx: RenderCtx = {
     state: this.componentDef.state,
-    run: (action: string, payload: unknown) => (event: Event) => {
+    run: (action: string | Symbol, payload: unknown) => (event: Event) => {
       this.notifyHandlers(event, payload, action).then((res) => {
         this.onComplete({ action, payload, event }, res);
       });
@@ -153,7 +153,7 @@ export class JoistElement extends Base implements Lifecycle {
   /**
    * Call all handlers that match a given action
    */
-  private notifyHandlers(...args: [Event, any, string]) {
+  private notifyHandlers(...args: [Event, any, string | Symbol]) {
     let responses: Promise<any>[] = [];
 
     for (let i = 0; i < this.handlers.length; i++) {
@@ -171,8 +171,8 @@ export class JoistElement extends Base implements Lifecycle {
   /**
    * Checks to see if a given handler matches the action
    */
-  private handlerMatches(handler: Handler, action: string) {
-    if (handler.pattern instanceof RegExp) {
+  private handlerMatches(handler: Handler, action: string | Symbol) {
+    if (handler.pattern instanceof RegExp && typeof action === 'string') {
       return handler.pattern.test(action);
     }
 

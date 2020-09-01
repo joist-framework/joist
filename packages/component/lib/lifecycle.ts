@@ -16,7 +16,7 @@ export interface OnPropChanges {
 
 export interface HandlerCtx {
   event: Event;
-  action: string;
+  action: string | Symbol;
   payload: any;
 }
 

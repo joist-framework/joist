@@ -147,9 +147,39 @@ describe('JoistElement', () => {
       expect(el.onTestRun).calledWith(new MouseEvent('click'), 'Hello World', 'TEST_RUN');
     });
 
-    it('should handle multiple functions', () => {
+    it('should call a function if the trigger is mapped to a class method and is a symbol', () => {
+      const Test = Symbol();
+
       @component({
         tagName: 'handlers-2',
+        render({ run, host }) {
+          const button = document.createElement('button');
+
+          button.onclick = run(Test, 'Hello World');
+
+          host.append(button);
+        },
+      })
+      class MyElement extends JoistElement {
+        @handle(Test) onTestRun(..._: any[]) {}
+      }
+
+      const el = new MyElement();
+
+      spy(el, 'onTestRun');
+
+      el.connectedCallback();
+
+      const button = el.querySelector('button') as HTMLButtonElement;
+
+      button.click();
+
+      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'Hello World', Test);
+    });
+
+    it('should handle multiple functions', () => {
+      @component({
+        tagName: 'handlers-3',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -180,7 +210,7 @@ describe('JoistElement', () => {
 
     it('should let one function handle multiple actions', () => {
       @component({
-        tagName: 'handlers-3',
+        tagName: 'handlers-4',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -213,7 +243,7 @@ describe('JoistElement', () => {
 
     it('should allow a user to match on a Regex', () => {
       @component({
-        tagName: 'handlers-4',
+        tagName: 'handlers-5',
         render({ run, host }) {
           const button = document.createElement('button');
 
@@ -249,7 +279,7 @@ describe('JoistElement', () => {
 
     it('should notify when all handlers are settled', (done) => {
       @component({
-        tagName: 'handlers-5',
+        tagName: 'handlers-6',
         render({ run, host }) {
           const button = document.createElement('button');
 

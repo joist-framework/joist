@@ -4,7 +4,7 @@ export const COMPONENT_DEF_KEY = 'componentDef';
 
 export interface RenderCtx<T = unknown, H extends HTMLElement = HTMLElement> {
   state: T;
-  run: (event: string, payload?: unknown) => (e: Event) => void;
+  run: (event: string | Symbol, payload?: unknown) => (e: Event) => void;
   dispatch: (eventName: string, init?: CustomEventInit) => () => void;
   host: H;
 }
