@@ -5,6 +5,7 @@
 ### Features
 
 - **component:** Add `onComplete` callback.
+The onComplete callback when be called after all handlers have run.
 
 ```TS
 import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
