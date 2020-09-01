@@ -527,7 +527,7 @@ export class MyElement extends withPropChanges(HTMLElement) {
   private template() {
     return html`
       <button @click=${() => this.count--}>Decrement</button>
-      ${this.count}
+      <span>${this.count}</span>
       <button @click=${() => this.count++}>Increment</button>
     `
   }
