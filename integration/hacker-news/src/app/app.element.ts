@@ -114,11 +114,13 @@ export class AppElement extends JoistElement {
     this.state.patchValue(state);
   }
 
-  @handle('card_clicked') onCardClicked(_: Event, news: HackerNewsItemFull): void {
+  @handle('card_clicked')
+  onCardClicked(_: Event, news: HackerNewsItemFull): void {
     this.state.patchValue(this.loadDrawerElement().then(() => this.getNewsItem(news.id)));
   }
 
-  @handle('close_drawer') onCloseDrawer(_: CustomEvent): void {
+  @handle('close_drawer')
+  onCloseDrawer(_: CustomEvent): void {
     this.state.patchValue({ currentNewsItem: undefined });
   }
 
