@@ -13,7 +13,8 @@ npm i @joist/di @joist/router @joist/component
 ```TS
 import { component, get, JoistElement } from '@joist/component';
 import { template, html } from '@joist/component/lit-html';
-import { Route, RouteCtxRef, RouteCtx } from '@joist/router';
+import { Route, 
+RouteCtx } from '@joist/router';
 
 import { Child2Element } from './child-2.element';
 
