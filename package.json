@@ -29,7 +29,7 @@
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
     "@open-wc/testing": "2.5.26",
-    "@types/node": "8.10.63",
+    "@types/node": "8.10.64",
     "@web/dev-server-esbuild": "0.2.4",
     "@web/test-runner": "0.7.23",
     "@web/test-runner-puppeteer": "0.6.3",
