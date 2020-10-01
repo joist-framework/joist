@@ -31,7 +31,7 @@
     "@open-wc/testing": "2.5.27",
     "@types/node": "8.10.64",
     "@web/dev-server-esbuild": "0.2.4",
-    "@web/test-runner": "0.7.38",
+    "@web/test-runner": "0.7.39",
     "@web/test-runner-puppeteer": "0.6.4",
     "bundlesize": "0.18.0",
     "husky": "4.3.0",
