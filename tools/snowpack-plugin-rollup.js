@@ -1,8 +1,6 @@
 const { rollup } = require('rollup');
 const { readFile, writeFile } = require('fs');
 const { promisify } = require('util');
-const { pathToFileURL } = require('url');
-const { join } = require('path');
 
 const read = promisify(readFile);
 const write = promisify(writeFile);
