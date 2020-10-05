@@ -1,6 +1,8 @@
 const { rollup } = require('rollup');
 const { readFile, writeFile } = require('fs');
 const { promisify } = require('util');
+const { pathToFileURL } = require('url');
+const { join } = require('path');
 
 const read = promisify(readFile);
 const write = promisify(writeFile);
@@ -17,7 +19,7 @@ module.exports = function (snowpackConfig, _pluginOptions) {
       );
 
       const bundle = await rollup({
-        input: `${buildDirectory}${snowpackConfig.mount['src/']}/main.js`,
+        input: `${buildDirectory}${Object.values(snowpackConfig.mount)[1]}/main.js`,
         preserveEntrySignatures: false,
       });
 
