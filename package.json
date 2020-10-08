@@ -32,7 +32,7 @@
     "@snowpack/plugin-optimize": "0.2.3",
     "@types/node": "8.10.64",
     "@web/dev-server-esbuild": "0.2.4",
-    "@web/test-runner": "0.8.3",
+    "@web/test-runner": "0.8.4",
     "@web/test-runner-puppeteer": "0.7.0",
     "bundlesize": "0.18.0",
     "husky": "4.3.0",
