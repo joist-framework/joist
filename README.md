@@ -12,7 +12,7 @@ A small (~2kb or ~5kb with lit-html) library to help with the creation of web co
 
 ### [webcomponents.dev](https://webcomponents.dev/new/)
 
-The easiest way get started with Joist is to go to use the Joist starter on [webcomponents.dev](https://webcomponents.dev/create/joist).
+The easiest way get started with Joist is to go to use the Joist starter on [webcomponents.dev](https://webcomponents.dev/create/joist-lit-html).
 There you can play around with Joist (and other frameworks) with 0 setup required. (You can even test and publish!)
 
 ### [starter-app-snowpack](https://github.com/joist-framework/starter-app-snowpack)
