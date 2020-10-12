@@ -1,5 +1,5 @@
 import { RenderCtx, RenderDef, ComponentDef } from '@joist/component';
-import { render, TemplateResult, html } from 'lit-html';
+import { render, TemplateResult, html, svg } from 'lit-html';
 
 export function template<T>(result: (ctx: RenderCtx<T>) => TemplateResult): RenderDef<T> {
   let styles: TemplateResult;
@@ -21,4 +21,4 @@ export function template<T>(result: (ctx: RenderCtx<T>) => TemplateResult): Rend
   };
 }
 
-export { html } from 'lit-html';
+export { html, svg };
