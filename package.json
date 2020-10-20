@@ -29,7 +29,7 @@
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
     "@open-wc/testing": "2.5.29",
-    "@snowpack/plugin-optimize": "0.2.5",
+    "@snowpack/plugin-optimize": "0.2.6",
     "@types/node": "8.10.65",
     "@web/dev-server-esbuild": "0.2.6",
     "@web/test-runner": "0.9.4",
