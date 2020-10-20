@@ -10,7 +10,7 @@ module.exports = function (snowpackConfig, _pluginOptions) {
     name: 'bundle',
     async optimize({ buildDirectory }) {
       const html = await read(`${buildDirectory}/index.html`);
-      const jsDist = `${buildDirectory}${Object.values(snowpackConfig.mount)[1]}`;
+      const jsDist = `${buildDirectory}${Object.values(snowpackConfig.mount)[1].url}`;
 
       await write(`${buildDirectory}/index.html`, html.toString().replace(jsDist, '/js'));
 
