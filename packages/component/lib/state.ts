@@ -32,10 +32,10 @@ export class State<T> {
   }
 
   onChange(cb: (state: T) => void) {
-    this.listeners.push(cb);
+    const index = this.listeners.push(cb) - 1;
 
     return () => {
-      this.listeners = this.listeners.filter((currentCb) => currentCb !== cb);
+      this.listeners.splice(index, 1);
     };
   }
 

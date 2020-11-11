@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { spy } from 'sinon';
 
 import { State } from './state';
 
@@ -55,5 +56,25 @@ describe('state', () => {
     });
 
     state.patchValue(Promise.resolve({ foo: false }));
+  });
+
+  it('should remove a current listener', async () => {
+    const state = new State(0);
+
+    const spys = {
+      cb() {},
+    };
+
+    spy(spys, 'cb');
+
+    const remove = state.onChange(spys.cb);
+
+    await state.setValue(1);
+
+    remove();
+
+    await state.setValue(2);
+
+    expect(spys.cb).calledOnce;
   });
 });
