@@ -31,7 +31,7 @@
     "@open-wc/testing": "2.5.32",
     "@snowpack/plugin-optimize": "0.2.9",
     "@types/node": "8.10.66",
-    "@web/dev-server-esbuild": "0.2.6",
+    "@web/dev-server-esbuild": "0.2.8",
     "@web/test-runner": "0.9.12",
     "@web/test-runner-puppeteer": "0.7.3",
     "bundlesize": "0.18.0",
