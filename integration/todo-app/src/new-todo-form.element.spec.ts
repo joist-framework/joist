@@ -22,7 +22,7 @@ describe('NewTodoFormElement', () => {
       form.dispatchEvent(new Event('submit'));
     });
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       todo.onChange((val) => {
         expect(val.length).to.equal(1);
         expect(val[0].name).to.equal('Hello World');
