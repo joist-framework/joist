@@ -1,19 +1,14 @@
+import { defineTestBed } from '@joist/component/testing';
 import { Injector } from '@joist/di';
 import { expect } from '@open-wc/testing';
 
 import { LoaderElement } from './loader.element';
 
-describe('LoaderElement', () => {
+describe('TodoFormElement', () => {
   let el: LoaderElement;
 
   beforeEach(() => {
-    el = new LoaderElement();
-
-    document.body.appendChild(el);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(el);
+    el = defineTestBed().get(LoaderElement);
   });
 
   it('should work', () => {

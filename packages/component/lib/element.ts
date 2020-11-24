@@ -122,6 +122,7 @@ export class JoistElement extends Base implements Lifecycle {
 
   connectedCallback() {
     this.applyStyles();
+    this.applyParentInjector();
 
     const state = this.injector.get(State);
 
@@ -133,6 +134,14 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
+
+  private applyParentInjector() {
+    const parent = this.parentElement?.closest<JoistElement>('[__joist__injector__root__]');
+
+    if (parent && parent.injector) {
+      this.injector.parent = parent.injector;
+    }
+  }
 
   private createStyleSheet(styleString: string) {
     const sheet = new CSSStyleSheet();

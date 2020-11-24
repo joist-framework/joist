@@ -5,7 +5,8 @@
   "module": "target/main.js",
   "files": [
     "target",
-    "lit-html/package.json"
+    "lit-html/package.json",
+    "testing/package.json"
   ],
   "sideEffects": false,
   "description": "A framework for building web components, and applications with web components.",

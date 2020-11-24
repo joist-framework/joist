@@ -388,7 +388,7 @@ class AppElement extends JoistElement {
   updateCount(_: Event, val: number) {
     return this.state.setValue(this.state.value + val);
   }
-  
+
   onComplete({ action }: HandlerCtx, res: any[]) {
     console.log({ action, payload, state: this.state.value });
   }
@@ -418,9 +418,11 @@ class AppElement extends JoistElement {}
 
 ### Testing
 
-The simplest way to test your components is to just create a new instance using `document.createElement`
+When Joist elements attach to a document the check to see if they have a marked parent Injector and inherit from it.
+Joist ships with a test harness that helps you creates scoped injectors.
 
 ```TS
+import { defineTestBed } from '@joist/component/testing'
 import { expect } from '@open-wc/testing'
 
 import { AppElement } from './app.element';
@@ -429,7 +431,7 @@ describe('AppElement', () => {
   let el: AppElement;
 
   beforeEach(() => {
-    el = document.createElement('app-root') as AppElement;
+    el = defineTestBed().create(AppElement);
   });
 
   it('should work', () => {
@@ -438,34 +440,34 @@ describe('AppElement', () => {
 });
 ```
 
-If you want to make use of mock providers you can manually bootstrap your environment.
+If you want to make use of mock providers you just have to pass them to your TestBed.
 
 ```TS
-import { defineEnvironment, clearEnvironment } from '@joist/component';
+import { defineTestBed } from '@joist/component/testing'
 import { expect } from '@open-wc/testing'
 
 import { AppElement } from './app.element';
 import { Myservice } from './my.service'
 
 describe('AppElement', () => {
+  let el: AppElement;
+
   beforeEach(() => {
-    defineEnvironment([
+    const testBed = defineTestBed([
       {
         provide: MyService,
-        use: class implements Myservice {
+        use: class {
           sayHello() {
             return 'GOTCHA!';
           }
         }
       },
     ]);
+
+    el = testBed.create(AppElement)
   });
 
-  afterEach(clearEnvironment);
-
   it('should work', () => {
-    const el = new AppElement();
-
     expect(el.service.sayHello()).to.equal('GOTCHA!');
   });
 });

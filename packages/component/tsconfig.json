@@ -11,5 +11,5 @@
     }
   },
   "files": ["main.ts", "typings.d.ts"],
-  "include": ["lib", "lit-html"]
+  "include": ["lib", "lit-html", "testing"]
 }
