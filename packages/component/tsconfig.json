@@ -5,7 +5,7 @@
     "baseUrl": "./",
     "paths": {
       "@joist/component": ["main.ts"],
-      "@joist/component/extras": ["extras/ain.ts"],
+      "@joist/component/testing": ["testing/main.ts"],
       "@joist/component/lit-html": ["lit-html/main.ts"],
       "lit-html": ["../../node_modules/lit-html/lit-html"]
     }

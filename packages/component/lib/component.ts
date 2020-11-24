@@ -21,6 +21,7 @@ export interface ComponentDef<T, H extends HTMLElement = HTMLElement> {
   styles?: string[];
   state?: T;
   providers?: Provider<any>[];
+  isInjectorRoot?: boolean;
 }
 
 export function getComponentDef<T>(component: any): ComponentDef<T> {

@@ -1,10 +1,10 @@
 import { service } from '@joist/di';
 import { expect } from '@open-wc/testing';
+import { defineTestBed } from '@joist/component/testing';
 import { spy } from 'sinon';
 
 import { JoistElement, get, withInjector } from './element';
 import { component } from './component';
-import { getEnvironmentRef, clearEnvironment } from './environment';
 import { State } from './state';
 import { handle } from './handle';
 import { OnComplete, HandlerCtx } from './lifecycle';
@@ -21,7 +21,7 @@ describe('JoistElement', () => {
 
       customElements.define('withinjector-test-1', MyElement);
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       expect(el.myService.constructor).to.equal(MyService);
     });
@@ -41,9 +41,7 @@ describe('JoistElement', () => {
     }
 
     it('should update the view when state is updated', async () => {
-      const el = new MyElement();
-
-      el.connectedCallback();
+      const el = defineTestBed().create(MyElement);
 
       expect(el.innerHTML.trim()).to.equal('0');
 
@@ -66,7 +64,7 @@ describe('JoistElement', () => {
       })
       class MyElement extends JoistElement {}
 
-      new MyElement().connectedCallback();
+      defineTestBed().create(MyElement);
     });
   });
 
@@ -86,7 +84,7 @@ describe('JoistElement', () => {
         @get(MyService) service!: MyService;
       }
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       expect(el.injector.get(MyService)).to.equal(el.service);
       expect(el.service.helloWorld()).to.equal('Hello World');
@@ -108,13 +106,12 @@ describe('JoistElement', () => {
         @get(MyService) service!: MyService;
       }
 
-      const el = new MyElement();
+      const testbed = defineTestBed();
+      const el = testbed.create(MyElement);
 
       expect(el.service).to.be.instanceOf(MyService);
 
-      expect(getEnvironmentRef().get(MyService)).not.to.equal(el.service);
-
-      clearEnvironment();
+      expect(testbed.get(MyService)).not.to.equal(el.service);
     });
   });
 
@@ -134,11 +131,9 @@ describe('JoistElement', () => {
         @handle('TEST_RUN') onTestRun(..._: any[]) {}
       }
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       spy(el, 'onTestRun');
-
-      el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
@@ -163,12 +158,9 @@ describe('JoistElement', () => {
       class MyElement extends JoistElement {
         @handle(Test) onTestRun(..._: any[]) {}
       }
-
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       spy(el, 'onTestRun');
-
-      el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
@@ -193,12 +185,10 @@ describe('JoistElement', () => {
         @handle('TEST_RUN') onTestRun2() {}
       }
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       spy(el, 'onTestRun');
       spy(el, 'onTestRun2');
-
-      el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
@@ -226,11 +216,9 @@ describe('JoistElement', () => {
         onTestRun(..._: any[]) {}
       }
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       spy(el, 'onTestRun');
-
-      el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
@@ -260,12 +248,10 @@ describe('JoistElement', () => {
         badFn(..._: any[]) {}
       }
 
-      const el = new MyElement();
+      const el = defineTestBed().create(MyElement);
 
       spy(el, 'onTestRun');
       spy(el, 'badFn');
-
-      el.connectedCallback();
 
       const button = el.querySelector('button') as HTMLButtonElement;
 
@@ -315,9 +301,7 @@ describe('JoistElement', () => {
         }
       }
 
-      const el = new MyElement();
-
-      el.connectedCallback();
+      const el = defineTestBed().create(MyElement);
 
       const button = el.querySelector('button') as HTMLButtonElement;
 

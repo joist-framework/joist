@@ -10,6 +10,8 @@ export interface InjectorBase {
   injector: Injector;
 }
 
+export const ROOT_ATTR = '__joist__injector__root__';
+
 export interface PropChangeBase extends OnPropChanges {
   definePropChange(change: PropChange): void;
 }
@@ -118,6 +120,10 @@ export class JoistElement extends Base implements Lifecycle {
     if (this.componentDef.shadowDom) {
       this.attachShadow({ mode: this.componentDef.shadowDom });
     }
+
+    if (this.componentDef.isInjectorRoot) {
+      this.setAttribute(ROOT_ATTR, 'true');
+    }
   }
 
   connectedCallback() {
@@ -136,7 +142,7 @@ export class JoistElement extends Base implements Lifecycle {
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
 
   private applyParentInjector() {
-    const parent = this.parentElement?.closest<JoistElement>('[__joist__injector__root__]');
+    const parent = this.parentElement?.closest<JoistElement>(`[${ROOT_ATTR}]`);
 
     if (parent && parent.injector) {
       this.injector.parent = parent.injector;
