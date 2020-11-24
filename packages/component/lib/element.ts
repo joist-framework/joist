@@ -136,7 +136,7 @@ export class JoistElement extends Base implements Lifecycle {
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
 
   private applyParentInjector() {
-    const parent = this.closest<JoistElement>('[__joist__injector__root__]');
+    const parent = this.parentElement?.closest<JoistElement>('[__joist__injector__root__]');
 
     if (parent && parent.injector) {
       this.injector.parent = parent.injector;
