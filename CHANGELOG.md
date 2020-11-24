@@ -2,12 +2,12 @@
 
 ### Features
 
-- **component/testing:** Add `onComplete` callback.
+- **component:** Add hierarchical injector.
 
-Add hierarchical injector. This allows a component to explicitly marked as an injector that children can inherit from.
+This allows a component to explicitly marked as an injector that children can inherit from.
 
 ```TS
-import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
+import { component, JoistElement } from '@joist/component';
 
 class MyService {
   title = 'foo'
@@ -26,6 +26,20 @@ class MyService {
   ]
 })
 class AppElement extends JoistElement { }
+```
+
+- **component/testing:** Add testing util for scoped services
+
+```TS
+import { component, JoistElement } from '@joist/component';
+import { defineTestBed } from '@joist/component/testing';
+
+@component({
+  tagName: 'app-root'
+})
+class AppElement extends JoistElement { }
+
+const el = defineTestBed([/* Providers available to just these components */]).create(AppElement);
 ```
 
 # 1.6.0 (2020-08-28)
