@@ -1,3 +1,4 @@
+import { defineTestBed } from '@joist/component/testing';
 import { Injector } from '@joist/di';
 import { expect } from '@open-wc/testing';
 
@@ -7,13 +8,7 @@ describe('TodoFormElement', () => {
   let el: CommentsDrawerElement;
 
   beforeEach(() => {
-    el = new CommentsDrawerElement();
-
-    document.body.appendChild(el);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(el);
+    el = defineTestBed().get(CommentsDrawerElement);
   });
 
   it('should work', () => {
