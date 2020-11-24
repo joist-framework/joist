@@ -1,4 +1,32 @@
-<a name="1.6.0"></a>
+# 1.7.0 (2020-11-24)
+
+### Features
+
+- **component/testing:** Add `onComplete` callback.
+
+Add hierarchical injector. This allows a component to explicitly marked as an injector that children can inherit from.
+
+```TS
+import { component, State, handle, JoistElement, get, HandlerCtx } from '@joist/component';
+
+class MyService {
+  title = 'foo'
+}
+
+@component({
+  tagName: 'app-root',
+  isProviderRoot: true, // Now this component and any child components will use this version of `MyService`
+  providers: [
+    { 
+      provide: MyService, 
+      use class { 
+        title = 'bar'
+      } 
+    }
+  ]
+})
+class AppElement extends JoistElement { }
+```
 
 # 1.6.0 (2020-08-28)
 
