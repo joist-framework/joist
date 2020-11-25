@@ -1,4 +1,4 @@
-import { defineEnvironment } from '@joist/component';
+import { defineTestBed } from '@joist/component/testing';
 import { expect } from '@open-wc/testing';
 
 import { Location } from '../router';
@@ -8,7 +8,7 @@ describe('RouterLinkComponent', () => {
   customElements.define('router-link', RouterLinkElement);
 
   it('should mark the router outlet with the default active class if the path matches', () => {
-    defineEnvironment([
+    const testBed = defineTestBed([
       {
         provide: Location,
         use: class extends Location {
@@ -19,17 +19,15 @@ describe('RouterLinkComponent', () => {
       },
     ]);
 
-    const el = document.createElement('router-link') as RouterLinkElement;
+    const el = testBed.create(RouterLinkElement);
 
     el.path = '/foo';
-
-    el.connectedCallback();
 
     expect(el.classList.contains('active')).to.be.true;
   });
 
   it('should use the path if the first child is an anchor', () => {
-    defineEnvironment([
+    const testBed = defineTestBed([
       {
         provide: Location,
         use: class extends Location {
@@ -40,7 +38,7 @@ describe('RouterLinkComponent', () => {
       },
     ]);
 
-    const el = document.createElement('router-link') as RouterLinkElement;
+    const el = testBed.create(RouterLinkElement);
 
     el.innerHTML = `<a href="/bar"></a>`;
 

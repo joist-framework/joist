@@ -1,4 +1,5 @@
-import { State, defineEnvironment, component, JoistElement, get } from '@joist/component';
+import { State, component, JoistElement, get } from '@joist/component';
+import { defineTestBed } from '@joist/component/testing';
 import { expect } from '@open-wc/testing';
 
 import { RouterOutletElement, RouterOutletState } from './router_outlet.element';
@@ -29,22 +30,16 @@ describe('RouterOutletComponent', () => {
   let router: Router;
 
   beforeEach(() => {
-    defineEnvironment([
+    const testBed = defineTestBed([
       {
         provide: Location,
         use: MockLocation,
       },
     ]);
 
-    el = new RouterOutletElement();
+    el = testBed.create(RouterOutletElement);
     state = el.injector.get(State);
-    router = el.injector.get(Router);
-
-    document.body.appendChild(el);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(el);
+    router = testBed.get(Router);
   });
 
   it('should render the html element when the path matches', (done) => {

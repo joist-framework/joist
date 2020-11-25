@@ -139,6 +139,10 @@ export class JoistElement extends Base implements Lifecycle {
     state.onChange(this.render.bind(this));
   }
 
+  disconnectedCallback() {
+    this.injector.parent = undefined;
+  }
+
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
 
   private applyParentInjector() {

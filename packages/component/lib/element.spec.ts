@@ -14,16 +14,17 @@ describe('JoistElement', () => {
     it('should add an injector to any CustomElementConstructor', () => {
       class MyService {}
 
+      @component({
+        tagName: 'withinjector-test-1',
+      })
       class MyElement extends withInjector(HTMLElement) {
         @get(MyService)
         public myService!: MyService;
       }
 
-      customElements.define('withinjector-test-1', MyElement);
-
       const el = defineTestBed().create(MyElement);
 
-      expect(el.myService.constructor).to.equal(MyService);
+      expect(el.myService instanceof MyService).to.be.true;
     });
   });
 
