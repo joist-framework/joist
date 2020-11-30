@@ -10,8 +10,10 @@ export interface OnAttributeChanged {
   attributeChangedCallback(attr: string, oldVal: string, newVal: string): void;
 }
 
+export type PropChanges = Map<string, PropChange>;
+
 export interface OnPropChanges {
-  onPropChanges(changes: PropChange[]): void;
+  onPropChanges(changes: PropChanges): void;
 }
 
 export interface HandlerCtx {

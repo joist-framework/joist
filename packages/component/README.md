@@ -244,10 +244,10 @@ class AppElement extends JoistElement {
 }
 ```
 
-When on prop changes is called you will get a list of current changes. This, coupled with explicit state updates, gives you give fine grained control over when your component updates.
+When on prop changes is called you will get a Map of current changes. This, coupled with explicit state updates, gives you give fine grained control over when your component updates.
 
 ```TS
-import { component, State, JoistElement, property, get, PropChange } from '@joist/component';
+import { component, State, JoistElement, property, get, PropChanges } from '@joist/component';
 
 @component({
   tagName: 'app-root',
@@ -269,43 +269,11 @@ class AppElement extends JoistElement {
   @property()
   public baz = '';
 
-  onPropChanges(changes: PropChange[]) {
-    const keys = changes.map((change) => change.key);
-
-    if (keys.includes('foo')) {
+  onPropChanges(changes: PropChanges) {
+    if (keys.has('foo')) {
       this.state.patchValue(this.foo);
     }
   }
-}
-```
-
-You can also provide validation functions to proeprty decorators for runtime safety.
-
-```TS
-import { component, JoistElement, property } from '@joist/component';
-
-function isString(val: unknown) {
-  if (typeof val === 'string') {
-    return null;
-  }
-
-  return { message: 'error' };
-}
-
-function isLongerThan(length: number) {
-  return function (val: string) {
-    if (val.length > length) {
-      return null;
-    }
-
-    return { message: 'Incorrect length' };
-  }
-}
-
-@component()
-class MyElement extends JoistElement {
-  @property(isString, isLongerThan(2))
-  public hello = 'Hello World';
 }
 ```
 
@@ -325,9 +293,9 @@ import { template, html } from '@joist/component/lit-html';
   state: 0,
   render: template(({ state, run }) => {
     return html`
-      <button @click=${run('dec')}>Decrement</button>
+      <button @click=${run('dec_clicked')}>Decrement</button>
       <span>${state}</span>
-      <button @click=${run('inc')}>Increment</button>
+      <button @click=${run('inc_clicked')}>Increment</button>
     `
   })
 })
@@ -335,16 +303,16 @@ class AppElement extends JoistElement {
   @get(State)
   private state!: State<number>;
 
-  @handle('inc') increment() {
+  @handle('inc_clicked') increment() {
     return this.state.setValue(this.state.value + 1);
   }
 
-  @handle('dec') decrement() {
+  @handle('dec_clicked') decrement() {
     return this.state.setValue(this.state.value - 1);
   }
 
-  @handle('inc')
-  @handle('dec')
+  @handle('inc_clicked')
+  @handle('dec_clicked')
   either() {
     console.log('CALLED WHEN EITHER IS RUN')
   }
@@ -373,9 +341,9 @@ import { template, html } from '@joist/component/lit-html';
   state: 0,
   render: template(({ state, run }) => {
     return html`
-      <button @click=${run('dec', -1)}>Decrement</button>
+      <button @click=${run('dec_clicked', -1)}>Decrement</button>
       <span>${state}</span>
-      <button @click=${run('inc', 1)}>Increment</button>
+      <button @click=${run('inc_clicked', 1)}>Increment</button>
     `
   })
 })
@@ -383,8 +351,8 @@ class AppElement extends JoistElement {
   @get(State)
   private state!: State<number>;
 
-  @handle('inc')
-  @handle('dec')
+  @handle('inc_clicked')
+  @handle('dec_clicked')
   updateCount(_: Event, val: number) {
     return this.state.setValue(this.state.value + val);
   }

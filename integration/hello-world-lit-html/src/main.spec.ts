@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { defineTestBed } from '@joist/component/testing';
 
 import { AppElement } from './main';
 
@@ -6,9 +7,7 @@ describe('AppElement', () => {
   let el: AppElement;
 
   beforeEach(() => {
-    el = new AppElement();
-
-    document.body.append(el);
+    el = defineTestBed().create(AppElement);
   });
 
   afterEach(() => {

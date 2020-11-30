@@ -6,12 +6,6 @@ import { NewTodoFormElement } from './new-todo-form.element';
 import { TodoService, TodoStatus } from './todo.service';
 
 describe('NewTodoFormElement', () => {
-  it('should create new instance', () => {
-    const el = defineTestBed().create(NewTodoFormElement);
-
-    expect(el).instanceOf(NewTodoFormElement);
-  });
-
   it('should add a new todo on form submit', () => {
     const el = defineTestBed().create(NewTodoFormElement);
     const state = el.injector.get(State);

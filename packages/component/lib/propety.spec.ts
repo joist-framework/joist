@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
 import { property, PropValidator } from './property';
-import { PropChange } from './lifecycle';
+import { PropChange, PropChanges } from './lifecycle';
 import { withPropChanges } from './element';
 
 describe('property', () => {
@@ -10,8 +10,8 @@ describe('property', () => {
       @property()
       public hello?: string;
 
-      onPropChanges(changes: PropChange[]) {
-        expect(changes).to.deep.equal([new PropChange('hello', 'Hello World', true)]);
+      onPropChanges(changes: PropChanges) {
+        expect(changes.get('hello')).to.deep.equal(new PropChange('hello', 'Hello World', true));
 
         done();
       }
@@ -25,8 +25,10 @@ describe('property', () => {
       @property()
       public hello: string = 'Hello World';
 
-      onPropChanges(changes: PropChange[]) {
-        expect(changes).to.deep.equal([new PropChange('hello', 'Final', false, 'Goodbye World')]);
+      onPropChanges(changes: PropChanges) {
+        expect(changes.get('hello')).to.deep.equal(
+          new PropChange('hello', 'Final', false, 'Goodbye World')
+        );
 
         done();
       }
@@ -45,8 +47,8 @@ describe('property', () => {
       @property()
       public bar = 'BAR';
 
-      onPropChanges(changes: PropChange[]) {
-        expect(changes).to.deep.equal([
+      onPropChanges(changes: PropChanges) {
+        expect(Array.from(changes.values())).to.deep.equal([
           new PropChange('foo', 'Hello', false, 'FOO'),
           new PropChange('bar', 'World', false, 'BAR'),
         ]);

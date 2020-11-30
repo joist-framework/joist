@@ -4,7 +4,7 @@ import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers, Handler } from './handle';
-import { Lifecycle, PropChange, OnPropChanges, HandlerCtx } from './lifecycle';
+import { Lifecycle, PropChange, OnPropChanges, HandlerCtx, PropChanges } from './lifecycle';
 
 export interface InjectorBase {
   injector: Injector;
@@ -42,11 +42,11 @@ export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
  * Mixin that applies an prop change to a base class
  */
 export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
-  return class PropChanges extends Base implements PropChangeBase {
-    $$propChanges: Map<string, PropChange> = new Map();
+  return class OnPropChanges extends Base implements PropChangeBase {
+    $$propChanges: PropChanges = new Map();
     $$propChange: Promise<void> | null = null;
 
-    onPropChanges(_: PropChange[]) {}
+    onPropChanges(_: PropChanges) {}
 
     /**
      * Marks a property as changed
@@ -60,10 +60,10 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
         // If there is no previous change defined set it up
         this.$$propChange = Promise.resolve().then(() => {
           // run onPropChanges here. This makes sure we capture all changes
-          this.onPropChanges(Array.from(this.$$propChanges.values()));
+          this.onPropChanges(this.$$propChanges);
 
           // reset for next time
-          this.$$propChanges.clear();
+          this.$$propChanges = new Map();
           this.$$propChange = null;
         });
       }
@@ -140,7 +140,8 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   disconnectedCallback() {
-    this.injector.parent = undefined;
+    // reset parent injector
+    this.injector.parent = getEnvironmentRef();
   }
 
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
