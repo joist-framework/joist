@@ -1,3 +1,4 @@
+import { component, JoistElement } from '@joist/component';
 import { defineTestBed } from '@joist/component/testing';
 import { expect } from '@open-wc/testing';
 
@@ -38,13 +39,22 @@ describe('RouterLinkComponent', () => {
       },
     ]);
 
-    const el = testBed.create(RouterLinkElement);
+    @component({
+      tagName: 'router-link-test-1',
+      render({ host }) {
+        host.innerHTML = `
+          <router-link>
+            <a href="/bar">Hello</a>
+          </router-link>
+        `;
+      },
+    })
+    class RouterLinkTest extends JoistElement {}
 
-    el.innerHTML = `<a href="/bar"></a>`;
+    const el = testBed.create(RouterLinkTest);
+    const routerLink = el.querySelector<RouterLinkElement>('router-link');
 
-    el.connectedCallback();
-
-    expect(el.path).to.equal('/bar');
-    expect(el.classList.contains('active')).to.be.true;
+    expect(routerLink!.path).to.equal('/bar');
+    expect(routerLink!.classList.contains('active')).to.be.true;
   });
 });
