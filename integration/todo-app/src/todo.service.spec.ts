@@ -2,7 +2,7 @@ import { TodoService, AppStorage, Todo, TodoStatus } from './todo.service';
 import { expect } from '@open-wc/testing';
 
 describe('TodoService', () => {
-  class MockStorage implements AppStorage {
+  class InMemoryStorage implements AppStorage {
     private storage: any = {};
 
     loadJSON<T>(key: string): T | undefined {
@@ -16,7 +16,7 @@ describe('TodoService', () => {
   }
 
   it('should add a todo', async () => {
-    const todo = new TodoService(new MockStorage());
+    const todo = new TodoService(new InMemoryStorage());
 
     await todo.addTodo(new Todo('hello-world-1', TodoStatus.Active));
     await todo.addTodo(new Todo('hello-world-2', TodoStatus.Active));
@@ -30,7 +30,7 @@ describe('TodoService', () => {
   });
 
   it('should remove a todo', async () => {
-    const todo = new TodoService(new MockStorage());
+    const todo = new TodoService(new InMemoryStorage());
 
     await todo.addTodo(new Todo('hello-world-1', TodoStatus.Active));
     await todo.addTodo(new Todo('hello-world-2', TodoStatus.Active));

@@ -82,7 +82,8 @@ describe('JoistElement', () => {
         tagName: 'di-1',
       })
       class MyElement extends JoistElement {
-        @get(MyService) service!: MyService;
+        @get(MyService)
+        public service!: MyService;
       }
 
       const el = defineTestBed().create(MyElement);
@@ -99,20 +100,21 @@ describe('JoistElement', () => {
         }
       }
 
+      class MockMyService extends MyService {}
+
       @component({
         tagName: 'di-2',
-        providers: [{ provide: MyService, use: class extends MyService {} }],
+        providers: [{ provide: MyService, use: MockMyService }],
       })
       class MyElement extends JoistElement {
-        @get(MyService) service!: MyService;
+        @get(MyService)
+        public service!: MyService;
       }
 
       const testbed = defineTestBed();
       const el = testbed.create(MyElement);
 
-      expect(el.service).to.be.instanceOf(MyService);
-
-      expect(testbed.get(MyService)).not.to.equal(el.service);
+      expect(el.service).to.be.instanceOf(MockMyService);
     });
   });
 

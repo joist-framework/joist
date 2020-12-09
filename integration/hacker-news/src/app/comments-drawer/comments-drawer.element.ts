@@ -67,7 +67,7 @@ function createComment(comment: HackerNewsItemComment) {
       <div class="drawer-header">
         <span class="title">Comments</span>
 
-        <button @click=${dispatch('close_drawer')}>close</button>
+        <button @click=${dispatch('closer_drawer')}>close</button>
       </div>
 
       <div class="drawer-content">${state.map(createComment)}</div>
@@ -79,9 +79,9 @@ export class CommentsDrawerElement extends JoistElement {
   private state!: State<HackerNewsItemComment[]>;
 
   @property()
-  public comments?: HackerNewsItemComment[];
+  public comments: HackerNewsItemComment[] = [];
 
   onPropChanges() {
-    this.state.setValue(this.comments || []);
+    this.state.setValue(this.comments);
   }
 }
