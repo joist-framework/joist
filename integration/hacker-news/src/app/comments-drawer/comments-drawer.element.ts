@@ -67,7 +67,7 @@ function createComment(comment: HackerNewsItemComment) {
       <div class="drawer-header">
         <span class="title">Comments</span>
 
-        <button @click=${dispatch(new CustomEvent('close_drawer'))}>close</button>
+        <button @click=${dispatch('closer_drawer')}>close</button>
       </div>
 
       <div class="drawer-content">${state.map(createComment)}</div>
