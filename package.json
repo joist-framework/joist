@@ -44,7 +44,7 @@
     "rollup": "2.35.1",
     "sinon": "9.2.2",
     "snowpack": "2.18.4",
-    "rxjs": "^6.6.3",
+    "rxjs": "6.6.3",
     "tslib": "2.0.3",
     "typescript": "4.1.3",
     "workbox-cli": "5.1.4"
