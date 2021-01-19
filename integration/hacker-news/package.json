@@ -8,7 +8,7 @@
     "build": "snowpack build --clean && workbox generateSW workbox-config.js",
     "test": "wtr **/*.spec.ts --config ../../wtr.config.js",
     "test:watch": "wtr src/**/*.spec.ts --watch",
-    "size": "bundlesize -f build/js/main.js -s 7.6kB"
+    "size": "bundlesize -f build/__dist__/main.js -s 7.6kB"
   },
   "repository": {
     "type": "git",
