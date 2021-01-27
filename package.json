@@ -32,7 +32,7 @@
     "@snowpack/plugin-typescript": "1.2.1",
     "@types/node": "8.10.66",
     "@web/dev-server-esbuild": "0.2.11",
-    "@web/test-runner": "0.12.6",
+    "@web/test-runner": "0.12.7",
     "@web/test-runner-puppeteer": "0.9.1",
     "bundlesize": "0.18.1",
     "husky": "4.3.8",
