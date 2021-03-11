@@ -3,11 +3,11 @@ name: Publish
 on:
   push:
     branches:
-      - "master"
+      - 'main'
     paths-ignore:
-      - "*.md"
-      - "/integration/*"
-      - "package*.json"
+      - '*.md'
+      - '/integration/*'
+      - 'package*.json'
 
 jobs:
   build:
