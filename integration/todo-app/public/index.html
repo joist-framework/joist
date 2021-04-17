@@ -68,7 +68,7 @@
     <script src="/__dist__/todo-list.element.js" type="module" async></script>
 
     <script type="module">
-      import env from './__snowpack__/env.js';
+      const { MODE } = import.meta.env;
 
       if (env.MODE === 'production') {
         navigator.serviceWorker.register('sw.js').then(
