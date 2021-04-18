@@ -2,3 +2,4 @@ node_modules
 build
 stats.json
 .firebase
+!src/meta.d.ts

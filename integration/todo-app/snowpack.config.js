@@ -2,8 +2,11 @@
 module.exports = {
   workspaceRoot: '../../',
   mount: {
-    public: '/',
-    src: '/__dist__',
+    src: '/',
   },
   plugins: ['@snowpack/plugin-typescript'],
+  optimize: {
+    minify: true,
+    target: 'esnext',
+  },
 };

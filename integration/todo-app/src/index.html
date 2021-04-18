@@ -64,24 +64,8 @@
       <todo-list></todo-list>
     </main>
 
-    <script src="/__dist__/new-todo-form.element.js" type="module" async></script>
-    <script src="/__dist__/todo-list.element.js" type="module" async></script>
-
-    <script type="module">
-      const { MODE } = import.meta.env;
-
-      if (env.MODE === 'production') {
-        navigator.serviceWorker.register('sw.js').then(
-          (registration) => {
-            // Registration was successful
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          },
-          (err) => {
-            // registration failed :(
-            console.log('ServiceWorker registration failed: ', err);
-          }
-        );
-      }
-    </script>
+    <script src="/app/new-todo-form.element.js" type="module" async></script>
+    <script src="/app/todo-list.element.js" type="module" async></script>
+    <script src="/app/service-worker.js" type="module"></script>
   </body>
 </html>
