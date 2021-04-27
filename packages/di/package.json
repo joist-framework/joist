@@ -1,6 +1,6 @@
 {
   "name": "@joist/di",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "exports": {
     ".": {
       "import": "./target/lib.js"
