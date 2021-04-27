@@ -1,4 +1,4 @@
-import { ProviderToken, Injector } from '@joist/di';
+import { ProviderToken, Injector, Provider } from '@joist/di';
 
 import { getEnvironmentRef } from './environment';
 
@@ -21,12 +21,19 @@ export function get<T>(token: ProviderToken<T>) {
   };
 }
 
+export interface JoistDiConfig {
+  providers: Provider<any>[];
+}
+
 /**
  * Mixin that applies an injector to a base class
  */
-export function JoistDi<T extends new (...args: any[]) => HTMLElement>(Base: T) {
+export function JoistDi<T extends new (...args: any[]) => HTMLElement>(
+  Base: T,
+  config: JoistDiConfig = { providers: [] }
+) {
   return class Injected extends Base implements InjectorBase {
-    public injector: Injector = new Injector({}, getEnvironmentRef());
+    public injector: Injector = new Injector({ providers: config.providers }, getEnvironmentRef());
 
     constructor(..._: any[]) {
       super();
