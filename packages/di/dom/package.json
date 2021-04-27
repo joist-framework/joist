@@ -1,0 +1,4 @@
+{
+  "main": "../target/dom/lib.js",
+  "module": "../target/dom/lib.js"
+}
