@@ -97,3 +97,44 @@ class MyElement extends JoistDi(HTMlElement) {
 
 customElements.define('my-element', MyElement);
 ```
+
+#### Hierarchy
+
+The JoistDi mixin is hierarchical, meaing a component will inherti from it's parent if it has one.
+For example:
+
+```TS
+import { JoistDi, get } from '@joist/di/dom';
+
+class Config {
+  name: 'Foo Bar'
+}
+
+const CustomRoot = JoistDi(HTMlElement, { 
+  providers: [
+    { provide: Config, use: class { name: 'Danny Blue' } }
+  ] 
+});
+
+class Parent extends CustomRoot {}
+
+class Child extends JoistDi(HTMLElement) {
+  @get(Config)
+  public config!: Config;
+}
+
+customElements.define('my-parent', Parent);
+customElements.define('my-child', Parent);
+```
+
+```HTML
+<my-parent>
+  <my-child id="child"></my-child>
+</my-parent>
+
+<script type="module">
+  const child = document.getElementById("child");
+  
+  console.log(child.config.name); // Danny Blue
+</script>
+```
