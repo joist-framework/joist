@@ -28,6 +28,12 @@ export function JoistDi<T extends new (...args: any[]) => HTMLElement>(Base: T) 
   return class Injected extends Base implements InjectorBase {
     public injector: Injector = new Injector({}, getEnvironmentRef());
 
+    constructor(..._: any[]) {
+      super();
+
+      this.setAttribute(ROOT_ATTR, 'true');
+    }
+
     connectedCallback() {
       if (!!super.connectedCallback) {
         super.connectedCallback();
@@ -38,6 +44,10 @@ export function JoistDi<T extends new (...args: any[]) => HTMLElement>(Base: T) 
       if (parent && parent.injector) {
         this.injector.parent = parent.injector;
       }
+    }
+
+    disconnectedCallback() {
+      this.injector.parent = undefined;
     }
   };
 }

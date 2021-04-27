@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "target"
   },
-  "include": ["src"]
+  "include": ["src", "dom"]
 }
