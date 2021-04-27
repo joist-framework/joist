@@ -1,6 +1,6 @@
 {
   "name": "@joist-app/hacker-news",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
