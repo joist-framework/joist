@@ -12,7 +12,7 @@ export interface PropChangeBase extends OnPropChanges {
 /**
  * Mixin that applies an prop change to a base class
  */
-export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
+export function PropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
     $$propChanges: Map<string, PropChange> = new Map();
     $$propChange: Promise<void> | null = null;
@@ -44,8 +44,6 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   };
 }
 
-const Base = withPropChanges(JoistDi(HTMLElement));
-
 // Cache computed constructable stylesheets
 const styleCache = new Map<string, CSSStyleSheet[]>();
 
@@ -54,7 +52,7 @@ const styleCache = new Map<string, CSSStyleSheet[]>();
  *
  * Applies an Injector and sets up state and render pipeline.
  */
-export class JoistElement extends Base implements Lifecycle {
+export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor); // read the component definition
   private handlers = getComponentHandlers(this.constructor); // read the component handlers
 
@@ -94,6 +92,8 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     this.applyStyles();
 
     const state = this.injector.get(State);

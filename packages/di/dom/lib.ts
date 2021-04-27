@@ -47,6 +47,10 @@ export function JoistDi<T extends new (...args: any[]) => HTMLElement>(Base: T) 
     }
 
     disconnectedCallback() {
+      if (!!super.disconnectedCallback) {
+        super.disconnectedCallback();
+      }
+
       this.injector.parent = undefined;
     }
   };
