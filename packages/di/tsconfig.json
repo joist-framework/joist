@@ -4,10 +4,10 @@
     "outDir": "target",
     "baseUrl": "./",
     "paths": {
-      "@joist/di": ["main.ts"],
+      "@joist/di": ["lib.ts"],
       "@joist/di/dom": ["dom/lib.ts"]
     }
   },
-  "files": ["main.ts", "typings.d.ts"],
+  "files": ["lib.ts", "typings.d.ts"],
   "include": ["lib", "dom"]
 }

@@ -1,8 +1,17 @@
 {
   "name": "@joist/di",
   "version": "1.7.0",
-  "main": "target/main.js",
-  "module": "target/main.js",
+  "exports": {
+    ".": {
+      "import": "./target/lib.js"
+    },
+    "./dom": {
+      "import": "./target/dom/lib.js"
+    }
+  },
+  "main": "target/lib.js",
+  "module": "target/lib.js",
+  "types": "target",
   "files": [
     "target"
   ],
