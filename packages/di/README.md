@@ -128,13 +128,17 @@ customElements.define('my-child', Child);
 ```
 
 ```HTML
+<my-child id="child-1"></my-child>
+
 <my-parent>
-  <my-child id="child"></my-child>
+  <my-child id="child-2"></my-child>
 </my-parent>
 
 <script type="module">
-  const child = document.getElementById("child");
-  
-  console.log(child.config.name); // Danny Blue
+  const child1 = document.getElementById("child-1");
+  const child2 = document.getElementById("child-2");
+
+  console.log(child1.config.name); // Foo Bar
+  console.log(child2.config.name); // Danny Blue
 </script>
 ```
