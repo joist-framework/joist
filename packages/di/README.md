@@ -100,7 +100,7 @@ customElements.define('my-element', MyElement);
 
 #### Hierarchy
 
-The JoistDi mixin is hierarchical, meaing a component will inherti from it's parent if it has one.
+The JoistDi mixin is hierarchical, meaing a component will inherit from it's parent if it has one.
 For example:
 
 ```TS
