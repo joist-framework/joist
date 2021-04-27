@@ -110,7 +110,7 @@ class Config {
   name: 'Foo Bar'
 }
 
-const CustomRoot = JoistDi(HTMlElement, { 
+const CustomRoot = JoistDi(HTMLElement, { 
   providers: [
     { provide: Config, use: class { name: 'Danny Blue' } }
   ] 
@@ -124,7 +124,7 @@ class Child extends JoistDi(HTMLElement) {
 }
 
 customElements.define('my-parent', Parent);
-customElements.define('my-child', Parent);
+customElements.define('my-child', Child);
 ```
 
 ```HTML
