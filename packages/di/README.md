@@ -107,12 +107,12 @@ For example:
 import { JoistDi, get } from '@joist/di/dom';
 
 class Config {
-  name: 'Foo Bar'
+  name = 'Foo Bar'
 }
 
 const CustomRoot = JoistDi(HTMLElement, { 
   providers: [
-    { provide: Config, use: class { name: 'Danny Blue' } }
+    { provide: Config, use: class { name = 'Danny Blue' } }
   ] 
 });
 
