@@ -1,6 +1,6 @@
 {
   "name": "@joist-app/todo-app",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Hacker News PWA",
   "private": true,
   "scripts": {
