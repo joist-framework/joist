@@ -82,3 +82,20 @@ class FooService {
   }
 }
 ```
+
+#### Custom Elements
+
+Joist DI was built with custom elements in mind. When you install `@joist/di` you also get the dom library.
+
+```TS
+import { JoistDi, get } from '@joist/di/dom';
+
+class MyService {}
+
+class MyElement extends JoistDi(HTMlElement) {
+  @get(MyService)
+  myService!: MyService;
+}
+
+customElements.define('my-element', MyElement);
+```
