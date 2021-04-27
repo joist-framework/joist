@@ -1,7 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "target"
+    "outDir": "target",
+    "baseUrl": "./",
+    "paths": {
+      "@joist/di": ["lib.ts"],
+      "@joist/di/dom": ["dom/lib.ts"]
+    }
   },
-  "include": ["src"]
+  "files": ["lib.ts", "typings.d.ts"],
+  "include": ["lib", "dom"],
+  "exclude": ["target"]
 }

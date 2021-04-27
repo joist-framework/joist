@@ -486,8 +486,8 @@ You can use Joist's DI immplementation with any base class that you like.
 The `withInjector` can be applied to a class which will make that class an `InjectorBase`.
 
 ```TS
-import { withInjector, get } from '@joist/component';
 import { service } from '@joist/di';
+import { JoistDi, get } from '@joist/di/dom';
 
 @service()
 class FooService {
@@ -496,9 +496,9 @@ class FooService {
   }
 }
 
-export class MyElement extends withInjector(HTMLElement) {
+export class MyElement extends JoistDi(HTMLElement) {
   @get(FooService)
-  public foo!: FooService;
+  foo!: FooService;
 }
 
 customElements.define('my-element', MyElement)

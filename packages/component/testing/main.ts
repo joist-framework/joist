@@ -1,5 +1,6 @@
-import { InjectorBase, JoistElement, component } from '@joist/component';
+import { component } from '@joist/component';
 import { Provider, ProviderToken } from '@joist/di';
+import { JoistDi, InjectorBase } from '@joist/di/dom';
 
 type TestBedBase = HTMLElement & InjectorBase;
 
@@ -25,9 +26,8 @@ class TestBed {
 
 @component({
   tagName: 'joist-test-bed',
-  isInjectorRoot: true,
 })
-class Host extends JoistElement {
+class Host extends JoistDi(HTMLElement) {
   constructor() {
     super();
 

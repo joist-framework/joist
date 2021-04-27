@@ -1,47 +1,18 @@
-import { Injector, ProviderToken } from '@joist/di';
+import { JoistDi } from '@joist/di/dom';
 
-import { getEnvironmentRef } from './environment';
 import { State } from './state';
 import { getComponentDef, RenderCtx } from './component';
 import { getComponentHandlers, Handler } from './handle';
 import { Lifecycle, PropChange, OnPropChanges, HandlerCtx } from './lifecycle';
-
-export interface InjectorBase {
-  injector: Injector;
-}
-
-export const ROOT_ATTR = '__joist__injector__root__';
 
 export interface PropChangeBase extends OnPropChanges {
   definePropChange(change: PropChange): void;
 }
 
 /**
- * Takes an InjectionToken and resolves that token to a service
- */
-export function get<T>(token: ProviderToken<T>) {
-  return function (target: InjectorBase, key: string) {
-    Object.defineProperty(target, key, {
-      get(this: InjectorBase) {
-        return this.injector.get(token);
-      },
-    });
-  };
-}
-
-/**
- * Mixin that applies an injector to a base class
- */
-export function withInjector<T extends new (...args: any[]) => {}>(Base: T) {
-  return class Injected extends Base implements InjectorBase {
-    public injector: Injector = new Injector({}, getEnvironmentRef());
-  };
-}
-
-/**
  * Mixin that applies an prop change to a base class
  */
-export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
+export function PropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   return class PropChanges extends Base implements PropChangeBase {
     $$propChanges: Map<string, PropChange> = new Map();
     $$propChange: Promise<void> | null = null;
@@ -73,8 +44,6 @@ export function withPropChanges<T extends new (...args: any[]) => {}>(Base: T) {
   };
 }
 
-const Base = withPropChanges(withInjector(HTMLElement));
-
 // Cache computed constructable stylesheets
 const styleCache = new Map<string, CSSStyleSheet[]>();
 
@@ -83,7 +52,7 @@ const styleCache = new Map<string, CSSStyleSheet[]>();
  *
  * Applies an Injector and sets up state and render pipeline.
  */
-export class JoistElement extends Base implements Lifecycle {
+export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements Lifecycle {
   private componentDef = getComponentDef<any>(this.constructor); // read the component definition
   private handlers = getComponentHandlers(this.constructor); // read the component handlers
 
@@ -120,15 +89,12 @@ export class JoistElement extends Base implements Lifecycle {
     if (this.componentDef.shadowDom) {
       this.attachShadow({ mode: this.componentDef.shadowDom });
     }
-
-    if (this.componentDef.isInjectorRoot) {
-      this.setAttribute(ROOT_ATTR, 'true');
-    }
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     this.applyStyles();
-    this.applyParentInjector();
 
     const state = this.injector.get(State);
 
@@ -144,14 +110,6 @@ export class JoistElement extends Base implements Lifecycle {
   }
 
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
-
-  private applyParentInjector() {
-    const parent = this.parentElement?.closest<JoistElement>(`[${ROOT_ATTR}]`);
-
-    if (parent && parent.injector) {
-      this.injector.parent = parent.injector;
-    }
-  }
 
   private createStyleSheet(styleString: string) {
     const sheet = new CSSStyleSheet();

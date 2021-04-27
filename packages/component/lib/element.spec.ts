@@ -1,11 +1,13 @@
 import { service } from '@joist/di';
-import { expect } from '@open-wc/testing';
+import { get, JoistDi } from '@joist/di/dom';
 import { defineTestBed } from '@joist/component/testing';
+import { expect } from '@open-wc/testing';
 import { spy } from 'sinon';
 
-import { JoistElement, get, withInjector } from './element';
+import { JoistElement } from './element';
 import { component } from './component';
 import { State } from './state';
+
 import { handle } from './handle';
 import { OnComplete, HandlerCtx } from './lifecycle';
 
@@ -17,7 +19,7 @@ describe('JoistElement', () => {
       @component({
         tagName: 'withinjector-test-1',
       })
-      class MyElement extends withInjector(HTMLElement) {
+      class MyElement extends JoistDi(HTMLElement) {
         @get(MyService)
         public myService!: MyService;
       }
