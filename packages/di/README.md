@@ -90,10 +90,8 @@ Joist DI was built with custom elements in mind. When you install `@joist/di` yo
 ```TS
 import { JoistDi, get } from '@joist/di/dom';
 
-class MyService {}
-
 class MyElement extends JoistDi(HTMlElement) {
-  @get(MyService)
+  @get(FooService)
   myService!: MyService;
 }
 
