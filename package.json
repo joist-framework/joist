@@ -52,11 +52,5 @@
     "*.{js,ts,json,css,md,html}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
-    }
   }
 }
