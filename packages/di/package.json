@@ -12,7 +12,8 @@
   "main": "target/lib.js",
   "module": "target/lib.js",
   "files": [
-    "target"
+    "target",
+    "dom/package.json"
   ],
   "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
