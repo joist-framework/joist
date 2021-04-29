@@ -1,14 +1,12 @@
-import { component, JoistElement } from '@joist/component';
+import { JoistDi } from '@joist/di/dom';
 import { expect } from '@open-wc/testing';
 
-import { defineTestBed } from './main';
+import { defineTestBed } from './lib';
 
 describe('testing', () => {
   it('should create a new instance of a custom element with the correct injector root', () => {
-    @component({
-      tagName: 'testing-0',
-    })
-    class Foo extends JoistElement {}
+    class Foo extends JoistDi(HTMLElement) {}
+    customElements.define('testing-0', Foo);
 
     class MyService {
       title = 'foo';

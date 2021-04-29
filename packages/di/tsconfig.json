@@ -5,10 +5,11 @@
     "baseUrl": "./",
     "paths": {
       "@joist/di": ["lib.ts"],
-      "@joist/di/dom": ["dom/lib.ts"]
+      "@joist/di/dom": ["dom/lib.ts"],
+      "@joist/di/dom_testing": ["dom_testing/lib.ts"]
     }
   },
   "files": ["lib.ts", "typings.d.ts"],
-  "include": ["lib", "dom"],
+  "include": ["lib", "dom", "dom_testing"],
   "exclude": ["target"]
 }

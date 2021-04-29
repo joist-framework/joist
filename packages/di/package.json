@@ -7,13 +7,17 @@
     },
     "./dom": {
       "import": "./target/dom/lib.js"
+    },
+    "./dom_testing": {
+      "import": "./target/dom_testing/lib.js"
     }
   },
   "main": "target/lib.js",
   "module": "target/lib.js",
   "files": [
     "target",
-    "dom/package.json"
+    "dom/package.json",
+    "dom_testing/package.json"
   ],
   "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",
