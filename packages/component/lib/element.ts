@@ -169,7 +169,7 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
         // styles are defined but Constructable stylesheets not supported
         const styleEls = styles.map(this.createStyleElement);
 
-        this.shadowRoot.append(...styleEls);
+        this.shadowRoot.prepend(...styleEls);
       }
     }
   }
