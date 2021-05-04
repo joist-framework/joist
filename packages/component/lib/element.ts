@@ -45,7 +45,7 @@ export function PropChanges<T extends new (...args: any[]) => {}>(Base: T) {
 }
 
 // Cache computed constructable stylesheets
-const styleCache = new Map<string, CSSStyleSheet[]>();
+const ccStyleCache = new Map<string, CSSStyleSheet[]>();
 
 /**
  * Base Element for Joist.
@@ -94,12 +94,13 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
   connectedCallback() {
     super.connectedCallback();
 
-    this.applyStyles();
-
     const state = this.injector.get(State);
 
     // render initial state
     this.render(state.value);
+
+    // Apply styles after first render
+    this.applyStyles();
 
     // re-render when state changes
     state.onChange(this.render.bind(this));
@@ -110,14 +111,6 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
   }
 
   onComplete(_ctx: HandlerCtx, _res: any[]) {}
-
-  private createStyleSheet(styleString: string) {
-    const sheet = new CSSStyleSheet();
-
-    sheet.replaceSync(styleString);
-
-    return sheet;
-  }
 
   private render(state: any) {
     this.renderCtx.state = state;
@@ -158,21 +151,42 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
 
   /**
    * Apply styles using Constructable StyleSheets if supported.
-   * Individual renders will need to handle falling back for browsers without support.
    */
   private applyStyles() {
-    if (
-      this.componentDef.styles && // styles are defined
-      this.shadowRoot && // element has shadowRoot
-      this.shadowRoot.adoptedStyleSheets // element supports adoptedStyleSheets
-    ) {
-      if (!styleCache.has(this.tagName)) {
-        // if styles have not previously been computed do so now
-        styleCache.set(this.tagName, this.componentDef.styles.map(this.createStyleSheet));
-      }
+    const styles = this.componentDef.styles;
 
-      // adpot calculated stylesheets
-      this.shadowRoot.adoptedStyleSheets = styleCache.get(this.tagName) || [];
+    if (styles && this.shadowRoot) {
+      if (this.shadowRoot.adoptedStyleSheets) {
+        // adoptedStyleSheets are available
+        if (!ccStyleCache.has(this.tagName)) {
+          // if styles have not previously been computed do so now
+          ccStyleCache.set(this.tagName, styles.map(this.createStyleSheet));
+        }
+
+        // adpot calculated stylesheets
+        this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
+      } else {
+        // styles are defined but Constructable stylesheets not supported
+        const styleEls = styles.map(this.createStyleElement);
+
+        this.shadowRoot.append(...styleEls);
+      }
     }
+  }
+
+  private createStyleSheet(styleString: string) {
+    const sheet = new CSSStyleSheet();
+
+    sheet.replaceSync(styleString);
+
+    return sheet;
+  }
+
+  private createStyleElement(styles: string) {
+    const el = document.createElement('style');
+
+    el.append(document.createTextNode(styles));
+
+    return el;
   }
 }
