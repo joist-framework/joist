@@ -38,7 +38,7 @@
     "husky": "6.0.0",
     "lerna": "3.22.1",
     "lint-staged": "10.5.4",
-    "lit-html": "1.4.0",
+    "lit-html": "1.4.1",
     "path-to-regexp": "6.2.0",
     "prettier": "2.2.1",
     "rxjs": "7.0.0",
