@@ -1,6 +1,6 @@
 {
   "name": "@joist-app/hello-world-lit-html",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "Hello World",
   "private": true,
   "scripts": {
