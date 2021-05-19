@@ -68,6 +68,7 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
       this.dispatchEvent(new CustomEvent(eventName, init));
     },
     host: this,
+    renderRoot: this,
   };
 
   constructor() {
@@ -87,7 +88,9 @@ export class JoistElement extends PropChanges(JoistDi(HTMLElement)) implements L
     options.bootstrap = providers.map((p) => p.provide);
 
     if (this.componentDef.shadowDom) {
-      this.attachShadow({ mode: this.componentDef.shadowDom });
+      const root = this.attachShadow({ mode: this.componentDef.shadowDom });
+
+      this.renderCtx.renderRoot = root;
     }
   }
 

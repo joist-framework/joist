@@ -7,6 +7,7 @@ export interface RenderCtx<T = unknown, H extends HTMLElement = HTMLElement> {
   run: (event: string | Symbol, payload?: unknown) => (e: Event) => void;
   dispatch: (eventName: string, init?: CustomEventInit) => () => void;
   host: H;
+  renderRoot: H | ShadowRoot;
 }
 
 export type RenderDef<T, H extends HTMLElement = HTMLElement> = (
