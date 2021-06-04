@@ -113,7 +113,7 @@ export class RouterOutletElement extends JoistElement implements RouterOutletLif
 
       // Only set route context if the HTMLElement has am injector attached
       if ('injector' in el) {
-        const base = el as InjectorBase;
+        const base = (el as unknown) as InjectorBase;
 
         if (base.injector instanceof Injector) {
           const routeCtx = base.injector.get(RouteCtx);
