@@ -41,7 +41,7 @@
     "lit-html": "1.4.1",
     "path-to-regexp": "6.2.0",
     "prettier": "2.3.2",
-    "rxjs": "7.1.0",
+    "rxjs": "7.2.0",
     "sinon": "10.0.0",
     "snowpack": "3.7.1",
     "tslib": "2.3.0",
