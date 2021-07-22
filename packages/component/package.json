@@ -29,7 +29,6 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "npm run build",
     "test": "wtr **/*.spec.ts --config ../../wtr.config.js",
     "build": "tsc -p tsconfig.build.json"
   },
