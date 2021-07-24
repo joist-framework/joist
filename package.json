@@ -27,8 +27,8 @@
     "@joist/router": "file:packages/router"
   },
   "devDependencies": {
-    "@commitlint/cli": "11.0.0",
-    "@commitlint/config-conventional": "11.0.0",
+    "@commitlint/cli": "13.1.0",
+    "@commitlint/config-conventional": "13.1.0",
     "@open-wc/testing": "2.5.33",
     "@snowpack/plugin-typescript": "1.2.1",
     "@types/node": "14.17.5",
