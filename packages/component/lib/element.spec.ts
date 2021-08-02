@@ -7,7 +7,6 @@ import { spy } from 'sinon';
 import { JoistElement } from './element';
 import { component } from './component';
 import { State } from './state';
-
 import { handle } from './handle';
 import { OnComplete, HandlerCtx } from './lifecycle';
 
@@ -142,7 +141,7 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'Hello World', 'TEST_RUN');
+      expect(el.onTestRun).calledWith(new PointerEvent('click'), 'Hello World', 'TEST_RUN');
     });
 
     it('should call a function if the trigger is mapped to a class method and is a symbol', () => {
@@ -169,7 +168,7 @@ describe('JoistElement', () => {
 
       button.click();
 
-      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'Hello World', Test);
+      expect(el.onTestRun).calledWith(new PointerEvent('click'), 'Hello World', Test);
     });
 
     it('should handle multiple functions', () => {
@@ -228,8 +227,8 @@ describe('JoistElement', () => {
       button.click();
 
       expect(el.onTestRun).calledTwice;
-      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'foo', 'FOO');
-      expect(el.onTestRun).calledWith(new MouseEvent('click'), 'bar', 'BAR');
+      expect(el.onTestRun).calledWith(new PointerEvent('click'), 'foo', 'FOO');
+      expect(el.onTestRun).calledWith(new PointerEvent('click'), 'bar', 'BAR');
     });
 
     it('should allow a user to match on a Regex', () => {
@@ -261,7 +260,7 @@ describe('JoistElement', () => {
       button.click();
 
       expect(el.onTestRun).calledOnce;
-      expect(el.onTestRun).calledWith(new MouseEvent('click'), undefined, 'foo-bar');
+      expect(el.onTestRun).calledWith(new PointerEvent('click'), undefined, 'foo-bar');
 
       expect(el.badFn).not.called;
     });
