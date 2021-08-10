@@ -44,7 +44,7 @@
     "pretty-quick": "3.1.1",
     "rxjs": "7.3.0",
     "sinon": "10.0.0",
-    "snowpack": "3.8.3",
+    "snowpack": "3.8.6",
     "tslib": "2.3.0",
     "typescript": "4.3.5",
     "workbox-cli": "6.2.2"
