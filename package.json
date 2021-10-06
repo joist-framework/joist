@@ -31,7 +31,7 @@
     "@commitlint/config-conventional": "13.2.0",
     "@open-wc/testing": "2.5.33",
     "@snowpack/plugin-typescript": "1.2.1",
-    "@types/node": "14.17.19",
+    "@types/node": "14.17.21",
     "@web/dev-server-esbuild": "0.2.14",
     "@web/test-runner": "0.13.18",
     "@web/test-runner-puppeteer": "0.10.2",
