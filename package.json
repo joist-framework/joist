@@ -29,7 +29,7 @@
   "devDependencies": {
     "@commitlint/cli": "13.2.1",
     "@commitlint/config-conventional": "13.2.0",
-    "@open-wc/testing": "2.5.33",
+    "@open-wc/testing": "3.0.1",
     "@snowpack/plugin-typescript": "1.2.1",
     "@types/node": "14.17.27",
     "@web/dev-server-esbuild": "0.2.14",
