@@ -36,7 +36,7 @@
     "@web/test-runner": "0.13.20",
     "@web/test-runner-puppeteer": "0.10.2",
     "bundlesize": "0.18.1",
-    "husky": "7.0.2",
+    "husky": "7.0.4",
     "lerna": "4.0.0",
     "lit-html": "1.4.1",
     "path-to-regexp": "6.2.0",
