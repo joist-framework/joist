@@ -46,7 +46,11 @@ export function JoistDi<T extends new (...args: any[]) => HTMLElement>(
         super.connectedCallback();
       }
 
-      const parent = this.parentElement?.closest<InjectorBase & HTMLElement>(`[${ROOT_ATTR}]`);
+      let parent: (InjectorBase & HTMLElement) | null | undefined;
+
+      if (this.parentElement) {
+        this.parentElement.closest(`[${ROOT_ATTR}]`);
+      }
 
       if (parent && parent.injector) {
         this.injector.parent = parent.injector;
