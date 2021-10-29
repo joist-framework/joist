@@ -1,6 +1,6 @@
 {
   "name": "@joist-app/hello-world",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "Hello World",
   "private": true,
   "scripts": {
