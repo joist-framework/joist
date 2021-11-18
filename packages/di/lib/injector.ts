@@ -1,0 +1,90 @@
+import { ProviderToken, Provider, ClassProviderToken } from './provider';
+import { readProviderDeps, isProvidedInRoot } from './utils';
+
+export interface InjectorOptions {
+  providers?: Provider<any>[];
+  bootstrap?: ProviderToken<any>[];
+}
+
+/**
+ * Create an instance of a Dependency injector.
+ * Can be used to create a singleton of any class that is property annotated with dependencies.
+ *
+ * @param options configuration options for the current instance of Injector
+ * @param parent a parent instance of Injector
+ */
+export class Injector {
+  private providerMap = new WeakMap<ProviderToken<any>, any>();
+
+  constructor(public options: InjectorOptions = {}, public parent?: Injector) {
+    if (this.options.bootstrap) {
+      this.options.bootstrap.forEach((provider) => this.get(provider));
+    }
+  }
+
+  setParent(parent?: Injector) {
+    this.parent = parent;
+  }
+
+  /**
+   * recursively check if a singleton instance is available for a provider
+   */
+  has(token: ProviderToken<any>): boolean {
+    if (this.providerMap.has(token)) {
+      return true;
+    } else if (this.findProvider(token)) {
+      return true;
+    } else if (this.parent) {
+      return this.parent.has(token);
+    }
+
+    return false;
+  }
+
+  /**
+   * fetches a singleton instance of a provider
+   */
+  get<T>(token: ProviderToken<T>): T {
+    if (this.providerMap.has(token)) {
+      return this.providerMap.get(token);
+    }
+
+    let instance: T = this.resolve(token);
+
+    this.providerMap.set(token, instance);
+
+    return instance;
+  }
+
+  create<T>(P: ClassProviderToken<T>): T {
+    const deps = readProviderDeps(P);
+
+    return new P(...deps.map((dep) => this.get(dep)));
+  }
+
+  private resolve<T>(token: ProviderToken<T>): T {
+    // Check to see if provider is defined in current scope
+    const provider = this.findProvider(token);
+
+    if (provider) {
+      // If provider is defined in current scope use that implementation
+      return this.create(provider.use);
+    }
+
+    if (this.parent && (isProvidedInRoot(token) || this.parent.has(token))) {
+      // if a parent is available and contains an instance of the provider already use that
+      return this.parent.get(token);
+    }
+
+    // if nothing else found assume ClassProviderToken
+    return this.create(token as ClassProviderToken<T>);
+  }
+
+  private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
+    if (!this.options.providers) {
+      return undefined;
+    }
+
+    return this.options.providers.find((provider) => provider.provide === token);
+  }
+}
