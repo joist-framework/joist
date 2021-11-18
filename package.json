@@ -40,7 +40,7 @@
     "lerna": "4.0.0",
     "lit-html": "1.4.1",
     "path-to-regexp": "6.2.0",
-    "prettier": "2.4.0",
+    "prettier": "2.4.1",
     "pretty-quick": "3.1.2",
     "rxjs": "7.4.0",
     "sinon": "11.1.2",
