@@ -7,6 +7,9 @@
     },
     "./decorators": {
       "import": "./target/build/decorators.js"
+    },
+    "./testing": {
+      "import": "./target/build/testing.js"
     }
   },
   "files": [
