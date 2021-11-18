@@ -3,7 +3,7 @@ import { Injector } from '@joist/di';
 import { service } from '@joist/di/decorators';
 
 import { getEnvironmentRef, clearEnvironment } from './environment';
-import { JoistDi } from './injector';
+import { WithInjector } from './injector';
 import { get } from '../decorators';
 
 describe('environment', () => {
@@ -17,7 +17,7 @@ describe('environment', () => {
     @service()
     class MyService {}
 
-    class MyElement extends JoistDi(HTMLElement) {
+    class MyElement extends WithInjector(HTMLElement) {
       @get(MyService) my!: MyService;
     }
 

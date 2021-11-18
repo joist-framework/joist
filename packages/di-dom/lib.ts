@@ -1,1 +1,1 @@
-export { JoistDi, JoistDiConfig } from './lib/injector';
+export { WithInjector, JoistDiConfig } from './lib/injector';

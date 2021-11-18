@@ -1,6 +1,6 @@
 import { Provider, ProviderToken } from '@joist/di';
 
-import { JoistDi, InjectorBase } from '../lib/injector';
+import { WithInjector, InjectorBase } from '../lib/injector';
 
 type TestBedBase = HTMLElement & InjectorBase;
 
@@ -24,7 +24,7 @@ class TestBed {
   }
 }
 
-class Host extends JoistDi(HTMLElement) {
+class Host extends WithInjector(HTMLElement) {
   constructor() {
     super();
 

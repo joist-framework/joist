@@ -15,7 +15,7 @@ export interface JoistDiConfig {
 /**
  * Mixin that applies an injector to a base class
  */
-export function JoistDi<T extends new (...args: any[]) => HTMLElement>(
+export function WithInjector<T extends new (...args: any[]) => HTMLElement>(
   Base: T,
   { providers }: JoistDiConfig = { providers: [] }
 ) {

@@ -1,11 +1,11 @@
 import { expect } from '@open-wc/testing';
 
 import { defineTestBed } from './test-bed';
-import { JoistDi } from '../lib/injector';
+import { WithInjector } from '../lib/injector';
 
 describe('testing', () => {
   it('should create a new instance of a custom element with the correct injector root', () => {
-    class Foo extends JoistDi(HTMLElement) {}
+    class Foo extends WithInjector(HTMLElement) {}
     customElements.define('testing-0', Foo);
 
     class MyService {
