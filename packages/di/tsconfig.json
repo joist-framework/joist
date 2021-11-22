@@ -1,12 +1,5 @@
 {
   "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@joist/di": ["lib.ts"],
-      "@joist/di/decorators": ["decorators.ts"]
-    }
-  },
   "files": ["lib.ts", "decorators.ts"],
   "include": ["lib", "decorators"],
   "exclude": ["target"]

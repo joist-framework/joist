@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@joist/component": "file:packages/component",
     "@joist/di": "file:packages/di",
     "@joist/di-dom": "file:packages/di-dom"
   },
