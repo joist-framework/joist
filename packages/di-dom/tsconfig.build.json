@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "target/build"
   },
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.test.ts"]
 }
