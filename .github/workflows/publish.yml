@@ -24,7 +24,16 @@ jobs:
         run: npm ci
 
       - name: Lib Tests
-        run: npx lerna run test
+        run: npx lerna run test --scope @joist/*
+
+      - name: Integration Tests
+        run: npx lerna run test --scope @joist-app/* --concurrency 1
+
+      - name: Build Integrations
+        run: npx lerna run build --scope @joist-app/*
+
+      - name: Check Bundle Sizes
+        run: npx lerna run size --scope @joist-app/*
 
       - name: Publish
-        run: npx lerna publish --canary --preid next.$(date +"%s") --yes
+        run: npx lerna publish --canary --preid canary.$(date +"%s") --yes
