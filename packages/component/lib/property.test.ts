@@ -1,12 +1,12 @@
 import { expect } from '@open-wc/testing';
 
 import { property } from '../decorators/property';
-import { PropChanges, propChanges } from './property';
+import { OnPropChanges, PropChanges, propChanges } from './property';
 
 describe('property', () => {
   it('should read the correct property definitions (decorator)', (done) => {
     @propChanges()
-    class MyEl extends HTMLElement {
+    class MyEl extends HTMLElement implements OnPropChanges {
       @property()
       counter = 0;
 
