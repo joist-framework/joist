@@ -1,0 +1,4 @@
+{
+  "main": "../target/build/decorators/index.js",
+  "module": "../target/build/decorators/index.js"
+}

@@ -10,20 +10,20 @@ export interface InjectableConfig {
   providers: Provider<any>[];
 }
 
-export type Injectable = {
+export interface Injectable {
   [key: string | symbol]: any;
   new (...args: any[]): HTMLElement;
-};
+}
 
 export function injectable({ providers }: InjectableConfig = { providers: [] }) {
-  return <T extends Injectable>(CE: T) => {
-    return class InjectableElement extends CE {
+  return <T extends Injectable>(CustomElement: T) => {
+    return class InjectableElement extends CustomElement {
       constructor(...args: any[]) {
         if (args.length) {
           super(...args);
         } else {
           const injector = new Injector({ providers }, getEnvironmentRef());
-          const deps = readProviderDeps(CE).map((dep) => injector.get(dep));
+          const deps = readProviderDeps(CustomElement).map((dep) => injector.get(dep));
 
           super(...deps);
         }

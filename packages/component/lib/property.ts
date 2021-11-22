@@ -13,16 +13,16 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
 }
 
 export function propChanges() {
-  return <T extends HTMLElement>(Cec: new (...args: any[]) => T) => {
-    const defs = readPropertyDefs(Cec);
+  return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
+    const defs = readPropertyDefs(CustomElement);
 
-    Object.defineProperty(Cec.prototype, '__$$propChanges', {
+    Object.defineProperty(CustomElement.prototype, '__$$propChanges', {
       value: new Map(),
       enumerable: false,
     });
 
     for (let def in defs) {
-      Object.defineProperty(Cec.prototype, def, {
+      Object.defineProperty(CustomElement.prototype, def, {
         set(val: any) {
           Reflect.set(this, `__$$${def}`, val);
 
@@ -35,7 +35,7 @@ export function propChanges() {
       });
     }
 
-    return Cec;
+    return CustomElement;
   };
 }
 
