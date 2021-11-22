@@ -1,6 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { Injector } from '@joist/di';
-import { inject, service } from '@joist/di/decorators';
+import { inject, service, Injector } from '@joist/di';
 
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { injectable } from './injectable';

@@ -1,5 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["lib", "decorators"],
+  "files": ["lib.ts"],
+  "include": ["lib"],
   "exclude": ["target"]
 }

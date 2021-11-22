@@ -1,8 +1,8 @@
 {
   "name": "@joist/di-dom",
   "version": "2.0.0",
-  "main": "./target/build/index.js",
-  "module": "./target/build/index.js",
+  "main": "./target/build/lib.js",
+  "module": "./target/build/lib.js",
   "files": [
     "target/build"
   ],

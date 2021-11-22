@@ -1,10 +1,9 @@
 {
   "name": "@joist/di",
   "version": "2.0.0",
-  "main": "./target/build/lib/index.js",
-  "module": "./target/build/lib/index.js",
+  "main": "./target/build/lib.js",
+  "module": "./target/build/lib.js",
   "files": [
-    "decorators/package.json",
     "target/build"
   ],
   "sideEffects": false,

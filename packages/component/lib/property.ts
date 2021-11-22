@@ -12,6 +12,15 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
   return c.properties || c.prototype.properties || {};
 }
 
+const PROPERTY_KEY = 'properties';
+
+export function property() {
+  return function (target: any, key: string) {
+    target[PROPERTY_KEY] = target[PROPERTY_KEY] || {};
+    target[PROPERTY_KEY][key] = {};
+  };
+}
+
 export function propChanges() {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);

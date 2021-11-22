@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { inject } from '@joist/di/decorators';
+import { inject } from '@joist/di';
 
 import { injectable } from './injectable';
 
