@@ -23,11 +23,8 @@ jobs:
       - name: Bootstrap
         run: npm ci
 
-      - name: Lib Build
-        run: npx lerna run build
-
-      - name: Lib Tests
-        run: npx lerna run test
+      # - name: Lib Tests
+      #   run: npx lerna run test
 
       - name: Publish
         run: npx lerna publish --canary --preid next.$(date +"%s") --yes
