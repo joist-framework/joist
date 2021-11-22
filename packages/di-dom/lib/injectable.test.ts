@@ -40,4 +40,23 @@ describe('@injectable()', () => {
 
     expect(el.foo).to.be.instanceOf(Foo);
   });
+
+  it('should accept arguments if passed in manually', () => {
+    class Foo {}
+
+    class Bar extends Foo {}
+
+    @injectable()
+    class MyElement extends HTMLElement {
+      constructor(@inject(Foo) public foo: Foo) {
+        super();
+      }
+    }
+
+    customElements.define('injectable-3', injectable()(MyElement));
+
+    const el = new MyElement(new Bar());
+
+    expect(el.foo).to.be.instanceOf(Bar);
+  });
 });
