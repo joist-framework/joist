@@ -12,11 +12,49 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
   return c.properties || c.prototype.properties || {};
 }
 
+/**
+ * Mixin that applies an prop change to a base class
+ */
+export function WithProps<T extends new (...args: any[]) => {}>(Base: T) {
+  return class extends Base {
+    $$propChanges: Map<string | symbol, PropChange> = new Map();
+    $$propChange: Promise<void> | null = null;
+
+    onPropChanges(_: PropChanges) {}
+
+    /**
+     * Marks a property as changed
+     * onPropChanges is called after all prop changes are defined.
+     * This batches onPropChanges calls.
+     */
+    definePropChange(propChange: PropChange): Promise<void> {
+      this.$$propChanges.set(propChange.key, propChange);
+
+      if (!this.$$propChange) {
+        // If there is no previous change defined set it up
+        this.$$propChange = Promise.resolve().then(() => {
+          // run onPropChanges here. This makes sure we capture all changes
+          this.onPropChanges(Object.fromEntries(this.$$propChanges));
+
+          // reset for next time
+          this.$$propChanges.clear();
+          this.$$propChange = null;
+        });
+      }
+
+      return this.$$propChange;
+    }
+  };
+}
+
 export function propChanges() {
   return <T extends HTMLElement>(Cec: new () => T) => {
     const defs = readPropertyDefs(Cec);
 
-    Cec.prototype.__$$propChanges = new Map();
+    Object.defineProperty(Cec.prototype, '__$$propChanges', {
+      value: new Map(),
+      enumerable: false,
+    });
 
     for (let def in defs) {
       Object.defineProperty(Cec.prototype, def, {
@@ -28,6 +66,7 @@ export function propChanges() {
         get() {
           return Reflect.get(this, `__$$${def}`);
         },
+        enumerable: false,
       });
     }
 
