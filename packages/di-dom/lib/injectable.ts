@@ -18,7 +18,7 @@ export interface Injectable {
 export function injectable({ providers }: InjectableConfig = { providers: [] }) {
   return <T extends Injectable>(CustomElement: T) => {
     return class InjectableElement extends CustomElement {
-      constructor(...args: any[]) {
+      constructor(...args: ConstructorParameters<typeof T>) {
         if (args.length) {
           super(...args);
         } else {

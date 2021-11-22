@@ -41,7 +41,7 @@ describe('@injectable()', () => {
     expect(el.foo).to.be.instanceOf(Foo);
   });
 
-  it('should accept arguments if passed in manually', () => {
+  it('should accept arguments if passed in manually (decorator)', () => {
     class Foo {}
 
     class Bar extends Foo {}
