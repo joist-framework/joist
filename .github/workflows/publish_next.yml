@@ -24,7 +24,10 @@ jobs:
         run: npm ci
 
       - name: Lib Tests
-        run: npx lerna run test --scope @joist/*
+        run: npx lerna run test
+
+      - name: Lib Build
+        run: npx lerna run build
 
       - name: Publish
         run: npx lerna publish --canary --preid next.$(date +"%s") --yes

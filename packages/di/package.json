@@ -3,15 +3,8 @@
   "version": "2.0.0",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
-  "exports": {
-    ".": {
-      "import": "./target/build/lib.js"
-    },
-    "./decorators": {
-      "import": "./target/build/decorators.js"
-    }
-  },
   "files": [
+    "decorators/package.json",
     "target/build"
   ],
   "sideEffects": false,
