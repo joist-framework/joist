@@ -1,19 +1,8 @@
 {
   "name": "@joist/di-dom",
   "version": "2.0.0",
-  "main": "./target/build/lib.js",
-  "module": "./target/build/lib.js",
-  "exports": {
-    ".": {
-      "import": "./target/build/lib.js"
-    },
-    "./decorators": {
-      "import": "./target/build/decorators.js"
-    },
-    "./testing": {
-      "import": "./target/build/testing.js"
-    }
-  },
+  "main": "./target/build/lib/index.js",
+  "module": "./target/build/lib/index.js",
   "files": [
     "target/build"
   ],

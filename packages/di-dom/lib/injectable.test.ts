@@ -53,7 +53,7 @@ describe('@injectable()', () => {
       }
     }
 
-    customElements.define('injectable-3', injectable()(MyElement));
+    customElements.define('injectable-3', MyElement);
 
     const el = new MyElement(new Bar());
 
