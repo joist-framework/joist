@@ -1,0 +1,25 @@
+name: Pull Request
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Bootstrap
+        run: npm ci
+
+      - name: Lib Tests
+        run: npx lerna run test --scope @joist/*
+
+      - name: Integration Tests
+        run: npx lerna run test --scope @joist-app/* --concurrency 1
+
+      - name: Build Integrations
+        run: npx lerna run build --scope @joist-app/*
+
+      - name: Check Bundle Sizes
+        run: npx lerna run size --scope @joist-app/*

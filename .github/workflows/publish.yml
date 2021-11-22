@@ -1,0 +1,30 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '*.md'
+      - '/integration/*'
+      - 'package*.json'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Bootstrap
+        run: npm ci
+
+      - name: Lib Tests
+        run: npx lerna run test
+
+      - name: Publish
+        run: npx lerna publish --canary --preid next.$(date +"%s") --yes
