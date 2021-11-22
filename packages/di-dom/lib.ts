@@ -1,1 +1,1 @@
-export { WithInjector, JoistDiConfig } from './lib/injector';
+export { InjectableConfig, injectable, InjectorBase } from './lib/injectable';

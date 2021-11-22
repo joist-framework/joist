@@ -1,10 +1,9 @@
 import { expect } from '@open-wc/testing';
 import { Injector } from '@joist/di';
-import { service } from '@joist/di/decorators';
+import { inject, service } from '@joist/di/decorators';
 
 import { getEnvironmentRef, clearEnvironment } from './environment';
-import { WithInjector } from './injector';
-import { get } from '../decorators';
+import { injectable } from './injectable';
 
 describe('environment', () => {
   afterEach(clearEnvironment);
@@ -17,13 +16,16 @@ describe('environment', () => {
     @service()
     class MyService {}
 
-    class MyElement extends WithInjector(HTMLElement) {
-      @get(MyService) my!: MyService;
+    @injectable()
+    class MyElement extends HTMLElement {
+      constructor(@inject(MyService) public my: MyService) {
+        super();
+      }
     }
 
-    customElements.define('environment-1', MyElement);
+    customElements.define('env-1', MyElement);
 
-    const el = new MyElement();
+    const el = document.createElement('env-1') as MyElement;
 
     expect(el.my).to.equal(getEnvironmentRef().get(MyService));
   });

@@ -7,7 +7,7 @@
       "@joist/di/decorators": ["../di/decorators.ts"]
     }
   },
-  "files": ["lib.ts", "decorators.ts", "testing.ts", "typings.d.ts"],
-  "include": ["lib", "decorators", "testing"],
+  "files": ["lib.ts", "typings.d.ts"],
+  "include": ["lib"],
   "exclude": ["target"]
 }
