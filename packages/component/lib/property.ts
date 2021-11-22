@@ -13,7 +13,7 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
 }
 
 export function propChanges() {
-  return <T extends HTMLElement>(Cec: new () => T) => {
+  return <T extends HTMLElement>(Cec: new (...args: any[]) => T) => {
     const defs = readPropertyDefs(Cec);
 
     Object.defineProperty(Cec.prototype, '__$$propChanges', {
