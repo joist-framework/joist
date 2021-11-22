@@ -6,97 +6,58 @@ export interface OnPropChanges {
   onPropChanges(changes: Map<string, PropChange>): void;
 }
 
-export interface PropChangeBase extends OnPropChanges {
-  definePropChange(change: PropChange): void;
-}
+export type PropChanges = Record<string | symbol, PropChange>;
 
-export interface PropChangeConstructor<T> {
-  properties?: Record<string, {}>;
-  new (...args: any[]): T;
-}
-
-export function readPropertyDefs<T>(c: PropChangeConstructor<T>) {
+export function readPropertyDefs(c: any): Record<string | symbol, {}> {
   return c.properties || c.prototype.properties || {};
 }
 
-/**
- * Mixin that applies an prop change to a base class
- */
-export function WithProps<T extends new (...args: any[]) => {}>(
-  Base: T,
-  props: Array<string | symbol> = []
-) {
-  class PropChanges extends Base implements PropChangeBase {
-    $$propChanges: Map<string | symbol, PropChange> = new Map();
-    $$propChange: Promise<void> | null = null;
+export function propChanges() {
+  return <T extends HTMLElement>(Cec: new () => T) => {
+    const defs = readPropertyDefs(Cec);
 
-    onPropChanges(_: Map<string | symbol, PropChange>) {}
+    Cec.prototype.__$$propChanges = new Map();
 
-    /**
-     * Marks a property as changed
-     * onPropChanges is called after all prop changes are defined.
-     * This batches onPropChanges calls.
-     */
-    definePropChange(propChange: PropChange): Promise<void> {
-      this.$$propChanges.set(propChange.key, propChange);
+    for (let def in defs) {
+      Object.defineProperty(Cec.prototype, def, {
+        set(val: any) {
+          Reflect.set(this, `__$$${def}`, val);
 
-      if (!this.$$propChange) {
-        // If there is no previous change defined set it up
-        this.$$propChange = Promise.resolve().then(() => {
-          // run onPropChanges here. This makes sure we capture all changes
-          this.onPropChanges(this.$$propChanges);
-
-          // reset for next time
-          this.$$propChanges.clear();
-          this.$$propChange = null;
-        });
-      }
-
-      return this.$$propChange;
-    }
-  }
-
-  return new Proxy(PropChanges, {
-    construct(base, args, extend) {
-      const el: PropChanges = Reflect.construct(base, args, extend);
-
-      new Proxy(el, {
-        defineProperty(a, b, c) {
-          return Reflect.defineProperty(a, b, c);
+          definePropChange.call(this, new PropChange(def, val));
         },
-        deleteProperty(a, b) {
-          return Reflect.deleteProperty(a, b);
-        },
-        get(target, prop, receiver) {
-          return Reflect.get(target, prop, receiver);
-        },
-        getOwnPropertyDescriptor(a, b) {
-          return Reflect.getOwnPropertyDescriptor(a, b);
-        },
-        getPrototypeOf(a) {
-          return Reflect.getPrototypeOf(a);
-        },
-        has(a, b) {
-          return Reflect.has(a, b);
-        },
-        isExtensible(a) {
-          return Reflect.isExtensible(a);
-        },
-        ownKeys(a) {
-          return Reflect.ownKeys(a);
-        },
-        set(target, prop, value, receiver) {
-          if (props.includes(prop)) {
-            el.definePropChange(new PropChange(prop as string, value));
-          }
-          return Reflect.set(target, prop, value, receiver);
-        },
-        setPrototypeOf(a, b) {
-          return Reflect.setPrototypeOf(a, b);
+        get() {
+          return Reflect.get(this, `__$$${def}`);
         },
       });
+    }
 
-      return el;
-    },
-  });
+    return Cec;
+  };
+}
+
+export interface PropChangeBase {
+  __$$propChanges: Map<string | symbol, PropChange>;
+  __$$propChange: Promise<void> | null;
+
+  onPropChanges?: (changes: PropChanges) => void;
+}
+
+function definePropChange(this: PropChangeBase, propChange: PropChange): Promise<void> {
+  this.__$$propChanges.set(propChange.key, propChange);
+
+  if (!this.__$$propChange) {
+    // If there is no previous change defined set it up
+    this.__$$propChange = Promise.resolve().then(() => {
+      // run onPropChanges here. This makes sure we capture all changes
+      if (this.onPropChanges) {
+        this.onPropChanges(Object.fromEntries(this.__$$propChanges));
+      }
+
+      // reset for next time
+      this.__$$propChanges.clear();
+      this.__$$propChange = null;
+    });
+  }
+
+  return this.__$$propChange;
 }

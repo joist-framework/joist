@@ -1,22 +1,25 @@
-import { WithProps } from './property';
+import { expect } from '@open-wc/testing';
+
+import { property } from '../decorators/property';
+import { PropChanges, propChanges } from './property';
 
 describe('property', () => {
-  it('should read the correct property definitions', () => {
-    class MyEl extends WithProps(HTMLElement) {
+  it('should read the correct property definitions', (done) => {
+    @propChanges()
+    class MyEl extends HTMLElement {
+      @property()
       counter = 0;
 
-      onPropChanges(val: any) {
-        console.log('props changed!', Array.from(val.values()));
+      onPropChanges(val: PropChanges) {
+        expect(val.counter.newValue).to.equal(5);
 
-        this.innerHTML = this.counter.toString();
+        done();
       }
     }
 
     customElements.define('my-el', MyEl);
 
     const el = new MyEl();
-
-    document.body.appendChild(el);
 
     el.counter = el.counter + 1;
     el.counter = el.counter + 1;
