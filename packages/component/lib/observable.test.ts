@@ -1,15 +1,15 @@
 import { expect } from '@open-wc/testing';
 
-import { OnPropChanges, PropChanges, properties, property } from './property';
+import { OnChange, PropChanges, observable, observe } from './observable';
 
 describe('property', () => {
   it('should read the correct property definitions (decorator)', (done) => {
-    @properties()
-    class MyEl extends HTMLElement implements OnPropChanges {
-      @property()
+    @observable()
+    class MyEl extends HTMLElement implements OnChange {
+      @observe()
       counter = 0;
 
-      onPropChanges(val: PropChanges) {
+      onChange(val: PropChanges) {
         expect(val.counter.newValue).to.equal(5);
 
         done();
@@ -37,14 +37,14 @@ describe('property', () => {
 
       counter = 0;
 
-      onPropChanges(val: PropChanges) {
+      onChange(val: PropChanges) {
         expect(val.counter.newValue).to.equal(5);
 
         done();
       }
     }
 
-    customElements.define('my-el-2', properties()(MyEl));
+    customElements.define('my-el-2', observable()(MyEl));
 
     const el = document.createElement('my-el-2') as MyEl;
 
