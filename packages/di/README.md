@@ -35,8 +35,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 ```
 
 ```TS
-import { Injector } from '@joist/di';
-import { inject } from '@joist/di/decorators';
+import { Injector, inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -60,8 +59,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 #### Override A Service:
 
 ```TS
-import { Injector } from '@joist/di';
-import { inject } from '@joist/di/decorators';
+import { Injector, inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -109,7 +107,7 @@ class FooService {
 ```
 
 ```TS
-import { service } from '@joist/di/decorators';
+import { service } from '@joist/di';
 
 @service()
 class FooService {
