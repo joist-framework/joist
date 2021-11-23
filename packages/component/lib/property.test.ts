@@ -1,11 +1,10 @@
 import { expect } from '@open-wc/testing';
 
-import { property } from '../decorators/property';
-import { OnPropChanges, PropChanges, propChanges } from './property';
+import { OnPropChanges, PropChanges, properties, property } from './property';
 
 describe('property', () => {
   it('should read the correct property definitions (decorator)', (done) => {
-    @propChanges()
+    @properties()
     class MyEl extends HTMLElement implements OnPropChanges {
       @property()
       counter = 0;
@@ -45,9 +44,9 @@ describe('property', () => {
       }
     }
 
-    customElements.define('my-el-2', propChanges()(MyEl));
+    customElements.define('my-el-2', properties()(MyEl));
 
-    const el = new MyEl();
+    const el = document.createElement('my-el-2') as MyEl;
 
     el.counter = el.counter + 1;
     el.counter = el.counter + 1;

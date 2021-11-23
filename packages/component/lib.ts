@@ -1,1 +1,1 @@
-export { propChanges, PropChange, OnPropChanges } from './lib/property';
+export { properties, PropChange, OnPropChanges } from './lib/property';

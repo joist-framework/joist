@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
-import { service } from '../decorators/service';
-import { inject } from '../decorators/inject';
+import { service } from './service';
+import { inject } from './inject';
 import { Injector } from './injector';
 import { ProviderToken } from './provider';
 

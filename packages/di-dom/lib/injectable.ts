@@ -16,14 +16,14 @@ export interface Injectable {
 }
 
 export function injectable({ providers }: InjectableConfig = { providers: [] }) {
-  return <T extends Injectable>(CustomElement: T) => {
-    return class InjectableElement extends CustomElement {
+  return <T extends Injectable>(Ce: T) => {
+    return class InjectableElement extends Ce {
       constructor(...args: any[]) {
         if (args.length) {
           super(...args);
         } else {
-          const injector = new Injector({ providers }, getEnvironmentRef());
-          const deps = readProviderDeps(CustomElement).map((dep) => injector.get(dep));
+          const i = new Injector({ providers }, getEnvironmentRef());
+          const deps = readProviderDeps(Ce).map((dep) => i.get(dep));
 
           super(...deps);
         }

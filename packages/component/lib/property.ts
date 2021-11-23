@@ -21,13 +21,20 @@ export function property() {
   };
 }
 
-export function propChanges() {
+export function properties() {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);
 
-    Object.defineProperty(CustomElement.prototype, '__$$propChanges', {
-      value: new Map(),
+    Object.defineProperty(CustomElement.prototype, 'propChanges', {
+      value: {},
       enumerable: false,
+      writable: true,
+    });
+
+    Object.defineProperty(CustomElement.prototype, 'propChange', {
+      value: null,
+      enumerable: false,
+      writable: true,
     });
 
     for (let def in defs) {
@@ -35,12 +42,11 @@ export function propChanges() {
         set(val: any) {
           Reflect.set(this, `__$$${def}`, val);
 
-          definePropChange.call(this, new PropChange(def, val));
+          definePropChange(this, new PropChange(def, val));
         },
         get() {
           return Reflect.get(this, `__$$${def}`);
         },
-        enumerable: false,
       });
     }
 
@@ -49,28 +55,28 @@ export function propChanges() {
 }
 
 export interface PropChangeBase {
-  __$$propChanges: Map<string | symbol, PropChange>;
-  __$$propChange: Promise<void> | null;
+  propChanges: PropChanges;
+  propChange: Promise<void> | null;
 
   onPropChanges?: (changes: PropChanges) => void;
 }
 
-function definePropChange(this: PropChangeBase, propChange: PropChange): Promise<void> {
-  this.__$$propChanges.set(propChange.key, propChange);
+function definePropChange(base: PropChangeBase, propChange: PropChange): Promise<void> {
+  base.propChanges[propChange.key] = propChange;
 
-  if (!this.__$$propChange) {
+  if (!base.propChange) {
     // If there is no previous change defined set it up
-    this.__$$propChange = Promise.resolve().then(() => {
+    base.propChange = Promise.resolve().then(() => {
       // run onPropChanges here. This makes sure we capture all changes
-      if (this.onPropChanges) {
-        this.onPropChanges(Object.fromEntries(this.__$$propChanges));
+      if (base.onPropChanges) {
+        base.onPropChanges(base.propChanges);
       }
 
       // reset for next time
-      this.__$$propChanges.clear();
-      this.__$$propChange = null;
+      base.propChanges = {};
+      base.propChange = null;
     });
   }
 
-  return this.__$$propChange;
+  return base.propChange;
 }
