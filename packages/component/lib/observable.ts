@@ -4,8 +4,8 @@ export class PropChange<T = any> {
 
 export type PropChanges = Record<string | symbol, PropChange>;
 
-export interface OnPropChanges {
-  onPropChanges(changes: PropChanges): void;
+export interface OnChange {
+  onChange(changes: PropChanges): void;
 }
 
 export function readPropertyDefs(c: any): Record<string | symbol, {}> {
@@ -14,14 +14,14 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
 
 const PROPERTY_KEY = 'properties';
 
-export function property() {
+export function observe() {
   return function (target: any, key: string) {
     target[PROPERTY_KEY] = target[PROPERTY_KEY] || {};
     target[PROPERTY_KEY][key] = {};
   };
 }
 
-export function properties() {
+export function observable() {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);
 
@@ -58,7 +58,7 @@ export interface PropChangeBase {
   propChanges: PropChanges;
   propChange: Promise<void> | null;
 
-  onPropChanges?: (changes: PropChanges) => void;
+  onChange?: (changes: PropChanges) => void;
 }
 
 function definePropChange(base: PropChangeBase, propChange: PropChange): Promise<void> {
@@ -68,8 +68,8 @@ function definePropChange(base: PropChangeBase, propChange: PropChange): Promise
     // If there is no previous change defined set it up
     base.propChange = Promise.resolve().then(() => {
       // run onPropChanges here. This makes sure we capture all changes
-      if (base.onPropChanges) {
-        base.onPropChanges(base.propChanges);
+      if (base.onChange) {
+        base.onChange(base.propChanges);
       }
 
       // reset for next time

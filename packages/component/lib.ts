@@ -1,2 +1,2 @@
-export { properties, PropChange, OnPropChanges, property, PropChanges } from './lib/property';
+export { observable, PropChange, OnChange, observe, PropChanges } from './lib/observable';
 export { styled } from './lib/styled';

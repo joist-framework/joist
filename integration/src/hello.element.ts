@@ -1,4 +1,4 @@
-import { properties, property, OnPropChanges, PropChanges, styled } from '@joist/component';
+import { observable, observe, OnChange, PropChanges, styled } from '@joist/component';
 import { inject, service } from '@joist/di';
 import { injectable } from '@joist/di-dom';
 
@@ -10,7 +10,7 @@ class AppService {
 }
 
 @injectable()
-@properties()
+@observable()
 @styled([
   /*css*/ `
     :host {
@@ -18,8 +18,8 @@ class AppService {
     }
   `,
 ])
-export class CounterElement extends HTMLElement implements OnPropChanges {
-  @property() name: string = 'Danny';
+export class CounterElement extends HTMLElement implements OnChange {
+  @observe() name: string = 'Danny';
 
   constructor(@inject(AppService) private app: AppService) {
     super();
@@ -27,7 +27,7 @@ export class CounterElement extends HTMLElement implements OnPropChanges {
     this.attachShadow({ mode: 'open' });
   }
 
-  onPropChanges(c: PropChanges) {
+  onChange(c: PropChanges) {
     console.log(c);
 
     this.shadowRoot!.innerHTML = this.app.sayHello(this.name);
