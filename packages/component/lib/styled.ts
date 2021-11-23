@@ -1,11 +1,11 @@
 // Cache computed constructable stylesheets
-const ccStyleCache = new Map<string, CSSStyleSheet>();
+const ccStyleCache = new Map<string, CSSStyleSheet[]>();
 
-export function styled(styles: string) {
+export function styled(styles: string[]) {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     return class StyledElement extends CustomElement {
       constructor(...args: any[]) {
-        super(args);
+        super(...args);
 
         this.applyStyles();
       }
@@ -19,18 +19,17 @@ export function styled(styles: string) {
             // adoptedStyleSheets are available
             if (!ccStyleCache.has(this.tagName)) {
               // if styles have not previously been computed do so now
-              ccStyleCache.set(this.tagName, this.createStyleSheet(styles));
+              ccStyleCache.set(this.tagName, styles.map(this.createStyleSheet));
             }
 
             // adpot calculated stylesheets
-            const cached = ccStyleCache.get(this.tagName);
 
-            this.shadowRoot.adoptedStyleSheets = cached ? [cached] : [];
+            this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
           } else {
             // styles are defined but Constructable stylesheets not supported
-            const styleEls = this.createStyleElement(styles);
+            const styleEls = styles.map(this.createStyleElement);
 
-            this.shadowRoot.prepend(styleEls);
+            this.shadowRoot.prepend(...styleEls);
           }
         }
       }
