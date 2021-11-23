@@ -4,8 +4,8 @@ const ccStyleCache = new Map<string, CSSStyleSheet>();
 export function styled(styles: string) {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     return class StyledElement extends CustomElement {
-      constructor(..._: any[]) {
-        super();
+      constructor(...args: any[]) {
+        super(args);
 
         this.applyStyles();
       }
