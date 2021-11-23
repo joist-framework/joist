@@ -26,7 +26,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && wtr --config ../../wtr.config.mjs",
+    "test": "tsc -p tsconfig.test.json && wtr --config ../../wtr.config.mjs -p 8002",
     "build": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
