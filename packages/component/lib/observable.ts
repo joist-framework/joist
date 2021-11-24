@@ -12,6 +12,12 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
   return c.properties || c.prototype.properties || {};
 }
 
+export interface ObservableBase {
+  propChanges: PropChanges;
+  propChange: Promise<void> | null;
+  definePropChange(propChange: PropChange): Promise<void>;
+}
+
 const PROPERTY_KEY = 'properties';
 
 export function observe() {
@@ -25,7 +31,24 @@ export function observable() {
   return <T extends new (...args: any[]) => HTMLElement & OnChange>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);
 
-    return class Observable extends CustomElement implements OnChange {
+    const props: Record<string, PropertyDescriptor> = {};
+
+    for (let def in defs) {
+      props[def] = {
+        set(this: ObservableBase, val) {
+          const prevVal = Reflect.get(this, `$${def}`);
+
+          this.definePropChange(new PropChange(def, val, prevVal));
+
+          Reflect.set(this, `$${def}`, val);
+        },
+        get() {
+          return Reflect.get(this, `$${def}`);
+        },
+      };
+    }
+
+    return class Observable extends CustomElement implements OnChange, ObservableBase {
       propChanges: PropChanges = {};
       propChange: Promise<void> | null = null;
 
@@ -35,16 +58,7 @@ export function observable() {
         for (let def in defs) {
           Reflect.set(this, `$${def}`, Reflect.get(this, def));
 
-          Object.defineProperty(this, def, {
-            set(val: any) {
-              Reflect.set(this, `$${def}`, val);
-
-              this.definePropChange(new PropChange(def, val));
-            },
-            get() {
-              return Reflect.get(this, `$${def}`);
-            },
-          });
+          Object.defineProperties(this, props);
         }
       }
 
