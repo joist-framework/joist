@@ -48,7 +48,7 @@ export function observable() {
       };
     }
 
-    return class Observable extends CustomElement implements OnChange, ObservableBase {
+    return class ObservableElement extends CustomElement implements OnChange, ObservableBase {
       propChanges: PropChanges = {};
       propChange: Promise<void> | null = null;
 

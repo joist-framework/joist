@@ -3,6 +3,17 @@
   "version": "2.0.0",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
+  "exports": {
+    ".": {
+      "import": "./target/build/lib.js"
+    },
+    "./observable": {
+      "import": "./target/build/lib/observable.js"
+    },
+    "./styled": {
+      "import": "./target/build/lib/styled.js"
+    }
+  },
   "files": [
     "target/build",
     "observable/package.json",

@@ -3,6 +3,11 @@
   "version": "2.0.0",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
+  "exports": {
+    ".": {
+      "import": "./target/build/lib.js"
+    }
+  },
   "files": [
     "target/build"
   ],
@@ -15,7 +20,8 @@
   "keywords": [
     "TypeScript",
     "DI",
-    "Dependency Injection"
+    "Dependency Injection",
+    "DOM"
   ],
   "author": "deebloo",
   "license": "MIT",
