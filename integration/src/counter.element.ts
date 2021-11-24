@@ -43,8 +43,6 @@ export class CounterEement extends HTMLElement implements OnChange {
     super();
 
     this.attachShadow({ mode: 'open' });
-
-    console.log(this.math);
   }
 
   connectedCallback() {
@@ -55,9 +53,7 @@ export class CounterEement extends HTMLElement implements OnChange {
     this.addListeners();
   }
 
-  onChange(c: PropChanges) {
-    console.log(c);
-
+  onChange(_: PropChanges) {
     this.update();
   }
 
@@ -78,9 +74,7 @@ export class CounterEement extends HTMLElement implements OnChange {
   }
 
   private update() {
-    const root = this.shadowRoot!;
-
-    root.getElementById('count')!.innerHTML = this.count.toString();
+    this.shadowRoot!.getElementById('count')!.innerHTML = this.count.toString();
   }
 }
 
