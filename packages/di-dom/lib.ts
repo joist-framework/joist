@@ -1,1 +1,1 @@
-export { InjectableConfig, injectable, InjectorBase } from './lib/injectable';
+export { InjectableConfig, injectable } from './lib/injectable';
