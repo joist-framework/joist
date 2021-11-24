@@ -6,8 +6,7 @@ describe('property', () => {
   it('should read the correct property definitions (decorator)', (done) => {
     @observable()
     class MyEl extends HTMLElement implements OnChange {
-      @observe()
-      counter = 0;
+      @observe() counter = 0;
 
       onChange(val: PropChanges) {
         expect(val.counter.newValue).to.equal(5);

@@ -22,61 +22,56 @@ export function observe() {
 }
 
 export function observable() {
-  return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
+  return <T extends new (...args: any[]) => HTMLElement & OnChange>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);
 
-    Object.defineProperty(CustomElement.prototype, 'propChanges', {
-      value: {},
-      enumerable: false,
-      writable: true,
-    });
+    return class Observable extends CustomElement implements OnChange {
+      propChanges: PropChanges = {};
+      propChange: Promise<void> | null = null;
 
-    Object.defineProperty(CustomElement.prototype, 'propChange', {
-      value: null,
-      enumerable: false,
-      writable: true,
-    });
+      constructor(...args: any[]) {
+        super(...args);
 
-    for (let def in defs) {
-      Object.defineProperty(CustomElement.prototype, def, {
-        set(val: any) {
-          Reflect.set(this, `__$$${def}`, val);
+        for (let def in defs) {
+          Reflect.set(this, `$${def}`, Reflect.get(this, def));
 
-          definePropChange(this, new PropChange(def, val));
-        },
-        get() {
-          return Reflect.get(this, `__$$${def}`);
-        },
-      });
-    }
+          Object.defineProperty(this, def, {
+            set(val: any) {
+              Reflect.set(this, `$${def}`, val);
 
-    return CustomElement;
-  };
-}
-
-export interface PropChangeBase {
-  propChanges: PropChanges;
-  propChange: Promise<void> | null;
-
-  onChange?: (changes: PropChanges) => void;
-}
-
-function definePropChange(base: PropChangeBase, propChange: PropChange): Promise<void> {
-  base.propChanges[propChange.key] = propChange;
-
-  if (!base.propChange) {
-    // If there is no previous change defined set it up
-    base.propChange = Promise.resolve().then(() => {
-      // run onPropChanges here. This makes sure we capture all changes
-      if (base.onChange) {
-        base.onChange(base.propChanges);
+              this.definePropChange(new PropChange(def, val));
+            },
+            get() {
+              return Reflect.get(this, `$${def}`);
+            },
+          });
+        }
       }
 
-      // reset for next time
-      base.propChanges = {};
-      base.propChange = null;
-    });
-  }
+      onChange(e: PropChanges) {
+        if (!!super.onChange) {
+          super.onChange(e);
+        }
+      }
 
-  return base.propChange;
+      definePropChange(propChange: PropChange): Promise<void> {
+        this.propChanges[propChange.key] = propChange;
+
+        if (!this.propChange) {
+          // If there is no previous change defined set it up
+          this.propChange = Promise.resolve().then(() => {
+            // run onPropChanges here. This makes sure we capture all changes
+
+            this.onChange(this.propChanges);
+
+            // reset for next time
+            this.propChanges = {};
+            this.propChange = null;
+          });
+        }
+
+        return this.propChange;
+      }
+    };
+  };
 }

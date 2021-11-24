@@ -4,7 +4,9 @@
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
   "files": [
-    "target/build"
+    "target/build",
+    "observable/package.json",
+    "styled/package.json"
   ],
   "sideEffects": false,
   "description": "Dependency Injection in ~800 bytes",

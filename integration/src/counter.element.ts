@@ -1,4 +1,5 @@
-import { observable, observe, OnChange, PropChanges, styled } from '@joist/component';
+import { styled } from '@joist/component/styled';
+import { observable, observe, OnChange, PropChanges } from '@joist/component/observable';
 import { inject } from '@joist/di';
 import { injectable } from '@joist/di-dom';
 
@@ -42,6 +43,8 @@ export class CounterEement extends HTMLElement implements OnChange {
     super();
 
     this.attachShadow({ mode: 'open' });
+
+    console.log(this.math);
   }
 
   connectedCallback() {
@@ -49,19 +52,29 @@ export class CounterEement extends HTMLElement implements OnChange {
 
     root.appendChild(template.content.cloneNode(true));
 
-    root.getElementById('inc')!.addEventListener('click', () => {
-      this.count = this.math.increment(this.count);
-    });
-
-    root.getElementById('dec')!.addEventListener('click', () => {
-      this.count = this.math.decrement(this.count);
-    });
+    this.addListeners();
   }
 
   onChange(c: PropChanges) {
     console.log(c);
 
     this.update();
+  }
+
+  private addListeners() {
+    this.shadowRoot!.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+
+      switch (target.dataset.action) {
+        case 'inc':
+          this.count = this.math.increment(this.count);
+          break;
+
+        case 'dec':
+          this.count = this.math.decrement(this.count);
+          break;
+      }
+    });
   }
 
   private update() {
