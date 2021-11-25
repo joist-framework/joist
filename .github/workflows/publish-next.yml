@@ -26,5 +26,8 @@ jobs:
       - name: Lib Tests
         run: npx lerna run test
 
+      - name: Build Integration
+        run: npm run build
+
       - name: Publish
         run: npx lerna publish --canary --preid next.$(date +"%s") --yes
