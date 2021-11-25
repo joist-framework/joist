@@ -1,4 +1,0 @@
-{
-  "main": "../target/build/lib/observable.js",
-  "module": "../target/build/lib/observable.js"
-}

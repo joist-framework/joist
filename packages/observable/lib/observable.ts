@@ -28,7 +28,7 @@ export function observe() {
 }
 
 export function observable() {
-  return <T extends new (...args: any[]) => HTMLElement & OnChange>(CustomElement: T) => {
+  return <T extends new (...args: any[]) => OnChange>(CustomElement: T) => {
     const defs = readPropertyDefs(CustomElement);
 
     const props: Record<string, PropertyDescriptor> = {};

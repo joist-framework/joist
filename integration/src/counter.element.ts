@@ -1,5 +1,5 @@
 import { styled } from '@joist/element/styled';
-import { observable, observe, OnChange, PropChanges } from '@joist/element/observable';
+import { observable, observe, OnChange, PropChanges } from '@joist/observable';
 import { inject } from '@joist/di';
 import { injectable } from '@joist/di/dom';
 
