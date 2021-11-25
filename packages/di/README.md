@@ -23,7 +23,7 @@ class BarService {
   constructor(@inject(FooService) private foo: FooService) {}
 
   sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
+    return this.foo.sayHello();
   }
 }
 
