@@ -85,7 +85,7 @@ class FooService {
 }
 ```
 
-### Custom Elements
+## Custom Elements
 
 Joist DI was built with custom elements in mind and ships with a seperate DOM lib.
 
