@@ -12,8 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@joist/component": "file:packages/component",
-    "@joist/di": "file:packages/di",
-    "@joist/di-dom": "file:packages/di-dom"
+    "@joist/di": "file:packages/di"
   },
   "devDependencies": {
     "@open-wc/testing": "^3.0.3",

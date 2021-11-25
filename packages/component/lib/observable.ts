@@ -56,7 +56,7 @@ export function observable() {
         super(...args);
 
         for (let def in defs) {
-          Reflect.set(this, `$${def}`, Reflect.get(this, def));
+          Reflect.set(this, `__${def}`, Reflect.get(this, def));
 
           Object.defineProperties(this, props);
         }

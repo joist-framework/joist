@@ -1,7 +1,7 @@
 import { styled } from '@joist/component/styled';
 import { observable, observe, OnChange, PropChanges } from '@joist/component/observable';
 import { inject } from '@joist/di';
-import { injectable } from '@joist/di-dom';
+import { injectable } from '@joist/di/dom';
 
 import { MathService } from './math.service';
 
