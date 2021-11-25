@@ -3,18 +3,16 @@ import { styled } from './styled';
 
 describe('styled', () => {
   it('should apply style sheets to coonostructable stylesheets', () => {
-    @styled([
-      /*css*/ `
-        :host {
+    @styled({
+      styles: [
+        `:host {
           display: block;
-        }
-      `,
-      /*css*/ `
-        :host {
+        }`,
+        `:host {
           color: red;
-        }
-      `,
-    ])
+        }`,
+      ],
+    })
     class MyElement extends HTMLElement {
       constructor() {
         super();

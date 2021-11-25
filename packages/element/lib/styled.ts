@@ -1,7 +1,11 @@
 // Cache computed constructable stylesheets
 const ccStyleCache = new Map<string, CSSStyleSheet[]>();
 
-export function styled(styles: string[]) {
+export interface StyledOptons {
+  styles: string[];
+}
+
+export function styled({ styles }: StyledOptons) {
   return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
     return class StyledElement extends CustomElement {
       constructor(...args: any[]) {

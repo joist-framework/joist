@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/component": "file:packages/component",
+    "@joist/element": "file:packages/element",
     "@joist/di": "file:packages/di"
   },
   "devDependencies": {
