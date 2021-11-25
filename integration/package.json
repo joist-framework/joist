@@ -19,7 +19,7 @@
     "url": "https://github.com/deebloo/joist/issues"
   },
   "dependencies": {
-    "@joist/component": "file:../packages/component",
-    "@joist/di": "file:../packages/di"
+    "@joist/component": "^2.0.0",
+    "@joist/di": "^2.0.0"
   }
 }
