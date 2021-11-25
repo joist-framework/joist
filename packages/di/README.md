@@ -113,7 +113,7 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable } from '@joist/di-dom';
+import { defineEnvironment, injectable } from '@joist/di/dom';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
