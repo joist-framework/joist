@@ -32,27 +32,7 @@ const app = new Injector();
 app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
 ```
 
-```TS
-import { Injector, inject } from '@joist/di';
 
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-
-class BarService {
-  constructor(@inject(FooService) private foo: FooService) {}
-
-  sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
-  }
-}
-
-const app = new Injector();
-
-app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
-```
 
 #### Override A Service:
 
