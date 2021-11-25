@@ -11,7 +11,7 @@ npm i @joist/di
 #### Example:
 
 ```TS
-import { Injector } from '@joist/di';
+import { Injector, inject } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -20,9 +20,7 @@ class FooService {
 }
 
 class BarService {
-  static deps = [FooService];
-
-  constructor(private foo: FooService) {}
+  constructor(@inject(FooService) private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
