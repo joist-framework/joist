@@ -1,6 +1,6 @@
 # Di
 
-Dependency Injection in ~800 bytes. Can be used with and without decorators.
+Dependency Injection in ~800 bytes.
 
 #### Installation:
 
