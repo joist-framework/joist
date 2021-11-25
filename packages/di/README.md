@@ -88,6 +88,7 @@ class FooService {
 ## Custom Elements
 
 Joist DI was built with custom elements in mind and ships with a seperate DOM lib.
+Since the browser will be what initializes your custom elements we need to be able to tell the browser how to pass arguments.
 
 The `@injectable()` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
 
