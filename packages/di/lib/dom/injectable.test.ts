@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
-import { inject } from '@joist/di';
 
 import { injectable } from './injectable';
+import { inject } from '../inject';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps (decorator)', () => {

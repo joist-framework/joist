@@ -1,6 +1,7 @@
-import { Injector, Provider, readProviderDeps } from '@joist/di';
-
 import { getEnvironmentRef } from './environment';
+import { Injector } from '../injector';
+import { Provider } from '../provider';
+import { readProviderDeps } from '../utils';
 
 export interface InjectableConfig {
   providers: Provider<any>[];

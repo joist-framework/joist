@@ -36,14 +36,14 @@ export function observable() {
     for (let def in defs) {
       props[def] = {
         set(this: ObservableBase, val) {
-          const prevVal = Reflect.get(this, `$${def}`);
+          const prevVal = Reflect.get(this, `__${def}`);
 
           this.definePropChange(new PropChange(def, val, prevVal));
 
-          Reflect.set(this, `$${def}`, val);
+          Reflect.set(this, `__${def}`, val);
         },
         get() {
-          return Reflect.get(this, `$${def}`);
+          return Reflect.get(this, `__${def}`);
         },
       };
     }

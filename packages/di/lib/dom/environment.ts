@@ -1,4 +1,5 @@
-import { Injector, Provider } from '@joist/di';
+import { Injector } from '../injector';
+import { Provider } from '../provider';
 
 let rootInjector: Injector | null = null;
 
