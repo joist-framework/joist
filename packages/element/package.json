@@ -1,5 +1,5 @@
 {
-  "name": "@joist/component",
+  "name": "@joist/element",
   "version": "2.0.0",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",

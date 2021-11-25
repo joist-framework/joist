@@ -34,16 +34,18 @@ export function observable() {
     const props: Record<string, PropertyDescriptor> = {};
 
     for (let def in defs) {
+      const privateKey = createPrivateKey(def);
+
       props[def] = {
         set(this: ObservableBase, val) {
-          const prevVal = Reflect.get(this, `__${def}`);
+          const prevVal = Reflect.get(this, privateKey);
 
           this.definePropChange(new PropChange(def, val, prevVal));
 
-          Reflect.set(this, `__${def}`, val);
+          Reflect.set(this, privateKey, val);
         },
         get() {
-          return Reflect.get(this, `__${def}`);
+          return Reflect.get(this, privateKey);
         },
       };
     }
@@ -56,7 +58,7 @@ export function observable() {
         super(...args);
 
         for (let def in defs) {
-          Reflect.set(this, `__${def}`, Reflect.get(this, def));
+          Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
 
           Object.defineProperties(this, props);
         }
@@ -88,4 +90,8 @@ export function observable() {
       }
     };
   };
+}
+
+function createPrivateKey(key: string) {
+  return `__${key}`;
 }

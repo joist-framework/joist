@@ -19,36 +19,37 @@ export function styled(styles: string[]) {
             // adoptedStyleSheets are available
             if (!ccStyleCache.has(this.tagName)) {
               // if styles have not previously been computed do so now
-              ccStyleCache.set(this.tagName, styles.map(this.createStyleSheet));
+              ccStyleCache.set(this.tagName, styles.map(createStyleSheet));
             }
 
             // adpot calculated stylesheets
-
             this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
+
+            console.log('###', this.shadowRoot.adoptedStyleSheets);
           } else {
             // styles are defined but Constructable stylesheets not supported
-            const styleEls = styles.map(this.createStyleElement);
+            const styleEls = styles.map(createStyleElement);
 
             this.shadowRoot.prepend(...styleEls);
           }
         }
       }
-
-      createStyleSheet(styleString: string) {
-        const sheet = new CSSStyleSheet();
-
-        sheet.replaceSync(styleString);
-
-        return sheet;
-      }
-
-      createStyleElement(styles: string) {
-        const el = document.createElement('style');
-
-        el.append(document.createTextNode(styles));
-
-        return el;
-      }
     };
   };
+}
+
+function createStyleSheet(styleString: string) {
+  const sheet = new CSSStyleSheet();
+
+  sheet.replaceSync(styleString);
+
+  return sheet;
+}
+
+function createStyleElement(styles: string) {
+  const el = document.createElement('style');
+
+  el.append(document.createTextNode(styles));
+
+  return el;
 }
