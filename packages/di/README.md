@@ -75,16 +75,6 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 If you have nested injectors and you still want singleton instances mark your service as shown or decorate with `@service()`
 
 ```TS
-class FooService {
-  static providedInRoot = true;
-
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-```
-
-```TS
 import { service } from '@joist/di';
 
 @service()
