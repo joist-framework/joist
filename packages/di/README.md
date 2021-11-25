@@ -72,7 +72,7 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 
 #### Root Service
 
-If you have nested injectors and you still want singleton instances mark your service as shown or decorate with `@service()`
+If you have nested injectors and you want to make sure the same instance is provided to all decorate your service with `@service()`.
 
 ```TS
 import { service } from '@joist/di';
