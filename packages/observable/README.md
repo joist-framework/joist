@@ -21,7 +21,7 @@ class State implements OnChange {
 
   onChange(changes: Changes) {
     console.log(changes);
-    // { todos: { value: ['Build Shit'] }, userName: 'Danny Blue' }
+    // { todos: { value: ['Build Shit'] }, userName: { value: 'Danny Blue' } }
   }
 }
 
