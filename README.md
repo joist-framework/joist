@@ -10,8 +10,8 @@ This toolkit is here to help provide just the functionality you need and nothing
 
 ### Packages
 
-| Package                                  | Description                         |
-| ---------------------------------------- | ----------------------------------- |
-| [@joist/di](packages/di)                 | IOC container                       |
-| [@joist/observable](packages/observable) | Observe changes to class properties |
-| [@joist/styled](packages/styled)         | Apply styles to shadow dom          |
+| Package                                  | Description                                                           |
+| ---------------------------------------- | --------------------------------------------------------------------- |
+| [@joist/di](packages/di)                 | IOC container                                                         |
+| [@joist/observable](packages/observable) | Observe changes to class properties                                   |
+| [@joist/styled](packages/styled)         | Apply styles to shadow dom. (Constructable stylesheets with fallback) |
