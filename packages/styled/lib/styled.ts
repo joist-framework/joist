@@ -28,8 +28,6 @@ export function styled({ styles }: StyledOptons) {
 
             // adpot calculated stylesheets
             this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
-
-            console.log('###', this.shadowRoot.adoptedStyleSheets);
           } else {
             // styles are defined but Constructable stylesheets not supported
             const styleEls = styles.map(createStyleElement);

@@ -41,9 +41,9 @@ export function observable() {
 
         for (let def in defs) {
           Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
-
-          Object.defineProperties(this, props);
         }
+
+        Object.defineProperties(this, props);
       }
 
       definePropChange(key: string | symbol, propChange: Change): Promise<void> {
