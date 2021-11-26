@@ -1,120 +1,32 @@
-# Di
+# Observable
 
-Dependency Injection in ~800 bytes. Can be used with and without decorators.
+Observable in Joist means something slightly different then in something like RxJs.
+Marking a class with `@observable()` means that instances of that class will BE observable. This means you can watch for changes on select properties.s
 
 #### Installation:
 
 ```BASH
-npm i @joist/di
+npm i @joist/observable
 ```
 
 #### Example:
 
 ```TS
-import { Injector } from '@joist/di';
+import { observable, observer, OnChange, Changes } from '@joist/observable';
 
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
+@observable()
+class State implements OnChange {
+  @observe() todos: string[] = [];
+  @observe() userName?: string;
+
+  onChange(changes: Changes) {
+    console.log(changes);
+    // { todos: { value: ['Build Shit'] }, userName: 'Danny Blue' }
   }
 }
 
-class BarService {
-  static deps = [FooService];
+const state = new State();
 
-  constructor(private foo: FooService) {}
-
-  sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
-  }
-}
-
-const app = new Injector();
-
-app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
-```
-
-```TS
-import { Injector } from '@joist/di';
-import { inject } from '@joist/di/decorators';
-
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-
-class BarService {
-  constructor(@inject(FooService) private foo: FooService) {}
-
-  sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
-  }
-}
-
-const app = new Injector();
-
-app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
-```
-
-#### Override A Service:
-
-```TS
-import { Injector } from '@joist/di';
-import { inject } from '@joist/di/decorators';
-
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-
-class BarService {
-  constructor(@inject(FooService) private foo: FooService) {}
-
-  sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
-  }
-}
-
-// Override FooService with an alternate implementation
-const app = new Injector({
-  providers: [
-    {
-      provide: FooService,
-      use: class extends FooService {
-        sayHello() {
-          return 'IT HAS BEEN OVERRIDEN'
-        }
-      }
-    }
-  ]
-});
-
-app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRIDEN
-```
-
-#### Root Service
-
-If you have nested injectors and you still want singleton instances mark your service as shown or decorate with `@service()`
-
-```TS
-class FooService {
-  static providedInRoot = true;
-
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
-```
-
-```TS
-import { service } from '@joist/di/decorators';
-
-@service()
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
-}
+state.todos = [...state.todos, 'Build Shit'];
+state.userName = 'Danny Blue'
 ```

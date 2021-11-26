@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { OnChange, PropChanges, observable, observe } from './observable';
+import { OnChange, Changes, observable, observe } from './observable';
 
 describe('property', () => {
   it('should detect and batch property updates', (done) => {
@@ -8,8 +8,8 @@ describe('property', () => {
     class Counter implements OnChange {
       @observe() counter = 0;
 
-      onChange(val: PropChanges) {
-        expect(val.counter.newValue).to.equal(5);
+      onChange(val: Changes) {
+        expect(val.counter.value).to.equal(5);
 
         done();
       }
@@ -29,8 +29,8 @@ describe('property', () => {
     class MyEl extends HTMLElement implements OnChange {
       @observe() counter = 0;
 
-      onChange(val: PropChanges) {
-        expect(val.counter.newValue).to.equal(5);
+      onChange(val: Changes) {
+        expect(val.counter.value).to.equal(5);
 
         done();
       }
