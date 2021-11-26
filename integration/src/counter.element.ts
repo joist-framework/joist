@@ -1,5 +1,5 @@
 import { styled } from '@joist/element/styled';
-import { observable, observe, OnChange, PropChanges } from '@joist/observable';
+import { observable, observe, OnChange, Changes } from '@joist/observable';
 import { inject } from '@joist/di';
 import { injectable } from '@joist/di/dom';
 
@@ -53,7 +53,7 @@ export class CounterEement extends HTMLElement implements OnChange {
     this.addListeners();
   }
 
-  onChange(_: PropChanges) {
+  onChange(_: Changes) {
     this.update();
   }
 
