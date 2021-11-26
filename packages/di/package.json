@@ -6,13 +6,9 @@
   "exports": {
     ".": {
       "import": "./target/build/lib.js"
-    },
-    "./dom": {
-      "import": "./target/build/lib/dom.js"
     }
   },
   "files": [
-    "dom",
     "target/build"
   ],
   "sideEffects": false,

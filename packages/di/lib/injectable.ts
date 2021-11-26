@@ -1,7 +1,7 @@
 import { getEnvironmentRef } from './environment';
-import { Injector } from '../injector';
-import { Provider } from '../provider';
-import { readProviderDeps } from '../utils';
+import { Injector } from './injector';
+import { Provider } from './provider';
+import { readProviderDeps } from './utils';
 
 export interface InjectableConfig {
   providers: Provider<any>[];
@@ -9,7 +9,7 @@ export interface InjectableConfig {
 
 export interface Injectable {
   [key: string | symbol]: any;
-  new (...args: any[]): HTMLElement;
+  new (...args: any[]): any;
 }
 
 export function injectable({ providers }: InjectableConfig = { providers: [] }) {

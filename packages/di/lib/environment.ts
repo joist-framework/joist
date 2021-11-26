@@ -1,5 +1,5 @@
-import { Injector } from '../injector';
-import { Provider } from '../provider';
+import { Injector } from './injector';
+import { Provider } from './provider';
 
 let rootInjector: Injector | null = null;
 

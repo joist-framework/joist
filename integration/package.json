@@ -17,9 +17,5 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deebloo/joist/issues"
-  },
-  "dependencies": {
-    "@joist/component": "^2.0.0",
-    "@joist/di": "^2.0.0"
   }
 }

@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/element": "file:packages/element",
     "@joist/di": "file:packages/di",
-    "@joist/observable": "file:packages/observable"
+    "@joist/observable": "file:packages/observable",
+    "@joist/styled": "file:packages/styled"
   },
   "devDependencies": {
     "@open-wc/testing": "^3.0.3",

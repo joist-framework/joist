@@ -32,8 +32,6 @@ const app = new Injector();
 app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
 ```
 
-
-
 #### Override A Service:
 
 ```TS
@@ -87,16 +85,18 @@ class FooService {
 
 ## Custom Elements
 
-Joist DI was built with custom elements in mind and ships with a seperate DOM lib.
+Joist DI was built with custom elements in mind. Custom elements are an example where you do not have direct control over how your classes are instantiated.
+
 Since the browser will be what initializes your custom elements we need to be able to tell the browser how to pass arguments.
 
 The `@injectable()` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
 
+`@injectable()` is on required when you will not be able to manually create instances via an injector.
+
 #### Inject dependency into your custom element constructor
 
 ```TS
-import { inject, service } from '@joist/di';
-import { injectable } from '@joist/di/dom';
+import { inject, service, injectable } from '@joist/di';
 
 @service()
 class MyService {}
@@ -114,7 +114,7 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable } from '@joist/di/dom';
+import { defineEnvironment, injectable } from '@joist/di';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
