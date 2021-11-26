@@ -55,7 +55,7 @@ describe('property', () => {
     }
 
     @observable()
-    class AppState extends State implements OnChange {
+    class AppState extends State {
       @observe() counter = 0;
     }
 
