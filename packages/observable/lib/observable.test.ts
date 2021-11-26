@@ -48,16 +48,18 @@ describe('property', () => {
   });
 
   it('should detect and batch property updates with an EventEmitter', (done) => {
-    @observable()
     class State extends EventTarget implements OnChange {
-      @observe() counter = 0;
-
       onChange(val: Changes) {
         this.dispatchEvent(new CustomEvent('statechange', { detail: val }));
       }
     }
 
-    const state = new State();
+    @observable()
+    class AppState extends State implements OnChange {
+      @observe() counter = 0;
+    }
+
+    const state = new AppState();
 
     state.addEventListener('statechange', (e) => {
       const evt = e as CustomEvent<Changes>;
