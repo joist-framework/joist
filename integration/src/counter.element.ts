@@ -6,9 +6,9 @@ import { MathService } from './math.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
-  <button id="dec">-</button>
-  <span id="count"></span>
-  <button id="inc">+</button>
+  <button data-action="dec">-</button>
+  <span id="count">0</span>
+  <button data-action="inc">+</button>
 `;
 
 @injectable()
