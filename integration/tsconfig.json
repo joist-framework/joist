@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "target": "es2020",
     "noEmit": true
   },
   "include": ["src"]
