@@ -52,10 +52,9 @@ export class TodoCard extends LitElement {
     super();
 
     this.todos = this.todo.todos;
+    this.totalActive = this.getActiveTodoCount();
 
     this.todo.addEventListener('todochange', () => {
-      console.log(this.todo.todos);
-
       this.todos = this.todo.todos;
       this.totalActive = this.getActiveTodoCount();
     });

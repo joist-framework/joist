@@ -60,9 +60,11 @@ export class TodoCard extends HTMLElement implements OnChange {
         ${this.todo?.name}
       </div>
 
-      <button class="remove" @click="${() => this.dispatch('remove_todo')}">remove</button>
+      <button class="remove" @click="${() => this.dispatchEvent(new Event('remove_todo'))}">
+        remove
+      </button>
 
-      <button class="complete" @click="${() => this.dispatch('complete_todo')}">
+      <button class="complete" @click="${() => this.dispatchEvent(new Event('complete_todo'))}">
         ${this.todo?.status === TodoStatus.Active ? 'complete' : 'active'}
       </button>
     `;
@@ -70,10 +72,6 @@ export class TodoCard extends HTMLElement implements OnChange {
 
   private render() {
     render(this.template(), this.shadowRoot!);
-  }
-
-  private dispatch(name: string) {
-    this.dispatchEvent(new Event(name));
   }
 }
 
