@@ -1,16 +1,16 @@
-import { injectable } from '@joist/di';
+import { injectable, inject } from '@joist/di';
 import { styled } from '@joist/styled';
 import { observable, observe, OnChange } from '@joist/observable';
 import { render, html } from 'lit-html';
+import classNames from 'classnames';
 
-import { Todo, TodoStatus } from './todo.service';
+import { Todo, TodoStatus, TodoService } from './todo.service';
 
 @injectable()
 @observable()
 @styled({
   styles: [
-    /*css*/ `
-    :host {
+    `:host {
       align-items: center;
       display: flex;
       padding: 1rem;
@@ -42,8 +42,10 @@ import { Todo, TodoStatus } from './todo.service';
 export class TodoCard extends HTMLElement implements OnChange {
   @observe() todo?: Todo;
 
-  constructor() {
+  constructor(@inject(TodoService) service: TodoService) {
     super();
+
+    console.log(service);
 
     this.attachShadow({ mode: 'open' });
   }
@@ -57,8 +59,14 @@ export class TodoCard extends HTMLElement implements OnChange {
   }
 
   private template() {
+    if (!this.todo) {
+      return html``;
+    }
+
+    const { status } = this.todo;
+
     return html`
-      <div class="name${this.todo?.status === TodoStatus.Completed ? ' complete' : ''}">
+      <div class="${classNames('name', { complete: status === TodoStatus.Completed })}">
         ${this.todo?.name}
       </div>
 
@@ -67,7 +75,7 @@ export class TodoCard extends HTMLElement implements OnChange {
       </button>
 
       <button class="complete" @click="${() => this.dispatchEvent(new Event('complete_todo'))}">
-        ${this.todo?.status === TodoStatus.Active ? 'complete' : 'active'}
+        ${status === TodoStatus.Active ? 'complete' : 'active'}
       </button>
     `;
   }

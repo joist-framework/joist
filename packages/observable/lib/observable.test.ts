@@ -49,7 +49,8 @@ describe('property', () => {
   it('should let the user know when this is the first change', (done) => {
     @observable()
     class Counter implements OnChange {
-      @observe() counter = 0;
+      @observe() fname = '';
+      @observe() lname = '';
 
       private first = true;
 
@@ -57,10 +58,13 @@ describe('property', () => {
         console.log(val);
 
         if (this.first) {
-          expect(val.counter.firstChange).to.equal(true);
+          expect(val.fname.firstChange).to.equal(true);
+          expect(val.lname.firstChange).to.equal(true);
+
           this.first = false;
         } else {
-          expect(val.counter.firstChange).to.equal(false);
+          expect(val.fname.firstChange).to.equal(false);
+          expect(val.lname.firstChange).to.equal(false);
 
           done();
         }
@@ -69,14 +73,12 @@ describe('property', () => {
 
     const el = new Counter();
 
-    el.counter = el.counter + 1;
-    el.counter = el.counter + 1;
-    el.counter = el.counter + 1;
-    el.counter = el.counter + 1;
-    el.counter = el.counter + 1;
+    el.fname = 'Foo';
+    el.lname = 'Bar';
 
     setTimeout(() => {
-      el.counter = el.counter + 1;
+      el.fname = 'Foo-1';
+      el.lname = 'Bar-1';
     }, 0);
   });
 
