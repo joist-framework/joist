@@ -1,4 +1,4 @@
-# Observable
+# Styled
 
 Apply css to a shadow root. Will apply constructable stylesheets if available and fallback to `<style>` elements if not.
 
