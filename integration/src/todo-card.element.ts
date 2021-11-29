@@ -1,9 +1,11 @@
+import { injectable } from '@joist/di';
 import { styled } from '@joist/styled';
 import { observable, observe, OnChange } from '@joist/observable';
 import { render, html } from 'lit-html';
 
 import { Todo, TodoStatus } from './todo.service';
 
+@injectable()
 @observable()
 @styled({
   styles: [
