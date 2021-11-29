@@ -3,19 +3,21 @@ import { FASTElement, customElement, css, html, observable } from '@microsoft/fa
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
 
+const template = html<TodoForm>/*html*/ `
+  <form @submit=${(x, c) => x.onSubmit(c.event)}>
+    <input
+      :value=${(x) => x.value}
+      name="todo"
+      placeholder="What needs to be done?"
+      autocomplete="off"
+      autofocus
+    />
+  </form>
+`;
+
 @customElement({
   name: 'todo-form',
-  template: html<NameTag>`
-    <form @submit=${(x, c) => x.onSubmit(c.event)}>
-      <input
-        :value=${(x) => x.value}
-        name="todo"
-        placeholder="What needs to be done?"
-        autocomplete="off"
-        autofocus
-      />
-    </form>
-  `,
+  template,
   styles: css`
     :host {
       display: block;
@@ -62,7 +64,7 @@ import { TodoService, Todo, TodoStatus } from './todo.service';
   `,
 })
 @injectable()
-export class NameTag extends FASTElement {
+export class TodoForm extends FASTElement {
   @observable value: string = '';
 
   constructor(@inject(TodoService) private todo: TodoService) {
