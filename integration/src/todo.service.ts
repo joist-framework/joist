@@ -1,6 +1,8 @@
 import { service, inject } from '@joist/di';
 import { observable, observe, OnChange } from '@joist/observable';
 
+import { AppStorage } from './storage.service';
+
 export const enum TodoStatus {
   Active,
   Completed,
@@ -8,31 +10,6 @@ export const enum TodoStatus {
 
 export class Todo {
   constructor(public readonly name: string, public readonly status: TodoStatus) {}
-}
-
-@service()
-export class AppStorage {
-  loadJSON<T>(key: string): T | undefined {
-    try {
-      const res = localStorage.getItem(key);
-
-      if (res) {
-        return JSON.parse(res);
-      }
-    } catch {}
-
-    return undefined;
-  }
-
-  saveJSON<T extends object>(key: string, val: T): boolean {
-    try {
-      localStorage.setItem(key, JSON.stringify(val));
-
-      return true;
-    } catch {}
-
-    return false;
-  }
 }
 
 export class TodoChangeEvent extends Event {
