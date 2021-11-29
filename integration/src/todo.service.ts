@@ -60,6 +60,10 @@ export class TodoService extends EventTarget implements OnChange {
     });
   }
 
+  getStatusText({ status }: Todo) {
+    return status === TodoStatus.Active ? 'complete' : 'active';
+  }
+
   addTodo(todo: Todo) {
     this.todos = [...this.todos, todo];
   }

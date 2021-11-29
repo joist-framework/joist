@@ -42,10 +42,8 @@ import { Todo, TodoStatus, TodoService } from './todo.service';
 export class TodoCard extends HTMLElement implements OnChange {
   @observe() todo?: Todo;
 
-  constructor(@inject(TodoService) service: TodoService) {
+  constructor(@inject(TodoService) private service: TodoService) {
     super();
-
-    console.log(service);
 
     this.attachShadow({ mode: 'open' });
   }
@@ -60,22 +58,21 @@ export class TodoCard extends HTMLElement implements OnChange {
 
   private template() {
     if (!this.todo) {
-      return html``;
+      throw new Error(`Todo Object required to render a TodoCard`);
     }
 
     const { status } = this.todo;
+    const complete = status === TodoStatus.Completed;
 
     return html`
-      <div class="${classNames('name', { complete: status === TodoStatus.Completed })}">
-        ${this.todo?.name}
-      </div>
+      <div class="${classNames('name', { complete })}">${this.todo.name}</div>
 
       <button class="remove" @click="${() => this.dispatchEvent(new Event('remove_todo'))}">
         remove
       </button>
 
       <button class="complete" @click="${() => this.dispatchEvent(new Event('complete_todo'))}">
-        ${status === TodoStatus.Active ? 'complete' : 'active'}
+        ${this.service.getStatusText(this.todo)}
       </button>
     `;
   }
