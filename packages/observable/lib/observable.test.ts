@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { OnChange, Changes, observable, observe } from './observable';
+import { OnChange, Changes, observable, observe, Change } from './observable';
 
 describe('property', () => {
   it('should detect and batch property updates', (done) => {
@@ -9,7 +9,9 @@ describe('property', () => {
       @observe() counter = 0;
 
       onChange(val: Changes) {
+        expect(val.counter.previousValue).to.equal(0);
         expect(val.counter.value).to.equal(5);
+        expect(val.counter.firstChange).to.equal(true);
 
         done();
       }
@@ -24,6 +26,26 @@ describe('property', () => {
     el.counter = el.counter + 1;
   });
 
+  it('should detect and batch property updates for multiple properties', (done) => {
+    @observable()
+    class Person implements OnChange {
+      @observe() fname = 'Danny';
+      @observe() lname = 'Blue';
+
+      onChange(val: Changes) {
+        expect(val.fname).to.deep.equal(new Change('Foo', 'Danny', true));
+        expect(val.lname).to.deep.equal(new Change('Bar', 'Blue', true));
+
+        done();
+      }
+    }
+
+    const person = new Person();
+
+    person.fname = 'Foo';
+    person.lname = 'Bar';
+  });
+
   it('should let the user know when this is the first change', (done) => {
     @observable()
     class Counter implements OnChange {
@@ -32,6 +54,8 @@ describe('property', () => {
       private first = true;
 
       onChange(val: Changes) {
+        console.log(val);
+
         if (this.first) {
           expect(val.counter.firstChange).to.equal(true);
           this.first = false;

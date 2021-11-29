@@ -1,5 +1,5 @@
 export class Change<T = any> {
-  constructor(public value: T, public previousValue: T | undefined, public firstChange?: boolean) {}
+  constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
 }
 
 export type Changes = Record<string | symbol, Change>;
@@ -15,7 +15,7 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
 export interface ObservableBase {
   propChanges: Changes;
   propChange: Promise<void> | null;
-  firstChanges: Record<string | symbol, boolean>;
+  initializedChanges: Set<string | symbol>;
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
 }
 
@@ -36,7 +36,7 @@ export function observable() {
     return class ObservableElement extends CustomElement implements ObservableBase {
       propChanges: Changes = {};
       propChange: Promise<void> | null = null;
-      firstChanges: Record<string | symbol, boolean> = {};
+      initializedChanges = new Set<string | symbol>();
 
       constructor(...args: any[]) {
         super(...args);
@@ -49,20 +49,23 @@ export function observable() {
       }
 
       definePropChange(key: string | symbol, propChange: Change): Promise<void> {
-        this.propChanges[key] = propChange;
+        if (!this.propChanges[key]) {
+          this.propChanges[key] = propChange;
+        }
+
+        this.propChanges[key].value = propChange.value;
 
         if (!this.propChange) {
           // If there is no previous change defined set it up
           this.propChange = Promise.resolve().then(() => {
             // run onPropChanges here. This makes sure we capture all changes
 
-            if (!this.firstChanges[key]) {
-              this.firstChanges[key] = true;
-            } else {
-              this.firstChanges[key] = false;
-            }
+            // keep track of whether or not this is the first time a given property has changes
+            for (let change in this.propChanges) {
+              this.propChanges[change].firstChange = !this.initializedChanges.has(change);
 
-            this.propChanges[key].firstChange = this.firstChanges[key];
+              this.initializedChanges.add(change);
+            }
 
             if (this.onChange) {
               this.onChange(this.propChanges);
@@ -96,7 +99,7 @@ function createPropertyDescripors(
       set(this: ObservableBase, val) {
         const prevVal = Reflect.get(this, privateKey);
 
-        this.definePropChange(def, new Change(val, prevVal));
+        this.definePropChange(def, new Change(val, prevVal, true));
 
         Reflect.set(this, privateKey, val);
       },
