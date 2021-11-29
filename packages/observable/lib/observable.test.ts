@@ -24,6 +24,38 @@ describe('property', () => {
     el.counter = el.counter + 1;
   });
 
+  it('should let the user know when this is the first change', (done) => {
+    @observable()
+    class Counter implements OnChange {
+      @observe() counter = 0;
+
+      private first = true;
+
+      onChange(val: Changes) {
+        if (this.first) {
+          expect(val.counter.firstChange).to.equal(true);
+          this.first = false;
+        } else {
+          expect(val.counter.firstChange).to.equal(false);
+
+          done();
+        }
+      }
+    }
+
+    const el = new Counter();
+
+    el.counter = el.counter + 1;
+    el.counter = el.counter + 1;
+    el.counter = el.counter + 1;
+    el.counter = el.counter + 1;
+    el.counter = el.counter + 1;
+
+    setTimeout(() => {
+      el.counter = el.counter + 1;
+    }, 0);
+  });
+
   it('should detect and batch property updates with a custom element', (done) => {
     @observable()
     class MyEl extends HTMLElement implements OnChange {

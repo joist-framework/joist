@@ -1,5 +1,5 @@
 export class Change<T = any> {
-  constructor(public value: T, public previousValue?: T) {}
+  constructor(public value: T, public previousValue: T | undefined, public firstChange?: boolean) {}
 }
 
 export type Changes = Record<string | symbol, Change>;
@@ -15,6 +15,7 @@ export function readPropertyDefs(c: any): Record<string | symbol, {}> {
 export interface ObservableBase {
   propChanges: Changes;
   propChange: Promise<void> | null;
+  firstChanges: Record<string | symbol, boolean>;
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
 }
 
@@ -35,6 +36,7 @@ export function observable() {
     return class ObservableElement extends CustomElement implements ObservableBase {
       propChanges: Changes = {};
       propChange: Promise<void> | null = null;
+      firstChanges: Record<string | symbol, boolean> = {};
 
       constructor(...args: any[]) {
         super(...args);
@@ -53,6 +55,14 @@ export function observable() {
           // If there is no previous change defined set it up
           this.propChange = Promise.resolve().then(() => {
             // run onPropChanges here. This makes sure we capture all changes
+
+            if (!this.firstChanges[key]) {
+              this.firstChanges[key] = true;
+            } else {
+              this.firstChanges[key] = false;
+            }
+
+            this.propChanges[key].firstChange = this.firstChanges[key];
 
             if (this.onChange) {
               this.onChange(this.propChanges);
