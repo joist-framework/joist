@@ -11,17 +11,18 @@ npm i @joist/styled
 #### Example:
 
 ```TS
-import { styled } from '@joist/styled';
+import { styled, css } from '@joist/styled';
 
-@styled({
-  styled: [
-    `:host {
-      display: block;
-      color: red;
-    }`
-  ]
-})
+@styled
 export class MyElement extends HTMLElement {
+  static styles = [
+    css`
+      :host {
+        display: block;
+        color: red;
+      }
+    `
+  ]
   constructor() {
     this.attachShadow({ mode: 'open' });
   }
