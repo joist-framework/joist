@@ -1,4 +1,4 @@
-import { CSSResult } from './css.tag';
+import { CSSResult } from './css-tag';
 
 // Cache computed constructable stylesheets
 const ccStyleCache = new Map<string, CSSStyleSheet[]>();
