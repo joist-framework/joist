@@ -1,3 +1,5 @@
+import { CSSResult } from './css.tag';
+
 // Cache computed constructable stylesheets
 const ccStyleCache = new Map<string, CSSStyleSheet[]>();
 
@@ -6,7 +8,7 @@ export interface StyledOptons {
 }
 
 export interface Styled {
-  styles: string[];
+  styles: CSSResult[];
 
   new (...args: any[]): HTMLElement;
 }
@@ -46,18 +48,18 @@ export function styled<T extends Styled>(CustomElement: T) {
   };
 }
 
-function createStyleSheet(styleString: string) {
+function createStyleSheet(styleString: CSSResult) {
   const sheet = new CSSStyleSheet();
 
-  sheet.replaceSync(styleString);
+  sheet.replaceSync(styleString.cssText);
 
   return sheet;
 }
 
-function createStyleElement(styles: string) {
+function createStyleElement(styles: CSSResult) {
   const el = document.createElement('style');
 
-  el.append(document.createTextNode(styles));
+  el.append(document.createTextNode(styles.cssText));
 
   return el;
 }

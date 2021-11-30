@@ -1,5 +1,5 @@
 import { injectable } from '@joist/di';
-import { styled } from '@joist/styled';
+import { styled, css } from '@joist/styled';
 import { observable, observe, OnChange } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
@@ -13,34 +13,35 @@ export class TodoCard extends HTMLElement implements OnChange {
   static deps = [TodoService];
 
   static styles = [
-    /*css*/ `
-    :host {
-      align-items: center;
-      display: flex;
-      padding: 1rem;
-    }
+    css`
+      :host {
+        align-items: center;
+        display: flex;
+        padding: 1rem;
+      }
 
-    .name {
-      flex-grow: 1;
-    }
-    
-    .name.complete {
-      text-decoration: line-through;
-      opacity: .5;
-    }
-    
-    button {
-      border: none;
-      color: cornflowerblue;
-      cursor: pointer;
-      font-size: 1rem;
-      background: none;
-      margin-left: .5rem;
-    }
+      .name {
+        flex-grow: 1;
+      }
 
-    button.remove {
-      color: darkred;
-    }`,
+      .name.complete {
+        text-decoration: line-through;
+        opacity: 0.5;
+      }
+
+      button {
+        border: none;
+        color: cornflowerblue;
+        cursor: pointer;
+        font-size: 1rem;
+        background: none;
+        margin-left: 0.5rem;
+      }
+
+      button.remove {
+        color: darkred;
+      }
+    `,
   ];
 
   @observe todo?: Todo;

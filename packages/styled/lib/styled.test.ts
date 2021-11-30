@@ -1,4 +1,6 @@
 import { expect } from '@open-wc/testing';
+
+import { css } from './css.tag';
 import { styled } from './styled';
 
 describe('styled', () => {
@@ -6,12 +8,12 @@ describe('styled', () => {
     @styled
     class MyElement extends HTMLElement {
       static styles = [
-        /*css*/ `
+        css`
           :host {
-            display: block;
+            display: ${css`block`};
           }
         `,
-        /*css*/ `
+        css`
           :host {
             color: red;
           }
