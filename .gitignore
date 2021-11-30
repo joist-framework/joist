@@ -4,6 +4,7 @@
 **/.nyc_output
 **/.cache
 **/*.d.ts
+!**/vite-env.d.ts
 
 # dependencies
 **/node_modules/
