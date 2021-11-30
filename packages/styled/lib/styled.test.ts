@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { css } from './css.tag';
+import { css } from './css-tag';
 import { styled } from './styled';
 
 describe('styled', () => {
