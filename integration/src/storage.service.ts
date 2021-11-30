@@ -1,6 +1,6 @@
 import { service } from '@joist/di';
 
-@service()
+@service
 export class AppStorage {
   loadJSON<T>(key: string): T | undefined {
     try {

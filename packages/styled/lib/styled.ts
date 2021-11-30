@@ -5,38 +5,44 @@ export interface StyledOptons {
   styles: string[];
 }
 
-export function styled({ styles }: StyledOptons) {
-  return <T extends new (...args: any[]) => HTMLElement>(CustomElement: T) => {
-    return class StyledElement extends CustomElement {
-      constructor(...args: any[]) {
-        super(...args);
+export interface Styled {
+  styles: string[];
 
-        this.applyStyles();
-      }
+  new (...args: any[]): HTMLElement;
+}
 
-      /**
-       * Apply styles using Constructable StyleSheets if supported.
-       */
-      applyStyles() {
-        if (styles && this.shadowRoot) {
-          if (this.shadowRoot.adoptedStyleSheets) {
-            // adoptedStyleSheets are available
-            if (!ccStyleCache.has(this.tagName)) {
-              // if styles have not previously been computed do so now
-              ccStyleCache.set(this.tagName, styles.map(createStyleSheet));
-            }
+export function styled<T extends Styled>(CustomElement: T) {
+  const styles = CustomElement.styles;
 
-            // adpot calculated stylesheets
-            this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
-          } else {
-            // styles are defined but Constructable stylesheets not supported
-            const styleEls = styles.map(createStyleElement);
+  return class StyledElement extends CustomElement {
+    constructor(...args: any[]) {
+      super(...args);
 
-            this.shadowRoot.prepend(...styleEls);
+      this.applyStyles();
+    }
+
+    /**
+     * Apply styles using Constructable StyleSheets if supported.
+     */
+    applyStyles() {
+      if (styles && this.shadowRoot) {
+        if (this.shadowRoot.adoptedStyleSheets) {
+          // adoptedStyleSheets are available
+          if (!ccStyleCache.has(this.tagName)) {
+            // if styles have not previously been computed do so now
+            ccStyleCache.set(this.tagName, styles.map(createStyleSheet));
           }
+
+          // adpot calculated stylesheets
+          this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
+        } else {
+          // styles are defined but Constructable stylesheets not supported
+          const styleEls = styles.map(createStyleElement);
+
+          this.shadowRoot.prepend(...styleEls);
         }
       }
-    };
+    }
   };
 }
 

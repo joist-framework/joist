@@ -1,15 +1,18 @@
 import { expect } from '@open-wc/testing';
 
 import { injectable } from './injectable';
-import { inject } from './inject';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps (decorator)', () => {
     class Foo {}
 
-    @injectable()
+    class Bar {}
+
+    @injectable
     class MyElement extends HTMLElement {
-      constructor(@inject(Foo) public foo: Foo) {
+      static deps = [Foo, Bar];
+
+      constructor(public foo: Foo, public bar: Bar) {
         super();
       }
     }
@@ -25,16 +28,14 @@ describe('@injectable()', () => {
     class Foo {}
 
     class MyElement extends HTMLElement {
-      static get deps() {
-        return [Foo];
-      }
+      static deps = [Foo];
 
       constructor(public foo: Foo) {
         super();
       }
     }
 
-    customElements.define('injectable-2', injectable()(MyElement));
+    customElements.define('injectable-2', injectable(MyElement));
 
     const el = document.createElement('injectable-2') as MyElement;
 
@@ -46,9 +47,11 @@ describe('@injectable()', () => {
 
     class Bar extends Foo {}
 
-    @injectable()
+    @injectable
     class MyElement extends HTMLElement {
-      constructor(@inject(Foo) public foo: Foo) {
+      static deps = [Foo];
+
+      constructor(public foo: Foo) {
         super();
       }
     }
@@ -56,6 +59,28 @@ describe('@injectable()', () => {
     customElements.define('injectable-3', MyElement);
 
     const el = new MyElement(new Bar());
+
+    expect(el.foo).to.be.instanceOf(Bar);
+  });
+
+  it('should locally override a provider', () => {
+    class Foo {}
+
+    class Bar extends Foo {}
+
+    @injectable
+    class MyElement extends HTMLElement {
+      static deps = [Foo];
+      static providers = [{ provide: Foo, use: Bar }];
+
+      constructor(public foo: Foo) {
+        super();
+      }
+    }
+
+    customElements.define('injectable-4', MyElement);
+
+    const el = document.createElement('injectable-4') as MyElement;
 
     expect(el.foo).to.be.instanceOf(Bar);
   });

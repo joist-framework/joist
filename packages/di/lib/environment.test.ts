@@ -4,7 +4,6 @@ import { getEnvironmentRef, clearEnvironment } from './environment';
 import { injectable } from './injectable';
 import { Injector } from './injector';
 import { service } from './service';
-import { inject } from './inject';
 
 describe('environment', () => {
   afterEach(clearEnvironment);
@@ -14,12 +13,14 @@ describe('environment', () => {
   });
 
   it('should use the root injector when creating services', () => {
-    @service()
+    @service
     class MyService {}
 
-    @injectable()
+    @injectable
     class MyElement extends HTMLElement {
-      constructor(@inject(MyService) public my: MyService) {
+      static deps = [MyService];
+
+      constructor(public my: MyService) {
         super();
       }
     }

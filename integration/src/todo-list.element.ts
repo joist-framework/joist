@@ -1,12 +1,13 @@
-import { injectable, inject } from '@joist/di';
+import { injectable } from '@joist/di';
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
 
 @customElement('todo-list')
-@injectable()
+@injectable
 export class TodoCard extends LitElement {
+  static deps = [TodoService];
   static styles = css`
     :host {
       display: block;
@@ -48,7 +49,7 @@ export class TodoCard extends LitElement {
   @state() private todos: Todo[] = [];
   @state() private totalActive = 0;
 
-  constructor(@inject(TodoService) private todo: TodoService) {
+  constructor(private todo: TodoService) {
     super();
 
     this.todos = this.todo.todos;

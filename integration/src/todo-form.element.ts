@@ -1,4 +1,4 @@
-import { injectable, inject } from '@joist/di';
+import { injectable } from '@joist/di';
 import { FASTElement, customElement, css, html, observable } from '@microsoft/fast-element';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
@@ -63,11 +63,13 @@ const template = html<TodoForm>/*html*/ `
     }
   `,
 })
-@injectable()
+@injectable
 export class TodoForm extends FASTElement {
+  static deps = [TodoService];
+
   @observable value: string = '';
 
-  constructor(@inject(TodoService) private todo: TodoService) {
+  constructor(private todo: TodoService) {
     super();
   }
 

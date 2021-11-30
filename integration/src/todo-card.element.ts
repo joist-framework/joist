@@ -1,4 +1,4 @@
-import { injectable, inject } from '@joist/di';
+import { injectable } from '@joist/di';
 import { styled } from '@joist/styled';
 import { observable, observe, OnChange } from '@joist/observable';
 import { render, html } from 'lit-html';
@@ -6,11 +6,15 @@ import classNames from 'classnames';
 
 import { Todo, TodoStatus, TodoService } from './todo.service';
 
-@injectable()
-@observable()
-@styled({
-  styles: [
-    `:host {
+@injectable
+@observable
+@styled
+export class TodoCard extends HTMLElement implements OnChange {
+  static deps = [TodoService];
+
+  static styles = [
+    /*css*/ `
+    :host {
       align-items: center;
       display: flex;
       padding: 1rem;
@@ -37,12 +41,11 @@ import { Todo, TodoStatus, TodoService } from './todo.service';
     button.remove {
       color: darkred;
     }`,
-  ],
-})
-export class TodoCard extends HTMLElement implements OnChange {
-  @observe() todo?: Todo;
+  ];
 
-  constructor(@inject(TodoService) private service: TodoService) {
+  @observe todo?: Todo;
+
+  constructor(private service: TodoService) {
     super();
 
     this.attachShadow({ mode: 'open' });

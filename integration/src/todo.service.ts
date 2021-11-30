@@ -1,4 +1,4 @@
-import { service, inject } from '@joist/di';
+import { service, injectable } from '@joist/di';
 import { observable, observe, OnChange } from '@joist/observable';
 
 import { AppStorage } from './storage.service';
@@ -18,12 +18,15 @@ export class TodoChangeEvent extends Event {
   }
 }
 
-@service()
-@observable()
+@service
+@observable
+@injectable
 export class TodoService extends EventTarget implements OnChange {
-  @observe() todos: Todo[] = [];
+  static deps = [AppStorage];
 
-  constructor(@inject(AppStorage) private store: AppStorage) {
+  @observe todos: Todo[] = [];
+
+  constructor(private store: AppStorage) {
     super();
 
     const stored = this.store.loadJSON<Todo[]>('joist_todo');

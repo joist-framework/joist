@@ -21,65 +21,61 @@ export interface ObservableBase {
 
 const PROPERTY_KEY = 'properties';
 
-export function observe() {
-  return function (target: any, key: string) {
-    target[PROPERTY_KEY] = target[PROPERTY_KEY] || {};
-    target[PROPERTY_KEY][key] = {};
-  };
+export function observe(target: any, key: string) {
+  target[PROPERTY_KEY] = target[PROPERTY_KEY] || {};
+  target[PROPERTY_KEY][key] = {};
 }
 
-export function observable() {
-  return <T extends new (...args: any[]) => any>(CustomElement: T) => {
-    const defs = readPropertyDefs(CustomElement);
-    const props = createPropertyDescripors(defs);
+export function observable<T extends new (...args: any[]) => any>(CustomElement: T) {
+  const defs = readPropertyDefs(CustomElement);
+  const props = createPropertyDescripors(defs);
 
-    return class ObservableElement extends CustomElement implements ObservableBase {
-      propChanges: Changes = {};
-      propChange: Promise<void> | null = null;
-      initializedChanges = new Set<string | symbol>();
+  return class ObservableElement extends CustomElement implements ObservableBase {
+    propChanges: Changes = {};
+    propChange: Promise<void> | null = null;
+    initializedChanges = new Set<string | symbol>();
 
-      constructor(...args: any[]) {
-        super(...args);
+    constructor(...args: any[]) {
+      super(...args);
 
-        for (let def in defs) {
-          Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
-        }
-
-        Object.defineProperties(this, props);
+      for (let def in defs) {
+        Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
       }
 
-      definePropChange(key: string | symbol, propChange: Change): Promise<void> {
-        if (!this.propChanges[key]) {
-          this.propChanges[key] = propChange;
-        }
+      Object.defineProperties(this, props);
+    }
 
-        this.propChanges[key].value = propChange.value;
-
-        if (!this.propChange) {
-          // If there is no previous change defined set it up
-          this.propChange = Promise.resolve().then(() => {
-            // run onPropChanges here. This makes sure we capture all changes
-
-            // keep track of whether or not this is the first time a given property has changes
-            for (let change in this.propChanges) {
-              this.propChanges[change].firstChange = !this.initializedChanges.has(change);
-
-              this.initializedChanges.add(change);
-            }
-
-            if (this.onChange) {
-              this.onChange(this.propChanges);
-            }
-
-            // reset for next time
-            this.propChanges = {};
-            this.propChange = null;
-          });
-        }
-
-        return this.propChange;
+    definePropChange(key: string | symbol, propChange: Change): Promise<void> {
+      if (!this.propChanges[key]) {
+        this.propChanges[key] = propChange;
       }
-    };
+
+      this.propChanges[key].value = propChange.value;
+
+      if (!this.propChange) {
+        // If there is no previous change defined set it up
+        this.propChange = Promise.resolve().then(() => {
+          // run onPropChanges here. This makes sure we capture all changes
+
+          // keep track of whether or not this is the first time a given property has changes
+          for (let change in this.propChanges) {
+            this.propChanges[change].firstChange = !this.initializedChanges.has(change);
+
+            this.initializedChanges.add(change);
+          }
+
+          if (this.onChange) {
+            this.onChange(this.propChanges);
+          }
+
+          // reset for next time
+          this.propChanges = {};
+          this.propChange = null;
+        });
+      }
+
+      return this.propChange;
+    }
   };
 }
 

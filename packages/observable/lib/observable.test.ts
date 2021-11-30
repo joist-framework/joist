@@ -2,11 +2,11 @@ import { expect } from '@open-wc/testing';
 
 import { OnChange, Changes, observable, observe, Change } from './observable';
 
-describe('property', () => {
+describe('observable', () => {
   it('should detect and batch property updates', (done) => {
-    @observable()
+    @observable
     class Counter implements OnChange {
-      @observe() counter = 0;
+      @observe counter = 0;
 
       onChange(val: Changes) {
         expect(val.counter.previousValue).to.equal(0);
@@ -27,10 +27,10 @@ describe('property', () => {
   });
 
   it('should detect and batch property updates for multiple properties', (done) => {
-    @observable()
+    @observable
     class Person implements OnChange {
-      @observe() fname = 'Danny';
-      @observe() lname = 'Blue';
+      @observe fname = 'Danny';
+      @observe lname = 'Blue';
 
       onChange(val: Changes) {
         expect(val.fname).to.deep.equal(new Change('Foo', 'Danny', true));
@@ -47,10 +47,10 @@ describe('property', () => {
   });
 
   it('should let the user know when this is the first change', (done) => {
-    @observable()
+    @observable
     class Counter implements OnChange {
-      @observe() fname = '';
-      @observe() lname = '';
+      @observe fname = '';
+      @observe lname = '';
 
       private first = true;
 
@@ -83,9 +83,9 @@ describe('property', () => {
   });
 
   it('should detect and batch property updates with a custom element', (done) => {
-    @observable()
+    @observable
     class MyEl extends HTMLElement implements OnChange {
-      @observe() counter = 0;
+      @observe counter = 0;
 
       onChange(val: Changes) {
         expect(val.counter.value).to.equal(5);
@@ -112,9 +112,9 @@ describe('property', () => {
       }
     }
 
-    @observable()
+    @observable
     class AppState extends State {
-      @observe() counter = 0;
+      @observe counter = 0;
     }
 
     const state = new AppState();

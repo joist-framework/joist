@@ -1,7 +1,6 @@
 import { expect } from '@open-wc/testing';
 
 import { service } from './service';
-import { inject } from './inject';
 import { Injector } from './injector';
 import { ProviderToken } from './provider';
 
@@ -26,14 +25,13 @@ describe('Injector', () => {
     }
 
     class MyService {
+      static deps = [FooService, BarService];
+
       get value() {
         return this.foo.foo + this.bar.bar;
       }
 
-      constructor(
-        @inject(FooService) private foo: FooService,
-        @inject(BarService) private bar: BarService
-      ) {}
+      constructor(private foo: FooService, private bar: BarService) {}
     }
 
     const app = new Injector();
@@ -49,7 +47,9 @@ describe('Injector', () => {
     }
 
     class B {
-      constructor(@inject(A) private a: A) {}
+      static deps = [A];
+
+      constructor(private a: A) {}
 
       sayHello() {
         return this.a.sayHello() + '|';
@@ -57,7 +57,9 @@ describe('Injector', () => {
     }
 
     class C {
-      constructor(@inject(A) private a: A, @inject(B) private b: B) {}
+      static deps = [A, B];
+
+      constructor(private a: A, private b: B) {}
 
       sayHello() {
         return this.a.sayHello() + '|' + this.b.sayHello();
@@ -65,7 +67,9 @@ describe('Injector', () => {
     }
 
     class D {
-      constructor(@inject(A) private a: A, @inject(B) private b: B, @inject(C) private c: C) {}
+      static deps = [A, B, C];
+
+      constructor(private a: A, private b: B, private c: C) {}
 
       sayHello() {
         return this.a.sayHello() + '|' + this.b.sayHello() + this.c.sayHello();
@@ -73,7 +77,9 @@ describe('Injector', () => {
     }
 
     class E {
-      constructor(@inject(D) private d: D) {}
+      static deps = [D];
+
+      constructor(private d: D) {}
 
       sayHello() {
         return this.d.sayHello() + '|';
@@ -91,7 +97,9 @@ describe('Injector', () => {
     }
 
     class FooService {
-      constructor(@inject(BarService) private bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(private bar: BarService) {}
 
       sayHello() {
         return this.bar.foo;
@@ -140,7 +148,9 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@inject(BarService) public bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(public bar: BarService) {}
     }
 
     const app = new Injector();
@@ -152,7 +162,9 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@inject(BarService) public bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(public bar: BarService) {}
     }
 
     const app = new Injector();
@@ -164,7 +176,9 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@inject(BarService) public bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(public bar: BarService) {}
     }
 
     const parent = new Injector();
@@ -180,7 +194,9 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      constructor(@inject(BarService) public bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(public bar: BarService) {}
     }
 
     const parent = new Injector();
@@ -223,35 +239,14 @@ describe('Injector', () => {
     expect(app.get(MyService).sayHello()).to.equal('TESTING');
   });
 
-  it('should world with custom decortors', () => {
-    class MyFirstService {
-      sayHello() {
-        return 'TESTING';
-      }
-    }
-
-    const MyFirst = () => (c: ProviderToken<any>, k: string, i: number) =>
-      inject(MyFirstService)(c, k, i);
-
-    class MyService {
-      constructor(@MyFirst() private test: MyFirstService) {}
-
-      sayHello(): string {
-        return 'HELLO WORLD ' + this.test.sayHello();
-      }
-    }
-
-    const app = new Injector();
-
-    expect(app.get(MyService).sayHello()).to.equal('HELLO WORLD TESTING');
-  });
-
   it('should use the root Injector if specified', () => {
-    @service()
+    @service
     class BarService {}
 
     class FooService {
-      constructor(@inject(BarService) public bar: BarService) {}
+      static deps = [BarService];
+
+      constructor(public bar: BarService) {}
     }
 
     const parent = new Injector();

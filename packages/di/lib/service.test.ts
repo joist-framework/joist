@@ -4,7 +4,7 @@ import { service } from './service';
 import { isProvidedInRoot } from '../lib/utils';
 
 describe('Service', () => {
-  @service()
+  @service
   class A {}
 
   class B {}
