@@ -14,11 +14,11 @@ npm i @joist/observable
 ```TS
 import { observable, observer, OnChange, Changes } from '@joist/observable';
 
-@observable()
+@observable
 class State implements OnChange {
   // Changes to these will trigger callback
-  @observe() todos: string[] = [];
-  @observe() userName?: string;
+  @observe todos: string[] = [];
+  @observe userName?: string;
 
   // changes to this will not
   someValue: boolean = false;
@@ -48,11 +48,11 @@ class StateChangeEvent extends Event {
   }
 }
 
-@observable()
+@observable
 class State extends EventTarget implements OnChange {
   // Changes to these will trigger callback
-  @observe() todos: string[] = [];
-  @observe() userName?: string;
+  @observe todos: string[] = [];
+  @observe userName?: string;
 
   // changes to this will not
   someValue: boolean = false;
