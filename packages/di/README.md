@@ -11,7 +11,7 @@ npm i @joist/di
 #### Example:
 
 ```TS
-import { Injector, inject } from '@joist/di';
+import { Injector } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -20,7 +20,9 @@ class FooService {
 }
 
 class BarService {
-  constructor(@inject(FooService) private foo: FooService) {}
+  static deps = [FooService];
+
+  constructor(private foo: FooService) {}
 
   sayHello() {
     return this.foo.sayHello();
@@ -44,7 +46,9 @@ class FooService {
 }
 
 class BarService {
-  constructor(@inject(FooService) private foo: FooService) {}
+  static deps = [FooService];
+
+  constructor(private foo: FooService) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo.sayHello();
@@ -75,7 +79,7 @@ If you have nested injectors and you want to make sure the same instance is prov
 ```TS
 import { service } from '@joist/di';
 
-@service()
+@service
 class FooService {
   sayHello() {
     return 'Hello From FooService';
@@ -89,21 +93,23 @@ Joist DI was built with custom elements in mind. Custom elements are an example 
 
 Since the browser will be what initializes your custom elements we need to be able to tell the browser how to pass arguments.
 
-The `@injectable()` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
+The `@injectable` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
 
-`@injectable()` is on required when you will not be able to manually create instances via an injector.
+`@injectable` is on required when you will not be able to manually create instances via an injector.
 
 #### Inject dependency into your custom element constructor
 
 ```TS
 import { inject, service, injectable } from '@joist/di';
 
-@service()
+@service
 class MyService {}
 
-@injectable()
+@injectable
 class MyElement extends HTMLElement {
-  constructor(@inject(MyService) public myService: MyService) {}
+  static deps = [MyService];
+
+  constructor(public myService: MyService) {}
 }
 
 customElements.define('my-element', MyElement);
@@ -129,9 +135,11 @@ defineEnvironment([
   }
 ]);
 
-@injectable()
+@injectable
 class MyElement extends HTMLElement {
-  constructor(@inject(Config) config: Config) {
+  static deps = [Config];
+
+  constructor(config: Config) {
     console.log(config.apiUrl); // http://real-api/api/
   }
 }
