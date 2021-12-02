@@ -1,7 +1,7 @@
 # Observable
 
 Observable in Joist means something slightly different then in something like RxJs.
-Marking a class with `@observable()` means that instances of that class will BE observable. This means you can watch for changes on select properties.s
+Decorating a class with `@observable` means that instances of that class will BE observable. This means you can watch for changes on select properties.s
 
 #### Installation:
 
