@@ -1,0 +1,10 @@
+{
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "groupName": "@web/test-runner packages",
+      "packagePatterns": ["^@web"],
+      "enabled": true
+    }
+  ]
+}
