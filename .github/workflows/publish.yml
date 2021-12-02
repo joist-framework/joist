@@ -30,4 +30,4 @@ jobs:
         run: npm run build
 
       - name: Publish
-        run: npx lerna publish --canary --preid canary --dist-tag canary --yes
+        run: npx lerna publish --canary --preid canary.$(date +"%s") --dist-tag canary --yes
