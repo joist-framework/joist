@@ -4,7 +4,7 @@ NOTE: This branch contains the next available version (2.0.0) and is available u
 
 A foundation for libraries and applications.
 
-[Try it out with Vite and Stackblitz!](https://stackblitz.com/github/joist-framework/starter-app-vite)
+[Try it out with Vite and Stackblitz!](https://stackblitz.com/github/joist-framework/starter-app-vite/tree/main)
 
 When you have to integrate with many different applications, many different framework with many different technologies you need a toolkit to help.
 From SalesForce to ServiceNow to React you need to write JavaScript/TypeScript and you need tools to help.
