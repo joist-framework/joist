@@ -1,5 +1,7 @@
 # Joist
 
+NOTE: This branch contains the next available version (2.0.0) and is available under the "canary" tag
+
 A foundation for libraries and applications.
 
 When you have to integrate with many different applications, many different framework with many different technologies you need a toolkit to help.
