@@ -28,6 +28,3 @@ jobs:
 
       - name: Build Integration
         run: npm run build
-
-      - name: Publish
-        run: npx lerna publish --canary --preid canary.$(date +"%s") --yes
