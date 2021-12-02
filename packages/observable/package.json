@@ -12,20 +12,19 @@
     "target/build"
   ],
   "sideEffects": false,
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "Create objects with observable properties",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/joist.git"
+    "url": "git+https://github.com/joist-framework/joist.git"
   },
   "keywords": [
     "TypeScript",
-    "DI",
-    "Dependency Injection"
+    "Observable"
   ],
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/joist/issues"
+    "url": "https://github.com/joist-framework/joist/issues"
   },
   "publishConfig": {
     "access": "public"

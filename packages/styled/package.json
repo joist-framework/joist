@@ -6,12 +6,6 @@
   "exports": {
     ".": {
       "import": "./target/build/lib.js"
-    },
-    "./observable": {
-      "import": "./target/build/lib/observable.js"
-    },
-    "./styled": {
-      "import": "./target/build/lib/styled.js"
     }
   },
   "files": [
@@ -20,20 +14,21 @@
     "styled/package.json"
   ],
   "sideEffects": false,
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "Apply styles to Shadow DOM",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/joist.git"
+    "url": "git+https://github.com/joist-frameework/joist.git"
   },
   "keywords": [
     "TypeScript",
-    "DI",
-    "Dependency Injection"
+    "CSS",
+    "Styles",
+    "ShadowDOM"
   ],
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/joist/issues"
+    "url": "https://github.com/joist-framework/joist/issues"
   },
   "publishConfig": {
     "access": "public"
