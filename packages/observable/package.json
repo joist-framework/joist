@@ -1,6 +1,6 @@
 {
   "name": "@joist/observable",
-  "version": "2.0.0-next.9",
+  "version": "2.0.0-next.10",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
   "exports": {
