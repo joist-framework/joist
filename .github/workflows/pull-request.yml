@@ -1,13 +1,6 @@
-name: Publish
+name: Pull Request
 
-on:
-  push:
-    branches:
-      - 'next'
-    paths-ignore:
-      - '*.md'
-      - '/integration/*'
-      - 'package*.json'
+on: [pull_request]
 
 jobs:
   build:
