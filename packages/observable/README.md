@@ -6,7 +6,7 @@ Decorating a class with `@observable` means that instances of that class will BE
 #### Installation:
 
 ```BASH
-npm i @joist/observable
+npm i @joist/observable@alpha
 ```
 
 #### Example:
