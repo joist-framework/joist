@@ -16,6 +16,7 @@ export interface ObservableBase {
   propChanges: Changes;
   propChange: Promise<void> | null;
   initializedChanges: Set<string | symbol>;
+  onChange?: (changes: Changes) => void;
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
 }
 
@@ -35,6 +36,8 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     propChange: Promise<void> | null = null;
     initializedChanges = new Set<string | symbol>();
 
+    definePropChange = definePropChange;
+
     constructor(...args: any[]) {
       super(...args);
 
@@ -43,44 +46,6 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       }
 
       Object.defineProperties(this, props);
-    }
-
-    connectedCallback() {
-      for (let def in defs) {
-        Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
-      }
-    }
-
-    definePropChange(key: string | symbol, propChange: Change): Promise<void> {
-      if (!this.propChanges[key]) {
-        this.propChanges[key] = propChange;
-      }
-
-      this.propChanges[key].value = propChange.value;
-
-      if (!this.propChange) {
-        // If there is no previous change defined set it up
-        this.propChange = Promise.resolve().then(() => {
-          // run onPropChanges here. This makes sure we capture all changes
-
-          // keep track of whether or not this is the first time a given property has changes
-          for (let change in this.propChanges) {
-            this.propChanges[change].firstChange = !this.initializedChanges.has(change);
-
-            this.initializedChanges.add(change);
-          }
-
-          if (this.onChange) {
-            this.onChange(this.propChanges);
-          }
-
-          // reset for next time
-          this.propChanges = {};
-          this.propChange = null;
-        });
-      }
-
-      return this.propChange;
     }
   };
 }
@@ -114,4 +79,40 @@ function createPropertyDescripors(
   }
 
   return props;
+}
+
+function definePropChange(
+  this: ObservableBase,
+  key: string | symbol,
+  propChange: Change
+): Promise<void> {
+  if (!this.propChanges[key]) {
+    this.propChanges[key] = propChange;
+  }
+
+  this.propChanges[key].value = propChange.value;
+
+  if (!this.propChange) {
+    // If there is no previous change defined set it up
+    this.propChange = Promise.resolve().then(() => {
+      // run onPropChanges here. This makes sure we capture all changes
+
+      // keep track of whether or not this is the first time a given property has changes
+      for (let change in this.propChanges) {
+        this.propChanges[change].firstChange = !this.initializedChanges.has(change);
+
+        this.initializedChanges.add(change);
+      }
+
+      if (this.onChange) {
+        this.onChange(this.propChanges);
+      }
+
+      // reset for next time
+      this.propChanges = {};
+      this.propChange = null;
+    });
+  }
+
+  return this.propChange;
 }
