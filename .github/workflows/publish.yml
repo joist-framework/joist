@@ -26,8 +26,11 @@ jobs:
       - name: Lib Tests
         run: npx lerna run test
 
-      - name: Build Integration
-        run: npm run build
+      - name: Build Integration (Own)
+        run: npx tsx -p integration/own && npx vite build integration/own
+
+      - name: Build Integration (Mixed)
+        run: npx tsx -p integration/mixed && npx vite build integration/mixed
 
       - name: Publish
         run: npx lerna publish --canary --preid canary.$(date +"%s") --dist-tag canary --yes

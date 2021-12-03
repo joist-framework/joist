@@ -1,0 +1,21 @@
+{
+  "name": "@integration/own",
+  "version": "2.0.0",
+  "sideEffects": false,
+  "private": true,
+  "description": "Dependency Injection in ~800 bytes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/joist.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "DI",
+    "Dependency Injection"
+  ],
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/joist/issues"
+  }
+}

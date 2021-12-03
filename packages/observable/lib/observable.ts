@@ -45,6 +45,12 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       Object.defineProperties(this, props);
     }
 
+    connectedCallback() {
+      for (let def in defs) {
+        Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
+      }
+    }
+
     definePropChange(key: string | symbol, propChange: Change): Promise<void> {
       if (!this.propChanges[key]) {
         this.propChanges[key] = propChange;

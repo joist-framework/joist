@@ -1,5 +1,5 @@
 {
-  "name": "integration",
+  "name": "@integration/mixed",
   "version": "2.0.0",
   "sideEffects": false,
   "private": true,

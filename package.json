@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install": "npx lerna run build",
-    "dev": "vite",
-    "build": "tsc -p ./integration/tsconfig.json && vite build"
+    "install": "npx lerna run build"
   },
   "author": "",
   "license": "ISC",
