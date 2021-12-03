@@ -53,10 +53,12 @@ export class TodoCard extends HTMLElement implements OnChange {
   }
 
   connectedCallback() {
+    console.log('connected', this.todo);
     this.render();
   }
 
   onChange() {
+    console.log('changed', this.todo);
     this.render();
   }
 

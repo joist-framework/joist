@@ -26,11 +26,11 @@ export function observe(target: any, key: string) {
   target[PROPERTY_KEY][key] = {};
 }
 
-export function observable<T extends new (...args: any[]) => any>(CustomElement: T) {
-  const defs = readPropertyDefs(CustomElement);
+export function observable<T extends new (...args: any[]) => any>(Base: T) {
+  const defs = readPropertyDefs(Base);
   const props = createPropertyDescripors(defs);
 
-  return class ObservableElement extends CustomElement implements ObservableBase {
+  return class Observable extends Base implements ObservableBase {
     propChanges: Changes = {};
     propChange: Promise<void> | null = null;
     initializedChanges = new Set<string | symbol>();
@@ -95,9 +95,11 @@ function createPropertyDescripors(
       set(this: ObservableBase, val) {
         const prevVal = Reflect.get(this, privateKey);
 
-        this.definePropChange(def, new Change(val, prevVal, true));
+        if (prevVal !== val) {
+          this.definePropChange(def, new Change(val, prevVal, true));
+        }
 
-        Reflect.set(this, privateKey, val);
+        return Reflect.set(this, privateKey, val);
       },
       get() {
         return Reflect.get(this, privateKey);
