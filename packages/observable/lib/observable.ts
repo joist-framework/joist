@@ -8,8 +8,10 @@ export interface OnChange {
   onChange(changes: Changes): void;
 }
 
-export function readPropertyDefs(c: any): Record<string | symbol, {}> {
-  return c.properties || c.prototype.properties || {};
+const PROPERTY_KEY = 'props';
+
+export function readPropertyDefs(c: any): Array<string | symbol> {
+  return c[PROPERTY_KEY] || {};
 }
 
 export interface ObservableBase {
@@ -20,54 +22,55 @@ export interface ObservableBase {
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
 }
 
-const PROPERTY_KEY = 'properties';
-
 export function observe(target: any, key: string) {
-  target[PROPERTY_KEY] = target[PROPERTY_KEY] || {};
-  target[PROPERTY_KEY][key] = {};
+  target.constructor[PROPERTY_KEY] = target.constructor[PROPERTY_KEY] || [];
+  target.constructor[PROPERTY_KEY].push(key);
 }
 
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
-  const defs = readPropertyDefs(Base);
-  const props = createPropertyDescripors(defs);
+  const props = readPropertyDefs(Base);
+  const descriptors = createPropertyDescripors(props);
 
   return class Observable extends Base implements ObservableBase {
     propChanges: Changes = {};
     propChange: Promise<void> | null = null;
     initializedChanges = new Set<string | symbol>();
 
-    definePropChange = definePropChange;
-
     constructor(...args: any[]) {
       super(...args);
 
-      for (let def in defs) {
-        Reflect.set(this, createPrivateKey(def), Reflect.get(this, def));
+      for (let i = 0; i < props.length; i++) {
+        const prop = props[i];
+
+        Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
       }
 
-      Object.defineProperties(this, props);
+      Object.defineProperties(this, descriptors);
     }
+
+    definePropChange = definePropChange;
   };
 }
 
-function createPrivateKey(key: string) {
-  return `__${key}`;
+function createPrivateKey(key: string | symbol) {
+  return `__${key.toString()}`;
 }
 
 function createPropertyDescripors(
-  defs: Record<string | symbol, {}>
+  props: Array<string | symbol>
 ): Record<string, PropertyDescriptor> {
-  const props: Record<string, PropertyDescriptor> = {};
+  const descriptors: Record<string | symbol, PropertyDescriptor> = {};
 
-  for (let def in defs) {
-    const privateKey = createPrivateKey(def);
+  for (let i = 0; i < props.length; i++) {
+    const prop = props[i];
+    const privateKey = createPrivateKey(prop);
 
-    props[def] = {
+    descriptors[prop] = {
       set(this: ObservableBase, val) {
         const prevVal = Reflect.get(this, privateKey);
 
         if (prevVal !== val) {
-          this.definePropChange(def, new Change(val, prevVal, true));
+          this.definePropChange(prop, new Change(val, prevVal, true));
         }
 
         return Reflect.set(this, privateKey, val);
@@ -78,7 +81,7 @@ function createPropertyDescripors(
     };
   }
 
-  return props;
+  return descriptors;
 }
 
 function definePropChange(
