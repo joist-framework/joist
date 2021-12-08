@@ -39,17 +39,22 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
-      for (let i = 0; i < props.length; i++) {
-        const prop = props[i];
-
-        Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
-      }
-
-      Object.defineProperties(this, descriptors);
+      initObservbale.call(this, descriptors);
     }
 
     definePropChange = definePropChange;
   };
+}
+
+function initObservbale(
+  this: ObservableBase,
+  descriptors: Record<string | symbol, PropertyDescriptor>
+) {
+  for (let prop in descriptors) {
+    Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
+  }
+
+  Object.defineProperties(this, descriptors);
 }
 
 function createPrivateKey(key: string | symbol) {
