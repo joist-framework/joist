@@ -40,7 +40,13 @@ export function control<T extends Controlled>(Base: T) {
         super.connectedCallback();
       }
 
-      this.dispatchEvent(new FindFormEvent());
+      const form = this.closest<HTMLFormElement>('form');
+
+      if (form) {
+        this.parentForm = form;
+      } else {
+        this.dispatchEvent(new FindFormEvent());
+      }
     }
 
     disconnectedCallback() {
