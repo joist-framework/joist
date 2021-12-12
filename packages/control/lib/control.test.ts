@@ -32,7 +32,6 @@ describe('slotted', () => {
     const el = await fixture<HTMLFormElement>(html`
       <form>
         <my-input></my-input>
-
         <button>submit</button>
       </form>
     `);
