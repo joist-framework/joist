@@ -1,6 +1,7 @@
 export interface FormControl {
   value: any;
   name: string;
+  appendFormData?(e: FormDataEvent): void;
 }
 
 export class FindFormEvent extends Event {
@@ -53,8 +54,12 @@ export function control<T extends Controlled>(Base: T) {
       }
     }
 
-    appendFormData({ formData }: FormDataEvent) {
-      formData.append(this.name, this.value);
+    appendFormData(e: FormDataEvent) {
+      if (super.appendFormData) {
+        super.appendFormData(e);
+      } else {
+        e.formData.append(this.name, this.value);
+      }
     }
   };
 }

@@ -1,1 +1,1 @@
-export { control } from './lib/control';
+export { control, FormControl } from './lib/control';
