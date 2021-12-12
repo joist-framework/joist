@@ -5,7 +5,7 @@ Dependency Injection in ~800 bytes.
 #### Installation:
 
 ```BASH
-npm i @joist/di@alpha
+npm i @joist/di@beta
 ```
 
 #### Example:

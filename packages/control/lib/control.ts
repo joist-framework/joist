@@ -1,6 +1,7 @@
 export interface FormControl {
-  value: any;
   name: string;
+
+  value?: any;
   appendFormData?(e: FormDataEvent): void;
 }
 

@@ -5,7 +5,7 @@ Apply css to a shadow root. Will apply constructable stylesheets if available an
 #### Installation:
 
 ```BASH
-npm i @joist/styled@alpha
+npm i @joist/styled@beta
 ```
 
 #### Example:

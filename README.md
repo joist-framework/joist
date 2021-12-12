@@ -1,6 +1,6 @@
 # Joist
 
-NOTE: This branch contains the next available version (2.0.0) and is available under the "alpha" tag. Nightly builds are available under the "canary" tag.
+NOTE: This branch contains the next available version (2.0.0) and is available under the "beta" tag. Nightly builds are available under the "canary" tag.
 
 A foundation for libraries and applications.
 
