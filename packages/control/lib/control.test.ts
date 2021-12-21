@@ -36,6 +36,39 @@ describe('slotted', () => {
     });
   });
 
+  it('should append the checked value if defined', async () => {
+    @control
+    class MyInput extends HTMLElement {
+      name = 'toc';
+      checked = true;
+    }
+
+    customElements.define('my-checkbox', MyInput);
+
+    const el = await fixture<HTMLFormElement>(html`
+      <form>
+        <my-checkbox></my-checkbox>
+        <button>submit</button>
+      </form>
+    `);
+
+    const submit = el.querySelector('button') as HTMLButtonElement;
+
+    return new Promise((resolve) => {
+      el.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = new FormData(e.target as HTMLFormElement);
+
+        expect(data.get('toc')).to.equal('true');
+
+        resolve();
+      });
+
+      submit.click();
+    });
+  });
+
   it('should allow a user to provide their own udpate function', async () => {
     @control
     class MyInput extends HTMLElement implements FormControl {

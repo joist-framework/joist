@@ -1,7 +1,7 @@
 export interface FormControl {
   name: string;
-
   value?: any;
+  checked?: boolean;
   appendFormData?(e: FormDataEvent): void;
 }
 
@@ -58,6 +58,8 @@ export function control<T extends Controlled>(Base: T) {
     appendFormData(e: FormDataEvent) {
       if (super.appendFormData) {
         super.appendFormData(e);
+      } else if (this.checked !== undefined && this.checked) {
+        e.formData.append(this.name, String(this.checked));
       } else {
         e.formData.append(this.name, this.value);
       }
