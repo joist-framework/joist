@@ -17,17 +17,13 @@ export function styled<T extends Styled>(CustomElement: T) {
   const styles = CustomElement.styles;
 
   return class StyledElement extends CustomElement {
-    constructor(...args: any[]) {
-      super(...args);
+    connectedCallback() {
+      if (super.connectedCallback) {
+        super.connectedCallback();
+      }
 
-      this.applyStyles();
-    }
-
-    /**
-     * Apply styles using Constructable StyleSheets if supported.
-     */
-    applyStyles() {
       if (styles && this.shadowRoot) {
+        // If there are defined styles AND a shadowRoot
         if (this.shadowRoot.adoptedStyleSheets) {
           // adoptedStyleSheets are available
           if (!ccStyleCache.has(this.tagName)) {
