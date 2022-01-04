@@ -31,6 +31,8 @@ describe('styled', () => {
 
     const el = new MyElement();
 
+    el.connectedCallback!();
+
     expect(el.shadowRoot?.adoptedStyleSheets.length).to.equal(2);
   });
 });
