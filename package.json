@@ -17,7 +17,7 @@
   "devDependencies": {
     "@microsoft/fast-element": "1.6.2",
     "@open-wc/testing": "3.0.3",
-    "@web/test-runner": "0.13.24",
+    "@web/test-runner": "0.13.25",
     "@web/test-runner-puppeteer": "0.10.4",
     "classnames": "2.3.1",
     "lerna": "4.0.0",
