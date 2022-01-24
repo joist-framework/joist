@@ -15,7 +15,7 @@
     "@joist/styled": "file:packages/styled"
   },
   "devDependencies": {
-    "@microsoft/fast-element": "1.6.2",
+    "@microsoft/fast-element": "1.7.0",
     "@open-wc/testing": "3.0.3",
     "@web/test-runner": "0.13.25",
     "@web/test-runner-puppeteer": "0.10.4",
