@@ -8,10 +8,10 @@ export interface OnChange {
   onChange(changes: Changes): void;
 }
 
-const PROPERTY_KEY = 'props';
+const PROPERTY_KEY = 'observedProps';
 
 export function readPropertyDefs(c: any): Array<string | symbol> {
-  return c[PROPERTY_KEY] || {};
+  return c[PROPERTY_KEY] || [];
 }
 
 export interface ObservableBase {
