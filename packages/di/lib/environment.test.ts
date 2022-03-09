@@ -18,7 +18,7 @@ describe('environment', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static deps = [MyService];
+      static inject = [MyService];
 
       constructor(public my: MyService) {
         super();

@@ -10,7 +10,7 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static deps = [Foo, Bar];
+      static inject = [Foo, Bar];
 
       constructor(public foo: Foo, public bar: Bar) {
         super();
@@ -28,7 +28,7 @@ describe('@injectable()', () => {
     class Foo {}
 
     class MyElement extends HTMLElement {
-      static deps = [Foo];
+      static inject = [Foo];
 
       constructor(public foo: Foo) {
         super();
@@ -49,7 +49,7 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static deps = [Foo];
+      static inject = [Foo];
 
       constructor(public foo: Foo) {
         super();
@@ -70,7 +70,7 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static deps = [Foo];
+      static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
       constructor(public foo: Foo) {

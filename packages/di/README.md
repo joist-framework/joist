@@ -20,7 +20,7 @@ class FooService {
 }
 
 class BarService {
-  static deps = [FooService];
+  static inject = [FooService];
 
   constructor(private foo: FooService) {}
 
@@ -46,7 +46,7 @@ class FooService {
 }
 
 class BarService {
-  static deps = [FooService];
+  static inject = [FooService];
 
   constructor(private foo: FooService) {}
 
@@ -107,7 +107,7 @@ class MyService {}
 
 @injectable
 class MyElement extends HTMLElement {
-  static deps = [MyService];
+  static inject = [MyService];
 
   constructor(public myService: MyService) {}
 }
@@ -137,7 +137,7 @@ defineEnvironment([
 
 @injectable
 class MyElement extends HTMLElement {
-  static deps = [Config];
+  static inject = [Config];
 
   constructor(config: Config) {
     console.log(config.apiUrl); // http://real-api/api/

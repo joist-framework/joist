@@ -1,9 +1,9 @@
-import { injectable } from "@joist/di";
-import { styled, css } from "@joist/styled";
+import { injectable } from '@joist/di';
+import { styled, css } from '@joist/styled';
 
-import { TodoService, Todo, TodoStatus } from "./todo.service";
+import { TodoService, Todo, TodoStatus } from './todo.service';
 
-const template = document.createElement("template");
+const template = document.createElement('template');
 template.innerHTML = /*html*/ `
   <form>
     <input name="todo" placeholder="What needs to be done?" autocomplete="off" autofocus />
@@ -13,7 +13,7 @@ template.innerHTML = /*html*/ `
 @injectable
 @styled
 export class TodoForm extends HTMLElement {
-  static deps = [TodoService];
+  static inject = [TodoService];
 
   static styles = [
     css`
@@ -62,7 +62,7 @@ export class TodoForm extends HTMLElement {
     `,
   ];
 
-  private root = this.attachShadow({ mode: "open" });
+  private root = this.attachShadow({ mode: 'open' });
   private input: HTMLInputElement | null = null;
 
   constructor(private todo: TodoService) {
@@ -72,9 +72,9 @@ export class TodoForm extends HTMLElement {
   connectedCallback() {
     this.root.appendChild(template.content.cloneNode(true));
 
-    this.input = this.root.querySelector("input");
+    this.input = this.root.querySelector('input');
 
-    this.root.addEventListener("submit", (e) => {
+    this.root.addEventListener('submit', (e) => {
       this.onSubmit(e);
     });
   }
@@ -87,9 +87,9 @@ export class TodoForm extends HTMLElement {
     if (todo.length) {
       this.todo.addTodo(new Todo(todo, TodoStatus.Active));
 
-      this.input!.value = "";
+      this.input!.value = '';
     }
   }
 }
 
-customElements.define("todo-form", TodoForm);
+customElements.define('todo-form', TodoForm);

@@ -10,7 +10,7 @@ import { Todo, TodoStatus, TodoService } from './todo.service';
 @observable
 @styled
 export class TodoCard extends HTMLElement implements OnChange {
-  static deps = [TodoService];
+  static inject = [TodoService];
 
   static styles = [
     css`

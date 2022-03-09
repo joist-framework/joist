@@ -3,23 +3,23 @@ import { Injector } from './injector';
 import { Provider, ProviderToken } from './provider';
 
 export interface Injectable {
-  deps: ProviderToken<any>[];
+  inject: ProviderToken<any>[];
   providers?: Provider<any>[];
 
   new (...args: any[]): any;
 }
 
 export function injectable<T extends Injectable>(Clazz: T) {
-  const { deps, providers } = Clazz;
+  const { inject, providers } = Clazz;
 
   return class InjectableElement extends Clazz {
     constructor(...args: any[]) {
-      if (args.length || !deps.length) {
+      if (args.length || !inject.length) {
         super(...args);
       } else {
         const i = new Injector({ providers }, getEnvironmentRef());
 
-        super(...deps.map((dep) => i.get(dep)));
+        super(...inject.map((dep) => i.get(dep)));
       }
     }
   };

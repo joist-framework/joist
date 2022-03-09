@@ -2,12 +2,12 @@ import { injectable } from '@joist/di';
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { TodoService, Todo, TodoStatus } from './todo.service';
+import { TodoService, Todo, TodoStatus } from './todo.service.js';
 
 @customElement('todo-list')
 @injectable
 export class TodoCard extends LitElement {
-  static deps = [TodoService];
+  static inject = [TodoService];
   static styles = css`
     :host {
       display: block;

@@ -25,7 +25,7 @@ describe('Injector', () => {
     }
 
     class MyService {
-      static deps = [FooService, BarService];
+      static inject = [FooService, BarService];
 
       get value() {
         return this.foo.foo + this.bar.bar;
@@ -47,7 +47,7 @@ describe('Injector', () => {
     }
 
     class B {
-      static deps = [A];
+      static inject = [A];
 
       constructor(private a: A) {}
 
@@ -57,7 +57,7 @@ describe('Injector', () => {
     }
 
     class C {
-      static deps = [A, B];
+      static inject = [A, B];
 
       constructor(private a: A, private b: B) {}
 
@@ -67,7 +67,7 @@ describe('Injector', () => {
     }
 
     class D {
-      static deps = [A, B, C];
+      static inject = [A, B, C];
 
       constructor(private a: A, private b: B, private c: C) {}
 
@@ -77,7 +77,7 @@ describe('Injector', () => {
     }
 
     class E {
-      static deps = [D];
+      static inject = [D];
 
       constructor(private d: D) {}
 
@@ -97,7 +97,7 @@ describe('Injector', () => {
     }
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(private bar: BarService) {}
 
@@ -148,7 +148,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(public bar: BarService) {}
     }
@@ -162,7 +162,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(public bar: BarService) {}
     }
@@ -176,7 +176,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(public bar: BarService) {}
     }
@@ -194,7 +194,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(public bar: BarService) {}
     }
@@ -244,7 +244,7 @@ describe('Injector', () => {
     class BarService {}
 
     class FooService {
-      static deps = [BarService];
+      static inject = [BarService];
 
       constructor(public bar: BarService) {}
     }

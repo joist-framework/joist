@@ -65,7 +65,7 @@ const template = html<TodoForm>/*html*/ `
 })
 @injectable
 export class TodoForm extends FASTElement {
-  static deps = [TodoService];
+  static inject = [TodoService];
 
   @observable value: string = '';
 

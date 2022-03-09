@@ -22,7 +22,7 @@ export class TodoChangeEvent extends Event {
 @observable
 @injectable
 export class TodoService extends EventTarget implements OnChange {
-  static deps = [AppStorage];
+  static inject = [AppStorage];
 
   @observe todos: Todo[] = [];
 

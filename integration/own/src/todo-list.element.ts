@@ -1,15 +1,15 @@
-import { injectable } from "@joist/di";
-import { observable, observe, OnChange } from "@joist/observable";
-import { styled, css } from "@joist/styled";
-import { render, html } from "lit-html";
+import { injectable } from '@joist/di';
+import { observable, observe, OnChange } from '@joist/observable';
+import { styled, css } from '@joist/styled';
+import { render, html } from 'lit-html';
 
-import { TodoService, Todo, TodoStatus } from "./todo.service";
+import { TodoService, Todo, TodoStatus } from './todo.service';
 
 @injectable
 @observable
 @styled
 export class TodoList extends HTMLElement implements OnChange {
-  static deps = [TodoService];
+  static inject = [TodoService];
 
   static styles = [
     css`
@@ -30,7 +30,7 @@ export class TodoList extends HTMLElement implements OnChange {
       }
 
       .todo-list-footer:before {
-        content: "";
+        content: '';
         position: absolute;
         right: 0;
         bottom: 0;
@@ -61,12 +61,12 @@ export class TodoList extends HTMLElement implements OnChange {
     this.todos = this.todo.todos;
     this.totalActive = this.getActiveTodoCount();
 
-    this.todo.addEventListener("todochange", () => {
+    this.todo.addEventListener('todochange', () => {
       this.todos = this.todo.todos;
       this.totalActive = this.getActiveTodoCount();
     });
 
-    this.attachShadow({ mode: "open" });
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
@@ -92,7 +92,7 @@ export class TodoList extends HTMLElement implements OnChange {
       </div>
 
       <div class="todo-list-footer">
-        ${this.totalActive} item${this.todos.length > 1 ? "s" : ""} left
+        ${this.totalActive} item${this.todos.length > 1 ? 's' : ''} left
       </div>
     `;
   }
@@ -111,12 +111,9 @@ export class TodoList extends HTMLElement implements OnChange {
     const todo = this.todo.todos[i];
 
     return this.todo.updateTodo(i, {
-      status:
-        todo.status === TodoStatus.Active
-          ? TodoStatus.Completed
-          : TodoStatus.Active,
+      status: todo.status === TodoStatus.Active ? TodoStatus.Completed : TodoStatus.Active,
     });
   }
 }
 
-customElements.define("todo-list", TodoList);
+customElements.define('todo-list', TodoList);
