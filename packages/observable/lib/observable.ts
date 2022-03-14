@@ -4,7 +4,7 @@ export class Change<T = any> {
 
 export type Changes = Record<string | symbol, Change>;
 
-export interface onPropertyChanged {
+export interface OnPropertyChanged {
   onPropertyChanged(changes: Changes): void;
 }
 

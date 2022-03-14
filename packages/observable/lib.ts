@@ -1,1 +1,1 @@
-export { observable, Change, onPropertyChanged, observe, Changes } from './lib/observable';
+export { observable, Change, OnPropertyChanged, observe, Changes } from './lib/observable';
