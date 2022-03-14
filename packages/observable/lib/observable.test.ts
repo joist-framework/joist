@@ -1,11 +1,11 @@
 import { expect } from '@open-wc/testing';
 
-import { OnChange, Changes, observable, observe, Change } from './observable';
+import { onPropertyChanged, Changes, observable, observe, Change } from './observable';
 
 describe('observable', () => {
   it('should detect and batch property updates', (done) => {
     @observable
-    class Counter implements OnChange {
+    class Counter implements onPropertyChanged {
       @observe counter = 0;
 
       onPropertyChanged(val: Changes) {
@@ -28,7 +28,7 @@ describe('observable', () => {
 
   it('should detect and batch property updates for multiple properties', (done) => {
     @observable
-    class Person implements OnChange {
+    class Person implements onPropertyChanged {
       @observe fname = 'Danny';
       @observe lname = 'Blue';
 
@@ -48,7 +48,7 @@ describe('observable', () => {
 
   it('should let the user know when this is the first change', (done) => {
     @observable
-    class Counter implements OnChange {
+    class Counter implements onPropertyChanged {
       @observe fname = '';
       @observe lname = '';
 
@@ -84,7 +84,7 @@ describe('observable', () => {
 
   it('should detect and batch property updates with a custom element', (done) => {
     @observable
-    class MyEl extends HTMLElement implements OnChange {
+    class MyEl extends HTMLElement implements onPropertyChanged {
       @observe counter = 0;
 
       onPropertyChanged(val: Changes) {
@@ -106,7 +106,7 @@ describe('observable', () => {
   });
 
   it('should detect and batch property updates with an EventEmitter', (done) => {
-    class State extends EventTarget implements OnChange {
+    class State extends EventTarget implements onPropertyChanged {
       onPropertyChanged(val: Changes) {
         this.dispatchEvent(new CustomEvent('statechange', { detail: val }));
       }

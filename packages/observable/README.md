@@ -12,10 +12,10 @@ npm i @joist/observable@beta
 #### Example:
 
 ```TS
-import { observable, observer, OnChange, Changes } from '@joist/observable';
+import { observable, observer, onPropertyChanged, Changes } from '@joist/observable';
 
 @observable
-class State implements OnChange {
+class State implements onPropertyChanged {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
@@ -23,7 +23,7 @@ class State implements OnChange {
   // changes to this will not
   someValue: boolean = false;
 
-  onChange(changes: Changes) {
+  onPropertyChanged(changes: Changes) {
     console.log(changes);
     // { todos: { value: ['Build Shit'], previousValue: [] }, userName: { value: 'Danny Blue', previousValue: undefined } }
   }
@@ -40,7 +40,7 @@ state.userName = 'Danny Blue'
 If you want to externally monitor your class for changes you can extend event target and dispatch events. (available in both node and the browser)
 
 ```TS
-import { observable, observer, OnChange, Changes } from '@joist/observable';
+import { observable, observer, onPropertyChanged, Changes } from '@joist/observable';
 
 class StateChangeEvent extends Event {
   consetructor(public changes: Changes) {
@@ -49,7 +49,7 @@ class StateChangeEvent extends Event {
 }
 
 @observable
-class State extends EventTarget implements OnChange {
+class State extends EventTarget implements onPropertyChanged {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
@@ -57,7 +57,7 @@ class State extends EventTarget implements OnChange {
   // changes to this will not
   someValue: boolean = false;
 
-  onChange(changes: Changes) {
+  onPropertyChanged(changes: Changes) {
     this.dispatchEvent(new StateChangeEvent());
   }
 }

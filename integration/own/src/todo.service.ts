@@ -1,5 +1,5 @@
 import { service, injectable } from '@joist/di';
-import { observable, observe, OnChange } from '@joist/observable';
+import { observable, observe, onPropertyChanged } from '@joist/observable';
 
 import { AppStorage } from './storage.service';
 
@@ -21,7 +21,7 @@ export class TodoChangeEvent extends Event {
 @service
 @observable
 @injectable
-export class TodoService extends EventTarget implements OnChange {
+export class TodoService extends EventTarget implements onPropertyChanged {
   static inject = [AppStorage];
 
   @observe todos: Todo[] = [];
@@ -58,7 +58,7 @@ export class TodoService extends EventTarget implements OnChange {
     });
   }
 
-  onChange() {
+  onPropertyChanged() {
     this.dispatchEvent(new TodoChangeEvent());
   }
 }

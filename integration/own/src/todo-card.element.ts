@@ -1,13 +1,13 @@
-import { styled, css } from "@joist/styled";
-import { observable, observe, OnChange } from "@joist/observable";
-import { render, html } from "lit-html";
-import classNames from "classnames";
+import { styled, css } from '@joist/styled';
+import { observable, observe, onPropertyChanged } from '@joist/observable';
+import { render, html } from 'lit-html';
+import classNames from 'classnames';
 
-import { Todo, TodoStatus } from "./todo.service";
+import { Todo, TodoStatus } from './todo.service';
 
 @styled
 @observable
-export class TodoCard extends HTMLElement implements OnChange {
+export class TodoCard extends HTMLElement implements onPropertyChanged {
   static styles = [
     css`
       :host {
@@ -45,7 +45,7 @@ export class TodoCard extends HTMLElement implements OnChange {
   constructor() {
     super();
 
-    this.attachShadow({ mode: "open" });
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
@@ -53,7 +53,7 @@ export class TodoCard extends HTMLElement implements OnChange {
     this.render();
   }
 
-  onChange() {
+  onPropertyChanged() {
     console.log(this.todo);
     this.render();
   }
@@ -67,20 +67,14 @@ export class TodoCard extends HTMLElement implements OnChange {
     const complete = status === TodoStatus.Completed;
 
     return html`
-      <div class="${classNames("name", { complete })}">${this.todo.name}</div>
+      <div class="${classNames('name', { complete })}">${this.todo.name}</div>
 
-      <button
-        class="remove"
-        @click="${() => this.dispatchEvent(new Event("remove"))}"
-      >
+      <button class="remove" @click="${() => this.dispatchEvent(new Event('remove'))}">
         remove
       </button>
 
-      <button
-        class="complete"
-        @click="${() => this.dispatchEvent(new Event("complete"))}"
-      >
-        ${status === TodoStatus.Active ? "complete" : "active"}
+      <button class="complete" @click="${() => this.dispatchEvent(new Event('complete'))}">
+        ${status === TodoStatus.Active ? 'complete' : 'active'}
       </button>
     `;
   }
@@ -90,4 +84,4 @@ export class TodoCard extends HTMLElement implements OnChange {
   }
 }
 
-customElements.define("todo-card", TodoCard);
+customElements.define('todo-card', TodoCard);

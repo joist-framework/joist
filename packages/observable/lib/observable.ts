@@ -4,7 +4,7 @@ export class Change<T = any> {
 
 export type Changes = Record<string | symbol, Change>;
 
-export interface OnChange {
+export interface onPropertyChanged {
   onPropertyChanged(changes: Changes): void;
 }
 
@@ -42,10 +42,10 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       super(...args);
 
       for (let prop in descriptors) {
-        Reflect.set(observable, createPrivateKey(prop), Reflect.get(observable, prop));
+        Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
       }
 
-      Object.defineProperties(observable, descriptors);
+      Object.defineProperties(this, descriptors);
     }
   };
 }
