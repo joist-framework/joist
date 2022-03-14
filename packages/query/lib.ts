@@ -1,2 +1,2 @@
-export { query, QueryOptions } from './lib/query';
-export { queryAll, QueryAllOptions } from './lib/query-all';
+export { query, cacheableQuery } from './lib/query';
+export { queryAll, cacheableQueryAll } from './lib/query-all';

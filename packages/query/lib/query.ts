@@ -1,12 +1,4 @@
-export interface QueryOptions {
-  cache: boolean;
-}
-
-export interface CacheableQueryOptions {
-  cache: boolean;
-  cacheKey: string;
-  selector: string;
-}
+import { CacheableQueryOptions, QueryOptions } from './options';
 
 export function cacheableQuery(target: HTMLElement | ShadowRoot, opts: CacheableQueryOptions) {
   if (opts.cacheKey == null) {

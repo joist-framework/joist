@@ -1,12 +1,4 @@
-export interface QueryAllOptions {
-  cache: boolean;
-}
-
-export interface CacheableQueryOptions {
-  cache: boolean;
-  cacheKey: string;
-  selector: string;
-}
+import { CacheableQueryOptions, QueryOptions } from './options';
 
 export function cacheableQueryAll(target: HTMLElement | ShadowRoot, opts: CacheableQueryOptions) {
   if (opts.cacheKey == null) {
@@ -26,7 +18,7 @@ export function cacheableQueryAll(target: HTMLElement | ShadowRoot, opts: Cachea
   return res;
 }
 
-export function queryAll(selector: string, { cache }: QueryAllOptions = { cache: true }) {
+export function queryAll(selector: string, { cache }: QueryOptions = { cache: true }) {
   return (target: any, key: string) => {
     Object.defineProperty(target, key, {
       get(this: HTMLElement) {
