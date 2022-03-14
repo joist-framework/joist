@@ -8,7 +8,7 @@ describe('observable', () => {
     class Counter implements OnChange {
       @observe counter = 0;
 
-      onChange(val: Changes) {
+      onPropertyChanged(val: Changes) {
         expect(val.counter.previousValue).to.equal(0);
         expect(val.counter.value).to.equal(5);
         expect(val.counter.firstChange).to.equal(true);
@@ -32,7 +32,7 @@ describe('observable', () => {
       @observe fname = 'Danny';
       @observe lname = 'Blue';
 
-      onChange(val: Changes) {
+      onPropertyChanged(val: Changes) {
         expect(val.fname).to.deep.equal(new Change('Foo', 'Danny', true));
         expect(val.lname).to.deep.equal(new Change('Bar', 'Blue', true));
 
@@ -54,7 +54,7 @@ describe('observable', () => {
 
       private first = true;
 
-      onChange(val: Changes) {
+      onPropertyChanged(val: Changes) {
         console.log(val);
 
         if (this.first) {
@@ -87,7 +87,7 @@ describe('observable', () => {
     class MyEl extends HTMLElement implements OnChange {
       @observe counter = 0;
 
-      onChange(val: Changes) {
+      onPropertyChanged(val: Changes) {
         expect(val.counter.value).to.equal(5);
 
         done();
@@ -107,7 +107,7 @@ describe('observable', () => {
 
   it('should detect and batch property updates with an EventEmitter', (done) => {
     class State extends EventTarget implements OnChange {
-      onChange(val: Changes) {
+      onPropertyChanged(val: Changes) {
         this.dispatchEvent(new CustomEvent('statechange', { detail: val }));
       }
     }

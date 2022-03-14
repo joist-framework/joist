@@ -5,12 +5,12 @@ export class Change<T = any> {
 export type Changes = Record<string | symbol, Change>;
 
 export interface OnChange {
-  onChange(changes: Changes): void;
+  onPropertyChanged(changes: Changes): void;
 }
 
-const PROPERTY_KEY = 'observedProps';
+const PROPERTY_KEY = 'observedProperties';
 
-export function readPropertyDefs(c: any): Array<string | symbol> {
+export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
 }
 
@@ -18,8 +18,9 @@ export interface ObservableBase {
   propChanges: Changes;
   propChange: Promise<void> | null;
   initializedChanges: Set<string | symbol>;
-  onChange?: (changes: Changes) => void;
+
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
+  onPropertyChanged?: (changes: Changes) => void;
 }
 
 export function observe(target: any, key: string) {
@@ -28,33 +29,25 @@ export function observe(target: any, key: string) {
 }
 
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
-  const props = readPropertyDefs(Base);
-  const descriptors = createPropertyDescripors(props);
+  const descriptors = createPropertyDescripors(getObservableProperties(Base));
 
   return class Observable extends Base implements ObservableBase {
     propChanges: Changes = {};
     propChange: Promise<void> | null = null;
     initializedChanges = new Set<string | symbol>();
 
+    definePropChange = definePropChange;
+
     constructor(...args: any[]) {
       super(...args);
 
-      initObservbale.call(this, descriptors);
+      for (let prop in descriptors) {
+        Reflect.set(observable, createPrivateKey(prop), Reflect.get(observable, prop));
+      }
+
+      Object.defineProperties(observable, descriptors);
     }
-
-    definePropChange = definePropChange;
   };
-}
-
-function initObservbale(
-  this: ObservableBase,
-  descriptors: Record<string | symbol, PropertyDescriptor>
-) {
-  for (let prop in descriptors) {
-    Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
-  }
-
-  Object.defineProperties(this, descriptors);
 }
 
 function createPrivateKey(key: string | symbol) {
@@ -112,8 +105,8 @@ function definePropChange(
         this.initializedChanges.add(change);
       }
 
-      if (this.onChange) {
-        this.onChange(this.propChanges);
+      if (this.onPropertyChanged) {
+        this.onPropertyChanged(this.propChanges);
       }
 
       // reset for next time
