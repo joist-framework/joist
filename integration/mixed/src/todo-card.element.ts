@@ -1,6 +1,6 @@
 import { injectable } from '@joist/di';
 import { styled, css } from '@joist/styled';
-import { observable, observe, onPropertyChanged } from '@joist/observable';
+import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
@@ -9,7 +9,7 @@ import { Todo, TodoStatus, TodoService } from './todo.service';
 @injectable
 @observable
 @styled
-export class TodoCard extends HTMLElement implements onPropertyChanged {
+export class TodoCard extends HTMLElement implements OnPropertyChanged {
   static inject = [TodoService];
 
   static styles = [

@@ -1,5 +1,5 @@
 import { styled, css } from '@joist/styled';
-import { observable, observe, onPropertyChanged } from '@joist/observable';
+import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
@@ -7,7 +7,7 @@ import { Todo, TodoStatus } from './todo.service';
 
 @styled
 @observable
-export class TodoCard extends HTMLElement implements onPropertyChanged {
+export class TodoCard extends HTMLElement implements OnPropertyChanged {
   static styles = [
     css`
       :host {
