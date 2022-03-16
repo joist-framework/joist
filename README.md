@@ -19,4 +19,5 @@ This toolkit is here to help provide just the functionality you need and nothing
 | [@joist/control](packages/control)       | Makes a CustomElement behave like a form control                      |
 | [@joist/di](packages/di)                 | IOC container                                                         |
 | [@joist/observable](packages/observable) | Observe changes to class properties                                   |
+| [@joist/query](packages/query)           | query custom elements and assign to property.                         |
 | [@joist/styled](packages/styled)         | Apply styles to shadow dom. (Constructable stylesheets with fallback) |
