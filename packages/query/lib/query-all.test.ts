@@ -38,7 +38,7 @@ describe('query', () => {
       root = this.attachShadow({ mode: 'open' });
 
       connectedCallback() {
-        this.shadowRoot!.innerHTML = /*html*/ `
+        this.root.innerHTML = /*html*/ `
             <ul>
                 <li>first</li>
                 <li>second</li>
@@ -54,6 +54,36 @@ describe('query', () => {
     const el = await fixture<MyElement>(html`<query-test-2></query-test-2>`);
 
     expect(Array.from(el.li).map((li) => li.innerHTML)).to.deep.equal([
+      'first',
+      'second',
+      'third',
+      'fourth',
+    ]);
+  });
+
+  it('should infer that the property is the id if no selector provided', async () => {
+    class MyElement extends HTMLElement {
+      @queryAll listItems!: NodeListOf<HTMLLIElement>;
+
+      root = this.attachShadow({ mode: 'open' });
+
+      connectedCallback() {
+        this.root.innerHTML = /*html*/ `
+            <ul>
+                <li query-id="listItems">first</li>
+                <li query-id="listItems">second</li>
+                <li query-id="listItems">third</li>
+                <li query-id="listItems">fourth</li>
+            </ul>
+        `;
+      }
+    }
+
+    customElements.define('query-test-3', MyElement);
+
+    const el = await fixture<MyElement>(html`<query-test-3></query-test-3>`);
+
+    expect(Array.from(el.listItems).map((li) => li.innerHTML)).to.deep.equal([
       'first',
       'second',
       'third',

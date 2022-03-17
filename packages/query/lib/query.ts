@@ -18,16 +18,33 @@ export function cacheableQuery(target: HTMLElement | ShadowRoot, opts: Cacheable
   return res;
 }
 
-export function query(selector: string, { cache }: QueryOptions = { cache: true }) {
+export function query(target: HTMLElement, key: any): void;
+export function query(selector: string, opts?: QueryOptions): (target: any, key: any) => void;
+export function query(targetOrSelector: unknown, keyOrOpts: unknown) {
+  if (targetOrSelector instanceof HTMLElement) {
+    const key = keyOrOpts as string;
+
+    defineCacheableQueryProp(targetOrSelector, key, `[query-id='${key}']`, true);
+
+    return void 0;
+  }
+
   return (target: any, key: string) => {
-    Object.defineProperty(target, key, {
-      get(this: HTMLElement) {
-        return cacheableQuery(this.shadowRoot || this, {
-          cacheKey: key,
-          selector,
-          cache,
-        });
-      },
-    });
+    const selector = targetOrSelector as string;
+    const opts = (keyOrOpts || { cache: true }) as QueryOptions;
+
+    defineCacheableQueryProp(target, key, selector, opts.cache);
   };
+}
+
+function defineCacheableQueryProp(target: any, key: any, selector: string, cache: boolean) {
+  Object.defineProperty(target, key, {
+    get(this: HTMLElement) {
+      return cacheableQuery(this.shadowRoot || this, {
+        cacheKey: key,
+        selector,
+        cache,
+      });
+    },
+  });
 }
