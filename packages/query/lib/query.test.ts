@@ -33,7 +33,7 @@ describe('query', () => {
       root = this.attachShadow({ mode: 'open' });
 
       connectedCallback() {
-        this.shadowRoot!.innerHTML = /*html*/ `
+        this.root.innerHTML = /*html*/ `
             <ul>
                 <li>first</li>
                 <li>second</li>
@@ -59,7 +59,7 @@ describe('query', () => {
 
       connectedCallback() {
         this.root.innerHTML = /*html*/ `
-            <ul query-id="myList">
+            <ul query="myList">
                 <li>first</li>
                 <li>second</li>
                 <li>third</li>

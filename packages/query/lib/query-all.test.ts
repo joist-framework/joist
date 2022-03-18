@@ -70,10 +70,10 @@ describe('query', () => {
       connectedCallback() {
         this.root.innerHTML = /*html*/ `
             <ul>
-                <li query-id="listItems">first</li>
-                <li query-id="listItems">second</li>
-                <li query-id="listItems">third</li>
-                <li query-id="listItems">fourth</li>
+                <li query="listItems">first</li>
+                <li query="listItems">second</li>
+                <li query="listItems">third</li>
+                <li query="listItems">fourth</li>
             </ul>
         `;
       }

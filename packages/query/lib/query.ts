@@ -1,7 +1,7 @@
 import { CacheableQueryOptions, QueryOptions } from './options';
 
 export function cacheableQuery(target: HTMLElement | ShadowRoot, opts: CacheableQueryOptions) {
-  if (opts.cacheKey == null) {
+  if (!opts.cache) {
     return target.querySelector(opts.selector);
   }
 
@@ -24,7 +24,7 @@ export function query(targetOrSelector: unknown, keyOrOpts: unknown) {
   if (targetOrSelector instanceof HTMLElement) {
     const key = keyOrOpts as string;
 
-    defineCacheableQueryProp(targetOrSelector, key, `[query-id='${key}']`, true);
+    defineCacheableQueryProp(targetOrSelector, key, `[query='${key}']`, true);
 
     return void 0;
   }
