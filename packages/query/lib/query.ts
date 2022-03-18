@@ -1,8 +1,17 @@
-import { CacheableQueryOptions, QueryOptions } from './options';
+import { CacheableQueryOptions, QueryOptions, QueryRootProvider } from './options';
 
-export function cacheableQuery(target: HTMLElement | ShadowRoot, opts: CacheableQueryOptions) {
+export function cacheableQuery(
+  target: HTMLElement & QueryRootProvider,
+  opts: CacheableQueryOptions
+) {
+  let root = target.shadowRoot || target;
+
+  if (target.queryRoot) {
+    root = target.queryRoot();
+  }
+
   if (!opts.cache) {
-    return target.querySelector(opts.selector);
+    return target.querySelectorAll(opts.selector);
   }
 
   const cached = Reflect.get(target, `__query_cache_${opts.cacheKey}`);
@@ -11,7 +20,7 @@ export function cacheableQuery(target: HTMLElement | ShadowRoot, opts: Cacheable
     return cached;
   }
 
-  const res = target.querySelector(opts.selector);
+  const res = target.querySelectorAll(opts.selector);
 
   Reflect.set(target, `__query_cache_${opts.cacheKey}`, res);
 
@@ -39,8 +48,8 @@ export function query(targetOrSelector: unknown, keyOrOpts: unknown) {
 
 function defineCacheableQueryProp(target: any, key: any, selector: string, cache: boolean) {
   Object.defineProperty(target, key, {
-    get(this: HTMLElement) {
-      return cacheableQuery(this.shadowRoot || this, {
+    get(this: HTMLElement & QueryRootProvider) {
+      return cacheableQuery(this, {
         cacheKey: key,
         selector,
         cache,

@@ -7,3 +7,7 @@ export interface CacheableQueryOptions {
 export interface QueryOptions {
   cache: boolean;
 }
+
+export interface QueryRootProvider {
+  queryRoot?(): HTMLElement | ShadowRoot;
+}

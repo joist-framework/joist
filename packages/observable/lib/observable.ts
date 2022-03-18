@@ -1,3 +1,5 @@
+import { getObservableAttributes } from './attribute';
+
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
 }
@@ -20,7 +22,7 @@ export interface ObservableBase {
   initializedChanges: Set<string | symbol>;
 
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
-  onPropertyChanged?: (changes: Changes) => void;
+  onPropertyChanged?(changes: Changes): void;
 }
 
 export function observe(target: any, key: string) {
@@ -29,7 +31,9 @@ export function observe(target: any, key: string) {
 }
 
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
-  const descriptors = createPropertyDescripors(getObservableProperties(Base));
+  const properties = getObservableProperties(Base);
+  const attributes = getObservableAttributes(Base);
+  const descriptors = createPropertyDescripors(properties);
 
   return class Observable extends Base implements ObservableBase {
     propChanges: Changes = {};
@@ -47,7 +51,57 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 
       Object.defineProperties(this, descriptors);
     }
+
+    connectedCallback(this: HTMLElement) {
+      attributes.forEach((attribute) => {
+        Reflect.set(this, attribute, parseAttribute(this.getAttribute(attribute)));
+      });
+
+      if (super.connectedCallback) {
+        super.connectedCallback();
+      }
+    }
+
+    attributeChangedCallback(this: HTMLElement, name: string, oldVal: string, newVal: string) {
+      Reflect.set(this, name, parseAttribute(newVal));
+
+      if (super.attributeChangedCallback) {
+        super.attributeChangedCallback(name, newVal, oldVal);
+      }
+    }
+
+    onPropertyChanged(changes: Changes) {
+      if (this instanceof HTMLElement) {
+        for (let change in changes) {
+          if (attributes.includes(change)) {
+            this.setAttribute(change, String(changes[change].value));
+          }
+        }
+      }
+
+      if (super.onPropertyChanged) {
+        super.onPropertyChanged(changes);
+      }
+    }
   };
+}
+
+function parseAttribute(val: string | null): string | number | boolean | null {
+  if (val === null) {
+    return null;
+  }
+
+  const number = Number(val);
+
+  if (!isNaN(number)) {
+    return number;
+  }
+
+  if (val === 'true' || val === 'false') {
+    return Boolean(val);
+  }
+
+  return val;
 }
 
 function createPrivateKey(key: string | symbol) {

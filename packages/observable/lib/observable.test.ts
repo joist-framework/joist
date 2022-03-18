@@ -55,8 +55,6 @@ describe('observable', () => {
       private first = true;
 
       onPropertyChanged(val: Changes) {
-        console.log(val);
-
         if (this.first) {
           expect(val.fname.firstChange).to.equal(true);
           expect(val.lname.firstChange).to.equal(true);
