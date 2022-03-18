@@ -11,7 +11,7 @@ export function cacheableQuery(
   }
 
   if (!opts.cache) {
-    return root.querySelectorAll(opts.selector);
+    return root.querySelector(opts.selector);
   }
 
   const cached = Reflect.get(target, `__query_cache_${opts.cacheKey}`);
@@ -20,7 +20,7 @@ export function cacheableQuery(
     return cached;
   }
 
-  const res = root.querySelectorAll(opts.selector);
+  const res = root.querySelector(opts.selector);
 
   Reflect.set(target, `__query_cache_${opts.cacheKey}`, res);
 
