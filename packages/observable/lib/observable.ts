@@ -91,14 +91,14 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 }
 
 function parseAttribute(val: string): string | number | boolean {
+  if (val === 'true' || val === 'false' || val === '') {
+    return Boolean(val);
+  }
+
   const number = Number(val);
 
   if (!isNaN(number)) {
     return number;
-  }
-
-  if (val === 'true' || val === 'false') {
-    return Boolean(val);
   }
 
   return val;
