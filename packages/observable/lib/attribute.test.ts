@@ -80,4 +80,17 @@ describe('attribute', () => {
 
     expect(el.count).to.equal(100);
   });
+
+  it('should not set prop from attribute if null to start', async () => {
+    @observable
+    class TestElement extends HTMLElement {
+      @attr count: number = 0;
+    }
+
+    customElements.define('attr-test-6', TestElement);
+
+    const el = await fixture<TestElement>(html`<attr-test-6></attr-test-6>`);
+
+    expect(el.count).to.equal(0);
+  });
 });

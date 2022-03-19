@@ -54,7 +54,11 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 
     connectedCallback(this: HTMLElement) {
       attributes.forEach((attribute) => {
-        Reflect.set(this, attribute, parseAttribute(this.getAttribute(attribute)));
+        const val = this.getAttribute(attribute);
+
+        if (val !== null) {
+          Reflect.set(this, attribute, parseAttribute(val));
+        }
       });
 
       if (super.connectedCallback) {
@@ -86,11 +90,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
   };
 }
 
-function parseAttribute(val: string | null): string | number | boolean | null {
-  if (val === null) {
-    return null;
-  }
-
+function parseAttribute(val: string): string | number | boolean {
   const number = Number(val);
 
   if (!isNaN(number)) {
