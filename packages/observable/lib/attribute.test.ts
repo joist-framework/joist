@@ -93,4 +93,17 @@ describe('attribute', () => {
 
     expect(el.count).to.equal(0);
   });
+
+  it('should treat empty values as bool', async () => {
+    @observable
+    class TestElement extends HTMLElement {
+      @attr hasThing: boolean = false;
+    }
+
+    customElements.define('attr-test-7', TestElement);
+
+    const el = await fixture<TestElement>(html`<attr-test-7 hasthing></attr-test-7>`);
+
+    expect(el.hasThing).to.equal(true);
+  });
 });
