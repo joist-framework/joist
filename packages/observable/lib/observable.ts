@@ -1,4 +1,4 @@
-import { getObservableAttributes } from './attribute';
+import { attr, getObservableAttributes } from './attribute';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -56,10 +56,10 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       attributes.forEach((attribute) => {
         const val = this.getAttribute(attribute);
 
-        console.log('#####', typeof val);
-
         if (val !== null) {
           Reflect.set(this, attribute, parseAttribute(val));
+        } else if (typeof Reflect.get(this, attribute) !== 'undefined') {
+          this.setAttribute(attribute, Reflect.get(this, attribute));
         }
       });
 
@@ -72,7 +72,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       Reflect.set(this, name, parseAttribute(newVal));
 
       if (super.attributeChangedCallback) {
-        super.attributeChangedCallback(name, newVal, oldVal);
+        super.attributeChangedCallback(name, oldVal, newVal);
       }
     }
 
@@ -94,7 +94,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 
 function parseAttribute(val: string): string | number | boolean {
   if (val === 'true' || val === 'false') {
-    return Boolean(val);
+    return val === 'true';
   }
 
   if (val === '') {

@@ -58,14 +58,14 @@ describe('attribute', () => {
   it('should auto parse bool', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr hasThing: boolean = false;
+      @attr hasThing: boolean = true;
     }
 
     customElements.define('attr-test-4', TestElement);
 
-    const el = await fixture<TestElement>(html`<attr-test-4 hasthing="true"></attr-test-4>`);
+    const el = await fixture<TestElement>(html`<attr-test-4 hasthing="false"></attr-test-4>`);
 
-    expect(el.hasThing).to.equal(true);
+    expect(el.hasThing).to.equal(false);
   });
 
   it('should auto parse number', async () => {
