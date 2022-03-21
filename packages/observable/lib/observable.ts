@@ -1,4 +1,4 @@
-import { attr, getObservableAttributes } from './attribute';
+import { getObservableAttributes } from './attribute';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
