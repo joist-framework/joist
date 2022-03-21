@@ -52,14 +52,12 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       Object.defineProperties(this, descriptors);
     }
 
-    connectedCallback(this: HTMLElement) {
+    connectedCallback(this: HTMLElement & Observable) {
       attributes.forEach((attribute) => {
         const val = this.getAttribute(attribute);
 
         if (val !== null) {
-          Reflect.set(this, attribute, parseAttribute(val));
-        } else if (typeof Reflect.get(this, attribute) !== 'undefined') {
-          this.setAttribute(attribute, Reflect.get(this, attribute));
+          Reflect.set(this, attribute, this.fromAttribute(attribute, val));
         }
       });
 
@@ -68,8 +66,13 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       }
     }
 
-    attributeChangedCallback(this: HTMLElement, name: string, oldVal: string, newVal: string) {
-      Reflect.set(this, name, parseAttribute(newVal));
+    attributeChangedCallback(
+      this: HTMLElement & Observable,
+      name: string,
+      oldVal: string,
+      newVal: string
+    ) {
+      Reflect.set(this, name, this.fromAttribute(name, newVal));
 
       if (super.attributeChangedCallback) {
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -80,7 +83,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       if (this instanceof HTMLElement) {
         for (let change in changes) {
           if (attributes.includes(change)) {
-            this.setAttribute(change, String(changes[change].value));
+            this.toAttribute(change, changes[change].value);
           }
         }
       }
@@ -89,25 +92,26 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
         super.onPropertyChanged(changes);
       }
     }
+
+    toAttribute(name: string, value: unknown) {
+      this.setAttribute(name, String(value));
+    }
+
+    fromAttribute(_name: string, val: string): string | number | boolean {
+      // if a boolean assume such
+      if (val === 'true' || val === 'false') {
+        return val === 'true';
+      }
+
+      const number = parseInt(val);
+
+      if (!isNaN(number)) {
+        return number;
+      }
+
+      return val;
+    }
   };
-}
-
-function parseAttribute(val: string): string | number | boolean {
-  if (val === 'true' || val === 'false') {
-    return val === 'true';
-  }
-
-  if (val === '') {
-    return true;
-  }
-
-  const number = Number(val);
-
-  if (!isNaN(number)) {
-    return number;
-  }
-
-  return val;
 }
 
 function createPrivateKey(key: string | symbol) {
