@@ -93,4 +93,17 @@ describe('attribute', () => {
 
     expect(el.count).to.equal(0);
   });
+
+  it('should set default value for attributes if not set', async () => {
+    @observable
+    class TestElement extends HTMLElement {
+      @attr name: string = 'Hello World';
+    }
+
+    customElements.define('attr-test-7', TestElement);
+
+    const el = await fixture<TestElement>(html`<attr-test-7></attr-test-7>`);
+
+    expect(el.getAttribute('name')).to.equal('Hello World');
+  });
 });

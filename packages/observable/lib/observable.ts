@@ -1,4 +1,4 @@
-import { getObservableAttributes } from './attribute';
+import { attr, getObservableAttributes } from './attribute';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -58,6 +58,12 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 
         if (val !== null) {
           Reflect.set(this, attribute, this.fromAttribute(attribute, val));
+        } else {
+          const propVal = Reflect.get(this, attribute);
+
+          if (propVal !== undefined && propVal !== null) {
+            this.setAttribute(attribute, this.toAttribute(attribute, propVal));
+          }
         }
       });
 
@@ -83,7 +89,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       if (this instanceof HTMLElement) {
         for (let change in changes) {
           if (attributes.includes(change)) {
-            this.toAttribute(change, changes[change].value);
+            this.setAttribute(change, this.toAttribute(change, changes[change].value));
           }
         }
       }
@@ -93,8 +99,8 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       }
     }
 
-    toAttribute(name: string, value: unknown) {
-      this.setAttribute(name, String(value));
+    toAttribute(_name: string, value: unknown) {
+      return String(value);
     }
 
     fromAttribute(_name: string, val: string): string | number | boolean {
