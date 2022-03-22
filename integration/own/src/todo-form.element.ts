@@ -1,6 +1,5 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di';
 import { styled, css } from '@joist/styled';
-import { Injected } from 'packages/di/target/build/lib/injectable';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
 
