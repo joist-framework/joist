@@ -1,4 +1,4 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di';
 import { FASTElement, customElement, css, html, observable } from '@microsoft/fast-element';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
@@ -69,7 +69,7 @@ export class TodoForm extends FASTElement {
 
   @observable value: string = '';
 
-  constructor(private todo: TodoService) {
+  constructor(private todo: Injected<TodoService>) {
     super();
   }
 
@@ -84,7 +84,7 @@ export class TodoForm extends FASTElement {
     this.value = todo;
 
     if (todo.length) {
-      this.todo.addTodo(new Todo(todo, TodoStatus.Active));
+      this.todo().addTodo(new Todo(todo, TodoStatus.Active));
       this.value = '';
     }
   }

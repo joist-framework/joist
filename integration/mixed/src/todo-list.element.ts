@@ -1,4 +1,4 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di';
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
@@ -8,6 +8,7 @@ import { TodoService, Todo, TodoStatus } from './todo.service.js';
 @injectable
 export class TodoCard extends LitElement {
   static inject = [TodoService];
+
   static styles = css`
     :host {
       display: block;
@@ -49,14 +50,14 @@ export class TodoCard extends LitElement {
   @state() private todos: Todo[] = [];
   @state() private totalActive = 0;
 
-  constructor(private todo: TodoService) {
+  constructor(private todo: Injected<TodoService>) {
     super();
 
-    this.todos = this.todo.todos;
+    this.todos = this.todo().todos;
     this.totalActive = this.getActiveTodoCount();
 
-    this.todo.addEventListener('todochange', () => {
-      this.todos = this.todo.todos;
+    this.todo().addEventListener('todochange', () => {
+      this.todos = this.todo().todos;
       this.totalActive = this.getActiveTodoCount();
     });
   }
@@ -68,7 +69,7 @@ export class TodoCard extends LitElement {
           return html`
             <todo-card
               .todo=${todo}
-              @remove_todo=${() => this.todo.removeTodo(i)}
+              @remove_todo=${() => this.todo().removeTodo(i)}
               @complete_todo=${() => this.completeTodo(i)}
             ></todo-card>
           `;
@@ -82,15 +83,15 @@ export class TodoCard extends LitElement {
   }
 
   private getActiveTodoCount(): number {
-    return this.todo.todos
-      .filter((todo) => todo.status === TodoStatus.Active)
+    return this.todo()
+      .todos.filter((todo) => todo.status === TodoStatus.Active)
       .reduce<number>((total) => total + 1, 0);
   }
 
   private completeTodo(i: number) {
-    const todo = this.todo.todos[i];
+    const todo = this.todo().todos[i];
 
-    return this.todo.updateTodo(i, {
+    return this.todo().updateTodo(i, {
       status: todo.status === TodoStatus.Active ? TodoStatus.Completed : TodoStatus.Active,
     });
   }
