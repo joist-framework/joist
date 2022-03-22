@@ -1,9 +1,4 @@
 {
   "main": "../target/build/lib/dom.js",
-  "module": "./target/build/lib/dom.js",
-  "exports": {
-    ".": {
-      "import": "./target/build/lib/dom.js"
-    }
-  }
+  "module": "../target/build/lib/dom.js"
 }
