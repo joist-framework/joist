@@ -95,7 +95,7 @@ Since the browser will be what initializes your custom elements we need to be ab
 
 The `@injectable` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
 
-`@injectable` is on required when you will not be able to manually create instances via an injector.
+`@injectable` also injects your services in a lazy way. Instead of passing direct instances of your services it passes a function that be called when you need your service instance. This allows the injector to look for parent injectors which are only availabel after connectedCallback.
 
 #### Inject dependency into your custom element constructor
 
@@ -120,7 +120,7 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable } from '@joist/di';
+import { defineEnvironment, injectable, Injected } from '@joist/di';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
@@ -139,8 +139,8 @@ defineEnvironment([
 class MyElement extends HTMLElement {
   static inject = [Config];
 
-  constructor(config: Config) {
-    console.log(config.apiUrl); // http://real-api/api/
+  constructor(config: Injected<Config>) {
+    console.log(config().apiUrl); // http://real-api/api/
   }
 }
 
