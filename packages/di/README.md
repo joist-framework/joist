@@ -146,3 +146,53 @@ class MyElement extends HTMLElement {
 
 customElements.define('my-element', MyElement);
 ```
+
+## Context
+
+The Joist injector is hierarchical meaning that you can define context for just one part of the DOM tree.
+
+```TS
+class Colors {
+  primary = 'red';
+  secodnary = 'green';
+  tertiary = 'blue';
+}
+
+@injectable
+class ColorCtx extends HTMLElement {
+  static providers = [
+    {
+      provide: Colors,
+      use: class implements Colors {
+        primary = 'orange';
+        secondary = 'purple';
+        tertiary = 'white';
+      },
+    },
+  ];
+}
+
+@injectable
+class MyElement extends HTMLElement {
+  static inject = [Colors];
+
+  constructor(public colors: Injected<Colors>) {
+    super();
+  }
+
+  connectedCallback() {
+    const { primary } = this.colors();
+
+    this.style.background = primary;
+  }
+}
+
+customElements.define('color-ctx', ColorCtx);
+customElements.define('my-element', ChMyElementild);
+```
+
+```HTML
+<color-ctx>
+  <my-element></my-element>
+</color-ctx>
+```
