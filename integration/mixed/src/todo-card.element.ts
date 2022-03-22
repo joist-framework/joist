@@ -5,6 +5,7 @@ import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
 import { Todo, TodoStatus, TodoService } from './todo.service';
+import { Injected } from 'packages/di/target/build/lib/injectable';
 
 @injectable
 @observable
@@ -46,7 +47,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
 
   @observe todo?: Todo;
 
-  constructor(private service: TodoService) {
+  constructor(private service: Injected<TodoService>) {
     super();
 
     this.attachShadow({ mode: 'open' });
@@ -78,7 +79,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
       </button>
 
       <button class="complete" @click="${() => this.dispatchEvent(new Event('complete_todo'))}">
-        ${this.service.getStatusText(this.todo)}
+        ${this.service().getStatusText(this.todo)}
       </button>
     `;
   }

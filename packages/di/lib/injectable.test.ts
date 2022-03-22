@@ -1,6 +1,6 @@
-import { expect } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
-import { injectable } from './injectable';
+import { injectable, Injected } from './injectable';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps (decorator)', () => {
@@ -12,7 +12,7 @@ describe('@injectable()', () => {
     class MyElement extends HTMLElement {
       static inject = [Foo, Bar];
 
-      constructor(public foo: Foo, public bar: Bar) {
+      constructor(public foo: Injected<Foo>, public bar: Injected<Bar>) {
         super();
       }
     }
@@ -21,7 +21,7 @@ describe('@injectable()', () => {
 
     const el = document.createElement('injectable-1') as MyElement;
 
-    expect(el.foo).to.be.instanceOf(Foo);
+    expect(el.foo()).to.be.instanceOf(Foo);
   });
 
   it('should allow a custom element to be injected with deps (function)', () => {
@@ -30,7 +30,7 @@ describe('@injectable()', () => {
     class MyElement extends HTMLElement {
       static inject = [Foo];
 
-      constructor(public foo: Foo) {
+      constructor(public foo: Injected<Foo>) {
         super();
       }
     }
@@ -39,7 +39,7 @@ describe('@injectable()', () => {
 
     const el = document.createElement('injectable-2') as MyElement;
 
-    expect(el.foo).to.be.instanceOf(Foo);
+    expect(el.foo()).to.be.instanceOf(Foo);
   });
 
   it('should accept arguments if passed in manually (decorator)', () => {
@@ -51,16 +51,16 @@ describe('@injectable()', () => {
     class MyElement extends HTMLElement {
       static inject = [Foo];
 
-      constructor(public foo: Foo) {
+      constructor(public foo: Injected<Foo>) {
         super();
       }
     }
 
     customElements.define('injectable-3', MyElement);
 
-    const el = new MyElement(new Bar());
+    const el = new MyElement(() => new Bar());
 
-    expect(el.foo).to.be.instanceOf(Bar);
+    expect(el.foo()).to.be.instanceOf(Bar);
   });
 
   it('should locally override a provider', () => {
@@ -73,7 +73,7 @@ describe('@injectable()', () => {
       static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
-      constructor(public foo: Foo) {
+      constructor(public foo: Injected<Foo>) {
         super();
       }
     }
@@ -82,6 +82,50 @@ describe('@injectable()', () => {
 
     const el = document.createElement('injectable-4') as MyElement;
 
-    expect(el.foo).to.be.instanceOf(Bar);
+    expect(el.foo()).to.be.instanceOf(Bar);
+  });
+
+  it('should handle parent HTML Injectors', async () => {
+    class Foo {
+      sayHello() {
+        return 'Hello World';
+      }
+    }
+
+    @injectable
+    class Parent extends HTMLElement {
+      static providers = [
+        {
+          provide: Foo,
+          use: class extends Foo {
+            sayHello() {
+              return 'Goodbye World';
+            }
+          },
+        },
+      ];
+    }
+
+    @injectable
+    class Child extends HTMLElement {
+      static inject = [Foo];
+
+      constructor(public foo: Injected<Foo>) {
+        super();
+      }
+    }
+
+    customElements.define('injectable-parent-1', Parent);
+    customElements.define('injectable-child-1', Child);
+
+    const el = await fixture(html`
+      <injectable-parent-1>
+        <injectable-child-1></injectable-child-1>
+      </injectable-parent-1>
+    `);
+
+    const child = el.querySelector<Child>('injectable-child-1')!;
+
+    expect(child.foo().sayHello()).to.equal('Goodbye World');
   });
 });

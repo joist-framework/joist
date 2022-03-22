@@ -2,6 +2,7 @@ import { injectable } from '@joist/di';
 import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { styled, css } from '@joist/styled';
 import { render, html } from 'lit-html';
+import { Injected } from 'packages/di/target/build/lib/injectable';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
 
@@ -55,14 +56,14 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   @observe private todos: Todo[] = [];
   @observe private totalActive = 0;
 
-  constructor(private todo: TodoService) {
+  constructor(private todo: Injected<TodoService>) {
     super();
 
-    this.todos = this.todo.todos;
+    this.todos = this.todo().todos;
     this.totalActive = this.getActiveTodoCount();
 
-    this.todo.addEventListener('todochange', () => {
-      this.todos = this.todo.todos;
+    this.todo().addEventListener('todochange', () => {
+      this.todos = this.todo().todos;
       this.totalActive = this.getActiveTodoCount();
     });
 
@@ -84,7 +85,7 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
           return html`
             <todo-card
               .todo=${todo}
-              @remove=${() => this.todo.removeTodo(i)}
+              @remove=${() => this.todo().removeTodo(i)}
               @complete=${() => this.completeTodo(i)}
             ></todo-card>
           `;
@@ -102,15 +103,15 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   }
 
   private getActiveTodoCount(): number {
-    return this.todo.todos
-      .filter((todo) => todo.status === TodoStatus.Active)
+    return this.todo()
+      .todos.filter((todo) => todo.status === TodoStatus.Active)
       .reduce<number>((total) => total + 1, 0);
   }
 
   private completeTodo(i: number) {
-    const todo = this.todo.todos[i];
+    const todo = this.todo().todos[i];
 
-    return this.todo.updateTodo(i, {
+    return this.todo().updateTodo(i, {
       status: todo.status === TodoStatus.Active ? TodoStatus.Completed : TodoStatus.Active,
     });
   }

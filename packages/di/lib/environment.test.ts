@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
 import { getEnvironmentRef, clearEnvironment } from './environment';
-import { injectable } from './injectable';
+import { injectable, Injected } from './injectable';
 import { Injector } from './injector';
 import { service } from './service';
 
@@ -20,7 +20,7 @@ describe('environment', () => {
     class MyElement extends HTMLElement {
       static inject = [MyService];
 
-      constructor(public my: MyService) {
+      constructor(public my: Injected<MyService>) {
         super();
       }
     }
@@ -29,6 +29,6 @@ describe('environment', () => {
 
     const el = document.createElement('env-1') as MyElement;
 
-    expect(el.my).to.equal(getEnvironmentRef().get(MyService));
+    expect(el.my()).to.equal(getEnvironmentRef().get(MyService));
   });
 });
