@@ -1,11 +1,10 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
 import { Todo, TodoStatus, TodoService } from './todo.service';
-import { Injected } from 'packages/di/target/build/lib/injectable';
 
 @injectable
 @observable

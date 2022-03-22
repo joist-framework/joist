@@ -1,4 +1,4 @@
-import { injectable, Injected } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 import { FASTElement, customElement, css, html, observable } from '@microsoft/fast-element';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';

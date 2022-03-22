@@ -1,4 +1,4 @@
-import { injectable, Injected } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 
 import { TodoService, Todo, TodoStatus } from './todo.service';
