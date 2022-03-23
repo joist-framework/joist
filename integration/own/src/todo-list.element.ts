@@ -3,7 +3,7 @@ import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { styled, css } from '@joist/styled';
 import { render, html } from 'lit-html';
 
-import { TodoService, Todo, TodoStatus } from './todo.service';
+import { TodoService, Todo, TodoStatus } from './services/todo.service';
 
 @injectable
 @observable
@@ -58,6 +58,10 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   constructor(private todo: Injected<TodoService>) {
     super();
 
+    this.attachShadow({ mode: 'open' });
+  }
+
+  connectedCallback() {
     this.todos = this.todo().todos;
     this.totalActive = this.getActiveTodoCount();
 
@@ -66,10 +70,6 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
       this.totalActive = this.getActiveTodoCount();
     });
 
-    this.attachShadow({ mode: 'open' });
-  }
-
-  connectedCallback() {
     this.render();
   }
 

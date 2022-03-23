@@ -1,4 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { service } from '../service';
 
 import { injectable, Injected } from './injectable';
 
@@ -86,18 +87,31 @@ describe('@injectable()', () => {
   });
 
   it('should handle parent HTML Injectors', async () => {
-    class Foo {
+    @service
+    class A {
       sayHello() {
         return 'Hello World';
+      }
+    }
+
+    @service
+    class B {
+      static inject = [A];
+
+      constructor(private foo: A) {}
+
+      sayHello() {
+        return this.foo.sayHello();
       }
     }
 
     @injectable
     class Parent extends HTMLElement {
       static providers = [
+        { provide: B, use: B },
         {
-          provide: Foo,
-          use: class extends Foo {
+          provide: A,
+          use: class extends A {
             sayHello() {
               return 'Goodbye World';
             }
@@ -108,9 +122,9 @@ describe('@injectable()', () => {
 
     @injectable
     class Child extends HTMLElement {
-      static inject = [Foo];
+      static inject = [B];
 
-      constructor(public foo: Injected<Foo>) {
+      constructor(public b: Injected<B>) {
         super();
       }
     }
@@ -126,6 +140,6 @@ describe('@injectable()', () => {
 
     const child = el.querySelector<Child>('injectable-child-1')!;
 
-    expect(child.foo().sayHello()).to.equal('Goodbye World');
+    expect(child.b().sayHello()).to.equal('Goodbye World');
   });
 });

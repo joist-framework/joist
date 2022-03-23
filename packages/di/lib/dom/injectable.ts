@@ -16,7 +16,6 @@ export function injectable<T extends Injectable>(Clazz: T) {
 
   return class InjectableElement extends Clazz {
     injector: Injector;
-    injected: Injected<any>[];
 
     constructor(...args: any[]) {
       const injector = new Injector({ providers }, getEnvironmentRef());
@@ -25,41 +24,47 @@ export function injectable<T extends Injectable>(Clazz: T) {
       if (args.length || !inject) {
         super(...args);
       } else {
-        injected = inject.map((dep) => () => injector.get(dep));
+        injected = inject.map((dep) => {
+          return () => {
+            return this.injector.get(dep);
+          };
+        });
 
         super(...injected);
       }
 
       this.injector = injector;
-      this.injected = injected;
 
       this.addEventListener('finddiroot', (e) => {
         const path = e.composedPath();
 
         const parentInjector = path.find((el) => {
-          return el instanceof HTMLElement && el !== this && el.hasAttribute('joist-injector');
+          return el instanceof HTMLElement && el !== this && el.hasAttribute('joist-injector-root');
         });
 
         if (parentInjector) {
           const injectorHost = parentInjector as InjectableElement;
 
-          this.injector.setParent(injectorHost.injector);
+          this.injector.parent = injectorHost.injector;
+        }
 
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
+        if (super.connectedCallback) {
+          super.connectedCallback();
         }
       });
     }
 
     connectedCallback() {
-      this.setAttribute('joist-injector', 'true');
+      // only mark as an injector root if element defines providers
+      if (providers) {
+        this.setAttribute('joist-injector-root', 'true');
+      }
 
       this.dispatchEvent(new Event('finddiroot'));
     }
 
     disconnectedCallback() {
-      this.injector.setParent(undefined);
+      delete this.injector.parent;
 
       if (super.disconnectedCallback) {
         super.disconnectedCallback();

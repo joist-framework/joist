@@ -100,9 +100,8 @@ The `@injectable` decorator allows the Joist Dependency Injector to pass argumen
 #### Inject dependency into your custom element constructor
 
 ```TS
-import { inject, service, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 
-@service
 class MyService {}
 
 @injectable
@@ -129,7 +128,7 @@ class Config {
 defineEnvironment([
   {
     provide: Config,
-    use: class extends Config {
+    use: class {
       apiUrl = 'http://real-api/api/'
     }
   }
@@ -155,7 +154,6 @@ The Joist injector is hierarchical meaning that you can define context for just 
 class Colors {
   primary = 'red';
   secodnary = 'green';
-  tertiary = 'blue';
 }
 
 @injectable
@@ -166,7 +164,6 @@ class ColorCtx extends HTMLElement {
       use: class implements Colors {
         primary = 'orange';
         secondary = 'purple';
-        tertiary = 'white';
       },
     },
   ];
@@ -192,6 +189,10 @@ customElements.define('my-element', ChMyElementild);
 ```
 
 ```HTML
+<!-- Default Colors -->
+<my-element></my-element>
+
+<!-- Special color ctx -->
 <color-ctx>
   <my-element></my-element>
 </color-ctx>

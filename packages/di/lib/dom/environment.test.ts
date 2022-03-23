@@ -1,8 +1,7 @@
 import { expect } from '@open-wc/testing';
 
-import { service } from '../service';
 import { Injector } from '../injector';
-
+import { service } from '../service';
 import { getEnvironmentRef, clearEnvironment } from './environment';
 import { injectable, Injected } from './injectable';
 

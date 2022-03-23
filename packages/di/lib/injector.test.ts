@@ -1,260 +1,91 @@
 import { expect } from '@open-wc/testing';
 
-import { service } from './service';
 import { Injector } from './injector';
-import { ProviderToken } from './provider';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
-    class A {
-      foo = 'Hello World';
-    }
+    class A {}
 
     const app = new Injector();
 
-    expect(app.get(A).foo).to.equal('Hello World');
+    expect(app.get(A)).to.be.instanceOf(A);
+    expect(app.get(A)).to.equal(app.get(A));
   });
 
   it('should inject providers in the correct order', () => {
-    class FooService {
-      foo = 'FOO';
-    }
-
-    class BarService {
-      bar = 'BAR';
-    }
+    class A {}
+    class B {}
 
     class MyService {
-      static inject = [FooService, BarService];
+      static inject = [A, B];
 
-      get value() {
-        return this.foo.foo + this.bar.bar;
-      }
-
-      constructor(private foo: FooService, private bar: BarService) {}
+      constructor(public a: A, public b: B) {}
     }
 
     const app = new Injector();
+    const instance = app.get(MyService);
 
-    expect(app.get(MyService).value).to.equal('FOOBAR');
+    expect(instance.a).to.be.instanceOf(A);
+    expect(instance.b).to.be.instanceOf(B);
   });
 
   it('should create a new instance of a provider that has a full dep tree', () => {
-    class A {
-      sayHello() {
-        return '|';
-      }
-    }
+    class A {}
 
     class B {
       static inject = [A];
 
-      constructor(private a: A) {}
-
-      sayHello() {
-        return this.a.sayHello() + '|';
-      }
+      constructor(public a: A) {}
     }
 
     class C {
-      static inject = [A, B];
+      static inject = [B];
 
-      constructor(private a: A, private b: B) {}
-
-      sayHello() {
-        return this.a.sayHello() + '|' + this.b.sayHello();
-      }
+      constructor(public b: B) {}
     }
 
     class D {
-      static inject = [A, B, C];
+      static inject = [C];
 
-      constructor(private a: A, private b: B, private c: C) {}
-
-      sayHello() {
-        return this.a.sayHello() + '|' + this.b.sayHello() + this.c.sayHello();
-      }
+      constructor(public c: C) {}
     }
 
     class E {
       static inject = [D];
 
-      constructor(private d: D) {}
-
-      sayHello() {
-        return this.d.sayHello() + '|';
-      }
+      constructor(public d: D) {}
     }
 
     const app = new Injector();
+    const instance = app.get(E);
 
-    expect(app.get(E).sayHello()).to.equal('|||||||||');
+    expect(instance.d.c.b.a).to.be.instanceOf(A);
   });
 
   it('should override a provider if explicitly instructed', () => {
-    class BarService {
-      foo = 'Hello World';
+    class A {}
+
+    class B {
+      static inject = [A];
+
+      constructor(public a: A) {}
     }
 
-    class FooService {
-      static inject = [BarService];
-
-      constructor(private bar: BarService) {}
-
-      sayHello() {
-        return this.bar.foo;
-      }
-    }
-
-    expect(new Injector().get(FooService).sayHello()).to.equal('Hello World');
-
-    expect(
-      new Injector({
-        providers: [
-          {
-            provide: BarService,
-            use: class implements BarService {
-              foo = 'Goodbye World';
-            },
-          },
-        ],
-      })
-        .get(FooService)
-        .sayHello()
-    ).to.equal('Goodbye World');
-  });
-
-  it('immediately initialize specified providers', () => {
-    const initialized: ProviderToken<any>[] = [];
-
-    class BarService {
-      constructor() {
-        initialized.push(BarService);
-      }
-    }
-
-    class FooService {
-      constructor() {
-        initialized.push(FooService);
-      }
-    }
-
-    new Injector({ bootstrap: [FooService, BarService] });
-
-    expect(initialized).to.deep.equal([FooService, BarService]);
-  });
-
-  it('should return the same instance when called', () => {
-    class BarService {}
-
-    class FooService {
-      static inject = [BarService];
-
-      constructor(public bar: BarService) {}
-    }
-
-    const app = new Injector();
-
-    expect(app.get(FooService).bar).to.equal(app.get(BarService));
-  });
-
-  it('should return different instances', () => {
-    class BarService {}
-
-    class FooService {
-      static inject = [BarService];
-
-      constructor(public bar: BarService) {}
-    }
-
-    const app = new Injector();
-
-    expect(app.create(FooService)).not.to.equal(app.get(FooService));
-  });
-
-  it('should return an instance from a parent injector', () => {
-    class BarService {}
-
-    class FooService {
-      static inject = [BarService];
-
-      constructor(public bar: BarService) {}
-    }
-
-    const parent = new Injector();
-    const child1 = new Injector({}, parent);
-    const child2 = new Injector({}, child1);
-
-    const app = new Injector({}, child2);
-
-    expect(parent.get(FooService)).to.equal(app.get(FooService));
-  });
-
-  it('should use the override in scope over everything else', () => {
-    class BarService {}
-
-    class FooService {
-      static inject = [BarService];
-
-      constructor(public bar: BarService) {}
-    }
-
-    const parent = new Injector();
-    const child1 = new Injector({}, parent);
-    const child2 = new Injector({}, child1);
-
-    const app = new Injector(
-      {
-        providers: [
-          {
-            provide: FooService,
-            use: class extends FooService {},
-          },
-        ],
-      },
-      child2
-    );
-
-    expect(parent.get(FooService)).not.to.equal(app.get(FooService));
-  });
-
-  it('should be able to use an abstract class as an injection token', () => {
-    abstract class MyService {
-      abstract sayHello(): string;
-    }
+    class AltA extends A {}
 
     const app = new Injector({
-      providers: [
-        {
-          provide: MyService,
-          use: class implements MyService {
-            sayHello() {
-              return 'TESTING';
-            }
-          },
-        },
-      ],
+      providers: [{ provide: A, use: AltA }],
     });
 
-    expect(app.get(MyService).sayHello()).to.equal('TESTING');
+    expect(app.get(B).a).to.be.instanceOf(AltA);
   });
 
-  it('should use the root Injector if specified', () => {
-    @service
-    class BarService {}
-
-    class FooService {
-      static inject = [BarService];
-
-      constructor(public bar: BarService) {}
-    }
+  it('should return an existing instance from a parent injector', () => {
+    class A {}
 
     const parent = new Injector();
-    const child1 = new Injector({}, parent);
-    const child2 = new Injector({}, child1);
+    const app = new Injector({}, parent);
 
-    const app = new Injector({}, child2);
-
-    expect(app.get(FooService).bar).to.equal(parent.get(BarService));
+    expect(parent.get(A)).to.equal(app.get(A));
   });
 });

@@ -1,7 +1,7 @@
 import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 
-import { TodoService, Todo, TodoStatus } from './todo.service';
+import { TodoService, Todo, TodoStatus } from './services/todo.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
