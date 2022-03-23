@@ -1,9 +1,14 @@
-# Element
+# Query
 
-Utilities for working directly with custom elements
+Allows user to query the light dom or shadow dom (if attached) for
 
 #### Installation:
 
 ```BASH
-npm i @joist/element@beta
+npm i @joist/query@beta
+```
+
+```TS
+const template = document.createElement('template');
+class MyElement extends HTMLElement {}
 ```
