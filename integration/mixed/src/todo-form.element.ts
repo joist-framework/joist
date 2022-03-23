@@ -1,7 +1,7 @@
 import { injectable, Injected } from '@joist/di/dom';
 import { FASTElement, customElement, css, html, observable } from '@microsoft/fast-element';
 
-import { TodoService, Todo, TodoStatus } from './todo.service';
+import { TodoService, Todo, TodoStatus } from './services/todo.service';
 
 const template = html<TodoForm>/*html*/ `
   <form @submit=${(x, c) => x.onSubmit(c.event)}>
@@ -85,6 +85,7 @@ export class TodoForm extends FASTElement {
 
     if (todo.length) {
       this.todo().addTodo(new Todo(todo, TodoStatus.Active));
+
       this.value = '';
     }
   }

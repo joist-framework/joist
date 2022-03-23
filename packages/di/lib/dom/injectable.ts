@@ -11,10 +11,10 @@ export interface Injectable {
 
 export type Injected<T> = () => T;
 
-export function injectable<T extends Injectable>(Clazz: T) {
-  const { inject, providers } = Clazz;
+export function injectable<T extends Injectable>(CustomElement: T) {
+  const { inject, providers } = CustomElement;
 
-  return class InjectableElement extends Clazz {
+  return class InjectableElement extends CustomElement {
     injector: Injector;
 
     constructor(...args: any[]) {

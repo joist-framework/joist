@@ -2,7 +2,7 @@ import { injectable, Injected } from '@joist/di/dom';
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { TodoService, Todo, TodoStatus } from './todo.service.js';
+import { TodoService, Todo, TodoStatus } from './services/todo.service.js';
 
 @customElement('todo-list')
 @injectable
@@ -52,12 +52,20 @@ export class TodoCard extends LitElement {
 
   constructor(private todo: Injected<TodoService>) {
     super();
+  }
 
-    this.todos = this.todo().todos;
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    const service = this.todo();
+
+    console.log(service.todos);
+
+    this.todos = service.todos;
     this.totalActive = this.getActiveTodoCount();
 
-    this.todo().addEventListener('todochange', () => {
-      this.todos = this.todo().todos;
+    service.addEventListener('todochange', () => {
+      this.todos = service.todos;
       this.totalActive = this.getActiveTodoCount();
     });
   }

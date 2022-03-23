@@ -88,35 +88,22 @@ describe('@injectable()', () => {
 
   it('should handle parent HTML Injectors', async () => {
     @service
-    class A {
-      sayHello() {
-        return 'Hello World';
-      }
-    }
+    class A {}
 
     @service
     class B {
       static inject = [A];
 
-      constructor(private foo: A) {}
-
-      sayHello() {
-        return this.foo.sayHello();
-      }
+      constructor(public a: A) {}
     }
+
+    class AltA implements A {}
 
     @injectable
     class Parent extends HTMLElement {
       static providers = [
         { provide: B, use: B },
-        {
-          provide: A,
-          use: class extends A {
-            sayHello() {
-              return 'Goodbye World';
-            }
-          },
-        },
+        { provide: A, use: AltA },
       ];
     }
 
@@ -140,6 +127,6 @@ describe('@injectable()', () => {
 
     const child = el.querySelector<Child>('injectable-child-1')!;
 
-    expect(child.b().sayHello()).to.equal('Goodbye World');
+    expect(child.b().a).to.be.instanceOf(AltA);
   });
 });

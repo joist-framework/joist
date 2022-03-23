@@ -62,11 +62,13 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   }
 
   connectedCallback() {
-    this.todos = this.todo().todos;
+    const service = this.todo();
+
+    this.todos = service.todos;
     this.totalActive = this.getActiveTodoCount();
 
-    this.todo().addEventListener('todochange', () => {
-      this.todos = this.todo().todos;
+    service.addEventListener('todochange', () => {
+      this.todos = service.todos;
       this.totalActive = this.getActiveTodoCount();
     });
 
