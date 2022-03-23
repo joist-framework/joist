@@ -187,7 +187,7 @@ class MyElement extends HTMLElement {
 }
 
 customElements.define('color-ctx', ColorCtx);
-customElements.define('my-element', ChMyElementild);
+customElements.define('my-element', MyElement);
 ```
 
 ```HTML
