@@ -100,7 +100,7 @@ The `@injectable` decorator allows the Joist Dependency Injector to pass argumen
 #### Inject dependency into your custom element constructor
 
 ```TS
-import { inject, injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 
 class MyService {}
 
@@ -108,18 +108,18 @@ class MyService {}
 class MyElement extends HTMLElement {
   static inject = [MyService];
 
-  constructor(public myService: MyService) {}
+  constructor(public myService: Injected<MyService>) {}
 }
 
 customElements.define('my-element', MyElement);
 ```
 
-#### Define providers and overrides
+#### Define global providers and overrides
 
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable, Injected } from '@joist/di';
+import { defineEnvironment, injectable, Injected } from '@joist/di/dom';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
@@ -150,7 +150,9 @@ customElements.define('my-element', MyElement);
 
 The Joist injector is hierarchical meaning that you can define context for just one part of the DOM tree.
 
-```TS
+```TS]
+import { injectable, Injected } from '@joist/di/dom';
+
 class Colors {
   primary = 'red';
   secodnary = 'green';
