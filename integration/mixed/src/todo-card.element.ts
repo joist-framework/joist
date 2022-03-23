@@ -1,4 +1,4 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { render, html } from 'lit-html';
@@ -46,7 +46,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
 
   @observe todo?: Todo;
 
-  constructor(private service: TodoService) {
+  constructor(private service: Injected<TodoService>) {
     super();
 
     this.attachShadow({ mode: 'open' });
@@ -78,7 +78,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
       </button>
 
       <button class="complete" @click="${() => this.dispatchEvent(new Event('complete_todo'))}">
-        ${this.service.getStatusText(this.todo)}
+        ${this.service().getStatusText(this.todo)}
       </button>
     `;
   }

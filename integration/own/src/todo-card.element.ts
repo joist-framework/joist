@@ -3,7 +3,7 @@ import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
-import { Todo, TodoStatus } from './todo.service';
+import { Todo, TodoStatus } from './services/todo.service';
 
 @styled
 @observable
@@ -49,12 +49,10 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
   }
 
   connectedCallback() {
-    console.log(this.todo);
     this.render();
   }
 
   onPropertyChanged() {
-    console.log(this.todo);
     this.render();
   }
 

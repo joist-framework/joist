@@ -1,59 +1,49 @@
 import { ProviderToken, Provider, ClassProviderToken } from './provider';
-import { readProviderDeps, isProvidedInRoot } from './utils';
+import { readProviderDeps } from './utils';
+import { isProvidedInRoot } from './utils';
 
 export interface InjectorOptions {
-  providers?: Provider<any>[];
+  providers?: Array<Provider<any>>;
   bootstrap?: ProviderToken<any>[];
 }
 
-/**
- * Create an instance of a Dependency injector.
- * Can be used to create a singleton of any class that is property annotated with dependencies.
- *
- * @param options configuration options for the current instance of Injector
- * @param parent a parent instance of Injector
- */
 export class Injector {
-  private providerMap = new WeakMap<ProviderToken<any>, any>();
+  private instances = new WeakMap<ProviderToken<any>, any>();
 
-  constructor(public options: InjectorOptions = {}, public parent?: Injector) {
-    if (this.options.bootstrap) {
-      this.options.bootstrap.forEach((provider) => this.get(provider));
-    }
-  }
+  constructor(public options: InjectorOptions = {}, public parent?: Injector) {}
 
-  setParent(parent?: Injector) {
-    this.parent = parent;
-  }
+  has<T>(token: ProviderToken<T>): boolean {
+    const hasLocally = this.instances.has(token) || !!this.findProvider(token);
 
-  /**
-   * recursively check if a singleton instance is available for a provider
-   */
-  has(token: ProviderToken<any>): boolean {
-    if (this.providerMap.has(token)) {
+    if (hasLocally) {
       return true;
-    } else if (this.findProvider(token)) {
-      return true;
-    } else if (this.parent) {
-      return this.parent.has(token);
     }
 
-    return false;
+    return this.parent ? this.parent.has(token) : false;
   }
 
-  /**
-   * fetches a singleton instance of a provider
-   */
   get<T>(token: ProviderToken<T>): T {
-    if (this.providerMap.has(token)) {
-      return this.providerMap.get(token);
+    // check for a local instance
+    if (this.instances.has(token)) {
+      return this.instances.get(token);
     }
 
-    let instance: T = this.resolve(token);
+    const provider = this.findProvider(token);
 
-    this.providerMap.set(token, instance);
+    // check for a provider definition
+    if (provider) {
+      return this.createAndCache(provider.use);
+    }
 
-    return instance;
+    // check for a parent and attempt to get there
+    if (this.parent) {
+      if (this.parent.has(token) || isProvidedInRoot(token)) {
+        return this.parent.get(token);
+      }
+    }
+
+    // If nothing else treat as a local class provider
+    return this.createAndCache(token as ClassProviderToken<T>);
   }
 
   create<T>(P: ClassProviderToken<T>): T {
@@ -62,29 +52,23 @@ export class Injector {
     return new P(...deps.map((dep) => this.get(dep)));
   }
 
-  private resolve<T>(token: ProviderToken<T>): T {
-    // Check to see if provider is defined in current scope
-    const provider = this.findProvider(token);
+  private createAndCache<T>(token: ClassProviderToken<T>): T {
+    const instance = this.create(token);
 
-    if (provider) {
-      // If provider is defined in current scope use that implementation
-      return this.create(provider.use);
-    }
+    this.instances.set(token, instance);
 
-    if (this.parent && (isProvidedInRoot(token) || this.parent.has(token))) {
-      // if a parent is available and contains an instance of the provider already use that
-      return this.parent.get(token);
-    }
-
-    // if nothing else found assume ClassProviderToken
-    return this.create(token as ClassProviderToken<T>);
+    return instance;
   }
 
-  private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
+  private findProvider(
+    token: ProviderToken<any>
+  ): Provider<any> | ClassProviderToken<any> | undefined {
     if (!this.options.providers) {
       return undefined;
     }
 
-    return this.options.providers.find((provider) => provider.provide === token);
+    return this.options.providers.find((provider) => {
+      return provider.provide === token;
+    });
   }
 }

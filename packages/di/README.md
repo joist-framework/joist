@@ -95,14 +95,13 @@ Since the browser will be what initializes your custom elements we need to be ab
 
 The `@injectable` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
 
-`@injectable` is on required when you will not be able to manually create instances via an injector.
+`@injectable` also injects your services in a lazy way. Instead of passing direct instances of your services it passes a function that be called when you need your service instance. This allows the injector to look for parent injectors which are only availabel after connectedCallback.
 
 #### Inject dependency into your custom element constructor
 
 ```TS
-import { inject, service, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 
-@service
 class MyService {}
 
 @injectable
@@ -120,7 +119,7 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable } from '@joist/di';
+import { defineEnvironment, injectable, Injected } from '@joist/di';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
@@ -129,7 +128,7 @@ class Config {
 defineEnvironment([
   {
     provide: Config,
-    use: class extends Config {
+    use: class {
       apiUrl = 'http://real-api/api/'
     }
   }
@@ -139,10 +138,62 @@ defineEnvironment([
 class MyElement extends HTMLElement {
   static inject = [Config];
 
-  constructor(config: Config) {
-    console.log(config.apiUrl); // http://real-api/api/
+  constructor(config: Injected<Config>) {
+    console.log(config().apiUrl); // http://real-api/api/
   }
 }
 
 customElements.define('my-element', MyElement);
+```
+
+## Context
+
+The Joist injector is hierarchical meaning that you can define context for just one part of the DOM tree.
+
+```TS
+class Colors {
+  primary = 'red';
+  secodnary = 'green';
+}
+
+@injectable
+class ColorCtx extends HTMLElement {
+  static providers = [
+    {
+      provide: Colors,
+      use: class implements Colors {
+        primary = 'orange';
+        secondary = 'purple';
+      },
+    },
+  ];
+}
+
+@injectable
+class MyElement extends HTMLElement {
+  static inject = [Colors];
+
+  constructor(public colors: Injected<Colors>) {
+    super();
+  }
+
+  connectedCallback() {
+    const { primary } = this.colors();
+
+    this.style.background = primary;
+  }
+}
+
+customElements.define('color-ctx', ColorCtx);
+customElements.define('my-element', ChMyElementild);
+```
+
+```HTML
+<!-- Default Colors -->
+<my-element></my-element>
+
+<!-- Special color ctx -->
+<color-ctx>
+  <my-element></my-element>
+</color-ctx>
 ```

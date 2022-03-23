@@ -1,7 +1,7 @@
-import { injectable } from '@joist/di';
+import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 
-import { TodoService, Todo, TodoStatus } from './todo.service';
+import { TodoService, Todo, TodoStatus } from './services/todo.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
@@ -65,7 +65,7 @@ export class TodoForm extends HTMLElement {
   private root = this.attachShadow({ mode: 'open' });
   private input: HTMLInputElement | null = null;
 
-  constructor(private todo: TodoService) {
+  constructor(private todo: Injected<TodoService>) {
     super();
   }
 
@@ -85,7 +85,7 @@ export class TodoForm extends HTMLElement {
     const todo = this.input!.value;
 
     if (todo.length) {
-      this.todo.addTodo(new Todo(todo, TodoStatus.Active));
+      this.todo().addTodo(new Todo(todo, TodoStatus.Active));
 
       this.input!.value = '';
     }
