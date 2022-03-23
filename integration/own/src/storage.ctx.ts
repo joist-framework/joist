@@ -39,4 +39,4 @@ export class StorageCtx extends HTMLElement {
   ];
 }
 
-customElements.define('storage-ctx', StorageCtx);
+customElements.define('local-storage-ctx', StorageCtx);

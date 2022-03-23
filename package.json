@@ -12,6 +12,7 @@
     "@joist/control": "file:packages/control",
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
+    "@joist/query": "file:packages/query",
     "@joist/styled": "file:packages/styled"
   },
   "devDependencies": {

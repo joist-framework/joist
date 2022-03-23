@@ -1,12 +1,13 @@
 import { injectable, Injected } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
+import { query } from '@joist/query';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
   <form>
-    <input name="todo" placeholder="What needs to be done?" autocomplete="off" autofocus />
+    <input query="input" name="todo" placeholder="What needs to be done?" autocomplete="off" autofocus />
   </form>
 `;
 
@@ -62,8 +63,9 @@ export class TodoForm extends HTMLElement {
     `,
   ];
 
+  @query input!: HTMLInputElement;
+
   private root = this.attachShadow({ mode: 'open' });
-  private input: HTMLInputElement | null = null;
 
   constructor(private todo: Injected<TodoService>) {
     super();
@@ -71,8 +73,6 @@ export class TodoForm extends HTMLElement {
 
   connectedCallback() {
     this.root.appendChild(template.content.cloneNode(true));
-
-    this.input = this.root.querySelector('input');
 
     this.root.addEventListener('submit', (e) => {
       this.onSubmit(e);
@@ -82,12 +82,12 @@ export class TodoForm extends HTMLElement {
   private onSubmit(e: Event) {
     e.preventDefault();
 
-    const todo = this.input!.value;
+    const todo = this.input.value;
 
     if (todo.length) {
       this.todo().addTodo(new Todo(todo, TodoStatus.Active));
 
-      this.input!.value = '';
+      this.input.value = '';
     }
   }
 }
