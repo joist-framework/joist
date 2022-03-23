@@ -150,7 +150,7 @@ customElements.define('my-element', MyElement);
 
 The Joist injector is hierarchical meaning that you can define context for just one part of the DOM tree.
 
-```TS]
+```TS
 import { injectable, Injected } from '@joist/di/dom';
 
 class Colors {
