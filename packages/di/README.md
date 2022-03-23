@@ -150,6 +150,10 @@ customElements.define('my-element', MyElement);
 
 The Joist injector is hierarchical meaning that you can define context for just one part of the DOM tree.
 
+### NOTE:
+When using context elements it is important that they are registered BEFORE your other elements.
+If child elements are upgraded before the context element they won't be able to find the context scope.
+
 ```TS
 import { injectable, Injected } from '@joist/di/dom';
 
