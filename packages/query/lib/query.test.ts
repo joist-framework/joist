@@ -50,29 +50,4 @@ describe('query', () => {
 
     expect(el.ul).to.be.instanceOf(HTMLUListElement);
   });
-
-  it('should infer that the property is the id if no selector provided', async () => {
-    class MyElement extends HTMLElement {
-      @query myList!: HTMLUListElement;
-
-      root = this.attachShadow({ mode: 'open' });
-
-      connectedCallback() {
-        this.root.innerHTML = /*html*/ `
-            <ul query="myList">
-                <li>first</li>
-                <li>second</li>
-                <li>third</li>
-                <li>fourth</li>
-            </ul>
-        `;
-      }
-    }
-
-    customElements.define('query-test-3', MyElement);
-
-    const el = await fixture<MyElement>(html`<query-test-3></query-test-3>`);
-
-    expect(el.myList).to.be.instanceOf(HTMLUListElement);
-  });
 });

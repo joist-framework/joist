@@ -27,33 +27,16 @@ export function cacheableQuery(
   return res;
 }
 
-export function query(target: HTMLElement, key: any): void;
-export function query(selector: string, opts?: QueryOptions): (target: any, key: any) => void;
-export function query(targetOrSelector: unknown, keyOrOpts: unknown) {
-  if (targetOrSelector instanceof HTMLElement) {
-    const key = keyOrOpts as string;
-
-    defineCacheableQueryProp(targetOrSelector, key, `[query='${key}']`, true);
-
-    return void 0;
-  }
-
-  return (target: any, key: string) => {
-    const selector = targetOrSelector as string;
-    const opts = (keyOrOpts || { cache: true }) as QueryOptions;
-
-    defineCacheableQueryProp(target, key, selector, opts.cache);
+export function query(selector: string, { cache }: QueryOptions = { cache: true }) {
+  return (target: HTMLElement, key: string) => {
+    Object.defineProperty(target, key, {
+      get(this: HTMLElement & QueryRootProvider) {
+        return cacheableQuery(this, {
+          cacheKey: key,
+          selector,
+          cache,
+        });
+      },
+    });
   };
-}
-
-function defineCacheableQueryProp(target: any, key: any, selector: string, cache: boolean) {
-  Object.defineProperty(target, key, {
-    get(this: HTMLElement & QueryRootProvider) {
-      return cacheableQuery(this, {
-        cacheKey: key,
-        selector,
-        cache,
-      });
-    },
-  });
 }
