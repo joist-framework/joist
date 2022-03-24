@@ -7,7 +7,7 @@ import { TodoService, Todo, TodoStatus } from './services/todo.service';
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
   <form>
-    <input query="input" name="todo" placeholder="What needs to be done?" autocomplete="off" autofocus />
+    <input id="input" name="todo" placeholder="What needs to be done?" autocomplete="off" autofocus />
   </form>
 `;
 
@@ -63,7 +63,7 @@ export class TodoForm extends HTMLElement {
     `,
   ];
 
-  @query input!: HTMLInputElement;
+  @query('#input') input!: HTMLInputElement;
 
   private root = this.attachShadow({ mode: 'open' });
 
