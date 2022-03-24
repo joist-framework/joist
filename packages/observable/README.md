@@ -58,7 +58,7 @@ class State extends EventTarget implements onPropertyChanged {
   someValue: boolean = false;
 
   onPropertyChanged(changes: Changes) {
-    this.dispatchEvent(new StateChangeEvent());
+    this.dispatchEvent(new StateChangeEvent(changes));
   }
 }
 
