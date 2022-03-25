@@ -8,3 +8,7 @@ export function attr(target: any, key: string) {
   target.constructor[PROPERTY_KEY] = target.constructor[PROPERTY_KEY] || [];
   target.constructor[PROPERTY_KEY].push(key);
 }
+
+export interface AttributeParser {
+  fromAttribute?(name: string, value: string): any;
+}

@@ -103,7 +103,15 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       return String(value);
     }
 
-    fromAttribute(_name: string, val: string): string | number | boolean {
+    fromAttribute(name: string, val: string): string | number | boolean {
+      if (super.fromAttribute) {
+        const superRes = super.fromAttribute(name, val);
+
+        if (superRes !== null) {
+          return superRes;
+        }
+      }
+
       // if a boolean assume such
       if (val === 'true' || val === 'false') {
         return val === 'true';

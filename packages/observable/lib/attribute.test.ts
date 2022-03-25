@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { attr } from './attribute';
+import { attr, AttributeParser } from './attribute';
 import { OnPropertyChanged, observable, observe } from './observable';
 
 describe('attribute', () => {
@@ -105,5 +105,28 @@ describe('attribute', () => {
     const el = await fixture<TestElement>(html`<attr-test-7></attr-test-7>`);
 
     expect(el.getAttribute('name')).to.equal('Hello World');
+  });
+
+  it('should let you override specific attributes', async () => {
+    @observable
+    class TestElement extends HTMLElement implements AttributeParser {
+      @attr count: string = '';
+
+      fromAttribute(name: string, value: string) {
+        switch (name) {
+          case 'count':
+            return value;
+
+          default:
+            return null;
+        }
+      }
+    }
+
+    customElements.define('attr-test-8', TestElement);
+
+    const el = await fixture<TestElement>(html`<attr-test-8 count="1"></attr-test-8>`);
+
+    expect(el.count).to.equal('1');
   });
 });
