@@ -24,24 +24,52 @@ export interface AttributeParser {
   write(val: unknown): string;
 }
 
-export function attr(target: any, key: string) {
-  target.constructor.observedAttributes = target.constructor.observedAttributes || [];
-  target.constructor.observedAttributes.push(key);
+export function attr<T extends HTMLElement>(
+  targetOrParser: T | Partial<AttributeParser>,
+  key?: string
+): any {
+  if (targetOrParser instanceof HTMLElement) {
+    defineAttribute(targetOrParser, key as string);
 
-  target.constructor.attributeParsers = target.constructor.attributeParsers || {};
-  target.constructor.attributeParsers[key] = {
-    read: defaultRead,
-    write: String,
+    return void 0;
+  }
+
+  return (target: T, key: string) => {
+    const parser = targetOrParser as AttributeParser;
+
+    defineAttribute(target, key);
+
+    const attributeParsers: Record<string, AttributeParser> = Reflect.get(
+      target.constructor,
+      'attributeParsers'
+    );
+
+    attributeParsers[key].read = parser.read || attributeParsers[key].read;
+    attributeParsers[key].write = parser.write || attributeParsers[key].write;
+
+    Reflect.set(target.constructor, 'attributeParsers', attributeParsers);
+
+    return void 0;
   };
 }
 
-export function attribute(parser: Partial<AttributeParser>) {
-  return (target: any, key: string) => {
-    attr(target, key);
+function defineAttribute<T extends HTMLElement>(target: T, key: string) {
+  const observedAttributes = Reflect.get(target.constructor, 'observedAttributes') || [];
+  observedAttributes.push(key);
 
-    const current: AttributeParser = target.constructor.attributeParsers[key];
+  Reflect.set(target.constructor, 'observedAttributes', observedAttributes);
 
-    current.read = parser.read || current.read;
-    current.write = parser.write || current.write;
-  };
+  const attributeParsers: Record<string, AttributeParser> | undefined = Reflect.get(
+    target.constructor,
+    'attributeParsers'
+  );
+
+  if (attributeParsers) {
+    attributeParsers[key] = { read: defaultRead, write: String };
+  } else {
+    const attributeParsers = Reflect.get(target.constructor, 'attributeParsers');
+    attributeParsers[key as string] = { read: defaultRead, write: String };
+
+    Reflect.set(target.constructor, 'attributeParsers', attributeParsers);
+  }
 }

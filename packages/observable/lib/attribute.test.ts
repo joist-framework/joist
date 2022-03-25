@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { attr, attribute } from './attribute';
+import { attr } from './attribute';
 import { OnPropertyChanged, observable, observe } from './observable';
 
 describe('attribute', () => {
@@ -70,7 +70,7 @@ describe('attribute', () => {
   it('should use provided parser', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attribute({ read: Number, write: String }) count: number = 0;
+      @attr({ read: Number, write: String }) count: number = 0;
     }
 
     customElements.define('attr-test-5', TestElement);
@@ -83,7 +83,7 @@ describe('attribute', () => {
   it('should not set prop from attribute if null to start', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attribute({ read: Number }) count: number = 0;
+      @attr({ read: Number }) count: number = 0;
     }
 
     customElements.define('attr-test-6', TestElement);
