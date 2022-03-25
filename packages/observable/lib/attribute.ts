@@ -25,13 +25,12 @@ export interface AttributeParser {
 }
 
 export function attr<T extends HTMLElement>(
-  targetOrParser: T | Partial<AttributeParser>,
-  key?: string
-): any {
+  p: Partial<AttributeParser>
+): (t: T, key: string) => void;
+export function attr<T extends HTMLElement>(t: T, key: string): void;
+export function attr<T extends HTMLElement>(targetOrParser: unknown, key?: string): any {
   if (targetOrParser instanceof HTMLElement) {
-    defineAttribute(targetOrParser, key as string);
-
-    return void 0;
+    return defineAttribute(targetOrParser, key as string);
   }
 
   return (target: T, key: string) => {
@@ -53,11 +52,17 @@ export function attr<T extends HTMLElement>(
   };
 }
 
-function defineAttribute<T extends HTMLElement>(target: T, key: string) {
-  const observedAttributes = Reflect.get(target.constructor, 'observedAttributes') || [];
-  observedAttributes.push(key);
+function defineAttribute<T extends HTMLElement>(target: T, key: string): void {
+  const observedAttributes: string[] | undefined = Reflect.get(
+    target.constructor,
+    'observedAttributes'
+  );
 
-  Reflect.set(target.constructor, 'observedAttributes', observedAttributes);
+  if (observedAttributes) {
+    observedAttributes.push(key);
+  } else {
+    Reflect.set(target.constructor, 'observedAttributes', [key]);
+  }
 
   const attributeParsers: Record<string, AttributeParser> | undefined = Reflect.get(
     target.constructor,
@@ -67,9 +72,11 @@ function defineAttribute<T extends HTMLElement>(target: T, key: string) {
   if (attributeParsers) {
     attributeParsers[key] = { read: defaultRead, write: String };
   } else {
-    const attributeParsers = Reflect.get(target.constructor, 'attributeParsers');
-    attributeParsers[key as string] = { read: defaultRead, write: String };
+    const attributeParsers: Record<string, AttributeParser> = {};
+    attributeParsers[key] = { read: defaultRead, write: String };
 
     Reflect.set(target.constructor, 'attributeParsers', attributeParsers);
   }
+
+  return void 0;
 }
