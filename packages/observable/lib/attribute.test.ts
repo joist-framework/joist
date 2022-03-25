@@ -1,6 +1,6 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { attr, AttributeParser } from './attribute';
+import { attr, attribute } from './attribute';
 import { OnPropertyChanged, observable, observe } from './observable';
 
 describe('attribute', () => {
@@ -11,7 +11,6 @@ describe('attribute', () => {
     }
 
     customElements.define('attr-test-1', TestElement);
-
     const el = await fixture<TestElement>(html`<attr-test-1 name="Foo"></attr-test-1>`);
 
     expect(el.name).to.equal('Foo');
@@ -68,10 +67,10 @@ describe('attribute', () => {
     expect(el.hasThing).to.equal(false);
   });
 
-  it('should auto parse number', async () => {
+  it('should use provided parser', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr count: number = 0;
+      @attribute({ read: Number, write: String }) count: number = 0;
     }
 
     customElements.define('attr-test-5', TestElement);
@@ -84,7 +83,7 @@ describe('attribute', () => {
   it('should not set prop from attribute if null to start', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr count: number = 0;
+      @attribute({ read: Number }) count: number = 0;
     }
 
     customElements.define('attr-test-6', TestElement);
@@ -105,28 +104,5 @@ describe('attribute', () => {
     const el = await fixture<TestElement>(html`<attr-test-7></attr-test-7>`);
 
     expect(el.getAttribute('name')).to.equal('Hello World');
-  });
-
-  it('should let you override specific attributes', async () => {
-    @observable
-    class TestElement extends HTMLElement implements AttributeParser {
-      @attr count: string = '';
-
-      fromAttribute(name: string, value: string) {
-        switch (name) {
-          case 'count':
-            return value;
-
-          default:
-            return null;
-        }
-      }
-    }
-
-    customElements.define('attr-test-8', TestElement);
-
-    const el = await fixture<TestElement>(html`<attr-test-8 count="1"></attr-test-8>`);
-
-    expect(el.count).to.equal('1');
   });
 });

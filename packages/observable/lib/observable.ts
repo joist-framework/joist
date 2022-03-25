@@ -1,4 +1,4 @@
-import { getObservableAttributes } from './attribute';
+import { getAttributeParsers, getObservableAttributes } from './attribute';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -33,6 +33,7 @@ export function observe(target: any, key: string) {
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
   const properties = getObservableProperties(Base);
   const attributes = getObservableAttributes(Base);
+  const parsers = getAttributeParsers(Base);
   const descriptors = createPropertyDescripors(properties);
 
   return class Observable extends Base implements ObservableBase {
@@ -54,15 +55,17 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 
     connectedCallback(this: HTMLElement & Observable) {
       attributes.forEach((attribute) => {
+        const { read, write } = parsers[attribute];
+
         const val = this.getAttribute(attribute);
 
         if (val !== null) {
-          Reflect.set(this, attribute, this.fromAttribute(attribute, val));
+          Reflect.set(this, attribute, read(val));
         } else {
           const propVal = Reflect.get(this, attribute);
 
           if (propVal !== undefined && propVal !== null) {
-            this.setAttribute(attribute, this.toAttribute(attribute, propVal));
+            this.setAttribute(attribute, write(propVal));
           }
         }
       });
@@ -78,7 +81,9 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       oldVal: string,
       newVal: string
     ) {
-      Reflect.set(this, name, this.fromAttribute(name, newVal));
+      const { read } = parsers[name];
+
+      Reflect.set(this, name, read(newVal));
 
       if (super.attributeChangedCallback) {
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -89,7 +94,9 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       if (this instanceof HTMLElement) {
         for (let change in changes) {
           if (attributes.includes(change)) {
-            this.setAttribute(change, this.toAttribute(change, changes[change].value));
+            const { write } = parsers[change];
+
+            this.setAttribute(change, write(changes[change].value));
           }
         }
       }
@@ -97,33 +104,6 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       if (super.onPropertyChanged) {
         super.onPropertyChanged(changes);
       }
-    }
-
-    toAttribute(_name: string, value: unknown) {
-      return String(value);
-    }
-
-    fromAttribute(name: string, val: string): string | number | boolean {
-      if (super.fromAttribute) {
-        const superRes = super.fromAttribute(name, val);
-
-        if (superRes !== null) {
-          return superRes;
-        }
-      }
-
-      // if a boolean assume such
-      if (val === 'true' || val === 'false') {
-        return val === 'true';
-      }
-
-      const number = parseInt(val);
-
-      if (!isNaN(number)) {
-        return number;
-      }
-
-      return val;
     }
   };
 }
