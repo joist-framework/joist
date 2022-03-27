@@ -71,3 +71,31 @@ state.addEventListener('statechange', (e) => {
 state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
+
+#### Attributes
+
+If you are using @observable with custom elements it is very likely that you will want to read from and write to attributes.
+Joist accounts for this by giving you an `@attr` decorator.
+
+```TS
+import { observable, observe, attr} from '@joist/observable';
+
+@observable
+class TestElement extends HTMLElement implements OnPropertyChanged {
+  // reads as a string and writes directly to the name attribute
+  @observe @attr name = '';
+
+  // reads as a number and writes back a string
+  @observe
+  @attr({ read: Number, write: String })
+  count: number = 0;
+
+  // reads as a data and writes back a string
+  @observe
+  @attr({
+    read: (val: string) => new Date(val),
+    write: (val: Date) => val.toString()
+  })
+  count: number = 0;
+}
+```
