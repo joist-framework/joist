@@ -1,3 +1,5 @@
+// This is super stolen from stuff in LIT. All I want to do is provide safety
+
 const constructionToken = Symbol();
 
 export class CSSResult {
