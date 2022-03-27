@@ -81,7 +81,7 @@ Joist accounts for this by giving you an `@attr` decorator.
 import { observable, observe, attr} from '@joist/observable';
 
 @observable
-class TestElement extends HTMLElement implements OnPropertyChanged {
+class TestElement extends HTMLElement {
   // reads as a string and writes directly to the name attribute
   @observe @attr name = '';
 
