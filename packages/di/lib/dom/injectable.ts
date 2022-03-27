@@ -36,16 +36,10 @@ export function injectable<T extends Injectable>(CustomElement: T) {
       this.injector = injector;
 
       this.addEventListener('finddiroot', (e) => {
-        const path = e.composedPath();
-
-        const parentInjector = path.find((el) => {
-          return el instanceof HTMLElement && el !== this && el.hasAttribute('joist-injector-root');
-        });
+        const parentInjector = findInjectorRoot(e);
 
         if (parentInjector) {
-          const injectorHost = parentInjector as InjectableElement;
-
-          this.injector.parent = injectorHost.injector;
+          this.injector.parent = parentInjector;
         }
 
         if (super.connectedCallback) {
@@ -71,4 +65,18 @@ export function injectable<T extends Injectable>(CustomElement: T) {
       }
     }
   };
+}
+
+function findInjectorRoot(e: Event): Injector | null {
+  const path = e.composedPath();
+
+  const parentInjector = path.find((el) => {
+    return el instanceof HTMLElement && el !== e.target && el.hasAttribute('joist-injector-root');
+  });
+
+  if (parentInjector) {
+    return Reflect.get(parentInjector, 'injector') as Injector;
+  }
+
+  return null;
 }
