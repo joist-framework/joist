@@ -5,7 +5,7 @@ Makes a custom element behave like a form control.
 #### Installation:
 
 ```BASH
-npm i @joist/control@beta
+npm i @joist/control@canary
 ```
 
 #### Example:

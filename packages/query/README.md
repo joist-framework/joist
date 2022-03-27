@@ -5,7 +5,7 @@ Allows user to query the light dom or shadow dom (if attached) for
 #### Installation:
 
 ```BASH
-npm i @joist/query@beta
+npm i @joist/query@canary
 ```
 
 ## With Query Attribute
@@ -18,11 +18,11 @@ template.innerHTML = `
 
 class MyElement extends HTMLElement {
   @query input!: HTMLInputElement;
-  
+
   constructor() {
     this.attachShadow({ mode: 'open' });
   }
-  
+
   connectedCallback() {
     this.shadowRoot!.appendChild(template.content.clone(true));
   }
@@ -39,11 +39,11 @@ template.innerHTML = `
 
 class MyElement extends HTMLElement {
   @query('input') input!: HTMLInputElement;
-  
+
   constructor() {
     this.attachShadow({ mode: 'open' });
   }
-  
+
   connectedCallback() {
     this.shadowRoot!.appendChild(template.content.clone(true));
   }
