@@ -35,7 +35,7 @@ describe('attribute', () => {
     el.name = 'Hello World';
   });
 
-  it('should map a attribute to an property when changed', (done) => {
+  it('should map an attribute to a property when changed', (done) => {
     @observable
     class TestElement extends HTMLElement implements OnPropertyChanged {
       @observe @attr name: string = '';
