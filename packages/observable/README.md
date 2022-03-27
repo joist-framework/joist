@@ -87,10 +87,10 @@ class TestElement extends HTMLElement implements OnPropertyChanged {
 
   // reads as a number and writes back a string
   @observe
-  @attr({ read: Number, write: String })
+  @attr({ read: Number })
   count: number = 0;
 
-  // reads as a data and writes back a string
+  // reads as a Date object and writes back a string
   @observe
   @attr({
     read: (val: string) => new Date(val),
