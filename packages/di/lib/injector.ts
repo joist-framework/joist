@@ -2,15 +2,10 @@ import { ProviderToken, Provider, ClassProviderToken } from './provider';
 import { readProviderDeps } from './utils';
 import { isProvidedInRoot } from './utils';
 
-export interface InjectorOptions {
-  providers?: Array<Provider<any>>;
-  bootstrap?: ProviderToken<any>[];
-}
-
 export class Injector {
   private instances = new WeakMap<ProviderToken<any>, any>();
 
-  constructor(public options: InjectorOptions = {}, public parent?: Injector) {}
+  constructor(public providers: Provider<any>[] = [], public parent?: Injector) {}
 
   has<T>(token: ProviderToken<T>): boolean {
     const hasLocally = this.instances.has(token) || !!this.findProvider(token);
@@ -63,11 +58,11 @@ export class Injector {
   private findProvider(
     token: ProviderToken<any>
   ): Provider<any> | ClassProviderToken<any> | undefined {
-    if (!this.options.providers) {
+    if (!this.providers) {
       return undefined;
     }
 
-    return this.options.providers.find((provider) => {
+    return this.providers.find((provider) => {
       return provider.provide === token;
     });
   }
