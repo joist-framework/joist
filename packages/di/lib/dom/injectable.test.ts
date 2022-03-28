@@ -101,10 +101,7 @@ describe('@injectable()', () => {
 
     @injectable
     class Parent extends HTMLElement {
-      static providers = [
-        { provide: B, use: B },
-        { provide: A, use: AltA },
-      ];
+      static providers = [B, { provide: A, use: AltA }];
     }
 
     @injectable

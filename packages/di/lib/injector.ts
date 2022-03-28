@@ -27,7 +27,11 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      return this.createAndCache(provider.use);
+      if (provider.use) {
+        return this.createAndCache(provider.use);
+      } else {
+        return this.createAndCache(provider as ClassProviderToken<T>);
+      }
     }
 
     // check for a parent and attempt to get there
@@ -62,6 +66,8 @@ export class Injector {
       return undefined;
     }
 
-    return this.providers.find((provider) => provider.provide === token);
+    return this.providers.find((provider) => {
+      return provider === token || provider.provide === token;
+    });
   }
 }
