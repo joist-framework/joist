@@ -4,7 +4,7 @@ import { Provider } from '../provider';
 let rootInjector: Injector | null = null;
 
 export function defineEnvironment(providers: Provider<any>[] = []): Injector {
-  rootInjector = new Injector({ providers });
+  rootInjector = new Injector(providers);
 
   return rootInjector;
 }

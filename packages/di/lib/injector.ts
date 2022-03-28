@@ -3,7 +3,7 @@ import { readProviderDeps } from './utils';
 import { isProvidedInRoot } from './utils';
 
 export class Injector {
-  private instances = new WeakMap<ProviderToken<any>, any>();
+  public instances = new WeakMap<ProviderToken<any>, any>();
 
   constructor(public providers: Provider<any>[] = [], public parent?: Injector) {}
 

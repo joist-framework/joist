@@ -73,9 +73,7 @@ describe('Injector', () => {
 
     class AltA extends A {}
 
-    const app = new Injector({
-      providers: [{ provide: A, use: AltA }],
-    });
+    const app = new Injector([{ provide: A, use: AltA }]);
 
     expect(app.get(B).a).to.be.instanceOf(AltA);
   });
@@ -84,7 +82,7 @@ describe('Injector', () => {
     class A {}
 
     const parent = new Injector();
-    const app = new Injector({}, parent);
+    const app = new Injector([], parent);
 
     expect(parent.get(A)).to.equal(app.get(A));
   });
