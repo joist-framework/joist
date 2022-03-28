@@ -62,8 +62,6 @@ export class Injector {
       return undefined;
     }
 
-    return this.providers.find((provider) => {
-      return provider.provide === token;
-    });
+    return this.providers.find((provider) => provider.provide === token);
   }
 }
