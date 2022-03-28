@@ -56,18 +56,16 @@ class BarService {
 }
 
 // Override FooService with an alternate implementation
-const app = new Injector({
-  providers: [
-    {
-      provide: FooService,
-      use: class extends FooService {
-        sayHello() {
-          return 'IT HAS BEEN OVERRIDEN'
-        }
+const app = new Injector([
+  {
+    provide: FooService,
+    use: class extends FooService {
+      sayHello() {
+        return 'IT HAS BEEN OVERRIDEN'
       }
     }
-  ]
-});
+  }
+]);
 
 app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRIDEN
 ```
