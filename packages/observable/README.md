@@ -12,10 +12,10 @@ npm i @joist/observable@canary
 #### Example:
 
 ```TS
-import { observable, observer, onPropertyChanged, Changes } from '@joist/observable';
+import { observable, observer, OnPropertyChanged, Changes } from '@joist/observable';
 
 @observable
-class State implements onPropertyChanged {
+class State implements OnPropertyChanged {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
@@ -40,7 +40,7 @@ state.userName = 'Danny Blue'
 If you want to externally monitor your class for changes you can extend event target and dispatch events. (available in both node and the browser)
 
 ```TS
-import { observable, observer, onPropertyChanged, Changes } from '@joist/observable';
+import { observable, observer, OnPropertyChanged, Changes } from '@joist/observable';
 
 class StateChangeEvent extends Event {
   consetructor(public changes: Changes) {
@@ -49,7 +49,7 @@ class StateChangeEvent extends Event {
 }
 
 @observable
-class State extends EventTarget implements onPropertyChanged {
+class State extends EventTarget implements OnPropertyChanged {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
