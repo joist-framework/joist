@@ -1,2 +1,2 @@
-export { getEnvironmentRef, defineEnvironment } from './dom/environment';
-export { injectable, Injected } from './dom/injectable';
+export { environment } from './dom/environment';
+export { injectable } from './dom/injectable';

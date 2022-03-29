@@ -1,6 +1,6 @@
 import { Provider, ProviderToken } from '../provider';
 import { Injector } from '../injector';
-import { getEnvironmentRef } from './environment';
+import { environment } from './environment';
 
 export interface Injectable {
   inject?: ProviderToken<any>[];
@@ -9,8 +9,6 @@ export interface Injectable {
   new (...args: any[]): HTMLElement;
 }
 
-export type Injected<T> = () => T;
-
 export function injectable<T extends Injectable>(CustomElement: T) {
   const { inject, providers } = CustomElement;
 
@@ -18,19 +16,12 @@ export function injectable<T extends Injectable>(CustomElement: T) {
     injector: Injector;
 
     constructor(...args: any[]) {
-      const injector = new Injector(providers, getEnvironmentRef());
-      let injected: Injected<any>[] = [];
+      const injector = new Injector(providers, environment());
 
       if (args.length || !inject) {
         super(...args);
       } else {
-        injected = inject.map((dep) => {
-          return () => {
-            return this.injector.get(dep);
-          };
-        });
-
-        super(...injected);
+        super(...inject.map((dep) => () => injector.get(dep)));
       }
 
       this.injector = injector;

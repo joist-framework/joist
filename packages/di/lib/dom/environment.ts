@@ -1,22 +1,12 @@
 import { Injector } from '../injector';
-import { Provider } from '../provider';
 
-let rootInjector: Injector | null = null;
+const rootInjector = new Injector();
 
-export function defineEnvironment(providers: Provider<any>[] = []): Injector {
-  rootInjector = new Injector(providers);
-
+export function environment(): Injector {
   return rootInjector;
 }
 
-export function getEnvironmentRef(): Injector {
-  if (rootInjector) {
-    return rootInjector;
-  }
-
-  return defineEnvironment();
-}
-
 export function clearEnvironment(): void {
-  rootInjector = null;
+  rootInjector.providers = [];
+  rootInjector.instances = new WeakMap();
 }

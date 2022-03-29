@@ -1,6 +1,7 @@
 import { ProviderToken, Provider, ClassProviderToken } from './provider';
-import { readProviderDeps } from './utils';
-import { isProvidedInRoot } from './utils';
+import { readProviderDeps, isProvidedInRoot } from './utils';
+
+export type Injected<T> = () => T;
 
 export class Injector {
   public instances = new WeakMap<ProviderToken<any>, any>();
@@ -27,10 +28,10 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      if (provider.use) {
+      if ('use' in provider) {
         return this.createAndCache(provider.use);
       } else {
-        return this.createAndCache(provider as ClassProviderToken<T>);
+        return this.createAndCache(provider);
       }
     }
 
@@ -48,7 +49,7 @@ export class Injector {
   create<T>(P: ClassProviderToken<T>): T {
     const deps = readProviderDeps(P);
 
-    return new P(...deps.map((dep) => this.get(dep)));
+    return new P(...deps.map((dep) => () => this.get(dep)));
   }
 
   private createAndCache<T>(token: ClassProviderToken<T>): T {
@@ -59,9 +60,7 @@ export class Injector {
     return instance;
   }
 
-  private findProvider(
-    token: ProviderToken<any>
-  ): Provider<any> | ClassProviderToken<any> | undefined {
+  private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
     if (!this.providers) {
       return undefined;
     }

@@ -1,5 +1,5 @@
 import { observable, observe, OnPropertyChanged } from '@joist/observable';
-import { service } from '@joist/di';
+import { service, Injected } from '@joist/di';
 
 import { AppStorage } from './storage.service';
 
@@ -25,10 +25,12 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
 
   @observe todos: Todo[] = [];
 
-  constructor(private store: AppStorage) {
+  private store: AppStorage;
+
+  constructor(private storeFactory: Injected<AppStorage>) {
     super();
 
-    console.log('created', store);
+    this.store = this.storeFactory();
 
     const stored = this.store.loadJSON<Todo[]>('joist_todo');
 
@@ -56,7 +58,6 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
   }
 
   onPropertyChanged() {
-    console.log(this.todos);
     this.dispatchEvent(new TodoChangeEvent());
     this.store.saveJSON('joist_todo', this.todos);
   }

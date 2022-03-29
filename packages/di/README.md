@@ -1,6 +1,7 @@
 # Di
 
-Dependency Injection in ~800 bytes.
+Dependency Injection in ~800 bytes. The Joist Dependency Injector is a small inversion of control (IOC) container that resolves dependencies lazyily.
+This means that it passes functions around and that dependencies are not initialized untill they are called.
 
 #### Installation:
 
@@ -11,7 +12,7 @@ npm i @joist/di@canary
 #### Example:
 
 ```TS
-import { Injector } from '@joist/di';
+import { Injector, Injected } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -22,10 +23,10 @@ class FooService {
 class BarService {
   static inject = [FooService];
 
-  constructor(private foo: FooService) {}
+  constructor(private foo: Injected<FooService>) {}
 
   sayHello() {
-    return this.foo.sayHello();
+    return this.foo().sayHello();
   }
 }
 
@@ -37,7 +38,7 @@ app.get(BarService).sayHello(); // Hello from BarService and Hello from FooServi
 #### Override A Service:
 
 ```TS
-import { Injector, inject } from '@joist/di';
+import { Injector, inject, Injected } from '@joist/di';
 
 class FooService {
   sayHello() {
@@ -48,10 +49,10 @@ class FooService {
 class BarService {
   static inject = [FooService];
 
-  constructor(private foo: FooService) {}
+  constructor(private foo: Injected<FooService>) {}
 
   sayHello() {
-    return 'Hello From BarService and ' + this.foo.sayHello();
+    return 'Hello From BarService and ' + this.foo().sayHello();
   }
 }
 
@@ -117,20 +118,18 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable, Injected } from '@joist/di/dom';
+import { environment, injectable, Injected } from '@joist/di/dom';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
 }
 
-defineEnvironment([
-  {
-    provide: Config,
-    use: class {
-      apiUrl = 'http://real-api/api/'
-    }
+environment().providers.push({
+  provide: Config,
+  use: class {
+    apiUrl = 'http://real-api/api/'
   }
-]);
+});
 
 @injectable
 class MyElement extends HTMLElement {
