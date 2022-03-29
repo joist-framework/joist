@@ -1,6 +1,7 @@
 import { Injected } from '@joist/di';
 import { injectable } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
+import { attr, Changes, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service';
@@ -14,7 +15,8 @@ template.innerHTML = /*html*/ `
 
 @injectable
 @styled
-export class TodoForm extends HTMLElement {
+@observable
+export class TodoForm extends HTMLElement implements OnPropertyChanged {
   static inject = [TodoService];
 
   static styles = [
@@ -64,6 +66,8 @@ export class TodoForm extends HTMLElement {
     `,
   ];
 
+  @observe @attr value = '';
+
   @query('#input') input!: HTMLInputElement;
 
   private root = this.attachShadow({ mode: 'open' });
@@ -75,9 +79,19 @@ export class TodoForm extends HTMLElement {
   connectedCallback() {
     this.root.appendChild(template.content.cloneNode(true));
 
+    this.input.addEventListener('input', () => {
+      this.value = this.input.value;
+    });
+
     this.root.addEventListener('submit', (e) => {
       this.onSubmit(e);
     });
+  }
+
+  onPropertyChanged(changes: Changes): void {
+    console.log(changes);
+
+    this.input.value = this.value;
   }
 
   private onSubmit(e: Event) {
