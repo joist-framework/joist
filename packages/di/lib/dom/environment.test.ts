@@ -1,9 +1,9 @@
 import { expect } from '@open-wc/testing';
 
-import { Injector } from '../injector';
+import { Injector, Injected } from '../injector';
 import { service } from '../service';
 import { getEnvironmentRef, clearEnvironment } from './environment';
-import { injectable, Injected } from './injectable';
+import { injectable } from './injectable';
 
 describe('environment', () => {
   afterEach(clearEnvironment);
