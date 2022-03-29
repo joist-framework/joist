@@ -94,14 +94,17 @@ describe('@injectable()', () => {
     class B {
       static inject = [A];
 
-      constructor(public a: A) {}
+      constructor(public a: Injected<A>) {}
     }
 
     class AltA implements A {}
 
     @injectable
     class Parent extends HTMLElement {
-      static providers = [B, { provide: A, use: AltA }];
+      static providers = [
+        { provide: B, use: B },
+        { provide: A, use: AltA },
+      ];
     }
 
     @injectable
@@ -124,6 +127,6 @@ describe('@injectable()', () => {
 
     const child = el.querySelector<Child>('injectable-child-1')!;
 
-    expect(child.b().a).to.be.instanceOf(AltA);
+    expect(child.b().a()).to.be.instanceOf(AltA);
   });
 });
