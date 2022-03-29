@@ -25,12 +25,14 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
 
   @observe todos: Todo[] = [];
 
-  constructor(private store: Injected<AppStorage>) {
+  private store: AppStorage;
+
+  constructor(private storeFactory: Injected<AppStorage>) {
     super();
 
-    console.log('created', store);
+    this.store = this.storeFactory();
 
-    const stored = this.store().loadJSON<Todo[]>('joist_todo');
+    const stored = this.store.loadJSON<Todo[]>('joist_todo');
 
     if (stored) {
       this.todos = stored;
@@ -57,6 +59,6 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
 
   onPropertyChanged() {
     this.dispatchEvent(new TodoChangeEvent());
-    this.store().saveJSON('joist_todo', this.todos);
+    this.store.saveJSON('joist_todo', this.todos);
   }
 }
