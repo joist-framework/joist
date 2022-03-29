@@ -1,6 +1,5 @@
 import { ProviderToken, Provider, ClassProviderToken } from './provider';
-import { readProviderDeps } from './utils';
-import { isProvidedInRoot } from './utils';
+import { readProviderDeps, isProvidedInRoot } from './utils';
 
 export type Injected<T> = () => T;
 
@@ -29,7 +28,11 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      return this.createAndCache(provider.use);
+      if ('use' in provider) {
+        return this.createAndCache(provider.use);
+      } else {
+        return this.createAndCache(provider);
+      }
     }
 
     // check for a parent and attempt to get there
@@ -63,7 +66,7 @@ export class Injector {
     }
 
     return this.providers.find((provider) => {
-      return provider.provide === token;
+      return provider === token || provider.provide === token;
     });
   }
 }

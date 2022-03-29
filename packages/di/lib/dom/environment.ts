@@ -1,9 +1,9 @@
 import { Injector } from '../injector';
-import { Provider } from '../provider';
+import { ProviderDef } from '../provider';
 
 let rootInjector: Injector | null = null;
 
-export function defineEnvironment(providers: Provider<any>[] = []): Injector {
+export function defineEnvironment(providers: ProviderDef<any>[] = []): Injector {
   rootInjector = new Injector(providers);
 
   return rootInjector;

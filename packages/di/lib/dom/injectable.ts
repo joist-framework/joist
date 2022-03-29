@@ -1,10 +1,10 @@
-import { Provider, ProviderToken } from '../provider';
+import { ProviderDef, ProviderToken } from '../provider';
 import { Injector } from '../injector';
 import { getEnvironmentRef } from './environment';
 
 export interface Injectable {
   inject?: ProviderToken<any>[];
-  providers?: Provider<any>[];
+  providers?: ProviderDef<any>[];
 
   new (...args: any[]): HTMLElement;
 }
