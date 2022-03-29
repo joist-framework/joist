@@ -9,8 +9,6 @@ export interface Injectable {
   new (...args: any[]): HTMLElement;
 }
 
-export type Injected<T> = () => T;
-
 export function injectable<T extends Injectable>(CustomElement: T) {
   const { inject, providers } = CustomElement;
 

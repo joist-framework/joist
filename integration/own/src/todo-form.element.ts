@@ -1,4 +1,5 @@
-import { injectable, Injected } from '@joist/di/dom';
+import { Injected } from '@joist/di';
+import { injectable } from '@joist/di/dom';
 import { styled, css } from '@joist/styled';
 import { query } from '@joist/query';
 

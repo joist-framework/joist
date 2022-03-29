@@ -33,7 +33,10 @@ class AppLocalStorage extends AppStorage {
 
 @injectable
 export class StorageCtx extends HTMLElement {
-  static providers = [TodoService, { provide: AppStorage, use: AppLocalStorage }];
+  static providers = [
+    { provide: TodoService, use: TodoService },
+    { provide: AppStorage, use: AppLocalStorage },
+  ];
 }
 
 customElements.define('local-storage-ctx', StorageCtx);
