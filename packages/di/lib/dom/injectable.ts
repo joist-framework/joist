@@ -19,18 +19,11 @@ export function injectable<T extends Injectable>(CustomElement: T) {
 
     constructor(...args: any[]) {
       const injector = new Injector(providers, getEnvironmentRef());
-      let injected: Injected<any>[] = [];
 
       if (args.length || !inject) {
         super(...args);
       } else {
-        injected = inject.map((dep) => {
-          return () => {
-            return this.injector.get(dep);
-          };
-        });
-
-        super(...injected);
+        super(...inject.map((dep) => () => injector.get(dep)));
       }
 
       this.injector = injector;
