@@ -118,20 +118,18 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { defineEnvironment, injectable, Injected } from '@joist/di/dom';
+import { environment, injectable, Injected } from '@joist/di/dom';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
 }
 
-defineEnvironment([
-  {
-    provide: Config,
-    use: class {
-      apiUrl = 'http://real-api/api/'
-    }
+environment().providers.push({
+  provide: Config,
+  use: class {
+    apiUrl = 'http://real-api/api/'
   }
-]);
+});
 
 @injectable
 class MyElement extends HTMLElement {

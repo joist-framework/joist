@@ -1,6 +1,6 @@
 import { ProviderDef, ProviderToken } from '../provider';
 import { Injector } from '../injector';
-import { getEnvironmentRef } from './environment';
+import { environment } from './environment';
 
 export interface Injectable {
   inject?: ProviderToken<any>[];
@@ -16,7 +16,7 @@ export function injectable<T extends Injectable>(CustomElement: T) {
     injector: Injector;
 
     constructor(...args: any[]) {
-      const injector = new Injector(providers, getEnvironmentRef());
+      const injector = new Injector(providers, environment());
 
       if (args.length || !inject) {
         super(...args);
