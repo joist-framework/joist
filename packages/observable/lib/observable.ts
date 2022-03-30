@@ -54,18 +54,22 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     }
 
     connectedCallback(this: HTMLElement & Observable) {
-      attributes.forEach((attribute) => {
-        const { read, write } = parsers[attribute];
+      attributes.forEach((key) => {
+        const { write } = parsers[key];
 
-        const val = this.getAttribute(attribute);
+        const val = this.getAttribute(key);
 
-        if (val !== null) {
-          Reflect.set(this, attribute, read(val));
-        } else {
-          const propVal = Reflect.get(this, attribute);
+        if (val === null) {
+          const propVal = Reflect.get(this, key);
+          const parsedVal = write(propVal);
 
-          if (propVal !== undefined && propVal !== null) {
-            this.setAttribute(attribute, write(propVal));
+          if (
+            propVal !== undefined &&
+            propVal !== null &&
+            propVal !== '' &&
+            propVal !== parsedVal
+          ) {
+            this.setAttribute(key, parsedVal);
           }
         }
       });
@@ -96,7 +100,11 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
           if (attributes.includes(change)) {
             const { write } = parsers[change];
 
-            this.setAttribute(change, write(changes[change].value));
+            const value = write(changes[change].value);
+
+            if (value !== this.getAttribute(change)) {
+              this.setAttribute(change, write(changes[change].value));
+            }
           }
         }
       }

@@ -19,7 +19,7 @@ describe('attribute', () => {
   it('should map a property to an attribute when changed', (done) => {
     @observable
     class TestElement extends HTMLElement implements OnPropertyChanged {
-      @observe @attr name: string = '';
+      @observe @attr name = '';
 
       onPropertyChanged() {
         expect(this.name).to.equal('Hello World');
@@ -57,14 +57,14 @@ describe('attribute', () => {
   it('should auto parse bool', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr hasThing: boolean = true;
+      @attr hasthing: boolean = true;
     }
 
     customElements.define('attr-test-4', TestElement);
 
     const el = await fixture<TestElement>(html`<attr-test-4 hasthing="false"></attr-test-4>`);
 
-    expect(el.hasThing).to.equal(false);
+    expect(el.hasthing).to.equal(false);
   });
 
   it('should use provided parser', async () => {
@@ -96,7 +96,7 @@ describe('attribute', () => {
   it('should set default value for attributes if not set', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr name: string = 'Hello World';
+      @attr name = 'Hello World';
     }
 
     customElements.define('attr-test-7', TestElement);
