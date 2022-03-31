@@ -57,19 +57,13 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       attributes.forEach((key) => {
         const { write } = parsers[key];
 
-        const val = this.getAttribute(key);
+        const attrVal = this.getAttribute(key);
 
-        if (val === null) {
+        if (attrVal === null) {
           const propVal = Reflect.get(this, key);
-          const parsedVal = write(propVal);
 
-          if (
-            propVal !== undefined &&
-            propVal !== null &&
-            propVal !== '' &&
-            propVal !== parsedVal
-          ) {
-            this.setAttribute(key, parsedVal);
+          if (propVal !== undefined && propVal !== null && propVal !== '') {
+            this.setAttribute(key, write(propVal));
           }
         }
       });
