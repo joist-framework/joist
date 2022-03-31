@@ -96,6 +96,6 @@ class TestElement extends HTMLElement {
     read: (val: string) => new Date(val),
     write: (val: Date) => val.toString()
   })
-  count: number = 0;
+  count: Date = 0;
 }
 ```
