@@ -157,21 +157,24 @@ function definePropChange(
     // If there is no previous change defined set it up
     this.propChange = Promise.resolve().then(() => {
       // run onPropChanges here. This makes sure we capture all changes
+      const changes: Changes = {};
 
-      // keep track of whether or not this is the first time a given property has changes
+      // Copy changes and keep track of whether or not this is the first time a given property has changes
       for (let change in this.propChanges) {
-        this.propChanges[change].firstChange = !this.initializedChanges.has(change);
+        changes[change] = this.propChanges[change];
+
+        changes[change].firstChange = !this.initializedChanges.has(change);
 
         this.initializedChanges.add(change);
       }
 
-      if (this.onPropertyChanged) {
-        this.onPropertyChanged(this.propChanges);
-      }
-
-      // reset for next time
-      this.propChanges = {};
+      // clear out before calling to account for changes made INSIDE of the onPropertyChanged callback
       this.propChange = null;
+      this.propChanges = {};
+
+      if (this.onPropertyChanged) {
+        this.onPropertyChanged(changes);
+      }
     });
   }
 

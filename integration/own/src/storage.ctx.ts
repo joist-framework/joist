@@ -4,10 +4,6 @@ import { AppStorage } from './services/storage.service';
 import { TodoService } from './services/todo.service';
 
 class AppLocalStorage extends AppStorage {
-  constructor() {
-    super();
-  }
-
   loadJSON<T>(key: string): T | undefined {
     try {
       const res = localStorage.getItem(key);

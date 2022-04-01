@@ -1,9 +1,17 @@
 import { styled, css } from '@joist/styled';
-import { observable, observe, OnPropertyChanged } from '@joist/observable';
-import { render, html } from 'lit-html';
-import classNames from 'classnames';
+import { attr, observable, observe, OnPropertyChanged } from '@joist/observable';
+import { query } from '@joist/query';
 
 import { Todo, TodoStatus } from './services/todo.service';
+
+const template = document.createElement('template');
+template.innerHTML = /*html*/ `
+  <div id="name"></div>
+  
+  <button id="remove">remove</button>
+  
+  <button id="complete">complete</button>
+`;
 
 @styled
 @observable
@@ -16,11 +24,11 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
         padding: 1rem;
       }
 
-      .name {
+      #name {
         flex-grow: 1;
       }
 
-      .name.complete {
+      :host([complete='true']) #name {
         text-decoration: line-through;
         opacity: 0.5;
       }
@@ -34,51 +42,47 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
         margin-left: 0.5rem;
       }
 
-      button.remove {
+      button#remove {
         color: darkred;
       }
     `,
   ];
 
   @observe todo?: Todo;
+  @observe @attr complete = false;
 
-  constructor() {
-    super();
+  @query('#remove') removeBtn!: HTMLElement;
+  @query('#complete') completeBtn!: HTMLElement;
+  @query('#name') nameEl!: HTMLElement;
 
-    this.attachShadow({ mode: 'open' });
-  }
+  private root = this.attachShadow({ mode: 'open' });
 
   connectedCallback() {
-    this.render();
+    this.root.appendChild(template.content.cloneNode(true));
+
+    this.root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+
+      switch (target.id) {
+        case 'remove':
+          this.dispatchEvent(new Event('remove'));
+
+          break;
+
+        case 'complete':
+          this.dispatchEvent(new Event('complete'));
+
+          break;
+      }
+    });
   }
 
   onPropertyChanged() {
-    this.render();
-  }
-
-  private template() {
-    if (!this.todo) {
-      return html``;
+    if (this.todo) {
+      this.nameEl.innerHTML = this.todo.name;
+      this.complete = this.todo.status === TodoStatus.Completed;
+      this.completeBtn.innerHTML = this.todo.status === TodoStatus.Active ? 'complete' : 'active';
     }
-
-    const { status } = this.todo;
-    const complete = status === TodoStatus.Completed;
-
-    return html`
-      <div class="${classNames('name', { complete })}">${this.todo.name}</div>
-
-      <button class="remove" @click="${() => this.dispatchEvent(new Event('remove'))}">
-        remove
-      </button>
-
-      <button class="complete" @click="${() => this.dispatchEvent(new Event('complete'))}">
-        ${status === TodoStatus.Active ? 'complete' : 'active'}
-      </button>
-    `;
-  }
-
-  private render() {
-    render(this.template(), this.shadowRoot!);
   }
 }
 

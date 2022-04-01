@@ -1,4 +1,4 @@
-import { expect } from '@open-wc/testing';
+import { expect, waitUntil } from '@open-wc/testing';
 
 import { OnPropertyChanged, Changes, observable, observe, Change } from './observable';
 
@@ -130,5 +130,32 @@ describe('observable', () => {
     state.counter = state.counter + 1;
     state.counter = state.counter + 1;
     state.counter = state.counter + 1;
+  });
+
+  it('should handle changes that are made INSIDE of the changed callback', async () => {
+    @observable
+    class Counter implements OnPropertyChanged {
+      changes: Changes[] = [];
+
+      @observe counter = 0;
+      @observe counterAsString = '0';
+
+      onPropertyChanged(changes: Changes) {
+        this.changes.push(changes);
+
+        this.counterAsString = String(this.counter);
+      }
+    }
+
+    const instance = new Counter();
+
+    instance.counter = instance.counter + 1;
+
+    await waitUntil(() => instance.counter === 1);
+
+    expect(instance.changes).to.deep.equal([
+      { counter: new Change(1, 0, true) },
+      { counterAsString: new Change('1', '0', true) },
+    ]);
   });
 });
