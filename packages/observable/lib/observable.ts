@@ -54,19 +54,17 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     }
 
     connectedCallback(this: HTMLElement & Observable) {
-      attributes.forEach((key) => {
-        const { write } = parsers[key];
+      for (let i = 0; i < attributes.length; i++) {
+        const key = attributes[i];
 
-        const attrVal = this.getAttribute(key);
-
-        if (attrVal === null) {
+        if (this.getAttribute(key) === null) {
           const propVal = Reflect.get(this, key);
 
           if (propVal !== undefined && propVal !== null && propVal !== '') {
-            this.setAttribute(key, write(propVal));
+            this.setAttribute(key, parsers[key].write(propVal));
           }
         }
-      });
+      }
 
       if (super.connectedCallback) {
         super.connectedCallback();
