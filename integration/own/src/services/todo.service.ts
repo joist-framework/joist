@@ -27,10 +27,10 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
 
   private store: AppStorage;
 
-  constructor(private storeFactory: Injected<AppStorage>) {
+  constructor(storeFactory: Injected<AppStorage>) {
     super();
 
-    this.store = this.storeFactory();
+    this.store = storeFactory();
 
     const stored = this.store.loadJSON<Todo[]>('joist_todo');
 

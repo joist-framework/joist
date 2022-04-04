@@ -81,7 +81,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
     if (this.todo) {
       this.nameEl.innerHTML = this.todo.name;
       this.complete = this.todo.status === TodoStatus.Completed;
-      this.completeBtn.innerHTML = this.todo.status === TodoStatus.Active ? 'complete' : 'active';
+      this.completeBtn.innerHTML = this.complete ? 'complete' : 'active';
     }
   }
 }
