@@ -4,8 +4,8 @@ import { service, Injected } from '@joist/di';
 import { AppStorage } from './storage.service';
 
 export const enum TodoStatus {
-  Active,
-  Completed,
+  Active = 'active',
+  Complete = 'complete',
 }
 
 export class Todo {

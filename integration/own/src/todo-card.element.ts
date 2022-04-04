@@ -2,11 +2,13 @@ import { styled, css } from '@joist/styled';
 import { attr, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
-import { Todo, TodoStatus } from './services/todo.service';
+import { TodoStatus } from './services/todo.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
-  <div id="name"></div>
+  <div id="name">
+    <slot></slot>
+  </div>
   
   <button id="remove">remove</button>
   
@@ -28,7 +30,7 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
         flex-grow: 1;
       }
 
-      :host([complete='true']) #name {
+      :host([status='complete']) #name {
         text-decoration: line-through;
         opacity: 0.5;
       }
@@ -48,41 +50,26 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
     `,
   ];
 
-  @observe todo?: Todo;
-  @observe @attr complete = false;
+  @observe @attr status: TodoStatus = TodoStatus.Active;
 
-  @query('#remove') removeBtn!: HTMLElement;
-  @query('#complete') completeBtn!: HTMLElement;
-  @query('#name') nameEl!: HTMLElement;
-
-  private root = this.attachShadow({ mode: 'open' });
+  @query('#complete') completeBtn!: HTMLButtonElement;
 
   connectedCallback() {
-    this.root.appendChild(template.content.cloneNode(true));
+    const root = this.attachShadow({ mode: 'open' });
 
-    this.root.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
+    root.appendChild(template.content.cloneNode(true));
 
-      switch (target.id) {
-        case 'remove':
-          this.dispatchEvent(new Event('remove'));
-
-          break;
-
-        case 'complete':
-          this.dispatchEvent(new Event('complete'));
-
-          break;
+    root.addEventListener('click', (e) => {
+      if (e.target instanceof HTMLButtonElement) {
+        this.dispatchEvent(new Event(e.target.id));
       }
     });
   }
 
   onPropertyChanged() {
-    if (this.todo) {
-      this.nameEl.innerHTML = this.todo.name;
-      this.complete = this.todo.status === TodoStatus.Completed;
-      this.completeBtn.innerHTML = this.complete ? 'complete' : 'active';
-    }
+    const isActive = this.status === TodoStatus.Active;
+
+    this.completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }
 }
 

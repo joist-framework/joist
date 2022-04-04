@@ -53,8 +53,8 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
     `,
   ];
 
-  @observe private todos: Todo[] = [];
-  @observe private totalActive = 0;
+  @observe todos: Todo[] = [];
+  @observe totalActive = 0;
 
   constructor(private todo: Injected<TodoService>) {
     super();
@@ -81,15 +81,19 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   }
 
   private template() {
+    const service = this.todo();
+
     return html`
       <div class="todo-list">
         ${this.todos.map((todo, i) => {
           return html`
             <todo-card
-              .todo=${todo}
-              @remove=${() => this.todo().removeTodo(i)}
+              .status=${todo.status}
+              @remove=${() => service.removeTodo(i)}
               @complete=${() => this.completeTodo(i)}
-            ></todo-card>
+            >
+              ${todo.name}
+            </todo-card>
           `;
         })}
       </div>
@@ -111,10 +115,12 @@ export class TodoList extends HTMLElement implements OnPropertyChanged {
   }
 
   private completeTodo(i: number) {
-    const todo = this.todo().todos[i];
+    const service = this.todo();
 
-    return this.todo().updateTodo(i, {
-      status: todo.status === TodoStatus.Active ? TodoStatus.Completed : TodoStatus.Active,
+    const todo = service.todos[i];
+
+    return service.updateTodo(i, {
+      status: todo.status === TodoStatus.Active ? TodoStatus.Complete : TodoStatus.Active,
     });
   }
 }
