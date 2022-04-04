@@ -67,10 +67,10 @@ describe('attribute', () => {
     expect(el.hasthing).to.equal(false);
   });
 
-  it('should use provided parser', async () => {
+  it('should use provided parser (read)', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr({ read: Number, write: String }) count: number = 0;
+      @attr({ read: Number }) count: number = 0;
     }
 
     customElements.define('attr-test-5', TestElement);
@@ -78,6 +78,23 @@ describe('attribute', () => {
     const el = await fixture<TestElement>(html`<attr-test-5 count="100"></attr-test-5>`);
 
     expect(el.count).to.equal(100);
+  });
+
+  it('should use provided parser', async () => {
+    @observable
+    class TestElement extends HTMLElement {
+      @attr({
+        read: (val) => Number(val),
+        write: (val) => `${String(val)}--1234`,
+      })
+      count: number = 100;
+    }
+
+    customElements.define('attr-test-parser-2', TestElement);
+
+    const el = await fixture<TestElement>(html`<attr-test-parser-2></attr-test-parser-2>`);
+
+    expect(el.getAttribute('count')).to.equal('100--1234');
   });
 
   it('should not set prop from attribute if null to start', async () => {
