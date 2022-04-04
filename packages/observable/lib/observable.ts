@@ -79,9 +79,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       oldVal: string,
       newVal: string
     ) {
-      const { read } = parsers[name];
-
-      Reflect.set(this, name, read(newVal));
+      Reflect.set(this, name, parsers[name].read(newVal));
 
       if (super.attributeChangedCallback) {
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -92,12 +90,10 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       if (this instanceof HTMLElement) {
         for (let change in changes) {
           if (attributes.includes(change)) {
-            const { write } = parsers[change];
-
-            const value = write(changes[change].value);
+            const value = parsers[change].write(changes[change].value);
 
             if (value !== this.getAttribute(change)) {
-              this.setAttribute(change, write(changes[change].value));
+              this.setAttribute(change, value);
             }
           }
         }
