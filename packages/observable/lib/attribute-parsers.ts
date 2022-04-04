@@ -16,8 +16,8 @@ export const date: AttributeParser<Date> = {
 };
 
 export const json: AttributeParser<Object> = {
-  read: JSON.stringify,
-  write: JSON.parse,
+  read: JSON.parse,
+  write: JSON.stringify,
 };
 
 export const bool: AttributeParser<boolean> = {
