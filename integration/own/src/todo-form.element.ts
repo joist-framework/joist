@@ -70,20 +70,20 @@ export class TodoForm extends HTMLElement implements OnPropertyChanged {
 
   @query('#input') input!: HTMLInputElement;
 
-  private root = this.attachShadow({ mode: 'open' });
-
   constructor(private todo: Injected<TodoService>) {
     super();
   }
 
   connectedCallback() {
-    this.root.appendChild(template.content.cloneNode(true));
+    const root = this.attachShadow({ mode: 'open' });
+
+    root.appendChild(template.content.cloneNode(true));
 
     this.input.addEventListener('input', () => {
       this.value = this.input.value;
     });
 
-    this.root.addEventListener('submit', (e) => {
+    root.addEventListener('submit', (e) => {
       this.onSubmit(e);
     });
   }
