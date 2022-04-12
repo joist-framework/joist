@@ -12,7 +12,7 @@
     "target/build"
   ],
   "sideEffects": false,
-  "description": "custom element utilities",
+  "description": "Cacheable DOM queries designed for WebComponents",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
@@ -20,7 +20,8 @@
   "keywords": [
     "TypeScript",
     "DOM",
-    "query"
+    "query",
+    "WebCOmponents"
   ],
   "author": "deebloo",
   "license": "MIT",

@@ -16,7 +16,7 @@
     "target/build"
   ],
   "sideEffects": false,
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "Dependency Injection for Vanilla JS classes",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
@@ -24,7 +24,8 @@
   "keywords": [
     "TypeScript",
     "DI",
-    "Dependency Injection"
+    "Dependency Injection",
+    "WebComponents"
   ],
   "author": "deebloo",
   "license": "MIT",

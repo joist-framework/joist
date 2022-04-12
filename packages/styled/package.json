@@ -20,15 +20,16 @@
     "styled/package.json"
   ],
   "sideEffects": false,
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "Intelligently apply styles to WebComponents",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
   },
   "keywords": [
     "TypeScript",
-    "DI",
-    "Dependency Injection"
+    "WebComponents",
+    "CSS",
+    "ShadowDOM"
   ],
   "author": "deebloo",
   "license": "MIT",
