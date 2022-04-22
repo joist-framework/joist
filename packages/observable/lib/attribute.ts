@@ -38,8 +38,8 @@ export function attr<T extends HTMLElement>(targetOrParser: unknown, key?: strin
 
     const attributeParsers: AttributeParsers = Reflect.get(target.constructor, 'attributeParsers');
 
-    attributeParsers[key].read = parser.read || attributeParsers[key].read;
-    attributeParsers[key].write = parser.write || attributeParsers[key].write;
+    attributeParsers[attrName].read = parser.read || attributeParsers[attrName].read;
+    attributeParsers[attrName].write = parser.write || attributeParsers[attrName].write;
 
     Reflect.set(target.constructor, 'attributeParsers', attributeParsers);
 
