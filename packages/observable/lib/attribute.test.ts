@@ -1,7 +1,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attribute';
-import { OnPropertyChanged, observable, observe } from './observable';
+import { OnPropertyChanged, observable, observe, Changes } from './observable';
 
 describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
@@ -57,14 +57,14 @@ describe('attribute', () => {
   it('should auto parse bool', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr hasthing: boolean = true;
+      @attr hasThing: boolean = true;
     }
 
     customElements.define('attr-test-4', TestElement);
 
-    const el = await fixture<TestElement>(html`<attr-test-4 hasthing="false"></attr-test-4>`);
+    const el = await fixture<TestElement>(html`<attr-test-4 has-thing="false"></attr-test-4>`);
 
-    expect(el.hasthing).to.equal(false);
+    expect(el.hasThing).to.equal(false);
   });
 
   it('should use provided parser (read)', async () => {
@@ -121,5 +121,26 @@ describe('attribute', () => {
     const el = await fixture<TestElement>(html`<attr-test-7></attr-test-7>`);
 
     expect(el.getAttribute('name')).to.equal('Hello World');
+  });
+
+  it('should map kebab case attributes to cammelCase property on changle', async () => {
+    return new Promise(async (resolve) => {
+      @observable
+      class TestElement extends HTMLElement implements OnPropertyChanged {
+        @attr @observe fooBar = 'Hello';
+
+        onPropertyChanged(_: Changes): void {
+          expect(this.fooBar).to.equal('World');
+
+          resolve();
+        }
+      }
+
+      customElements.define('attr-test-8', TestElement);
+
+      const el = await fixture<TestElement>(html`<attr-test-8></attr-test-8>`);
+
+      el.setAttribute('foo-bar', 'World');
+    });
   });
 });
