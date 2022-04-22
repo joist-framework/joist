@@ -1,6 +1,6 @@
 {
   "name": "@joist/control",
-  "version": "2.0.0-alpha.16",
+  "version": "2.0.0-alpha.17",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
   "exports": {
