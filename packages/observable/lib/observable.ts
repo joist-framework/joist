@@ -1,4 +1,5 @@
 import { getAttributeParsers, getObservableAttributes } from './attribute';
+import { propNameToAttrName } from './attribute-parsers';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -56,12 +57,13 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     connectedCallback(this: HTMLElement & Observable) {
       for (let i = 0; i < attributes.length; i++) {
         const key = attributes[i];
+        const { write, mapTo } = parsers[key];
 
         if (this.getAttribute(key) === null) {
-          const propVal = Reflect.get(this, key);
+          const propVal = Reflect.get(this, mapTo);
 
           if (propVal !== undefined && propVal !== null && propVal !== '') {
-            this.setAttribute(key, parsers[key].write(propVal));
+            this.setAttribute(key, write(propVal));
           }
         }
       }
@@ -77,7 +79,9 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       oldVal: string,
       newVal: string
     ) {
-      Reflect.set(this, name, parsers[name].read(newVal));
+      const { read, mapTo } = parsers[name];
+
+      Reflect.set(this, mapTo, read(newVal));
 
       if (super.attributeChangedCallback) {
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -89,9 +93,10 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
         for (let change in changes) {
           if (attributes.includes(change)) {
             const value = parsers[change].write(changes[change].value);
+            const attrName = propNameToAttrName(change);
 
-            if (value !== this.getAttribute(change)) {
-              this.setAttribute(change, value);
+            if (value !== this.getAttribute(attrName)) {
+              this.setAttribute(attrName, value);
             }
           }
         }
