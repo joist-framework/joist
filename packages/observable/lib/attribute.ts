@@ -19,18 +19,18 @@ export function getAttributeParsers<T extends typeof HTMLElement>(
   return parsers;
 }
 
-export function attr<T extends HTMLElement>(
-  p: Partial<AttributeParser<unknown>>
-): (t: T, key: string) => void;
+export function attr<T>(
+  p: Partial<AttributeParser<T>>
+): <E extends HTMLElement>(t: E, key: string) => void;
 export function attr<T extends HTMLElement>(t: T, key: string): void;
-export function attr<T extends HTMLElement>(targetOrParser: unknown, key?: string): any {
-  if (targetOrParser instanceof HTMLElement) {
-    const attrName = propNameToAttrName(key as string);
+export function attr(targetOrParser: unknown, key?: string): any {
+  if (targetOrParser instanceof HTMLElement && typeof key === 'string') {
+    const attrName = propNameToAttrName(key);
 
-    return defineAttribute(targetOrParser, attrName, key as string);
+    return defineAttribute(targetOrParser, attrName, key);
   }
 
-  return (target: T, key: string) => {
+  return <T extends HTMLElement>(target: T, key: string) => {
     const parser = targetOrParser as AttributeParser<unknown>;
     const attrName = propNameToAttrName(key);
 

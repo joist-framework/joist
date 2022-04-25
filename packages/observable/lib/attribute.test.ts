@@ -7,7 +7,7 @@ describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr name: string = '';
+      @attr name = '';
     }
 
     customElements.define('attr-test-1', TestElement);
@@ -70,7 +70,7 @@ describe('attribute', () => {
   it('should use provided parser (read)', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr({ read: Number }) count: number = 0;
+      @attr<number>({ read: Number }) count = 0;
     }
 
     customElements.define('attr-test-5', TestElement);
@@ -83,11 +83,11 @@ describe('attribute', () => {
   it('should use provided parser', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr({
+      @attr<number>({
         read: (val) => Number(val),
         write: (val) => `${String(val)}--1234`,
       })
-      count: number = 100;
+      count = 100;
     }
 
     customElements.define('attr-test-parser-2', TestElement);
