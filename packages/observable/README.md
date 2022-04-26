@@ -92,10 +92,10 @@ class TestElement extends HTMLElement {
 
   // reads as a Date object and writes back a string
   @observe
-  @attr({
-    read: (val: string) => new Date(val),
-    write: (val: Date) => val.toString()
+  @attr<Date>({
+    read: (val) => new Date(val),
+    write: (val) => val.toString()
   })
-  count: Date = 0;
+  count = new Date();
 }
 ```
