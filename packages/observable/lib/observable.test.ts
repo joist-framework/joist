@@ -41,7 +41,6 @@ describe('observable', () => {
     }
 
     const person = new Person();
-
     person.fname = 'Foo';
     person.lname = 'Bar';
   });

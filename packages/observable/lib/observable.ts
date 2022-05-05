@@ -91,9 +91,10 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     onPropertyChanged(changes: Changes) {
       if (this instanceof HTMLElement) {
         for (let change in changes) {
-          if (attributes.includes(change)) {
-            const value = parsers[change].write(changes[change].value);
-            const attrName = propNameToAttrName(change);
+          const attrName = propNameToAttrName(change);
+
+          if (attributes.includes(attrName)) {
+            const value = parsers[attrName].write(changes[change].value);
 
             if (value !== this.getAttribute(attrName)) {
               this.setAttribute(attrName, value);

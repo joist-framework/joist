@@ -143,4 +143,26 @@ describe('attribute', () => {
       el.setAttribute('foo-bar', 'World');
     });
   });
+
+  it('should map cammelCase property to kebab case attributes on changle', async () => {
+    return new Promise(async (resolve) => {
+      @observable
+      class TestElement extends HTMLElement implements OnPropertyChanged {
+        @attr @observe fooBar = 'Hello';
+
+        onPropertyChanged(_: Changes): void {
+          expect(el.getAttribute('foo-bar')).to.equal('World');
+          resolve();
+        }
+      }
+
+      customElements.define('attr-test-9', TestElement);
+
+      const el = await fixture<TestElement>(html`<attr-test-9></attr-test-9>`);
+
+      expect(el.getAttribute('foo-bar')).to.equal('Hello');
+
+      el.fooBar = 'World';
+    });
+  });
 });

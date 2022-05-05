@@ -6,9 +6,7 @@ import {
 } from './attribute-parsers';
 
 export function getObservableAttributes(c: typeof HTMLElement): Array<string> {
-  const attrs: string[] = Reflect.get(c, 'observedAttributes') || [];
-
-  return attrs.map(propNameToAttrName);
+  return Reflect.get(c, 'observedAttributes') || [];
 }
 
 export function getAttributeParsers<T extends typeof HTMLElement>(
