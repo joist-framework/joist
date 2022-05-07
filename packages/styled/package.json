@@ -1,6 +1,6 @@
 {
   "name": "@joist/styled",
-  "version": "2.0.0-beta.11",
+  "version": "2.0.0-beta.12",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",
   "exports": {
