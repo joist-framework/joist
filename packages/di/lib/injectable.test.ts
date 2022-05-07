@@ -1,8 +1,8 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { Injected } from './injector';
-import { service } from './service';
-import { injectable } from './injectable';
+import { Injected } from './injector.js';
+import { service } from './service.js';
+import { injectable } from './injectable.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps (decorator)', () => {

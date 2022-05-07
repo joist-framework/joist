@@ -1,4 +1,4 @@
-import { ProviderToken } from './provider';
+import { ProviderToken } from './provider.js';
 
 export const PROVIDER_DEPS_KEY = 'inject';
 

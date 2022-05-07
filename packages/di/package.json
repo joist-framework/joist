@@ -7,12 +7,23 @@
     ".": {
       "import": "./target/build/lib.js"
     },
-    "./dom": {
-      "import": "./target/build/lib/dom.js"
+    "./environment.js": {
+      "import": "./target/build/lib/environment.js"
+    },
+    "./injectable.js": {
+      "import": "./target/build/lib/injectable.js"
+    },
+    "./injector.js": {
+      "import": "./target/build/lib/injector.js"
+    },
+    "./provider.js": {
+      "import": "./target/build/lib/provider.js"
+    },
+    "./service.js": {
+      "import": "./target/build/lib/service.js"
     }
   },
   "files": [
-    "dom",
     "target/build"
   ],
   "sideEffects": false,

@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { Injector, Injected } from './injector';
+import { Injector, Injected } from './injector.js';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {

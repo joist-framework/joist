@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
-import { service } from './service';
-import { isProvidedInRoot } from './utils';
+import { service } from './service.js';
+import { isProvidedInRoot } from './utils.js';
 
 describe('Service', () => {
   @service

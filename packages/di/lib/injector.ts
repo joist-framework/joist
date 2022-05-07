@@ -1,5 +1,5 @@
-import { ProviderToken, Provider, ClassProviderToken } from './provider';
-import { readProviderDeps, isProvidedInRoot } from './utils';
+import { ProviderToken, Provider, ClassProviderToken } from './provider.js';
+import { readProviderDeps, isProvidedInRoot } from './utils.js';
 
 export type Injected<T> = () => T;
 

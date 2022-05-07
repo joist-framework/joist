@@ -1,6 +1,6 @@
-import { Provider, ProviderToken } from './provider';
-import { Injector } from './injector';
-import { environment } from './environment';
+import { Provider, ProviderToken } from './provider.js';
+import { Injector } from './injector.js';
+import { environment } from './environment.js';
 
 export interface Injectable {
   inject?: ProviderToken<any>[];

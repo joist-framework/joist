@@ -1,4 +1,4 @@
-import { Injector } from './injector';
+import { Injector } from './injector.js';
 
 const rootInjector = new Injector();
 
