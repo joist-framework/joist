@@ -6,7 +6,7 @@ This means that it passes functions around and that dependencies are not initial
 #### Installation:
 
 ```BASH
-npm i @joist/di@canary
+npm i @joist/di@beta
 ```
 
 #### Example:
