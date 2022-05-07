@@ -1,7 +1,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { Injected } from '../injector';
-import { service } from '../service';
+import { Injected } from './injector';
+import { service } from './service';
 import { injectable } from './injectable';
 
 describe('@injectable()', () => {

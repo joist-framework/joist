@@ -1,4 +1,4 @@
-import { ProviderToken } from '../lib/provider';
+import { ProviderToken } from './provider';
 
 export function service(provider: ProviderToken<any>): any {
   Object.defineProperty(provider, 'provideInRoot', {

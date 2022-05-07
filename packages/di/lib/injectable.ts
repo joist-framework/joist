@@ -1,5 +1,5 @@
-import { Provider, ProviderToken } from '../provider';
-import { Injector } from '../injector';
+import { Provider, ProviderToken } from './provider';
+import { Injector } from './injector';
 import { environment } from './environment';
 
 export interface Injectable {

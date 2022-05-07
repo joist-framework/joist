@@ -99,7 +99,7 @@ The `@injectable` decorator allows the Joist Dependency Injector to pass argumen
 #### Inject dependency into your custom element constructor
 
 ```TS
-import { injectable, Injected } from '@joist/di/dom';
+import { injectable, Injected } from '@joist/di';
 
 class MyService {}
 
@@ -118,7 +118,7 @@ customElements.define('my-element', MyElement);
 This allows your to override services for different environments or scenarios
 
 ```TS
-import { environment, injectable, Injected } from '@joist/di/dom';
+import { environment, injectable, Injected } from '@joist/di';
 
 class Config {
   apiUrl = 'http://localhost:4000/api/'
@@ -153,7 +153,7 @@ When using context elements it is important that they are registered BEFORE your
 If child elements are upgraded before the context element they won't be able to find the context scope.
 
 ```TS
-import { injectable, Injected } from '@joist/di/dom';
+import { injectable, Injected } from '@joist/di';
 
 class Colors {
   primary = 'red';
