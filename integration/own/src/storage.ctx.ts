@@ -1,4 +1,4 @@
-import { injectable } from '@joist/di/dom';
+import { injectable } from '@joist/di';
 
 import { AppStorage } from './services/storage.service';
 import { TodoService } from './services/todo.service';

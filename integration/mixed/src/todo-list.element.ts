@@ -1,5 +1,4 @@
-import { Injected } from '@joist/di';
-import { injectable } from '@joist/di/dom';
+import { Injected, injectable } from '@joist/di';
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 

@@ -1,5 +1,4 @@
-import { Injected } from '@joist/di';
-import { injectable } from '@joist/di/dom';
+import { Injected, injectable } from '@joist/di';
 import { styled, css } from '@joist/styled';
 import { attr, Changes, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
