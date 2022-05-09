@@ -7,13 +7,17 @@ describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
     @observable
     class TestElement extends HTMLElement {
-      @attr name = '';
+      @observe @attr name = 'Foo';
+      @observe @attr fooBar = true;
     }
 
     customElements.define('attr-test-1', TestElement);
-    const el = await fixture<TestElement>(html`<attr-test-1 name="Foo"></attr-test-1>`);
+    const el = await fixture<TestElement>(
+      html`<attr-test-1 name="Bar" foo-bar="false"></attr-test-1>`
+    );
 
-    expect(el.name).to.equal('Foo');
+    expect(el.name).to.equal('Bar');
+    expect(el.fooBar).to.equal(false);
   });
 
   it('should map a property to an attribute when changed', (done) => {
