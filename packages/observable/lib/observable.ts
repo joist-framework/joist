@@ -1,5 +1,4 @@
-import { getAttributeParsers, getObservableAttributes } from './attribute';
-import { propNameToAttrName } from './attribute-parsers';
+import { ObservableElement } from './element';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -18,9 +17,9 @@ export function getObservableProperties(c: any): Array<string | symbol> {
 }
 
 export interface ObservableBase {
-  propChanges: Changes;
-  propChange: Promise<void> | null;
-  initializedChanges: Set<string | symbol>;
+  __propChanges: Map<string | symbol, Change>;
+  __propChange: Promise<void> | null;
+  __initializedChanges: Set<string | symbol>;
 
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
   onPropertyChanged?(changes: Changes): void;
@@ -33,79 +32,65 @@ export function observe(target: any, key: string) {
 
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
   const properties = getObservableProperties(Base);
-  const attributes = getObservableAttributes(Base);
-  const parsers = getAttributeParsers(Base);
   const descriptors = createPropertyDescripors(properties);
 
   return class Observable extends Base implements ObservableBase {
-    propChanges: Changes = {};
-    propChange: Promise<void> | null = null;
-    initializedChanges = new Set<string | symbol>();
-
-    definePropChange = definePropChange;
+    __propChanges = new Map();
+    __propChange: Promise<void> | null = null;
+    __initializedChanges = new Set<string | symbol>();
 
     constructor(...args: any[]) {
       super(...args);
 
+      // Set initial props if forwarded from ObservableElement
+      if (this instanceof ObservableElement) {
+        for (let [key, value] of this.__upgradedProps) {
+          Reflect.set(this, key, value);
+        }
+      }
+
       for (let prop in descriptors) {
-        Reflect.set(this, createPrivateKey(prop), Reflect.get(this, prop));
+        Object.defineProperty(this, createPrivateKey(prop), {
+          value: Reflect.get(this, prop),
+          enumerable: false,
+          writable: true,
+        });
       }
 
       Object.defineProperties(this, descriptors);
     }
 
-    connectedCallback(this: HTMLElement & Observable) {
-      for (let i = 0; i < attributes.length; i++) {
-        const key = attributes[i];
-        const { write, mapTo } = parsers[key];
+    definePropChange(key: string | symbol, propChange: Change): Promise<void> {
+      if (!this.__propChanges.has(key)) {
+        this.__propChanges.set(key, propChange);
+      }
 
-        if (this.getAttribute(key) === null) {
-          const propVal = Reflect.get(this, mapTo);
+      this.__propChanges.get(key)!.value = propChange.value;
 
-          if (propVal !== undefined && propVal !== null && propVal !== '') {
-            this.setAttribute(key, write(propVal));
+      if (!this.__propChange) {
+        // If there is no previous change defined set it up
+        this.__propChange = Promise.resolve().then(() => {
+          // run onPropChanges here. This makes sure we capture all changes
+          const changes: Changes = {};
+
+          // Copy changes and keep track of whether or not this is the first time a given property has changes
+          for (let [key, value] of this.__propChanges) {
+            changes[key] = value;
+
+            changes[key].firstChange = !this.__initializedChanges.has(key);
+
+            this.__initializedChanges.add(key);
           }
-        }
+
+          // clear out before calling to account for changes made INSIDE of the onPropertyChanged callback
+          this.__propChange = null;
+          this.__propChanges.clear();
+
+          this.onPropertyChanged(changes);
+        });
       }
 
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
-    }
-
-    attributeChangedCallback(
-      this: HTMLElement & Observable,
-      name: string,
-      oldVal: string,
-      newVal: string
-    ) {
-      const { read, mapTo } = parsers[name];
-
-      Reflect.set(this, mapTo, read(newVal));
-
-      if (super.attributeChangedCallback) {
-        super.attributeChangedCallback(name, oldVal, newVal);
-      }
-    }
-
-    onPropertyChanged(changes: Changes) {
-      if (this instanceof HTMLElement) {
-        for (let change in changes) {
-          const attrName = propNameToAttrName(change);
-
-          if (attributes.includes(attrName)) {
-            const value = parsers[attrName].write(changes[change].value);
-
-            if (value !== this.getAttribute(attrName)) {
-              this.setAttribute(attrName, value);
-            }
-          }
-        }
-      }
-
-      if (super.onPropertyChanged) {
-        super.onPropertyChanged(changes);
-      }
+      return this.__propChange;
     }
   };
 }
@@ -140,43 +125,4 @@ function createPropertyDescripors(
   }
 
   return descriptors;
-}
-
-function definePropChange(
-  this: ObservableBase,
-  key: string | symbol,
-  propChange: Change
-): Promise<void> {
-  if (!this.propChanges[key]) {
-    this.propChanges[key] = propChange;
-  }
-
-  this.propChanges[key].value = propChange.value;
-
-  if (!this.propChange) {
-    // If there is no previous change defined set it up
-    this.propChange = Promise.resolve().then(() => {
-      // run onPropChanges here. This makes sure we capture all changes
-      const changes: Changes = {};
-
-      // Copy changes and keep track of whether or not this is the first time a given property has changes
-      for (let change in this.propChanges) {
-        changes[change] = this.propChanges[change];
-
-        changes[change].firstChange = !this.initializedChanges.has(change);
-
-        this.initializedChanges.add(change);
-      }
-
-      // clear out before calling to account for changes made INSIDE of the onPropertyChanged callback
-      this.propChange = null;
-      this.propChanges = {};
-
-      if (this.onPropertyChanged) {
-        this.onPropertyChanged(changes);
-      }
-    });
-  }
-
-  return this.propChange;
 }

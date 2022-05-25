@@ -72,16 +72,17 @@ state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
 
-#### Attributes
+#### Custom Elements
 
 If you are using @observable with custom elements it is very likely that you will want to read from and write to attributes.
-Joist accounts for this by giving you an `@attr` decorator.
+In order to appropriately handle upgrading custom elements and attributes Joist provides an `ObservableElement` base class that you can extend.
+Once you extend `ObservableElement` you can use the `@attr` decorator to define attribute behavior.
 
 ```TS
-import { observable, observe, attr} from '@joist/observable';
+import { observable, observe, attr, ObservableElement } from '@joist/observable';
 
 @observable
-class TestElement extends HTMLElement {
+class TestElement extends ObservableElement {
   // reads as a string and writes directly to the name attribute
   @observe @attr name = '';
 

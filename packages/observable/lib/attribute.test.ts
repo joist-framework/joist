@@ -1,17 +1,19 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attribute';
-import { OnPropertyChanged, observable, observe, Changes } from './observable';
+import { ObservableElement } from './element';
+import { observable, observe, Changes } from './observable';
 
 describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @observe @attr name = 'Foo';
       @observe @attr fooBar = true;
     }
 
     customElements.define('attr-test-1', TestElement);
+
     const el = await fixture<TestElement>(
       html`<attr-test-1 name="Bar" foo-bar="false"></attr-test-1>`
     );
@@ -22,10 +24,12 @@ describe('attribute', () => {
 
   it('should map a property to an attribute when changed', (done) => {
     @observable
-    class TestElement extends HTMLElement implements OnPropertyChanged {
+    class TestElement extends ObservableElement {
       @observe @attr name = '';
 
-      onPropertyChanged() {
+      onPropertyChanged(changes: Changes) {
+        super.onPropertyChanged(changes);
+
         expect(this.name).to.equal('Hello World');
         expect(this.getAttribute('name')).to.equal('Hello World');
 
@@ -41,10 +45,12 @@ describe('attribute', () => {
 
   it('should map an attribute to a property when changed', (done) => {
     @observable
-    class TestElement extends HTMLElement implements OnPropertyChanged {
+    class TestElement extends ObservableElement {
       @observe @attr name: string = '';
 
-      onPropertyChanged() {
+      onPropertyChanged(changes: Changes) {
+        super.onPropertyChanged(changes);
+
         expect(this.name).to.equal('Hello World');
         expect(this.getAttribute('name')).to.equal('Hello World');
 
@@ -60,7 +66,7 @@ describe('attribute', () => {
 
   it('should auto parse bool', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @attr hasThing: boolean = true;
     }
 
@@ -73,7 +79,7 @@ describe('attribute', () => {
 
   it('should use provided parser (read)', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @attr<number>({ read: Number }) count = 0;
     }
 
@@ -86,7 +92,7 @@ describe('attribute', () => {
 
   it('should use provided parser', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @attr<number>({
         read: (val) => Number(val),
         write: (val) => `${String(val)}--1234`,
@@ -103,7 +109,7 @@ describe('attribute', () => {
 
   it('should not set prop from attribute if null to start', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @attr({ read: Number }) count: number = 0;
     }
 
@@ -116,7 +122,7 @@ describe('attribute', () => {
 
   it('should set default value for attributes if not set', async () => {
     @observable
-    class TestElement extends HTMLElement {
+    class TestElement extends ObservableElement {
       @attr name = 'Hello World';
     }
 
@@ -130,10 +136,12 @@ describe('attribute', () => {
   it('should map kebab case attributes to cammelCase property on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends HTMLElement implements OnPropertyChanged {
+      class TestElement extends ObservableElement {
         @attr @observe fooBar = 'Hello';
 
-        onPropertyChanged(_: Changes): void {
+        onPropertyChanged(changes: Changes) {
+          super.onPropertyChanged(changes);
+
           expect(this.fooBar).to.equal('World');
 
           resolve();
@@ -151,10 +159,12 @@ describe('attribute', () => {
   it('should map cammelCase property to kebab case attributes on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends HTMLElement implements OnPropertyChanged {
+      class TestElement extends ObservableElement {
         @attr @observe fooBar = 'Hello';
 
-        onPropertyChanged(_: Changes): void {
+        onPropertyChanged(changes: Changes) {
+          super.onPropertyChanged(changes);
+
           expect(el.getAttribute('foo-bar')).to.equal('World');
           resolve();
         }

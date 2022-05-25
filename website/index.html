@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <i id="logo"></i>
+
+      <nav>
+        <joist-nav>
+          <a href="#home">home</a>
+
+          <a href="#docs">docs</a>
+
+          <a href="#examples">examples</a>
+        </joist-nav>
+      </nav>
+    </header>
+
+    <main>
+      <joist-hero-image></joist-hero-image>
+
+      <joist-description>
+        Web components are fantastic but sometimes you will find that what they provide is to "low
+        level" to be productive.
+
+        <br />
+
+        The goal of the Joist is to add just enough on top of web components to bridge that gap.
+        Joist is tiny overall and by using decorators (optional) the api has you add things on TOP
+        of your custom element code. Think of it less like you are writing "Joist code" and you are
+        just "using" joist.
+
+        <br />
+
+        A good example is @joist/observable.
+
+        Let's say you have a custom element like so.
+
+        <code>
+          <!-- Insert example -->
+        </code>
+
+        @joist/observable lets you monitor changes on any marked property.
+        Joist will then call your onPropertyChanged function and let you know what changed so you can respond accordinly.
+        You don't create a "JoistElement" or have to call in yourself. You just tell joist what you want, and it does it.
+        
+        <code>
+          <!-- Insert other example -->
+        </code>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>
