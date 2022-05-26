@@ -1,5 +1,5 @@
 import { styled, css } from '@joist/styled';
-import { observable, observe, OnPropertyChanged } from '@joist/observable';
+import { Changes, observable, ObservableElement, observe } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
@@ -7,7 +7,7 @@ import { Todo, TodoStatus, TodoService } from './services/todo.service';
 
 @observable
 @styled
-export class TodoCard extends HTMLElement implements OnPropertyChanged {
+export class TodoCard extends ObservableElement {
   static inject = [TodoService];
 
   static styles = [
@@ -52,11 +52,17 @@ export class TodoCard extends HTMLElement implements OnPropertyChanged {
 
   connectedCallback() {
     console.log('connected', this.todo);
+
+    super.connectedCallback();
+
     this.render();
   }
 
-  onPropertyChanged() {
+  onPropertyChanged(changes: Changes) {
     console.log('changed', this.todo);
+
+    super.onPropertyChanged(changes);
+
     this.render();
   }
 
