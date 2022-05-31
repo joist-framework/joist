@@ -127,6 +127,6 @@ import { observable, observe, ForwardProps } from '@joist/observable';
 
 @observable
 class TestElement extends ForwardProps(HTMLElement) {
-  name = ''; // now in our example above this value will be set to "Hello"
+  @observe name = ''; // now in our example above this value will be set to "Hello"
 }
 ```
