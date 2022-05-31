@@ -7,7 +7,7 @@ import {
   observable,
   observe,
   Change,
-  ForwardProps,
+  ForwardPropsProps,
 } from './observable';
 
 describe('observable', () => {
@@ -166,10 +166,10 @@ describe('observable', () => {
     ]);
   });
 
-  it('should forward initial props to upgraded element', async () => {
+  it('should ForwardProps initial props to upgraded element', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class MyElement extends ForwardProps(HTMLElement) {
+      class MyElement extends ForwardPropsProps(HTMLElement) {
         @observe name = 'hello';
 
         onPropertyChanged(changes: Changes): void {

@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { observable, observe, OnPropertyChanged, Forward } from '@joist/observable';
+import { observable, observe, OnPropertyChanged, ForwardProps } from '@joist/observable';
 import { styled, css } from '@joist/styled';
 import { render, html } from 'lit-html';
 
@@ -8,7 +8,7 @@ import { TodoService, Todo, TodoStatus } from './services/todo.service';
 @injectable
 @observable
 @styled
-export class TodoList extends Forward(HTMLElement) implements OnPropertyChanged {
+export class TodoList extends ForwardProps(HTMLElement) implements OnPropertyChanged {
   static inject = [TodoService];
 
   static styles = [

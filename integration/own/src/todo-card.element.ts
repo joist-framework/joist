@@ -1,5 +1,5 @@
 import { styled, css } from '@joist/styled';
-import { attr, Forward, observable, observe, OnPropertyChanged } from '@joist/observable';
+import { attr, ForwardProps, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoStatus } from './services/todo.service';
@@ -17,7 +17,7 @@ template.innerHTML = /*html*/ `
 
 @styled
 @observable
-export class TodoCard extends Forward(HTMLElement) implements OnPropertyChanged {
+export class TodoCard extends ForwardProps(HTMLElement) implements OnPropertyChanged {
   static styles = [
     css`
       :host {

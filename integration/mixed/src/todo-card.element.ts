@@ -1,5 +1,5 @@
 import { styled, css } from '@joist/styled';
-import { Forward, observable, observe } from '@joist/observable';
+import { ForwardProps, observable, observe } from '@joist/observable';
 import { render, html } from 'lit-html';
 import classNames from 'classnames';
 
@@ -7,7 +7,7 @@ import { Todo, TodoStatus, TodoService } from './services/todo.service';
 
 @observable
 @styled
-export class TodoCard extends Forward(HTMLElement) {
+export class TodoCard extends ForwardProps(HTMLElement) {
   static inject = [TodoService];
 
   static styles = [

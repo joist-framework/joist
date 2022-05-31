@@ -17,7 +17,7 @@ export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
 }
 
-export function ForwardProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
+export function ForwardPropsProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
   return class Foo extends Base {
     __upgradedProps = new Map<keyof this, unknown>();
 
@@ -97,7 +97,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 }
 
 function init(this: Record<string, unknown>, descriptors: Record<string, PropertyDescriptor>) {
-  // Set initial props if forwarded from ObservableElement
+  // Set initial props if ForwardPropsed from ObservableElement
   if ('__upgradedProps' in this && this['__upgradedProps'] instanceof Map) {
     for (let [key, value] of this.__upgradedProps) {
       Reflect.set(this, key, value);
