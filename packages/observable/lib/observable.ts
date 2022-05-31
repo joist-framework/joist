@@ -1,4 +1,4 @@
-import { attr, getAttributeParsers, getObservableAttributes } from './attribute';
+import { getAttributeParsers, getObservableAttributes } from './attribute';
 import { AttributeParsers, propNameToAttrName } from './attribute-parsers';
 
 export class Change<T = any> {
