@@ -17,7 +17,7 @@ export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
 }
 
-export function Forward<T extends new (...args: any[]) => HTMLElement>(Base: T) {
+export function ForwardProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
   return class Foo extends Base {
     __upgradedProps = new Map<keyof this, unknown>();
 

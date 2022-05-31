@@ -1,9 +1,9 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attribute';
-import { observable, observe, Changes, Forward } from './observable';
+import { observable, observe, Changes, ForwardProps } from './observable';
 
-const ForwardedElement = Forward(HTMLElement);
+const ForwardedElement = ForwardProps(HTMLElement);
 
 describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
