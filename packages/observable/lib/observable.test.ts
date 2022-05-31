@@ -1,8 +1,7 @@
 import { expect, fixture, waitUntil } from '@open-wc/testing';
 import { html } from 'lit';
 
-import { ObservableElement } from './element';
-import { OnPropertyChanged, Changes, observable, observe, Change } from './observable';
+import { OnPropertyChanged, Changes, observable, observe, Change, Forward } from './observable';
 
 describe('observable', () => {
   it('should detect and batch property updates', (done) => {
@@ -163,7 +162,7 @@ describe('observable', () => {
   it('should forward initial props to upgraded element', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class MyElement extends ObservableElement {
+      class MyElement extends Forward(HTMLElement) {
         @observe name = 'hello';
 
         onPropertyChanged(changes: Changes): void {

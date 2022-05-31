@@ -1,4 +1,5 @@
-import { ObservableElement } from './element';
+import { getAttributeParsers, getObservableAttributes } from './attribute';
+import { propNameToAttrName } from './attribute-parsers';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -14,6 +15,22 @@ const PROPERTY_KEY = 'observedProperties';
 
 export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
+}
+
+export function Forward<T extends new (...args: any[]) => HTMLElement>(Base: T) {
+  return class Foo extends Base {
+    __upgradedProps = new Map<keyof this, unknown>();
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      for (let prop in this) {
+        if (this.hasOwnProperty(prop) && prop !== 'upgradedProps') {
+          this.__upgradedProps.set(prop, this[prop]);
+        }
+      }
+    }
+  };
 }
 
 export interface ObservableBase {
@@ -33,6 +50,8 @@ export function observe(target: any, key: string) {
 export function observable<T extends new (...args: any[]) => any>(Base: T) {
   const properties = getObservableProperties(Base);
   const descriptors = createPropertyDescripors(properties);
+  const parsers = getAttributeParsers(Base);
+  const attributes = getObservableAttributes(Base);
 
   return class Observable extends Base implements ObservableBase {
     __propChanges = new Map();
@@ -43,7 +62,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       super(...args);
 
       // Set initial props if forwarded from ObservableElement
-      if (this instanceof ObservableElement) {
+      if ('__upgradedProps' in this && this['__upgradedProps'] instanceof Map) {
         for (let [key, value] of this.__upgradedProps) {
           Reflect.set(this, key, value);
         }
@@ -58,6 +77,55 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
       }
 
       Object.defineProperties(this, descriptors);
+    }
+
+    connectedCallback(this: HTMLElement) {
+      for (let i = 0; i < attributes.length; i++) {
+        const key = attributes[i];
+        const { write, mapTo } = parsers[key];
+
+        if (this.getAttribute(key) === null) {
+          const propVal = Reflect.get(this, mapTo);
+
+          if (propVal !== undefined && propVal !== null && propVal !== '') {
+            this.setAttribute(key, write(propVal));
+          }
+        }
+      }
+
+      if (super.connectedCallback) {
+        super.connectedCallback();
+      }
+    }
+
+    attributeChangedCallback(this: HTMLElement, name: string, oldVal: string, newVal: string) {
+      const { read, mapTo } = parsers[name];
+
+      Reflect.set(this, mapTo, read(newVal));
+
+      if (super.attributeChangedCallback) {
+        super.attributeChangedCallback(name, oldVal, newVal);
+      }
+    }
+
+    onPropertyChanged(changes: Changes) {
+      if (this instanceof HTMLElement) {
+        for (let change in changes) {
+          const attrName = propNameToAttrName(change);
+
+          if (attributes.includes(attrName)) {
+            const value = parsers[attrName].write(changes[change].value);
+
+            if (value !== this.getAttribute(attrName)) {
+              this.setAttribute(attrName, value);
+            }
+          }
+        }
+      }
+
+      if (super.onPropertyChanged) {
+        super.onPropertyChanged(changes);
+      }
     }
 
     definePropChange(key: string | symbol, propChange: Change): Promise<void> {

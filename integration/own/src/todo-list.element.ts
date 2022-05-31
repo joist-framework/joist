@@ -1,11 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import {
-  observable,
-  observe,
-  OnPropertyChanged,
-  ObservableElement,
-  Changes,
-} from '@joist/observable';
+import { observable, observe, OnPropertyChanged, Forward } from '@joist/observable';
 import { styled, css } from '@joist/styled';
 import { render, html } from 'lit-html';
 
@@ -14,7 +8,7 @@ import { TodoService, Todo, TodoStatus } from './services/todo.service';
 @injectable
 @observable
 @styled
-export class TodoList extends ObservableElement implements OnPropertyChanged {
+export class TodoList extends Forward(HTMLElement) implements OnPropertyChanged {
   static inject = [TodoService];
 
   static styles = [
@@ -68,8 +62,6 @@ export class TodoList extends ObservableElement implements OnPropertyChanged {
   }
 
   connectedCallback() {
-    super.connectedCallback();
-
     const service = this.todo();
 
     this.todos = service.todos;
@@ -83,9 +75,7 @@ export class TodoList extends ObservableElement implements OnPropertyChanged {
     this.render();
   }
 
-  onPropertyChanged(changes: Changes) {
-    super.onPropertyChanged(changes);
-
+  onPropertyChanged() {
     this.render();
   }
 

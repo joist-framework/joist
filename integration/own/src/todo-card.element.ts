@@ -1,12 +1,5 @@
 import { styled, css } from '@joist/styled';
-import {
-  attr,
-  Changes,
-  observable,
-  ObservableElement,
-  observe,
-  OnPropertyChanged,
-} from '@joist/observable';
+import { attr, Forward, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoStatus } from './services/todo.service';
@@ -24,7 +17,7 @@ template.innerHTML = /*html*/ `
 
 @styled
 @observable
-export class TodoCard extends ObservableElement implements OnPropertyChanged {
+export class TodoCard extends Forward(HTMLElement) implements OnPropertyChanged {
   static styles = [
     css`
       :host {
@@ -62,8 +55,6 @@ export class TodoCard extends ObservableElement implements OnPropertyChanged {
   @query('#complete') completeBtn!: HTMLButtonElement;
 
   connectedCallback() {
-    super.connectedCallback();
-
     const root = this.attachShadow({ mode: 'open' });
 
     root.appendChild(template.content.cloneNode(true));
@@ -75,9 +66,7 @@ export class TodoCard extends ObservableElement implements OnPropertyChanged {
     });
   }
 
-  onPropertyChanged(changes: Changes) {
-    super.onPropertyChanged(changes);
-
+  onPropertyChanged() {
     const isActive = this.status === TodoStatus.Active;
 
     this.completeBtn.innerHTML = isActive ? 'complete' : 'active';

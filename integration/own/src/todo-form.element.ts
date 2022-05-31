@@ -1,13 +1,6 @@
 import { Injected, injectable } from '@joist/di';
 import { styled, css } from '@joist/styled';
-import {
-  attr,
-  Changes,
-  observable,
-  observe,
-  OnPropertyChanged,
-  ObservableElement,
-} from '@joist/observable';
+import { attr, Changes, Forward, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service';
@@ -22,7 +15,7 @@ template.innerHTML = /*html*/ `
 @injectable
 @styled
 @observable
-export class TodoForm extends ObservableElement implements OnPropertyChanged {
+export class TodoForm extends Forward(HTMLElement) implements OnPropertyChanged {
   static inject = [TodoService];
 
   static styles = [

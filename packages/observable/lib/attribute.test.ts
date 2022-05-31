@@ -1,13 +1,14 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attribute';
-import { ObservableElement } from './element';
-import { observable, observe, Changes } from './observable';
+import { observable, observe, Changes, Forward } from './observable';
+
+const ForwardedElement = Forward(HTMLElement);
 
 describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @observe @attr name = 'Foo';
       @observe @attr fooBar = true;
     }
@@ -24,12 +25,10 @@ describe('attribute', () => {
 
   it('should map a property to an attribute when changed', (done) => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @observe @attr name = '';
 
-      onPropertyChanged(changes: Changes) {
-        super.onPropertyChanged(changes);
-
+      onPropertyChanged(_: Changes) {
         expect(this.name).to.equal('Hello World');
         expect(this.getAttribute('name')).to.equal('Hello World');
 
@@ -45,12 +44,10 @@ describe('attribute', () => {
 
   it('should map an attribute to a property when changed', (done) => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @observe @attr name: string = '';
 
-      onPropertyChanged(changes: Changes) {
-        super.onPropertyChanged(changes);
-
+      onPropertyChanged(_: Changes) {
         expect(this.name).to.equal('Hello World');
         expect(this.getAttribute('name')).to.equal('Hello World');
 
@@ -66,7 +63,7 @@ describe('attribute', () => {
 
   it('should auto parse bool', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @attr hasThing: boolean = true;
     }
 
@@ -79,7 +76,7 @@ describe('attribute', () => {
 
   it('should use provided parser (read)', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @attr<number>({ read: Number }) count = 0;
     }
 
@@ -92,7 +89,7 @@ describe('attribute', () => {
 
   it('should use provided parser', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @attr<number>({
         read: (val) => Number(val),
         write: (val) => `${String(val)}--1234`,
@@ -109,7 +106,7 @@ describe('attribute', () => {
 
   it('should not set prop from attribute if null to start', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @attr({ read: Number }) count: number = 0;
     }
 
@@ -122,7 +119,7 @@ describe('attribute', () => {
 
   it('should set default value for attributes if not set', async () => {
     @observable
-    class TestElement extends ObservableElement {
+    class TestElement extends ForwardedElement {
       @attr name = 'Hello World';
     }
 
@@ -136,12 +133,10 @@ describe('attribute', () => {
   it('should map kebab case attributes to cammelCase property on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends ObservableElement {
+      class TestElement extends ForwardedElement {
         @attr @observe fooBar = 'Hello';
 
-        onPropertyChanged(changes: Changes) {
-          super.onPropertyChanged(changes);
-
+        onPropertyChanged(_: Changes) {
           expect(this.fooBar).to.equal('World');
 
           resolve();
@@ -159,12 +154,10 @@ describe('attribute', () => {
   it('should map cammelCase property to kebab case attributes on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends ObservableElement {
+      class TestElement extends ForwardedElement {
         @attr @observe fooBar = 'Hello';
 
-        onPropertyChanged(changes: Changes) {
-          super.onPropertyChanged(changes);
-
+        onPropertyChanged(_: Changes) {
           expect(el.getAttribute('foo-bar')).to.equal('World');
           resolve();
         }

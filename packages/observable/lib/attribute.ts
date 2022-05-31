@@ -4,7 +4,6 @@ import {
   defaultParser,
   propNameToAttrName,
 } from './attribute-parsers';
-import { ObservableElement } from './element';
 
 export function getObservableAttributes(c: typeof HTMLElement | Function): Array<string> {
   return Reflect.get(c, 'observedAttributes') || [];
@@ -20,10 +19,10 @@ export function getAttributeParsers<T extends typeof HTMLElement | Function>(
 
 export function attr<T>(
   p: Partial<AttributeParser<T>>
-): <E extends ObservableElement>(t: E, key: string) => void;
-export function attr<T extends ObservableElement>(t: T, key: string): void;
+): <E extends HTMLElement>(t: E, key: string) => void;
+export function attr<T extends HTMLElement>(t: T, key: string): void;
 export function attr(targetOrParser: unknown, key?: string): any {
-  if (targetOrParser instanceof ObservableElement && typeof key === 'string') {
+  if (targetOrParser instanceof HTMLElement && typeof key === 'string') {
     const attrName = propNameToAttrName(key);
 
     return defineAttribute(targetOrParser, attrName, key);
