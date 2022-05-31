@@ -17,7 +17,7 @@ export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
 }
 
-export function ForwardPropsProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
+export function ForwardProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
   return class Foo extends Base {
     __upgradedProps = new Map<keyof this, unknown>();
 
@@ -73,9 +73,7 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
     }
 
     attributeChangedCallback(this: HTMLElement, name: string, oldVal: string, newVal: string) {
-      const { read, mapTo } = parsers[name];
-
-      Reflect.set(this, mapTo, read(newVal));
+      attributeChangedCallback.call(this, name, newVal, parsers);
 
       if (super.attributeChangedCallback) {
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -128,6 +126,17 @@ function connectedCallback(this: HTMLElement, attributes: string[], parsers: Att
       }
     }
   }
+}
+
+function attributeChangedCallback(
+  this: HTMLElement,
+  name: string,
+  newVal: string,
+  parsers: AttributeParsers
+) {
+  const { read, mapTo } = parsers[name];
+
+  Reflect.set(this, mapTo, read(newVal));
 }
 
 function onPropertyChanged(

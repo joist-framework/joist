@@ -4,6 +4,6 @@ export {
   OnPropertyChanged,
   observe,
   Changes,
-  ForwardPropsProps,
+  ForwardProps,
 } from './lib/observable';
 export { attr } from './lib/attribute';
