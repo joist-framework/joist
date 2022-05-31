@@ -5,11 +5,11 @@ import {
   propNameToAttrName,
 } from './attribute-parsers';
 
-export function getObservableAttributes(c: typeof HTMLElement): Array<string> {
+export function getObservableAttributes(c: typeof HTMLElement | Function): Array<string> {
   return Reflect.get(c, 'observedAttributes') || [];
 }
 
-export function getAttributeParsers<T extends typeof HTMLElement>(
+export function getAttributeParsers<T extends typeof HTMLElement | Function>(
   c: T
 ): Record<string, AttributeParser<unknown>> {
   const parsers: AttributeParsers = Reflect.get(c, 'attributeParsers') || {};

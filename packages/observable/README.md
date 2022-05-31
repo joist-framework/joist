@@ -72,13 +72,13 @@ state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
 
-#### Attributes
+#### Custom Elements
 
 If you are using @observable with custom elements it is very likely that you will want to read from and write to attributes.
-Joist accounts for this by giving you an `@attr` decorator.
+In order to appropriately handle reading from and writting to attributes. Any class that extends HTMLElement can use the `@attr` decorator to define attribute behavior.
 
 ```TS
-import { observable, observe, attr} from '@joist/observable';
+import { observable, observe, attr } from '@joist/observable';
 
 @observable
 class TestElement extends HTMLElement {
@@ -97,5 +97,36 @@ class TestElement extends HTMLElement {
     write: (val) => val.toString()
   })
   count = new Date();
+}
+```
+
+##### Upgrading Custom Element Properties
+
+One tricky thing about custom elements and properties is how to handle them when the upgrade. For example.
+
+```HTML
+
+<my-element></my-element>
+
+<script>
+  const el = document.querySelector('my-element');
+
+  // A property is changed BEFORE the definition is loaded.
+  // We still want this value to be available on our custom element
+  el.name = "Hello!"
+</script>
+
+<script src="./path/to/my-element-defintion.js" type="module">
+```
+
+Joist provides a mixin that solves this issue.
+You can ensure that any properties that are set prior to upgrade time are forwared to your custom element.
+
+```TS
+import { observable, observe, ForwardProps } from '@joist/observable';
+
+@observable
+class TestElement extends ForwardProps(HTMLElement) {
+  @observe name = ''; // now in our example above this value will be set to "Hello"
 }
 ```

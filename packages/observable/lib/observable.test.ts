@@ -1,6 +1,14 @@
-import { expect, waitUntil } from '@open-wc/testing';
+import { expect, fixture, waitUntil } from '@open-wc/testing';
+import { html } from 'lit';
 
-import { OnPropertyChanged, Changes, observable, observe, Change } from './observable';
+import {
+  OnPropertyChanged,
+  Changes,
+  observable,
+  observe,
+  Change,
+  ForwardProps,
+} from './observable';
 
 describe('observable', () => {
   it('should detect and batch property updates', (done) => {
@@ -156,5 +164,28 @@ describe('observable', () => {
       { counter: new Change(1, 0, true) },
       { counterAsString: new Change('1', '0', true) },
     ]);
+  });
+
+  it('should ForwardProps initial props to upgraded element', async () => {
+    return new Promise(async (resolve) => {
+      @observable
+      class MyElement extends ForwardProps(HTMLElement) {
+        @observe name = 'hello';
+
+        onPropertyChanged(changes: Changes): void {
+          console.log('####', changes);
+        }
+      }
+
+      const instance = await fixture<MyElement>(html`<test-el .name=${'world'}></test-el>`);
+
+      customElements.whenDefined('test-el').then(() => {
+        expect(instance.name).to.equal('world');
+
+        resolve();
+      });
+
+      customElements.define('test-el', MyElement);
+    });
   });
 });
