@@ -1,9 +1,3 @@
-export {
-  observable,
-  Change,
-  OnPropertyChanged,
-  observe,
-  Changes,
-  ForwardProps,
-} from './lib/observable';
-export { attr } from './lib/attribute';
+export { observable, Change, OnPropertyChanged, observe, Changes } from './lib/observable.js';
+export { attr } from './lib/attribute.js';
+export { upgradable, UpgradableElement } from './lib/upgradable.js';

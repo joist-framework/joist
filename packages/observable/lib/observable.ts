@@ -1,5 +1,5 @@
-import { getAttributeParsers, getObservableAttributes } from './attribute';
-import { AttributeParsers, propNameToAttrName } from './attribute-parsers';
+import { getAttributeParsers, getObservableAttributes } from './attribute.js';
+import { AttributeParsers, propNameToAttrName } from './attribute-parsers.js';
 
 export class Change<T = any> {
   constructor(public value: T, public previousValue: T | undefined, public firstChange: boolean) {}
@@ -15,22 +15,6 @@ const PROPERTY_KEY = 'observedProperties';
 
 export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
-}
-
-export function ForwardProps<T extends new (...args: any[]) => HTMLElement>(Base: T) {
-  return class Foo extends Base {
-    __upgradedProps = new Map<keyof this, unknown>();
-
-    constructor(...args: any[]) {
-      super(...args);
-
-      for (let prop in this) {
-        if (this.hasOwnProperty(prop) && prop !== 'upgradedProps') {
-          this.__upgradedProps.set(prop, this[prop]);
-        }
-      }
-    }
-  };
 }
 
 export interface ObservableBase {
@@ -95,13 +79,6 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
 }
 
 function init(this: Record<string, unknown>, descriptors: Record<string, PropertyDescriptor>) {
-  // Set initial props if ForwardPropsed from ObservableElement
-  if ('__upgradedProps' in this && this['__upgradedProps'] instanceof Map) {
-    for (let [key, value] of this.__upgradedProps) {
-      Reflect.set(this, key, value);
-    }
-  }
-
   for (let prop in descriptors) {
     Object.defineProperty(this, createPrivateKey(prop), {
       value: Reflect.get(this, prop),
@@ -111,6 +88,13 @@ function init(this: Record<string, unknown>, descriptors: Record<string, Propert
   }
 
   Object.defineProperties(this, descriptors);
+
+  // Set initial props if ForwardPropsed from ObservableElement
+  if ('__upgradedProps' in this && this['__upgradedProps'] instanceof Map) {
+    for (let [key, value] of this.__upgradedProps) {
+      Reflect.set(this, key, value);
+    }
+  }
 }
 
 function connectedCallback(this: HTMLElement, attributes: string[], parsers: AttributeParsers) {

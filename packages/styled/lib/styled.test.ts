@@ -10,7 +10,7 @@ describe('styled', () => {
       static styles = [
         css`
           :host {
-            display: ${css`block`};
+            display: block;
           }
         `,
         css`
@@ -30,8 +30,6 @@ describe('styled', () => {
     customElements.define('my-element', MyElement);
 
     const el = new MyElement();
-
-    el.connectedCallback!();
 
     expect(el.shadowRoot?.adoptedStyleSheets.length).to.equal(2);
   });

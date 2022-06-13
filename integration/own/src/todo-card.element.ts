@@ -1,5 +1,5 @@
 import { styled, css } from '@joist/styled';
-import { attr, ForwardProps, observable, observe, OnPropertyChanged } from '@joist/observable';
+import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoStatus } from './services/todo.service';
@@ -17,7 +17,7 @@ template.innerHTML = /*html*/ `
 
 @styled
 @observable
-export class TodoCard extends ForwardProps(HTMLElement) implements OnPropertyChanged {
+export class TodoCard extends UpgradableElement implements OnPropertyChanged {
   static styles = [
     css`
       :host {
@@ -54,12 +54,16 @@ export class TodoCard extends ForwardProps(HTMLElement) implements OnPropertyCha
 
   @query('#complete') completeBtn!: HTMLButtonElement;
 
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: 'open' });
+  }
+
   connectedCallback() {
-    const root = this.attachShadow({ mode: 'open' });
+    this.shadowRoot!.appendChild(template.content.cloneNode(true));
 
-    root.appendChild(template.content.cloneNode(true));
-
-    root.addEventListener('click', (e) => {
+    this.shadowRoot!.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
         this.dispatchEvent(new Event(e.target.id));
       }

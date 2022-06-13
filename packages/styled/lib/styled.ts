@@ -16,32 +16,32 @@ export interface Styled {
 export function styled<T extends Styled>(CustomElement: T) {
   const styles = CustomElement.styles;
 
-  return class StyledElement extends CustomElement {
-    connectedCallback() {
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
+  return new Proxy(CustomElement, {
+    construct(a, b, c) {
+      const instance: HTMLElement = Reflect.construct(a, b, c);
 
-      if (styles && this.shadowRoot) {
+      if (styles && instance.shadowRoot) {
         // If there are defined styles AND a shadowRoot
-        if (this.shadowRoot.adoptedStyleSheets) {
+        if (instance.shadowRoot.adoptedStyleSheets) {
           // adoptedStyleSheets are available
-          if (!ccStyleCache.has(this.tagName)) {
+          if (!ccStyleCache.has(instance.tagName)) {
             // if styles have not previously been computed do so now
-            ccStyleCache.set(this.tagName, styles.map(createStyleSheet));
+            ccStyleCache.set(instance.tagName, styles.map(createStyleSheet));
           }
 
           // adpot calculated stylesheets
-          this.shadowRoot.adoptedStyleSheets = ccStyleCache.get(this.tagName) || [];
+          instance.shadowRoot.adoptedStyleSheets = ccStyleCache.get(instance.tagName) || [];
         } else {
           // styles are defined but Constructable stylesheets not supported
           const styleEls = styles.map(createStyleElement);
 
-          this.shadowRoot.prepend(...styleEls);
+          instance.shadowRoot.prepend(...styleEls);
         }
       }
-    }
-  };
+
+      return instance;
+    },
+  });
 }
 
 function createStyleSheet(styleString: CSSResult) {
