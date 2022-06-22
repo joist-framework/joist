@@ -3,7 +3,7 @@ import {
   AttributeParsers,
   defaultParser,
   propNameToAttrName,
-} from './attribute-parsers';
+} from './attribute-parsers.js';
 
 export function getObservableAttributes(c: typeof HTMLElement | Function): Array<string> {
   return Reflect.get(c, 'observedAttributes') || [];

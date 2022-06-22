@@ -119,14 +119,24 @@ One tricky thing about custom elements and properties is how to handle them when
 <script src="./path/to/my-element-defintion.js" type="module">
 ```
 
-Joist provides a mixin that solves this issue.
-You can ensure that any properties that are set prior to upgrade time are forwared to your custom element.
+Joist provides an `UpgradableElement` base class that will ensure that any properties that are set prior to upgrade time are forwarded to your custom element.
 
 ```TS
-import { observable, observe, ForwardProps } from '@joist/observable';
+import { observable, observe, UpgradableElement } from '@joist/observable';
 
 @observable
-class TestElement extends ForwardProps(HTMLElement) {
+class TestElement extends UpgradableElement {
+  @observe name = ''; // now in our example above this value will be set to "Hello"
+}
+```
+
+If you need to extend your own custom HTMLElement you can also use the provided `upgradable` mixin.
+
+```TS
+import { observable, observe, upgradable } from '@joist/observable';
+
+@observable
+class TestElement extends upgradable(HTMLElement) {
   @observe name = ''; // now in our example above this value will be set to "Hello"
 }
 ```

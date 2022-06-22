@@ -7,7 +7,7 @@ export class CSSResult {
 
   constructor(cssText: string, safeToken: symbol) {
     if (safeToken !== constructionToken) {
-      throw new Error('CSSResult is not constructable. Use `unsafeCSS` or `css` instead.');
+      throw new Error('CSSResult is not constructable. Use `css` instead.');
     }
 
     this.cssText = cssText;

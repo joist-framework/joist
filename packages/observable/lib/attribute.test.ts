@@ -1,14 +1,13 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { attr } from './attribute';
-import { observable, observe, Changes, ForwardProps } from './observable';
-
-const ForwardPropsedElement = ForwardProps(HTMLElement);
+import { attr } from './attribute.js';
+import { observable, observe, Changes } from './observable.js';
+import { UpgradableElement } from './upgradable.js';
 
 describe('attribute', () => {
   it('should default the property to the given attribute', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @observe @attr name = 'Foo';
       @observe @attr fooBar = true;
     }
@@ -25,7 +24,7 @@ describe('attribute', () => {
 
   it('should map a property to an attribute when changed', (done) => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @observe @attr name = '';
 
       onPropertyChanged(_: Changes) {
@@ -44,7 +43,7 @@ describe('attribute', () => {
 
   it('should map an attribute to a property when changed', (done) => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @observe @attr name: string = '';
 
       onPropertyChanged(_: Changes) {
@@ -63,7 +62,7 @@ describe('attribute', () => {
 
   it('should auto parse bool', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @attr hasThing: boolean = true;
     }
 
@@ -76,7 +75,7 @@ describe('attribute', () => {
 
   it('should use provided parser (read)', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @attr<number>({ read: Number }) count = 0;
     }
 
@@ -89,7 +88,7 @@ describe('attribute', () => {
 
   it('should use provided parser', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @attr<number>({
         read: (val) => Number(val),
         write: (val) => `${String(val)}--1234`,
@@ -106,7 +105,7 @@ describe('attribute', () => {
 
   it('should not set prop from attribute if null to start', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @attr({ read: Number }) count: number = 0;
     }
 
@@ -119,7 +118,7 @@ describe('attribute', () => {
 
   it('should set default value for attributes if not set', async () => {
     @observable
-    class TestElement extends ForwardPropsedElement {
+    class TestElement extends UpgradableElement {
       @attr name = 'Hello World';
     }
 
@@ -133,7 +132,7 @@ describe('attribute', () => {
   it('should map kebab case attributes to cammelCase property on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends ForwardPropsedElement {
+      class TestElement extends UpgradableElement {
         @attr @observe fooBar = 'Hello';
 
         onPropertyChanged(_: Changes) {
@@ -154,7 +153,7 @@ describe('attribute', () => {
   it('should map cammelCase property to kebab case attributes on changle', async () => {
     return new Promise(async (resolve) => {
       @observable
-      class TestElement extends ForwardPropsedElement {
+      class TestElement extends UpgradableElement {
         @attr @observe fooBar = 'Hello';
 
         onPropertyChanged(_: Changes) {

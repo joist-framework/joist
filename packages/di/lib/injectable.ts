@@ -25,6 +25,13 @@ export function injectable<T extends Injectable>(CustomElement: T) {
       }
 
       this.injector = injector;
+    }
+
+    connectedCallback() {
+      // only mark as an injector root if element defines providers
+      if (providers) {
+        this.setAttribute('joist-injector-root', 'true');
+      }
 
       this.addEventListener('finddiroot', (e) => {
         const parentInjector = findInjectorRoot(e);
@@ -37,13 +44,6 @@ export function injectable<T extends Injectable>(CustomElement: T) {
           super.connectedCallback();
         }
       });
-    }
-
-    connectedCallback() {
-      // only mark as an injector root if element defines providers
-      if (providers) {
-        this.setAttribute('joist-injector-root', 'true');
-      }
 
       this.dispatchEvent(new Event('finddiroot'));
     }
