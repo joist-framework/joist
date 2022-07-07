@@ -23,14 +23,10 @@ class FooService {
 class BarService {
   static inject = [FooService];
   
-  private foo: FooService;
-  
-  constructor(foo: Injected<FooService>) {
-    this.foo = foo();
-  }
+  constructor(private foo: Injected<FooService>) { }
 
   sayHello() {
-    return this.foo.sayHello();
+    return this.foo().sayHello();
   }
 }
 
