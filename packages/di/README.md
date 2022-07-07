@@ -25,7 +25,7 @@ class BarService {
   
   private foo: FooService;
   
-  constructor(private foo: Injected<FooService>) {
+  constructor(foo: Injected<FooService>) {
     this.foo = foo();
   }
 
