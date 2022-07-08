@@ -72,18 +72,16 @@ export class TodoForm extends UpgradableElement implements OnPropertyChanged {
   constructor(private todo: Injected<TodoService>) {
     super();
 
-    this.attachShadow({ mode: 'open' });
-  }
+    const root = this.attachShadow({ mode: 'open' });
 
-  connectedCallback() {
-    this.shadowRoot!.appendChild(template.content.cloneNode(true));
+    root.appendChild(template.content.cloneNode(true));
+
+    root.addEventListener('submit', (e) => {
+      this.onSubmit(e);
+    });
 
     this.input.addEventListener('input', () => {
       this.value = this.input.value;
-    });
-
-    this.shadowRoot!.addEventListener('submit', (e) => {
-      this.onSubmit(e);
     });
   }
 
@@ -99,7 +97,7 @@ export class TodoForm extends UpgradableElement implements OnPropertyChanged {
     const todo = this.input.value;
 
     if (todo.length) {
-      service.addTodo(new Todo(todo, TodoStatus.Active));
+      service.addTodo(Todo.create(todo, TodoStatus.Active));
 
       this.input.value = '';
     }

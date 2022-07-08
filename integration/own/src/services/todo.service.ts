@@ -8,13 +8,40 @@ export const enum TodoStatus {
   Complete = 'complete',
 }
 
+const todoSecret = Symbol();
+
 export class Todo {
-  constructor(public readonly name: string, public readonly status: TodoStatus) {}
+  static create(name: string, status: TodoStatus) {
+    return new Todo(crypto.randomUUID(), name, status, todoSecret);
+  }
+
+  constructor(
+    public readonly id: string,
+    public readonly name: string,
+    public readonly status: TodoStatus,
+    secret: Symbol
+  ) {
+    if (secret !== todoSecret) {
+      throw new Error('use Todo.create');
+    }
+  }
 }
 
 export class TodoChangeEvent extends Event {
-  constructor() {
-    super('todochange');
+  constructor(public todo: Todo) {
+    super('todo_changed');
+  }
+}
+
+export class TodoAddedEvent extends Event {
+  constructor(public todo: Todo) {
+    super('todo_added');
+  }
+}
+
+export class TodoRemovedEvent extends Event {
+  constructor(public todo: string) {
+    super('todo_removed');
   }
 }
 
@@ -41,24 +68,29 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
 
   addTodo(todo: Todo) {
     this.todos = [...this.todos, todo];
+
+    this.dispatchEvent(new TodoAddedEvent(todo));
   }
 
-  removeTodo(index: number) {
-    this.todos = this.todos.filter((_, i) => i !== index);
+  removeTodo(id: string) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+
+    this.dispatchEvent(new TodoRemovedEvent(id));
   }
 
-  updateTodo(index: number, patch: Partial<Todo>) {
-    this.todos = this.todos.map((todo, i) => {
-      if (i === index) {
-        return { ...todo, ...patch };
+  updateTodo(id: string, patch: Partial<Todo>) {
+    for (let i = 0; i < this.todos.length; i++) {
+      if (this.todos[i].id === id) {
+        this.todos[i] = { ...this.todos[i], ...patch };
+
+        this.dispatchEvent(new TodoChangeEvent(this.todos[i]));
+
+        break;
       }
-
-      return todo;
-    });
+    }
   }
 
   onPropertyChanged() {
-    this.dispatchEvent(new TodoChangeEvent());
     this.store.saveJSON('joist_todo', this.todos);
   }
 }
