@@ -17,7 +17,7 @@ template.innerHTML = /*html*/ `
 
 @styled
 @observable
-export class TodoCard extends UpgradableElement implements OnPropertyChanged {
+export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
   static styles = [
     css`
       :host {
@@ -74,5 +74,3 @@ export class TodoCard extends UpgradableElement implements OnPropertyChanged {
     this.completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }
 }
-
-customElements.define('todo-card', TodoCard);

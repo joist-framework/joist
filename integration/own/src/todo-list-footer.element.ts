@@ -4,11 +4,14 @@ import { query } from '@joist/query';
 
 import { Todo, TodoService, TodoStatus } from './services/todo.service';
 
+const sfxs = new Map([
+  ['one', 'item'],
+  ['other', 'items'],
+]);
+
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
-  <footer id="footer">
-    <span id="active"></span> of <span id="total"></span>
-  </footer>
+  <footer id="footer"></footer>
 
   <div class="decoration"></div>
 `;
@@ -16,7 +19,7 @@ template.innerHTML = /*html*/ `
 @injectable
 @styled
 export class TodoListFooterElement extends HTMLElement {
-  static inject = [TodoService];
+  static inject = [TodoService, Intl.PluralRules];
 
   static styles = [
     css`
@@ -56,10 +59,9 @@ export class TodoListFooterElement extends HTMLElement {
     `,
   ];
 
-  @query('#active') active!: HTMLElement;
-  @query('#total') total!: HTMLElement;
+  @query('#footer') footer!: HTMLElement;
 
-  constructor(private todo: Injected<TodoService>) {
+  constructor(private todo: Injected<TodoService>, private pr: Injected<Intl.PluralRules>) {
     super();
 
     const root = this.attachShadow({ mode: 'open' });
@@ -68,18 +70,20 @@ export class TodoListFooterElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const service = this.todo();
+    const todo = this.todo();
+    const pr = this.pr();
 
     const onTodoUpdate = () => {
-      this.active.innerHTML = this.getCompleteCount(service.todos).toString();
-      this.total.innerHTML = service.todos.length.toString();
+      const activeCount = this.getCompleteCount(todo.todos);
+
+      this.footer.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))} left`;
     };
 
     onTodoUpdate();
 
-    service.addEventListener('todo_changed', onTodoUpdate);
-    service.addEventListener('todo_added', onTodoUpdate);
-    service.addEventListener('todo_removed', onTodoUpdate);
+    todo.addEventListener('todo_updated', onTodoUpdate);
+    todo.addEventListener('todo_added', onTodoUpdate);
+    todo.addEventListener('todo_removed', onTodoUpdate);
   }
 
   private getCompleteCount(todos: Todo[]) {
@@ -89,5 +93,3 @@ export class TodoListFooterElement extends HTMLElement {
     );
   }
 }
-
-customElements.define('todo-list-footer', TodoListFooterElement);

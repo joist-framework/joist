@@ -1,4 +1,3 @@
-import { observable, observe, OnPropertyChanged } from '@joist/observable';
 import { service, Injected } from '@joist/di';
 
 import { AppStorage } from './storage.service';
@@ -27,9 +26,9 @@ export class Todo {
   }
 }
 
-export class TodoChangeEvent extends Event {
+export class TodoUpdatedEvent extends Event {
   constructor(public todo: Todo) {
-    super('todo_changed');
+    super('todo_updated');
   }
 }
 
@@ -46,11 +45,10 @@ export class TodoRemovedEvent extends Event {
 }
 
 @service
-@observable
-export class TodoService extends EventTarget implements OnPropertyChanged {
+export class TodoService extends EventTarget {
   static inject = [AppStorage];
 
-  @observe todos: Todo[] = [];
+  todos: Todo[] = [];
 
   private store: AppStorage;
 
@@ -67,15 +65,17 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
   }
 
   addTodo(todo: Todo) {
-    this.todos = [...this.todos, todo];
+    this.todos.push(todo);
 
     this.dispatchEvent(new TodoAddedEvent(todo));
+    this.sync();
   }
 
   removeTodo(id: string) {
     this.todos = this.todos.filter((todo) => todo.id !== id);
 
     this.dispatchEvent(new TodoRemovedEvent(id));
+    this.sync();
   }
 
   updateTodo(id: string, patch: Partial<Todo>) {
@@ -83,14 +83,15 @@ export class TodoService extends EventTarget implements OnPropertyChanged {
       if (this.todos[i].id === id) {
         this.todos[i] = { ...this.todos[i], ...patch };
 
-        this.dispatchEvent(new TodoChangeEvent(this.todos[i]));
+        this.dispatchEvent(new TodoUpdatedEvent(this.todos[i]));
+        this.sync();
 
         break;
       }
     }
   }
 
-  onPropertyChanged() {
+  private sync() {
     this.store.saveJSON('joist_todo', this.todos);
   }
 }

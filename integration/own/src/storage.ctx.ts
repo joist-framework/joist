@@ -28,8 +28,6 @@ class AppLocalStorage extends AppStorage {
 }
 
 @injectable
-export class StorageCtx extends HTMLElement {
+export class StorageCtxElement extends HTMLElement {
   static providers = [TodoService, { provide: AppStorage, use: AppLocalStorage }];
 }
-
-customElements.define('local-storage-ctx', StorageCtx);
