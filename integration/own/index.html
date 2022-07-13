@@ -58,11 +58,39 @@
       <todo-form></todo-form>
 
       <todo-list></todo-list>
+
+      <todo-list-footer></todo-list-footer>
+
+      <todo-logger></todo-logger>
     </local-storage-ctx>
 
-    <script src="./src/storage.ctx.ts" type="module"></script>
-    <script src="./src/todo-form.element.ts" type="module"></script>
-    <script src="./src/todo-card.element.ts" type="module"></script>
-    <script src="./src/todo-list.element.ts" type="module"></script>
+    <script type="module">
+      import { injectable } from '@joist/di';
+
+      import { TodoService } from './src/services/todo.service.ts';
+      import { StorageCtxElement } from './src/storage.ctx';
+      import { TodoCardElement } from './src/todo-card.element';
+      import { TodoFormElement } from './src/todo-form.element';
+      import { TodoListFooterElement } from './src/todo-list-footer.element';
+      import { TodoListElement } from './src/todo-list.element';
+
+      customElements.define('local-storage-ctx', StorageCtxElement);
+      customElements.define('todo-list', TodoListElement);
+      customElements.define('todo-list-footer', TodoListFooterElement);
+      customElements.define('todo-form', TodoFormElement);
+      customElements.define('todo-card', TodoCardElement);
+
+      const params = new URLSearchParams(location.search);
+
+      if (params.has('debug')) {
+        initDebug();
+      }
+
+      async function initDebug() {
+        const { TodoLoggerElement } = await import('./src/todo-logger.element.ts');
+
+        customElements.define('todo-logger', TodoLoggerElement);
+      }
+    </script>
   </body>
 </html>

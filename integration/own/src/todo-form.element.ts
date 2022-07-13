@@ -1,6 +1,6 @@
 import { Injected, injectable } from '@joist/di';
 import { styled, css } from '@joist/styled';
-import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
+import { UpgradableElement } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service';
@@ -14,8 +14,7 @@ template.innerHTML = /*html*/ `
 
 @injectable
 @styled
-@observable
-export class TodoForm extends UpgradableElement implements OnPropertyChanged {
+export class TodoFormElement extends UpgradableElement {
   static inject = [TodoService];
 
   static styles = [
@@ -65,30 +64,18 @@ export class TodoForm extends UpgradableElement implements OnPropertyChanged {
     `,
   ];
 
-  @observe @attr value = '';
-
   @query('#input') input!: HTMLInputElement;
 
   constructor(private todo: Injected<TodoService>) {
     super();
 
-    this.attachShadow({ mode: 'open' });
-  }
+    const root = this.attachShadow({ mode: 'open' });
 
-  connectedCallback() {
-    this.shadowRoot!.appendChild(template.content.cloneNode(true));
+    root.appendChild(template.content.cloneNode(true));
 
-    this.input.addEventListener('input', () => {
-      this.value = this.input.value;
-    });
-
-    this.shadowRoot!.addEventListener('submit', (e) => {
+    root.addEventListener('submit', (e) => {
       this.onSubmit(e);
     });
-  }
-
-  onPropertyChanged(): void {
-    this.input.value = this.value;
   }
 
   private onSubmit(e: Event) {
@@ -99,11 +86,9 @@ export class TodoForm extends UpgradableElement implements OnPropertyChanged {
     const todo = this.input.value;
 
     if (todo.length) {
-      service.addTodo(new Todo(todo, TodoStatus.Active));
+      service.addTodo(Todo.create(todo, TodoStatus.Active));
 
       this.input.value = '';
     }
   }
 }
-
-customElements.define('todo-form', TodoForm);

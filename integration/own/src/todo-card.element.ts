@@ -17,7 +17,7 @@ template.innerHTML = /*html*/ `
 
 @styled
 @observable
-export class TodoCard extends UpgradableElement implements OnPropertyChanged {
+export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
   static styles = [
     css`
       :host {
@@ -57,15 +57,13 @@ export class TodoCard extends UpgradableElement implements OnPropertyChanged {
   constructor() {
     super();
 
-    this.attachShadow({ mode: 'open' });
-  }
+    const root = this.attachShadow({ mode: 'open' });
 
-  connectedCallback() {
-    this.shadowRoot!.appendChild(template.content.cloneNode(true));
+    root.appendChild(template.content.cloneNode(true));
 
-    this.shadowRoot!.addEventListener('click', (e) => {
+    root.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
-        this.dispatchEvent(new Event(e.target.id));
+        this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
       }
     });
   }
@@ -76,5 +74,3 @@ export class TodoCard extends UpgradableElement implements OnPropertyChanged {
     this.completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }
 }
-
-customElements.define('todo-card', TodoCard);
