@@ -7,6 +7,8 @@ export const enum TodoStatus {
   Complete = 'complete',
 }
 
+const todoSecret = Symbol();
+
 export class Todo {
   static create(name: string, status: TodoStatus) {
     return new Todo('todo--' + crypto.randomUUID(), name, status);
