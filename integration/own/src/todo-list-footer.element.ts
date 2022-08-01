@@ -1,6 +1,5 @@
 import { css, styled } from '@joist/styled';
 import { injectable, Injected } from '@joist/di';
-import { query } from '@joist/query';
 
 import { Todo, TodoService, TodoStatus } from './services/todo.service';
 
@@ -11,9 +10,11 @@ const sfxs = new Map([
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
-  <footer id="footer"></footer>
+  <div id="footer">
+    <slot></slot> left
+  </div>
 
-  <div class="decoration"></div>
+  <div id="decoration"></div> 
 `;
 
 @injectable
@@ -24,16 +25,21 @@ export class TodoListFooterElement extends HTMLElement {
   static styles = [
     css`
       :host {
+        --card-height: 50px;
+
         display: block;
         position: relative;
+        height: var(--card-height);
       }
 
-      footer {
+      #footer {
+        box-sizing: border-box;
         background: white;
-        display: block;
+        display: flex;
+        align-items: center;
         color: black;
         padding: 10px 15px;
-        height: 20px;
+        height: calc(var(--card-height) - 11px);
         text-align: center;
         border-top: 1px solid #e6e6e6;
         font-size: 14px;
@@ -42,7 +48,7 @@ export class TodoListFooterElement extends HTMLElement {
         z-index: 1;
       }
 
-      .decoration {
+      #decoration {
         background: white;
         content: '';
         position: absolute;
@@ -50,7 +56,7 @@ export class TodoListFooterElement extends HTMLElement {
         right: 0;
         bottom: 0;
         left: 0;
-        height: 50px;
+        height: calc(var(--card-height) - 11px);
         overflow: hidden;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
           0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
@@ -58,8 +64,6 @@ export class TodoListFooterElement extends HTMLElement {
       }
     `,
   ];
-
-  @query('#footer') footer!: HTMLElement;
 
   constructor(private todo: Injected<TodoService>, private pr: Injected<Intl.PluralRules>) {
     super();
@@ -73,10 +77,11 @@ export class TodoListFooterElement extends HTMLElement {
     const todo = this.todo();
     const pr = this.pr();
 
-    const onTodoUpdate = () => {
-      const activeCount = this.getCompleteCount(todo.todos);
+    const onTodoUpdate = async () => {
+      const todos = await todo.getTodos();
+      const activeCount = this.#getCompleteCount(todos);
 
-      this.footer.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))} left`;
+      this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
     };
 
     onTodoUpdate();
@@ -86,7 +91,7 @@ export class TodoListFooterElement extends HTMLElement {
     todo.addEventListener('todo_removed', onTodoUpdate);
   }
 
-  private getCompleteCount(todos: Todo[]) {
+  #getCompleteCount(todos: Todo[]) {
     return todos.reduce(
       (total, todo) => (todo.status === TodoStatus.Active ? total + 1 : total),
       0

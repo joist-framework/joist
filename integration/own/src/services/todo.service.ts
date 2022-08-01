@@ -7,23 +7,16 @@ export const enum TodoStatus {
   Complete = 'complete',
 }
 
-const todoSecret = Symbol();
-
 export class Todo {
   static create(name: string, status: TodoStatus) {
-    return new Todo(crypto.randomUUID(), name, status, todoSecret);
+    return new Todo('todo--' + crypto.randomUUID(), name, status);
   }
 
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly status: TodoStatus,
-    secret: Symbol
-  ) {
-    if (secret !== todoSecret) {
-      throw new Error('use Todo.create');
-    }
-  }
+    public readonly status: TodoStatus
+  ) {}
 }
 
 export class TodoUpdatedEvent extends Event {
@@ -48,50 +41,69 @@ export class TodoRemovedEvent extends Event {
 export class TodoService extends EventTarget {
   static inject = [AppStorage];
 
-  todos: Todo[] = [];
+  private todos: Todo[] = [];
+  private store = this.getStore();
+  private initialized = false;
 
-  private store: AppStorage;
-
-  constructor(store: Injected<AppStorage>) {
+  constructor(private getStore: Injected<AppStorage>) {
     super();
-
-    this.store = store();
-
-    const stored = this.store.loadJSON<Todo[]>('joist_todo');
-
-    if (stored) {
-      this.todos = stored;
-    }
   }
 
-  addTodo(todo: Todo) {
+  getTodos(): Promise<Todo[]> {
+    if (this.initialized) {
+      return Promise.resolve(this.todos);
+    }
+
+    return this.store.loadJSON<Todo[]>('joist_todo').then((todos) => {
+      this.initialized = true;
+
+      if (todos) {
+        this.todos = todos;
+      }
+
+      return this.todos;
+    });
+  }
+
+  async addTodo(todo: Todo) {
     this.todos.push(todo);
 
+    await this.sync();
+
     this.dispatchEvent(new TodoAddedEvent(todo));
-    this.sync();
   }
 
-  removeTodo(id: string) {
+  async removeTodo(id: string) {
     this.todos = this.todos.filter((todo) => todo.id !== id);
 
+    await this.sync();
+
     this.dispatchEvent(new TodoRemovedEvent(id));
-    this.sync();
   }
 
-  updateTodo(id: string, patch: Partial<Todo>) {
+  async updateTodo(id: string, patch: Partial<Todo>) {
     for (let i = 0; i < this.todos.length; i++) {
       if (this.todos[i].id === id) {
         this.todos[i] = { ...this.todos[i], ...patch };
 
+        await this.sync();
+
         this.dispatchEvent(new TodoUpdatedEvent(this.todos[i]));
-        this.sync();
 
         break;
       }
     }
   }
 
+  listen(event: string, cb: EventListener) {
+    this.addEventListener(event, cb);
+
+    return () => {
+      this.removeEventListener(event, cb);
+    };
+  }
+
   private sync() {
-    this.store.saveJSON('joist_todo', this.todos);
+    return this.store.saveJSON('joist_todo', this.todos);
   }
 }

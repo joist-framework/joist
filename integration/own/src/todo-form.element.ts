@@ -66,27 +66,23 @@ export class TodoFormElement extends UpgradableElement {
 
   @query('#input') input!: HTMLInputElement;
 
-  constructor(private todo: Injected<TodoService>) {
+  constructor(private getTodo: Injected<TodoService>) {
     super();
 
     const root = this.attachShadow({ mode: 'open' });
 
     root.appendChild(template.content.cloneNode(true));
 
-    root.addEventListener('submit', (e) => {
-      this.onSubmit(e);
-    });
+    root.addEventListener('submit', this.onSubmit.bind(this));
   }
 
   private onSubmit(e: Event) {
-    const service = this.todo();
+    const service = this.getTodo();
 
     e.preventDefault();
 
-    const todo = this.input.value;
-
-    if (todo.length) {
-      service.addTodo(Todo.create(todo, TodoStatus.Active));
+    if (this.input.value) {
+      service.addTodo(Todo.create(this.input.value, TodoStatus.Active));
 
       this.input.value = '';
     }

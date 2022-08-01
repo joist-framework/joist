@@ -10,10 +10,10 @@ export class TodoLoggerElement extends HTMLElement {
     super();
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     const service = this.todo();
 
-    console.log(service.todos);
+    console.log(await service.getTodos());
 
     service.addEventListener('todo_added', console.log);
     service.addEventListener('todo_removed', console.log);
