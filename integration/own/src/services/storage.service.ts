@@ -1,16 +1,21 @@
 import { service } from '@joist/di';
 
+export interface Storage {
+  loadJSON<T>(key: string): Promise<T | undefined>;
+  saveJSON<T>(key: string, val: T): Promise<boolean>;
+}
+
 @service
-export class AppStorage {
+export class AppStorage implements Storage {
   data: Record<string, any> = {};
 
-  loadJSON<T>(key: string): T | undefined {
-    return this.data[key];
+  loadJSON<T>(key: string): Promise<T | undefined> {
+    return Promise.resolve(this.data[key] as T);
   }
 
-  saveJSON<T extends object>(key: string, val: T): boolean {
+  saveJSON<T>(key: string, val: T): Promise<boolean> {
     this.data[key] = val;
 
-    return true;
+    return Promise.resolve(true);
   }
 }

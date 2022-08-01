@@ -2,7 +2,7 @@ import { styled, css } from '@joist/styled';
 import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
-import { TodoStatus } from './services/todo.service';
+import { Todo, TodoStatus } from './services/todo.service';
 
 const template = document.createElement('template');
 template.innerHTML = /*html*/ `
@@ -18,6 +18,15 @@ template.innerHTML = /*html*/ `
 @styled
 @observable
 export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
+  static create(todo: Todo) {
+    const card = new TodoCardElement();
+    card.id = todo.id;
+    card.status = todo.status;
+    card.innerHTML = todo.name;
+
+    return card;
+  }
+
   static styles = [
     css`
       :host {

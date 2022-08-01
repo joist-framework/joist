@@ -1,28 +1,28 @@
 import { injectable } from '@joist/di';
 
-import { AppStorage } from './services/storage.service';
+import { AppStorage, Storage } from './services/storage.service';
 import { TodoService } from './services/todo.service';
 
-class AppLocalStorage extends AppStorage {
-  loadJSON<T>(key: string): T | undefined {
+class AppLocalStorage implements Storage {
+  loadJSON<T>(key: string): Promise<T | undefined> {
     try {
       const res = localStorage.getItem(key);
 
       if (res) {
-        return JSON.parse(res);
+        return Promise.resolve(JSON.parse(res));
       }
     } catch {}
 
-    return undefined;
+    return Promise.resolve(undefined);
   }
 
-  saveJSON<T extends object>(key: string, val: T): boolean {
+  saveJSON<T>(key: string, val: T): Promise<boolean> {
     try {
       localStorage.setItem(key, JSON.stringify(val));
 
-      return true;
+      return Promise.resolve(true);
     } catch {
-      return false;
+      return Promise.resolve(false);
     }
   }
 }

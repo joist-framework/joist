@@ -48,6 +48,46 @@
         position: relative;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
       }
+
+      todo-form:not(:defined) {
+        border-bottom: solid 1px rgb(243, 243, 243);
+        background: #fff;
+        display: block;
+        height: 65px;
+      }
+
+      todo-list:not(:defined) {
+        border-bottom: solid 1px rgb(243, 243, 243);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 2rem 0;
+      }
+
+      #loader {
+        content: '';
+        box-sizing: border-box;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border-top: 2px solid #07d;
+        border-right: 2px solid transparent;
+        animation: spinner 0.6s linear infinite;
+      }
+
+      todo-list-footer:not(:defined) {
+        background: #fff;
+        display: block;
+        height: 50px;
+      }
+
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
 
     <header>
@@ -57,7 +97,9 @@
     <local-storage-ctx>
       <todo-form></todo-form>
 
-      <todo-list></todo-list>
+      <todo-list>
+        <div id="loader" slot="loading"></div>
+      </todo-list>
 
       <todo-list-footer></todo-list-footer>
 
