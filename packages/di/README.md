@@ -151,6 +151,7 @@ The Joist injector is hierarchical meaning that you can define context for just 
 
 When using context elements it is important that they are registered BEFORE your other elements.
 If child elements are upgraded before the context element they won't be able to find the context scope.
+If you plan on using context elements you will need to wait until the element has been attached so it can find any potential parent injectors.
 
 ```TS
 import { injectable, Injected } from '@joist/di';
