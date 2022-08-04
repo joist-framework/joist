@@ -6,7 +6,7 @@ This means that it passes functions around and that dependencies are not initial
 #### Installation:
 
 ```BASH
-npm i @joist/di@beta
+npm i @joist/di
 ```
 
 #### Example:
@@ -22,7 +22,7 @@ class FooService {
 
 class BarService {
   static inject = [FooService];
-  
+
   constructor(private foo: Injected<FooService>) { }
 
   sayHello() {
