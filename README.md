@@ -16,4 +16,4 @@ This toolkit is here to help provide just the functionality you need and nothing
 | [@joist/query](packages/query)           | query custom elements and assign to property.                         |
 | [@joist/styled](packages/styled)         | Apply styles to shadow dom. (Constructable stylesheets with fallback) |
 
-[Try it out with Vite and Stackblitz!](https://stackblitz.com/edit/joist-starter-app-vite)
+[Try it out with Vite and Stackblitz!](https://stackblitz.com/github/joist-framework/starter-app-vite?file=index.html)
