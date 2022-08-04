@@ -65,9 +65,7 @@ export class TodoListElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.#listeners.forEach((remove) => {
-      remove();
-    });
+    this.#listeners.forEach((remove) => remove());
   }
 
   #onRemove(e: Event) {

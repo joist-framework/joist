@@ -69,14 +69,14 @@ export class TodoFormElement extends UpgradableElement {
   constructor(private getTodo: Injected<TodoService>) {
     super();
 
-    const root = this.attachShadow({ mode: 'open' });
+    const shadow = this.attachShadow({ mode: 'open' });
 
-    root.appendChild(template.content.cloneNode(true));
+    shadow.appendChild(template.content.cloneNode(true));
 
-    root.addEventListener('submit', this.onSubmit.bind(this));
+    shadow.addEventListener('submit', this.#onSubmit.bind(this));
   }
 
-  private onSubmit(e: Event) {
+  #onSubmit(e: Event) {
     const service = this.getTodo();
 
     e.preventDefault();

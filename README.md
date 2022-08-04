@@ -16,6 +16,4 @@ This toolkit is here to help provide just the functionality you need and nothing
 | [@joist/query](packages/query)           | query custom elements and assign to property.                         |
 | [@joist/styled](packages/styled)         | Apply styles to shadow dom. (Constructable stylesheets with fallback) |
 
-NOTE: This branch contains the next available version (2.0.0) and is available under the "canary" tag. The API is solidfying and should be stable shortly.
-
 [Try it out with Vite and Stackblitz!](https://stackblitz.com/edit/joist-starter-app-vite)
