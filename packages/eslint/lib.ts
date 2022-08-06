@@ -32,6 +32,8 @@ export default {
           ? findInjectedArgs(injectedConstructor as TSESTree.MethodDefinition)
           : [];
 
+        console.log(injectedArts);
+
         for (let i = 0; i < injectedServices.length; i++) {}
       },
     };

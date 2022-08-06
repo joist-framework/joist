@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/control": "file:packages/control",
     "@joist/di": "file:packages/di",
+    "@joist/eslint": "file:packages/eslint",
     "@joist/observable": "file:packages/observable",
     "@joist/query": "file:packages/query",
     "@joist/styled": "file:packages/styled"
@@ -19,7 +19,6 @@
     "@microsoft/fast-element": "1.10.4",
     "@open-wc/testing": "3.1.6",
     "@web/test-runner": "0.14.0",
-    "@types/eslint": "^8.4.5",
     "@typescript-eslint/parser": "^5.32.0",
     "@typescript-eslint/typescript-estree": "^5.32.0",
     "@web/test-runner-puppeteer": "0.10.5",
