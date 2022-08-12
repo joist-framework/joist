@@ -50,6 +50,7 @@ export function injectable<T extends Injectable>(CustomElement: T) {
 
     disconnectedCallback() {
       delete this.injector.parent;
+      this.injector.instances = new WeakMap();
 
       if (super.disconnectedCallback) {
         super.disconnectedCallback();
@@ -65,7 +66,7 @@ function findInjectorRoot(e: Event): Injector | null {
     return el instanceof HTMLElement && el !== e.target && el.hasAttribute('joist-injector-root');
   });
 
-  if (parentInjector) {
+  if (parentInjector && 'injector' in parentInjector) {
     return Reflect.get(parentInjector, 'injector') as Injector;
   }
 
