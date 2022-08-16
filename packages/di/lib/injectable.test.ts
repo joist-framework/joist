@@ -130,4 +130,31 @@ describe('@injectable()', () => {
 
     expect(child.b().a()).to.be.instanceOf(AltA);
   });
+
+  it('should clear instances when disconnected', async () => {
+    class A {}
+
+    @injectable
+    class MyElement extends HTMLElement {
+      static inject = [A];
+
+      constructor(public a: Injected<A>) {
+        super();
+      }
+
+      connectedCallback() {
+        this.a();
+      }
+    }
+
+    customElements.define('injectable-disconnect', MyElement);
+
+    const el = await fixture<MyElement>(html`<injectable-disconnect></injectable-disconnect>`);
+
+    expect(Reflect.get(el, 'injector').instances.has(A)).to.be.true;
+
+    el.disconnectedCallback!();
+
+    expect(Reflect.get(el, 'injector').instances.has(A)).to.be.false;
+  });
 });
