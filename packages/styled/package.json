@@ -7,9 +7,6 @@
     ".": {
       "import": "./target/build/lib.js"
     },
-    "./observable": {
-      "import": "./target/build/lib/observable.js"
-    },
     "./styled": {
       "import": "./target/build/lib/styled.js"
     }
