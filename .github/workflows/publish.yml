@@ -1,12 +1,11 @@
 name: Publish
 
 on:
-  push:
-    branches: ['main']
-    paths-ignore:
-      - '*.md'
-      - '/integration/*'
-      - 'package*.json'
+  workflow_run:
+    workflows: ['Web Test Runner']
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   build:
