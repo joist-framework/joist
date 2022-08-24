@@ -1,7 +1,10 @@
-name: Pull Request
+name: Web Test Runner
 
-pull_request:
-  branches: [main, master]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -9,10 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Bootstrap
         run: npm ci
