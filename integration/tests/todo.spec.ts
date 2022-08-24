@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('should add a single todo', async ({ page }) => {
-  await page.goto('localhost:8888');
+  await page.goto('localhost:8888/own/index.html');
 
   await page.locator('todo-form #input').fill('Hello World');
 
@@ -14,7 +14,7 @@ test('should add a single todo', async ({ page }) => {
 });
 
 test('should mark a todo as complete', async ({ page }) => {
-  await page.goto('localhost:8888');
+  await page.goto('localhost:8888/own/index.html');
   await page.locator('todo-form #input').fill('Hello World');
   await page.keyboard.press('Enter');
 
@@ -26,7 +26,7 @@ test('should mark a todo as complete', async ({ page }) => {
 });
 
 test('should remove a todo as complete', async ({ page }) => {
-  await page.goto('localhost:8888');
+  await page.goto('localhost:8888/own/index.html');
   await page.locator('todo-form #input').fill('Hello World');
   await page.keyboard.press('Enter');
 

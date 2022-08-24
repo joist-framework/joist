@@ -99,7 +99,7 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npx vite integration/own --port 8888',
+    command: 'npx vite integration --port 8888',
     port: 8888,
   },
 };
