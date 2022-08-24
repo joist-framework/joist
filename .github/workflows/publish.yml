@@ -2,7 +2,7 @@ name: Publish
 
 on:
   workflow_run:
-    workflows: ['Web Test Runner', 'Playwright Tests', 'CodeQL']
+    workflows: ['Web Test Runner']
     branches: [main]
     types:
       - completed
@@ -20,12 +20,6 @@ jobs:
 
       - name: Bootstrap
         run: npm ci
-
-      - name: Build Integration (Own)
-        run: npx tsc -p integration/own && npx vite build integration/own
-
-      - name: Build Integration (Mixed)
-        run: npx tsc -p integration/mixed && npx vite build integration/mixed
 
       - name: Publish
         run: npx lerna publish --canary --preid canary.$(date +"%s") --dist-tag canary --yes
