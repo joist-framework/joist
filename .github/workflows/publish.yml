@@ -2,7 +2,7 @@ name: Publish
 
 on:
   workflow_run:
-    workflows: ['Web Test Runner']
+    workflows: ['Web Test Runner', 'Playwright Tests', 'CodeQL']
     branches: [main]
     types:
       - completed
