@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joist/control": "file:packages/control",
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
     "@joist/query": "file:packages/query",
