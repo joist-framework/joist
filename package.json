@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@joist/di": "file:packages/di",
+    "@joist/eslint": "file:packages/eslint",
     "@joist/observable": "file:packages/observable",
     "@joist/query": "file:packages/query",
     "@joist/styled": "file:packages/styled"
@@ -19,10 +20,13 @@
     "@open-wc/testing": "3.1.6",
     "@playwright/test": "1.25.1",
     "@web/test-runner": "0.14.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "@typescript-eslint/typescript-estree": "^5.32.0",
     "@web/test-runner-puppeteer": "0.10.5",
     "classnames": "2.3.1",
-    "lerna": "5.4.3",
-    "lit": "2.3.1",
+    "eslint": "^8.21.0",
+    "lerna": "5.3.0",
+    "lit": "2.2.8",
     "rollup-plugin-minify-html-literals": "1.2.6",
     "tslib": "2.4.0",
     "typescript": "4.7.4",
