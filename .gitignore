@@ -40,6 +40,6 @@ firebase-debug.log
 # System Files
 .DS_Store
 Thumbs.db
-/test-results/
-/playwright-report/
-/playwright/.cache/
+test-results/
+playwright-report/
+playwright/.cache/
