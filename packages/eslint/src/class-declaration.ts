@@ -23,6 +23,8 @@ export function ClassDeclaration(node: TSESTree.ClassDeclaration) {
     ? findInjectedArgs(injectedConstructor as TSESTree.MethodDefinition)
     : [];
 
+  console.log(injectedArgs);
+
   for (let i = 0; i < injectedServices.length; i++) {}
 }
 

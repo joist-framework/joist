@@ -41,7 +41,7 @@ export class TodoListElement extends HTMLElement {
     super();
 
     const root = this.attachShadow({ mode: 'open' });
-    root.innerHTML = '<slot></slot>';
+    root.innerHTML = /*html*/ `<slot></slot>`;
 
     this.addEventListener('remove', this.#onRemove.bind(this));
     this.addEventListener('complete', this.#onComplete.bind(this));

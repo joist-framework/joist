@@ -17,8 +17,8 @@ export function styled<T extends Styled>(CustomElement: T) {
   const styles = CustomElement.styles;
 
   return new Proxy(CustomElement, {
-    construct(a, b, c) {
-      const instance: HTMLElement = Reflect.construct(a, b, c);
+    construct(a, args, b) {
+      const instance: HTMLElement = Reflect.construct(a, args, b);
 
       if (styles && instance.shadowRoot) {
         // If there are defined styles AND a shadowRoot

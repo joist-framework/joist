@@ -9,7 +9,7 @@ export class Injector {
   constructor(public providers: Provider<any>[] = [], public parent?: Injector) {}
 
   has<T>(token: ProviderToken<T>): boolean {
-    const hasLocally = this.instances.has(token) || !!this.findProvider(token);
+    const hasLocally = this.instances.has(token) || !!this.#findProvider(token);
 
     if (hasLocally) {
       return true;
@@ -24,14 +24,14 @@ export class Injector {
       return this.instances.get(token);
     }
 
-    const provider = this.findProvider(token);
+    const provider = this.#findProvider(token);
 
     // check for a provider definition
     if (provider) {
       if ('use' in provider) {
-        return this.createAndCache(provider.use);
+        return this.#createAndCache(provider.use);
       } else {
-        return this.createAndCache(provider);
+        return this.#createAndCache(provider);
       }
     }
 
@@ -43,7 +43,7 @@ export class Injector {
     }
 
     // If nothing else treat as a local class provider
-    return this.createAndCache(token as ClassProviderToken<T>);
+    return this.#createAndCache(token as ClassProviderToken<T>);
   }
 
   create<T>(P: ClassProviderToken<T>): T {
@@ -52,7 +52,7 @@ export class Injector {
     return new P(...deps.map((dep) => () => this.get(dep)));
   }
 
-  private createAndCache<T>(token: ClassProviderToken<T>): T {
+  #createAndCache<T>(token: ClassProviderToken<T>): T {
     const instance = this.create(token);
 
     this.instances.set(token, instance);
@@ -60,7 +60,7 @@ export class Injector {
     return instance;
   }
 
-  private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
+  #findProvider(token: ProviderToken<any>): Provider<any> | undefined {
     if (!this.providers) {
       return undefined;
     }
