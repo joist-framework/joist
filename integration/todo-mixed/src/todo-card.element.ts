@@ -1,7 +1,7 @@
 import { styled, css } from '@joist/styled';
 import { UpgradableElement, observable, observe } from '@joist/observable';
 import { render, html } from 'lit-html';
-import classNames from 'classnames';
+import classNames from 'clsx';
 
 import { Todo, TodoStatus, TodoService } from './services/todo.service';
 
