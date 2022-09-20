@@ -6,9 +6,7 @@ export function effect(fn: (events: JoistChangeEvent[]) => void) {
 
   function cb(e: Event) {
     if (!scheduler) {
-      scheduler = Promise.resolve();
-
-      scheduler.then(() => {
+      scheduler = Promise.resolve().then(() => {
         fn(events);
 
         events = [];
