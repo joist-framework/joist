@@ -17,6 +17,12 @@ export function getObservableProperties(c: any): Array<string | symbol> {
   return c[PROPERTY_KEY] || [];
 }
 
+export class JoistChangeEvent extends Event {
+  constructor(public changes: Changes) {
+    super('joist-change-event', { bubbles: true });
+  }
+}
+
 export interface ObservableBase {
   __propChanges: Map<string | symbol, Change>;
   __propChange: Promise<void> | null;
@@ -141,6 +147,10 @@ function onPropertyChanged(
         }
       }
     }
+
+    this.dispatchEvent(new JoistChangeEvent(changes));
+  } else {
+    window.dispatchEvent(new JoistChangeEvent(changes));
   }
 }
 
