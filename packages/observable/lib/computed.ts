@@ -5,12 +5,12 @@ export class ComputedValue<T> {
   detach() {}
 }
 
-export function computed<T>(fn: () => T) {
+export function computed<T>(fn: () => T, root: Window | HTMLElement | ShadowRoot = window) {
   const computed = new ComputedValue<T>(fn());
 
   computed.detach = effect(() => {
     computed.value = fn();
-  });
+  }, root);
 
   return computed;
 }

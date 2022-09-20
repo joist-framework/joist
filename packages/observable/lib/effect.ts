@@ -1,6 +1,9 @@
 import { JoistChangeEvent } from './observable';
 
-export function effect(fn: (events: JoistChangeEvent[]) => void) {
+export function effect(
+  fn: (events: JoistChangeEvent[]) => void,
+  root: Window | HTMLElement | ShadowRoot = window
+) {
   let scheduler: Promise<void> | null = null;
   let events: JoistChangeEvent[] = [];
 
@@ -18,9 +21,9 @@ export function effect(fn: (events: JoistChangeEvent[]) => void) {
   }
 
   // batch all observable events
-  window.addEventListener('joist-observable-change', cb);
+  root.addEventListener('joist-observable-change', cb);
 
   return () => {
-    window.removeEventListener('joist-observable-change', cb);
+    root.removeEventListener('joist-observable-change', cb);
   };
 }

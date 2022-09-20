@@ -56,4 +56,24 @@ describe('effect', () => {
       done();
     });
   });
+
+  it('should let you listen from a given root', (done) => {
+    @observable
+    class CounterElement extends HTMLElement {
+      @observe value = 1;
+    }
+
+    window.customElements.define('my-el-1', CounterElement);
+
+    const counter = new CounterElement();
+
+    counter.value++;
+
+    const detach = effect((events) => {
+      expect(events.map((e) => e.changes)).to.deep.equal([{ value: new Change(2, 1, true) }]);
+
+      detach();
+      done();
+    }, counter);
+  });
 });
