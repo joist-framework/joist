@@ -9,7 +9,7 @@ Decorating a class with `@observable` means that instances of that class will BE
 npm i @joist/observable
 ```
 
-#### Example:
+#### Define an observable:
 
 Any class decorated with `@observable` will call the supplied `onPropertyChanged` callback whenever one of the marked values is updated.
 
