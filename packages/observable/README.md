@@ -9,7 +9,7 @@ Decorating a class with `@observable` means that instances of that class will BE
 npm i @joist/observable
 ```
 
-#### Define an observable:
+#### Define an observable
 
 Any class decorated with `@observable` will call the supplied `onPropertyChanged` callback whenever one of the marked values is updated.
 
@@ -34,7 +34,7 @@ state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
 
-#### effect
+#### Observe Effects
 
 If you need to monitor changes across all observables on your page you can use the supplied `effect` function.
 `effect` accepts a function that will be called after all observables have settled. Even if 10 observables have 15 updates made, your callback will only be called once everything is complete.
@@ -64,7 +64,7 @@ c1.value++;
 c2.value++;
 ```
 
-#### computed
+#### Compute new values
 
 `computed` allows you to define a computed value that will only be recomputed after all changes have settled.
 
