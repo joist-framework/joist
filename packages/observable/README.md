@@ -11,8 +11,10 @@ npm i @joist/observable
 
 #### Example:
 
+Any class decorated with `@observable` will call the supplied `onPropertyChanged` callback whenever one of the marked values is updated.
+
 ```TS
-import { observable, observer, OnPropertyChanged, Changes } from '@joist/observable';
+import { observable, observe, OnPropertyChanged, Changes } from '@joist/observable';
 
 @observable
 class State implements OnPropertyChanged {
@@ -35,41 +37,64 @@ state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
 
-#### Event target example:
+#### effect
 
-If you want to externally monitor your class for changes you can extend event target and dispatch events. (available in both node and the browser)
+If you need to monitor changes across all observables on your page you can use the supplied `effect` function.
+`effect` accepts a function that will be called after all observables have settled. Even if 10 observables have 15 updates made, your callback will only be called once everything is complete.
 
 ```TS
 import { observable, observer, OnPropertyChanged, Changes } from '@joist/observable';
+import { effect } from '@joist/observable/effect';
 
-class StateChangeEvent extends Event {
-  consetructor(public changes: Changes) {
-    super('statechange')
-  }
-}
 
 @observable
-class State extends EventTarget implements OnPropertyChanged {
-  // Changes to these will trigger callback
-  @observe todos: string[] = [];
-  @observe userName?: string;
-
-  // changes to this will not
-  someValue: boolean = false;
-
-  onPropertyChanged(changes: Changes) {
-    this.dispatchEvent(new StateChangeEvent(changes));
-  }
+class Counter implements OnPropertyChanged {
+  @observe value = 0;
 }
 
-const state = new State();
+const c1 = new Counter();
+const c2 = new Counter();
 
-state.addEventListener('statechange', (e) => {
-  console.log(e.changes);
+const detach = effect(() => {
+  // only called once everything is settled
+  console.log(c1.value); // 2
+  console.log(c2.value); // 1
+
+  detach(); // effect returns a function that will remove the callback;
+})
+
+c1.value++;
+c1.value++;
+c2.value++;
+```
+
+#### computed
+
+`computed` allows you to define a computed value that will only be recomputed after all changes have settled.
+
+```TS
+import { observable, observe } from '@joist/observable';
+import { effect, computed } from '@joist/observable/effect';
+
+@observable
+class Counter implements OnPropertyChanged {
+  @observe value = 0;
+}
+
+const c1 = new Counter();
+const c2 = new Counter();
+
+const combined = effect(() => {
+  return c1.value + c2.value;
 });
 
-state.todos = [...state.todos, 'Build Shit'];
-state.userName = 'Danny Blue'
+effect(() => {
+  console.log(combined.value); // 3
+});
+
+c1.value++;
+c1.value++;
+c2.value++;
 ```
 
 #### Custom Elements

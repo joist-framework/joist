@@ -47,19 +47,13 @@ export class CounterElement extends HTMLElement implements OnPropertyChanged {
     super();
 
     const shadow = this.attachShadow({ mode: 'open' });
-
     shadow.appendChild(template.content.cloneNode(true));
-
     shadow.addEventListener('click', this.#onClick.bind(this));
 
-    this.#update();
+    this.innerHTML = String(this.count);
   }
 
   onPropertyChanged() {
-    this.#update();
-  }
-
-  #update() {
     this.innerHTML = String(this.count);
   }
 
