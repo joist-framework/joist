@@ -1,14 +1,22 @@
-export function effect(fn: () => void) {
-  let defer: Promise<any>;
+import { JoistChangeEvent } from './observable';
 
-  function cb() {
+export function effect(fn: (events: JoistChangeEvent[]) => void) {
+  let defer: Promise<void> | null = null;
+  let events: JoistChangeEvent[] = [];
+
+  function cb(e: Event) {
     if (!defer) {
       defer = Promise.resolve();
 
       defer.then(() => {
-        fn();
+        fn(events);
+
+        events = [];
+        defer = null;
       });
     }
+
+    events.push(e as JoistChangeEvent);
   }
 
   // batch all observable events

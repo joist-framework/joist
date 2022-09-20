@@ -1,3 +1,4 @@
+import { expect } from '@open-wc/testing';
 import { effect } from './effect.js';
 import { observable, observe } from './observable.js';
 
@@ -31,8 +32,9 @@ describe('mapped', () => {
     todoList.addTodo('first');
 
     effect(() => {
-      // only called once
-      console.log(counter1.value, counter2.value, todoList.todos);
+      expect(counter1.value).to.equal(3);
+      expect(counter2.value).to.equal(2);
+      expect(counter2.value).to.deep.equal(['first']);
     });
   });
 });
