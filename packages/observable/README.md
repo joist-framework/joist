@@ -40,12 +40,11 @@ If you need to monitor changes across all observables on your page you can use t
 `effect` accepts a function that will be called after all observables have settled. Even if 10 observables have 15 updates made, your callback will only be called once everything is complete.
 
 ```TS
-import { observable, observer, OnPropertyChanged, Changes } from '@joist/observable';
+import { observable, observe, Changes } from '@joist/observable';
 import { effect } from '@joist/observable/effect';
 
-
 @observable
-class Counter implements OnPropertyChanged {
+class Counter {
   @observe value = 0;
 }
 
@@ -58,7 +57,7 @@ const detach = effect(() => {
   console.log(c2.value); // 1
 
   detach(); // effect returns a function that will remove the callback;
-})
+});
 
 c1.value++;
 c1.value++;
@@ -74,7 +73,7 @@ import { observable, observe } from '@joist/observable';
 import { effect, computed } from '@joist/observable/effect';
 
 @observable
-class Counter implements OnPropertyChanged {
+class Counter {
   @observe value = 0;
 }
 
