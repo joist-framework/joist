@@ -23,13 +23,14 @@ describe('effect', () => {
     counter2.value++;
     todoList.todos = ['first'];
 
-    const remove = effect(() => {
+    const detach = effect(() => {
       expect(counter1.value).to.equal(3);
       expect(counter2.value).to.equal(2);
       expect(todoList.todos).to.deep.equal(['first']);
 
+      detach();
+
       done();
-      remove();
     });
   });
 
@@ -45,14 +46,14 @@ describe('effect', () => {
     counter1.value++;
     counter2.value++;
 
-    const remove = effect((events) => {
+    const detach = effect((events) => {
       expect(events.map((e) => e.changes)).to.deep.equal([
         { value: new Change(2, 1, true) },
         { value: new Change(2, 1, true) },
       ]);
 
+      detach();
       done();
-      remove();
     });
   });
 });

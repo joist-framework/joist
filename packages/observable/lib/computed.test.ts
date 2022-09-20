@@ -23,12 +23,13 @@ describe('computed', () => {
     counter1.value++;
     counter2.value++;
 
-    const remove = effect(() => {
+    const detach = effect(() => {
       expect(combined.value).to.equal(5);
 
+      detach();
+      combined.detach();
+
       done();
-      remove();
-      combined.remove();
     });
   });
 
@@ -39,28 +40,23 @@ describe('computed', () => {
     }
 
     const counter = new Counter();
-
-    const doubled = computed(() => {
-      return counter.value * 2;
-    });
-
-    const trippled = computed(() => {
-      return doubled.value * 3;
-    });
+    const doubled = computed(() => counter.value * 2);
+    const trippled = computed(() => doubled.value * 3);
 
     expect(doubled.value).to.equal(2);
     expect(trippled.value).to.equal(6);
 
     counter.value++;
 
-    const remove = effect(() => {
+    const detach = effect(() => {
       expect(doubled.value).to.equal(4);
       expect(trippled.value).to.equal(12);
 
+      detach();
+      doubled.detach();
+      trippled.detach();
+
       done();
-      remove();
-      doubled.remove();
-      trippled.remove();
     });
   });
 });
