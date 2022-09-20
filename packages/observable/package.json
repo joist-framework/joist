@@ -6,6 +6,9 @@
   "exports": {
     ".": {
       "import": "./target/build/lib.js"
+    },
+    "./effect": {
+      "import": "./target/build/effect.js"
     }
   },
   "files": [

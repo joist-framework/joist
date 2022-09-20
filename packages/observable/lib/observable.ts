@@ -24,9 +24,9 @@ export class JoistChangeEvent extends Event {
 }
 
 export interface ObservableBase {
-  __propChanges: Map<string | symbol, Change>;
-  __propChange: Promise<void> | null;
-  __initializedChanges: Set<string | symbol>;
+  propChanges: Map<string | symbol, Change>;
+  scheduler: Promise<void> | null;
+  initializedChanges: Set<string | symbol>;
 
   definePropChange(key: string | symbol, propChange: Change): Promise<void>;
   onPropertyChanged?(changes: Changes): void;
@@ -44,9 +44,9 @@ export function observable<T extends new (...args: any[]) => any>(Base: T) {
   const attributes = getObservableAttributes(Base);
 
   return class Observable extends Base implements ObservableBase {
-    __propChanges = new Map();
-    __propChange: Promise<void> | null = null;
-    __initializedChanges = new Set<string | symbol>();
+    propChanges = new Map();
+    scheduler: Promise<void> | null = null;
+    initializedChanges = new Set<string | symbol>();
 
     constructor(...args: any[]) {
       super(...args);
@@ -159,30 +159,30 @@ function definePropChange(
   key: string | symbol,
   propChange: Change
 ): Promise<void> {
-  if (!this.__propChanges.has(key)) {
-    this.__propChanges.set(key, propChange);
+  if (!this.propChanges.has(key)) {
+    this.propChanges.set(key, propChange);
   }
 
-  this.__propChanges.get(key)!.value = propChange.value;
+  this.propChanges.get(key)!.value = propChange.value;
 
-  if (!this.__propChange) {
+  if (!this.scheduler) {
     // If there is no previous change defined set it up
-    this.__propChange = Promise.resolve().then(() => {
+    this.scheduler = Promise.resolve().then(() => {
       // run onPropChanges here. This makes sure we capture all changes
       const changes: Changes = {};
 
       // Copy changes and keep track of whether or not this is the first time a given property has changes
-      for (let [key, value] of this.__propChanges) {
+      for (let [key, value] of this.propChanges) {
         changes[key] = value;
 
-        changes[key].firstChange = !this.__initializedChanges.has(key);
+        changes[key].firstChange = !this.initializedChanges.has(key);
 
-        this.__initializedChanges.add(key);
+        this.initializedChanges.add(key);
       }
 
       // clear out before calling to account for changes made INSIDE of the onPropertyChanged callback
-      this.__propChange = null;
-      this.__propChanges.clear();
+      this.scheduler = null;
+      this.propChanges.clear();
 
       if (this.onPropertyChanged) {
         this.onPropertyChanged(changes);
@@ -190,7 +190,7 @@ function definePropChange(
     });
   }
 
-  return this.__propChange;
+  return this.scheduler;
 }
 
 function createPrivateKey(key: string | symbol) {
