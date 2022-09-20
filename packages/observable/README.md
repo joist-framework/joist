@@ -22,9 +22,6 @@ class State {
   @observe todos: string[] = [];
   @observe userName?: string;
 
-  // changes to this will not
-  someValue: boolean = false;
-
   onPropertyChanged(changes: Changes) {
     console.log(changes);
     // { todos: { value: ['Build Shit'], previousValue: [] }, userName: { value: 'Danny Blue', previousValue: undefined } }
