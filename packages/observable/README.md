@@ -51,12 +51,10 @@ class Counter {
 const c1 = new Counter();
 const c2 = new Counter();
 
-const detach = effect(() => {
+effect(() => {
   // only called once everything is settled
   console.log(c1.value); // 2
   console.log(c2.value); // 1
-
-  detach(); // effect returns a function that will remove the callback;
 });
 
 c1.value++;
