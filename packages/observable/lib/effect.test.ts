@@ -7,29 +7,21 @@ describe('effect', () => {
     @observable
     class Counter {
       @observe value = 1;
-
-      inc() {
-        this.value++;
-      }
     }
 
     @observable
     class TodoList {
       @observe todos: string[] = [];
-
-      addTodo(todo: string) {
-        this.todos = [todo, ...this.todos];
-      }
     }
 
     const counter1 = new Counter();
     const counter2 = new Counter();
     const todoList = new TodoList();
 
-    counter1.inc();
-    counter1.inc();
-    counter2.inc();
-    todoList.addTodo('first');
+    counter1.value++;
+    counter1.value++;
+    counter2.value++;
+    todoList.todos = ['first'];
 
     const remove = effect(() => {
       expect(counter1.value).to.equal(3);
@@ -45,17 +37,13 @@ describe('effect', () => {
     @observable
     class Counter {
       @observe value = 1;
-
-      inc() {
-        this.value++;
-      }
     }
 
     const counter1 = new Counter();
     const counter2 = new Counter();
 
-    counter1.inc();
-    counter2.inc();
+    counter1.value++;
+    counter2.value++;
 
     const remove = effect((events) => {
       expect(events.map((e) => e.changes)).to.deep.equal([

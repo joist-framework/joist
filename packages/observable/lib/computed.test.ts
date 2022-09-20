@@ -8,10 +8,6 @@ describe('computed', () => {
     @observable
     class Counter {
       @observe value = 1;
-
-      inc() {
-        this.value++;
-      }
     }
 
     const counter1 = new Counter();
@@ -21,17 +17,50 @@ describe('computed', () => {
       return counter1.value + counter2.value;
     });
 
-    counter1.inc();
-    counter1.inc();
-    counter2.inc();
+    expect(combined.value).to.deep.equal(2);
+
+    counter1.value++;
+    counter1.value++;
+    counter2.value++;
 
     const remove = effect(() => {
-      expect(counter1.value).to.equal(3);
-      expect(counter2.value).to.equal(2);
-      expect(combined.value).to.deep.equal(5);
+      expect(combined.value).to.equal(5);
 
       done();
       remove();
+      combined.remove();
+    });
+  });
+
+  it('should compute from another computed value', (done) => {
+    @observable
+    class Counter {
+      @observe value = 1;
+    }
+
+    const counter = new Counter();
+
+    const doubled = computed(() => {
+      return counter.value * 2;
+    });
+
+    const trippled = computed(() => {
+      return doubled.value * 3;
+    });
+
+    expect(doubled.value).to.equal(2);
+    expect(trippled.value).to.equal(6);
+
+    counter.value++;
+
+    const remove = effect(() => {
+      expect(doubled.value).to.equal(4);
+      expect(trippled.value).to.equal(12);
+
+      done();
+      remove();
+      doubled.remove();
+      trippled.remove();
     });
   });
 });
