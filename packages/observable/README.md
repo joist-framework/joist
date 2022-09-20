@@ -79,10 +79,7 @@ class Counter {
 
 const c1 = new Counter();
 const c2 = new Counter();
-
-const combined = effect(() => {
-  return c1.value + c2.value;
-});
+const combined = effect(() => c1.value + c2.value);
 
 effect(() => {
   console.log(combined.value); // 3
