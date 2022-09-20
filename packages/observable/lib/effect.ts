@@ -1,18 +1,18 @@
 import { JoistChangeEvent } from './observable';
 
 export function effect(fn: (events: JoistChangeEvent[]) => void) {
-  let defer: Promise<void> | null = null;
+  let scheduler: Promise<void> | null = null;
   let events: JoistChangeEvent[] = [];
 
   function cb(e: Event) {
-    if (!defer) {
-      defer = Promise.resolve();
+    if (!scheduler) {
+      scheduler = Promise.resolve();
 
-      defer.then(() => {
+      scheduler.then(() => {
         fn(events);
 
         events = [];
-        defer = null;
+        scheduler = null;
       });
     }
 
@@ -20,9 +20,9 @@ export function effect(fn: (events: JoistChangeEvent[]) => void) {
   }
 
   // batch all observable events
-  window.addEventListener('joist-change-event', cb);
+  window.addEventListener('joist-observable-change', cb);
 
   return () => {
-    window.removeEventListener('joist-change-event', cb);
+    window.removeEventListener('joist-observable-change', cb);
   };
 }

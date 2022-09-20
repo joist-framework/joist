@@ -19,7 +19,7 @@ export function getObservableProperties(c: any): Array<string | symbol> {
 
 export class JoistChangeEvent extends Event {
   constructor(public changes: Changes) {
-    super('joist-change-event', { bubbles: true });
+    super('joist-observable-change', { bubbles: true });
   }
 }
 
