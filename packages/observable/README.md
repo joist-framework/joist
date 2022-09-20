@@ -14,10 +14,10 @@ npm i @joist/observable
 Any class decorated with `@observable` will call the supplied `onPropertyChanged` callback whenever one of the marked values is updated.
 
 ```TS
-import { observable, observe, OnPropertyChanged, Changes } from '@joist/observable';
+import { observable, observe, Changes } from '@joist/observable';
 
 @observable
-class State implements OnPropertyChanged {
+class State {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
