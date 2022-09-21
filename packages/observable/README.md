@@ -86,6 +86,18 @@ effect(() => {
 });
 ```
 
+#### Stop observing
+
+`effect` returns a function that allows you to detach from the update cycle. Useful if you need to only listen for one update or to perform some teardown logic.
+
+```TS
+import { effect } from '@joist/observable';
+
+const detach = effect(() => {
+  detach(); // this function will only be called once
+});
+```
+
 #### Custom Elements
 
 If you are using @observable with custom elements it is very likely that you will want to read from and write to attributes.
