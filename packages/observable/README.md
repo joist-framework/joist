@@ -40,8 +40,7 @@ If you need to monitor changes across all observables on your page you can use t
 `effect` accepts a function that will be called after all observables have settled. Even if 10 observables have 15 updates made, your callback will only be called once everything is complete.
 
 ```TS
-import { observable, observe, Changes } from '@joist/observable';
-import { effect } from '@joist/observable/effect';
+import { observable, observe, effect } from '@joist/observable';
 
 @observable
 class Counter {
@@ -67,8 +66,7 @@ effect(() => {
 `computed` allows you to define a computed value that will only be recomputed after all changes have settled.
 
 ```TS
-import { observable, observe } from '@joist/observable';
-import { effect, computed } from '@joist/observable/effect';
+import { observable, observe, effect, computed } from '@joist/observable';
 
 @observable
 class Counter {

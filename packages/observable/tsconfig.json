@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "files": ["lib.ts", "effect.ts"],
+  "files": ["lib.ts"],
   "include": ["lib"],
   "exclude": ["target"]
 }
