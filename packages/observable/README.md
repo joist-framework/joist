@@ -77,7 +77,7 @@ class Counter {
 
 const c1 = new Counter();
 const c2 = new Counter();
-const combined = effect(() => c1.value + c2.value);
+const combined = computed(() => c1.value + c2.value);
 
 c1.value++;
 c1.value++;
