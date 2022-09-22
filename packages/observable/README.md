@@ -50,15 +50,15 @@ class Counter {
 const c1 = new Counter();
 const c2 = new Counter();
 
-c1.value++;
-c1.value++;
-c2.value++;
-
 effect(() => {
   // only called once everything is settled
   console.log(c1.value); // 2
   console.log(c2.value); // 1
 });
+
+c1.value++;
+c1.value++;
+c2.value++;
 ```
 
 #### Compute new values
@@ -77,13 +77,13 @@ const c1 = new Counter();
 const c2 = new Counter();
 const combined = computed(() => c1.value + c2.value);
 
-c1.value++;
-c1.value++;
-c2.value++;
-
 effect(() => {
   console.log(combined.value); // 3
 });
+
+c1.value++;
+c1.value++;
+c2.value++;
 ```
 
 #### Stop observing
