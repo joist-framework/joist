@@ -1,9 +1,16 @@
 import { JoistChangeEvent } from './observable';
 
+export interface EffectOptions {
+  root: Window | HTMLElement | ShadowRoot;
+  once: boolean;
+}
+
 export function effect(
   fn: (events: JoistChangeEvent[]) => void,
-  root: Window | HTMLElement | ShadowRoot = window
+  opts: Partial<EffectOptions> = {}
 ) {
+  const { root, once } = { root: window, once: false, ...opts };
+
   let scheduler: Promise<void> | null = null;
   let events: JoistChangeEvent[] = [];
 
@@ -11,6 +18,10 @@ export function effect(
     if (!scheduler) {
       scheduler = Promise.resolve().then(() => {
         fn(events);
+
+        if (once) {
+          root.removeEventListener('joist-observable-change', cb);
+        }
 
         events = [];
         scheduler = null;

@@ -1,16 +1,16 @@
-import { effect } from './effect.js';
+import { effect, EffectOptions } from './effect.js';
 
 export class ComputedValue<T> {
   constructor(public value: T) {}
   detach() {}
 }
 
-export function computed<T>(fn: () => T, root: Window | HTMLElement | ShadowRoot = window) {
+export function computed<T>(fn: () => T, opts: Partial<EffectOptions>) {
   const computed = new ComputedValue<T>(fn());
 
   computed.detach = effect(() => {
     computed.value = fn();
-  }, root);
+  }, opts);
 
   return computed;
 }

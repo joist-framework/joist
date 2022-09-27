@@ -18,20 +18,21 @@ describe('effect', () => {
     const counter2 = new Counter();
     const todoList = new TodoList();
 
+    effect(
+      () => {
+        expect(counter1.value).to.equal(3);
+        expect(counter2.value).to.equal(2);
+        expect(todoList.todos).to.deep.equal(['first']);
+
+        done();
+      },
+      { once: true }
+    );
+
     counter1.value++;
     counter1.value++;
     counter2.value++;
     todoList.todos = ['first'];
-
-    const detach = effect(() => {
-      expect(counter1.value).to.equal(3);
-      expect(counter2.value).to.equal(2);
-      expect(todoList.todos).to.deep.equal(['first']);
-
-      detach();
-
-      done();
-    });
   });
 
   it('should keep track of the change events', (done) => {
@@ -43,18 +44,20 @@ describe('effect', () => {
     const counter1 = new Counter();
     const counter2 = new Counter();
 
+    effect(
+      (events) => {
+        expect(events.map((e) => e.changes)).to.deep.equal([
+          { value: new Change(2, 1, true) },
+          { value: new Change(2, 1, true) },
+        ]);
+
+        done();
+      },
+      { once: true }
+    );
+
     counter1.value++;
     counter2.value++;
-
-    const detach = effect((events) => {
-      expect(events.map((e) => e.changes)).to.deep.equal([
-        { value: new Change(2, 1, true) },
-        { value: new Change(2, 1, true) },
-      ]);
-
-      detach();
-      done();
-    });
   });
 
   it('should let you listen from a given root', (done) => {
@@ -67,13 +70,15 @@ describe('effect', () => {
 
     const counter = new CounterElement();
 
+    effect(
+      (events) => {
+        expect(events.map((e) => e.changes)).to.deep.equal([{ value: new Change(2, 1, true) }]);
+
+        done();
+      },
+      { root: counter, once: true }
+    );
+
     counter.value++;
-
-    const detach = effect((events) => {
-      expect(events.map((e) => e.changes)).to.deep.equal([{ value: new Change(2, 1, true) }]);
-
-      detach();
-      done();
-    }, counter);
   });
 });
