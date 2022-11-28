@@ -1,6 +1,6 @@
 export function upgradable<T extends new (...args: any[]) => HTMLElement>(Base: T) {
   return class Upgradeable extends Base {
-    __upgradedProps = new Map<keyof this, unknown>();
+    __upgradedProps = new Map<any, unknown>();
 
     constructor(...args: any[]) {
       super(...args);
