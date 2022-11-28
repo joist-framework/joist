@@ -15,7 +15,7 @@ const applicator = new Applicator(
 );
 
 // Apply to a document and provide a list of elements to search for
-applicator.apply(document, { elements: [] })
+applicator.apply(document, [])
 ```
 
 ## Vite
@@ -38,7 +38,7 @@ export default defineConfig({
       transformIndexHtml: {
         enforce: "pre",
         transform(html) {
-          return applicator.apply(html, { elements: ['my-element', 'my-dropdown'] });
+          return applicator.apply(html, ['my-element', 'my-dropdown']);
         }
       }
     }
