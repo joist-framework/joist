@@ -20,9 +20,9 @@ applicator.apply(document, { elements: [] })
 
 ## Vite
 
-```JS
+```TS
 import { Applicator. NoopTemplateCache, FileSysTemplateLoader } from '@joist/ssr';
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 const applicator = new Applicator(
   new NoopTemplateCache(),
