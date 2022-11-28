@@ -1,11 +1,12 @@
-name: Publish
+name: Test and Publish
 
 on:
-  workflow_run:
-    workflows: ['Web Test Runner']
+  push:
     branches: [main]
-    types:
-      - completed
+    paths-ignore:
+      - 'README.md'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   build:
