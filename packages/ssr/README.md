@@ -17,3 +17,31 @@ const applicator = new Applicator(
 // Apply to a document and provide a list of elements to search for
 applicator.apply(document, { elements: [] })
 ```
+
+## Vite
+
+```JS
+import { Applicator. NoopTemplateCache, FileSysTemplateLoader } from '@joist/ssr';
+import { defineConfig } from "vite";
+
+const applicator = new Applicator(
+  new NoopTemplateCache(),
+  new FileSysTemplateLoader(
+    (tag) => `elements/${tag}/${tag}.html`,
+    (tag) => `elements/${tag}/${tag}.css`
+  )
+);
+
+export default defineConfig({
+  plugins: [
+    {
+      transformIndexHtml: {
+        enforce: "pre",
+        transform(html) {
+          return applicator.apply(html, { elements: ['my-element', 'my-dropdown'] });
+        }
+      }
+    }
+  ],
+});
+```
