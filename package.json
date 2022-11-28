@@ -12,6 +12,7 @@
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
     "@joist/query": "file:packages/query",
+    "@joist/ssr": "file:packages/ssr",
     "@joist/styled": "file:packages/styled"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
     "@types/node": "^18.11.9",
     "@web/test-runner": "0.15.0",
     "@web/test-runner-puppeteer": "0.11.0",
+    "ava": "^5.1.0",
     "clsx": "1.2.1",
     "lerna": "6.0.3",
     "lit": "2.4.1",
