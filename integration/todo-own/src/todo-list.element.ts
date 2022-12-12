@@ -1,6 +1,6 @@
 import { Injected, injectable } from '@joist/di';
 import { observable } from '@joist/observable';
-import { styled, css } from '@joist/styled';
+import { shadowed, css, html } from 'packages/shadowed';
 
 import {
   TodoAddedEvent,
@@ -13,35 +13,32 @@ import { TodoCardElement } from './todo-card.element';
 
 @injectable
 @observable
-@styled
+@shadowed
 export class TodoListElement extends HTMLElement {
   static inject = [TodoService];
 
-  static styles = [
-    css`
-      :host {
-        display: block;
-        background: #fff;
-        position: relative;
-      }
+  static styles = css`
+    :host {
+      display: block;
+      background: #fff;
+      position: relative;
+    }
 
-      ::slotted(todo-card) {
-        border-bottom: solid 1px #f3f3f3;
-      }
+    ::slotted(todo-card) {
+      border-bottom: solid 1px #f3f3f3;
+    }
 
-      ::slotted(todo-card:last-child) {
-        border-bottom: none;
-      }
-    `,
-  ];
+    ::slotted(todo-card:last-child) {
+      border-bottom: none;
+    }
+  `;
+
+  static template = html`<slot></slot>`;
 
   #listeners: Function[] = [];
 
   constructor(private getTodoService: Injected<TodoService>) {
     super();
-
-    const root = this.attachShadow({ mode: 'open' });
-    root.innerHTML = '<slot></slot>';
 
     this.addEventListener('remove', this.#onRemove.bind(this));
     this.addEventListener('complete', this.#onComplete.bind(this));

@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
 import { shadowed } from './shadowed.js';
-import { css, html } from './tags';
+import { css, html } from './tags.js';
 
 describe('shadowed', () => {
   it('should add a shadow root', () => {

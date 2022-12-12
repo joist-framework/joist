@@ -1,7 +1,7 @@
 import { Result } from './result';
 
 export interface Shadowed {
-  styles?: Result<CSSStyleSheet>;
+  styles?: Result<CSSStyleSheet | HTMLStyleElement>;
   template?: Result<HTMLTemplateElement>;
 
   new (...args: any[]): HTMLElement;
@@ -25,18 +25,17 @@ export function shadowed<T extends Shadowed>(CustomElement: T) {
 export function applyShadow(
   el: HTMLElement,
   html?: Result<HTMLTemplateElement>,
-  css?: Result<CSSStyleSheet>
+  css?: Result<CSSStyleSheet | HTMLStyleElement>
 ) {
   let shadow: ShadowRoot = el.shadowRoot || el.attachShadow({ mode: 'open' });
 
   if (css) {
-    if (shadow.adoptedStyleSheets) {
-      shadow.adoptedStyleSheets = [css.toValue()];
-    } else {
-      const style = document.createElement('style');
-      style.innerHTML = css.toString();
+    const value = css.toValue();
 
-      shadow.append(style);
+    if (value instanceof CSSStyleSheet) {
+      shadow.adoptedStyleSheets = [value];
+    } else if (value instanceof HTMLStyleElement) {
+      shadow.append(value);
     }
   }
 
