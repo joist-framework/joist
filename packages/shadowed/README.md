@@ -1,30 +1,29 @@
 # Styled
 
-Apply css to a shadow root. Will apply constructable stylesheets if available and fallback to `<style>` elements if not.
+Create a shadow root and apply styles and html as defined
 
 #### Installation:
 
 ```BASH
-npm i @joist/styled
+npm i @joist/shadowed
 ```
 
 #### Example:
 
 ```TS
-import { styled, css } from '@joist/styled';
+import { shadowed, css, html} from '@joist/shadowed';
 
-@styled
+@shadowed
 export class MyElement extends HTMLElement {
-  static styles = [
-    css`
-      :host {
-        display: block;
-        color: red;
-      }
-    `
-  ]
-  constructor() {
-    this.attachShadow({ mode: 'open' });
-  }
+  static styles = css`
+    :host {
+      display: block;
+      color: red;
+    }
+  `;
+
+  static template = html`
+    <slot></slot>
+  `
 }
 ```
