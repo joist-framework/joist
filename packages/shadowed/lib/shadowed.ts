@@ -41,7 +41,7 @@ export function applyShadow(
   }
 
   if (html) {
-    shadow.append(html.toValue().cloneNode(true));
+    shadow.append(html.toValue().content.cloneNode(true));
   }
 
   return shadow;

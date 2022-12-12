@@ -1,4 +1,6 @@
-# Styled
+# Styledm (deprecated)
+
+Please note this package is deprecated. use `@joist/shadowed` instead.
 
 Apply css to a shadow root. Will apply constructable stylesheets if available and fallback to `<style>` elements if not.
 
