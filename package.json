@@ -12,6 +12,7 @@
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
     "@joist/query": "file:packages/query",
+    "@joist/shadowed": "file:packages/shadowed",
     "@joist/ssr": "file:packages/ssr",
     "@joist/styled": "file:packages/styled"
   },

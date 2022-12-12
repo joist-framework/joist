@@ -1,21 +1,10 @@
-import { styled, css } from '@joist/styled';
+import { shadowed, css, html } from '@joist/shadowed';
 import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
 import { query } from '@joist/query';
 
 import { Todo, TodoStatus } from './services/todo.service';
 
-const template = document.createElement('template');
-template.innerHTML = /*html*/ `
-  <div id="name">
-    <slot></slot>
-  </div>
-  
-  <button id="remove">remove</button>
-  
-  <button id="complete">complete</button>
-`;
-
-@styled
+@shadowed
 @observable
 export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
   static create(todo: Todo) {
@@ -27,37 +16,45 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
     return card;
   }
 
-  static styles = [
-    css`
-      :host {
-        align-items: center;
-        display: flex;
-        padding: 1rem;
-      }
+  static styles = css`
+    :host {
+      align-items: center;
+      display: flex;
+      padding: 1rem;
+    }
 
-      #name {
-        flex-grow: 1;
-      }
+    #name {
+      flex-grow: 1;
+    }
 
-      :host([status='complete']) #name {
-        text-decoration: line-through;
-        opacity: 0.5;
-      }
+    :host([status='complete']) #name {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
 
-      button {
-        border: none;
-        color: cornflowerblue;
-        cursor: pointer;
-        font-size: 1rem;
-        background: none;
-        margin-left: 0.5rem;
-      }
+    button {
+      border: none;
+      color: cornflowerblue;
+      cursor: pointer;
+      font-size: 1rem;
+      background: none;
+      margin-left: 0.5rem;
+    }
 
-      button#remove {
-        color: darkred;
-      }
-    `,
-  ];
+    button#remove {
+      color: darkred;
+    }
+  `;
+
+  static template = html`
+    <div id="name">
+      <slot></slot>
+    </div>
+
+    <button id="remove">remove</button>
+
+    <button id="complete">complete</button>
+  `;
 
   @observe @attr status: TodoStatus = TodoStatus.Active;
 
@@ -66,11 +63,7 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
   constructor() {
     super();
 
-    const root = this.attachShadow({ mode: 'open' });
-
-    root.appendChild(template.content.cloneNode(true));
-
-    root.addEventListener('click', (e) => {
+    this.shadowRoot!.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
         this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
       }
