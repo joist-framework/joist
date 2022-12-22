@@ -1,17 +1,21 @@
 import { injectable, Injected } from '@joist/di';
 
-import { TodoService } from './services/todo.service';
+import { TodoService } from './services/todo.service.js';
 
 @injectable
 export class TodoLoggerElement extends HTMLElement {
   static inject = [TodoService];
 
-  constructor(private todo: Injected<TodoService>) {
+  #todo: Injected<TodoService>;
+
+  constructor(todo: Injected<TodoService>) {
     super();
+
+    this.#todo = todo;
   }
 
   async connectedCallback() {
-    const service = this.todo();
+    const service = this.#todo();
 
     console.log(await service.getTodos());
 

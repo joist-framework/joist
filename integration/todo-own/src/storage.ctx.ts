@@ -1,7 +1,7 @@
 import { injectable } from '@joist/di';
 
-import { AppStorage, Storage } from './services/storage.service';
-import { TodoService } from './services/todo.service';
+import { AppStorage, Storage } from './services/storage.service.js';
+import { TodoService } from './services/todo.service.js';
 
 class AppLocalStorage implements Storage {
   loadJSON<T>(key: string): Promise<T | undefined> {

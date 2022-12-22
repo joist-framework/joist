@@ -7,27 +7,14 @@ export interface Shadowed {
   new (...args: any[]): HTMLElement;
 }
 
-export function shadowed<T extends Shadowed>(CustomElement: T) {
-  const styles = CustomElement.styles;
-  const template = CustomElement.template;
+export function shadow(el: HTMLElement) {
+  if (el.shadowRoot) {
+    return el.shadowRoot;
+  }
 
-  return new Proxy(CustomElement, {
-    construct(a, b, c) {
-      const instance: HTMLElement = Reflect.construct(a, b, c);
-
-      applyShadow(instance, template, styles);
-
-      return instance;
-    },
-  });
-}
-
-export function applyShadow(
-  el: HTMLElement,
-  html?: Result<HTMLTemplateElement>,
-  css?: Result<CSSStyleSheet | HTMLStyleElement>
-) {
-  let shadow: ShadowRoot = el.shadowRoot || el.attachShadow({ mode: 'open' });
+  const css = readStyles(el);
+  const html = readTemplate(el);
+  const shadow = el.attachShadow({ mode: 'open' });
 
   if (css) {
     const value = css.toValue();
@@ -44,4 +31,12 @@ export function applyShadow(
   }
 
   return shadow;
+}
+
+function readStyles(el: HTMLElement): Result<CSSStyleSheet | HTMLStyleElement> | undefined {
+  return (el.constructor as any).styles;
+}
+
+function readTemplate(el: HTMLElement): Result<HTMLTemplateElement> | undefined {
+  return (el.constructor as any).template;
 }

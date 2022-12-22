@@ -1,12 +1,13 @@
 import { expect } from '@open-wc/testing';
 
-import { shadowed } from './shadowed.js';
+import { shadow } from './shadowed.js';
 import { css, html } from './tags.js';
 
 describe('shadowed', () => {
   it('should add a shadow root', () => {
-    @shadowed
-    class MyElement extends HTMLElement {}
+    class MyElement extends HTMLElement {
+      shadow = shadow(this);
+    }
 
     customElements.define('shadowed-1', MyElement);
 
@@ -16,13 +17,14 @@ describe('shadowed', () => {
   });
 
   it('should apply a stylesheet', () => {
-    @shadowed
     class MyElement extends HTMLElement {
       static styles = css`
         :host {
           display: flex;
         }
       `;
+
+      shadow = shadow(this);
     }
 
     customElements.define('shadowed-2', MyElement);
@@ -33,7 +35,6 @@ describe('shadowed', () => {
   });
 
   it('should apply html', () => {
-    @shadowed
     class MyElement extends HTMLElement {
       static styles = css`
         :host {
@@ -42,6 +43,8 @@ describe('shadowed', () => {
       `;
 
       static template = html`<slot></slot>`;
+
+      shadow = shadow(this);
     }
 
     customElements.define('shadowed-3', MyElement);

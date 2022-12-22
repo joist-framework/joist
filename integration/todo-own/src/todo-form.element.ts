@@ -1,12 +1,10 @@
 import { Injected, injectable } from '@joist/di';
-import { shadowed, css, html } from '@joist/shadowed';
+import { shadow, css, html } from '@joist/shadowed';
 import { UpgradableElement } from '@joist/observable';
-import { query } from '@joist/query';
 
-import { TodoService, Todo, TodoStatus } from './services/todo.service';
+import { TodoService, Todo, TodoStatus } from './services/todo.service.js';
 
 @injectable
-@shadowed
 export class TodoFormElement extends UpgradableElement {
   static inject = [TodoService];
 
@@ -67,12 +65,13 @@ export class TodoFormElement extends UpgradableElement {
     </form>
   `;
 
-  @query('#input') input!: HTMLInputElement;
+  #root = shadow(this);
+  #input = this.#root.querySelector<HTMLInputElement>('#input')!;
 
   constructor(private getTodo: Injected<TodoService>) {
     super();
 
-    this.shadowRoot!.addEventListener('submit', this.#onSubmit.bind(this));
+    this.#root.addEventListener('submit', this.#onSubmit.bind(this));
   }
 
   #onSubmit(e: Event) {
@@ -80,10 +79,10 @@ export class TodoFormElement extends UpgradableElement {
 
     e.preventDefault();
 
-    if (this.input.value) {
-      service.addTodo(Todo.create(this.input.value, TodoStatus.Active));
+    if (this.#input.value) {
+      service.addTodo(Todo.create(this.#input.value, TodoStatus.Active));
 
-      this.input.value = '';
+      this.#input.value = '';
     }
   }
 }

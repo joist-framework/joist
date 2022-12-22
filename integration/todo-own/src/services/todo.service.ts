@@ -1,6 +1,6 @@
 import { service, Injected } from '@joist/di';
 
-import { AppStorage } from './storage.service';
+import { AppStorage } from './storage.service.js';
 
 export const enum TodoStatus {
   Active = 'active',
@@ -41,32 +41,34 @@ export class TodoRemovedEvent extends Event {
 export class TodoService extends EventTarget {
   static inject = [AppStorage];
 
-  private todos: Todo[] = [];
-  private store = this.getStore();
-  private initialized = false;
+  #todos: Todo[] = [];
+  #store: AppStorage;
+  #initialized = false;
 
-  constructor(private getStore: Injected<AppStorage>) {
+  constructor(store: Injected<AppStorage>) {
     super();
+
+    this.#store = store();
   }
 
   getTodos(): Promise<Todo[]> {
-    if (this.initialized) {
-      return Promise.resolve(this.todos);
+    if (this.#initialized) {
+      return Promise.resolve(this.#todos);
     }
 
-    return this.store.loadJSON<Todo[]>('joist_todo').then((todos) => {
-      this.initialized = true;
+    return this.#store.loadJSON<Todo[]>('joist_todo').then((todos) => {
+      this.#initialized = true;
 
       if (todos) {
-        this.todos = todos;
+        this.#todos = todos;
       }
 
-      return this.todos;
+      return this.#todos;
     });
   }
 
   async addTodo(todo: Todo) {
-    this.todos.push(todo);
+    this.#todos.push(todo);
 
     await this.sync();
 
@@ -74,7 +76,7 @@ export class TodoService extends EventTarget {
   }
 
   async removeTodo(id: string) {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.#todos = this.#todos.filter((todo) => todo.id !== id);
 
     await this.sync();
 
@@ -82,13 +84,13 @@ export class TodoService extends EventTarget {
   }
 
   async updateTodo(id: string, patch: Partial<Todo>) {
-    for (let i = 0; i < this.todos.length; i++) {
-      if (this.todos[i].id === id) {
-        this.todos[i] = { ...this.todos[i], ...patch };
+    for (let i = 0; i < this.#todos.length; i++) {
+      if (this.#todos[i].id === id) {
+        this.#todos[i] = { ...this.#todos[i], ...patch };
 
         await this.sync();
 
-        this.dispatchEvent(new TodoUpdatedEvent(this.todos[i]));
+        this.dispatchEvent(new TodoUpdatedEvent(this.#todos[i]));
 
         break;
       }
@@ -104,6 +106,6 @@ export class TodoService extends EventTarget {
   }
 
   private sync() {
-    return this.store.saveJSON('joist_todo', this.todos);
+    return this.#store.saveJSON('joist_todo', this.#todos);
   }
 }

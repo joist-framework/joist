@@ -1,10 +1,8 @@
-import { shadowed, css, html } from '@joist/shadowed';
+import { shadow, css, html } from '@joist/shadowed';
 import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
-import { query } from '@joist/query';
 
-import { Todo, TodoStatus } from './services/todo.service';
+import { Todo, TodoStatus } from './services/todo.service.js';
 
-@shadowed
 @observable
 export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
   static create(todo: Todo) {
@@ -58,12 +56,13 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
 
   @observe @attr status: TodoStatus = TodoStatus.Active;
 
-  @query('#complete') completeBtn!: HTMLButtonElement;
+  #shadow = shadow(this);
+  #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
   constructor() {
     super();
 
-    this.shadowRoot!.addEventListener('click', (e) => {
+    this.#shadow.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
         this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
       }
@@ -73,6 +72,6 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
   onPropertyChanged() {
     const isActive = this.status === TodoStatus.Active;
 
-    this.completeBtn.innerHTML = isActive ? 'complete' : 'active';
+    this.#completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }
 }
