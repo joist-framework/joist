@@ -1,15 +1,13 @@
-import { observable, observe, OnPropertyChanged, attr } from '@joist/observable';
 import { css, html, shadow } from '@joist/shadow';
 
-@observable
-export class CounterElement extends HTMLElement implements OnPropertyChanged {
+export class CounterElement extends HTMLElement {
   static styles = css`
-    :host {
-      display: block;
-    }
-
     * {
       font-size: 200%;
+    }
+
+    :host {
+      display: block;
     }
 
     slot {
@@ -37,31 +35,27 @@ export class CounterElement extends HTMLElement implements OnPropertyChanged {
     <button id="inc">+</button>
   `;
 
-  @observe @attr({ read: Number }) count = 0;
-
-  #shadow = shadow(this);
-
   constructor() {
     super();
 
-    this.#shadow.addEventListener('click', this.#onClick.bind(this));
-    this.innerHTML = String(this.count);
-  }
+    const root = shadow(this);
 
-  onPropertyChanged() {
-    this.innerHTML = String(this.count);
+    root.addEventListener('click', this.#onClick.bind(this));
+
+    this.innerHTML = this.innerHTML || '0';
   }
 
   #onClick(e: Event) {
     const { id } = e.target as HTMLElement;
+    const current = Number(this.innerHTML);
 
     switch (id) {
       case 'inc':
-        this.count++;
+        this.innerHTML = String(current + 1);
         break;
 
       case 'dec':
-        this.count--;
+        this.innerHTML = String(current - 1);
         break;
     }
   }
