@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { shadow, css, html } from '@joist/shadowed';
+import { shadow, css, html } from '@joist/shadow';
 import { UpgradableElement } from '@joist/observable';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service.js';

@@ -5,15 +5,15 @@ Create a shadow root and apply styles and html as defined
 #### Installation:
 
 ```BASH
-npm i @joist/shadowed
+npm i @joist/shadow
 ```
 
 #### Example:
 
 ```TS
-import { shadowed, css, html} from '@joist/shadowed';
+import { shadow, css, html} from '@joist/shadow';
 
-@shadowed
+@shadow
 export class MyElement extends HTMLElement {
   static styles = css`
     :host {

@@ -1,5 +1,5 @@
 {
-  "name": "@joist/shadowed",
+  "name": "@joist/shadow",
   "version": "2.0.1",
   "main": "./target/build/lib.js",
   "module": "./target/build/lib.js",

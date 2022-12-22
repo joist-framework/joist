@@ -1,6 +1,6 @@
-import { Result } from './result';
+import { Result } from './result.js';
 
-export interface Shadowed {
+export interface shadow {
   styles?: Result<CSSStyleSheet | HTMLStyleElement>;
   template?: Result<HTMLTemplateElement>;
 
@@ -34,9 +34,9 @@ export function shadow(el: HTMLElement) {
 }
 
 function readStyles(el: HTMLElement): Result<CSSStyleSheet | HTMLStyleElement> | undefined {
-  return (el.constructor as any).styles;
+  return Reflect.get(el.constructor, 'styles');
 }
 
 function readTemplate(el: HTMLElement): Result<HTMLTemplateElement> | undefined {
-  return (el.constructor as any).template;
+  return Reflect.get(el.constructor, 'template');
 }

@@ -1,15 +1,15 @@
 import { expect } from '@open-wc/testing';
 
-import { shadow } from './shadowed.js';
+import { shadow } from './shadow.js';
 import { css, html } from './tags.js';
 
-describe('shadowed', () => {
+describe('shadow', () => {
   it('should add a shadow root', () => {
     class MyElement extends HTMLElement {
       shadow = shadow(this);
     }
 
-    customElements.define('shadowed-1', MyElement);
+    customElements.define('shadow-1', MyElement);
 
     const el = new MyElement();
 
@@ -27,7 +27,7 @@ describe('shadowed', () => {
       shadow = shadow(this);
     }
 
-    customElements.define('shadowed-2', MyElement);
+    customElements.define('shadow-2', MyElement);
 
     const el = new MyElement();
 
@@ -47,7 +47,7 @@ describe('shadowed', () => {
       shadow = shadow(this);
     }
 
-    customElements.define('shadowed-3', MyElement);
+    customElements.define('shadow-3', MyElement);
 
     const el = new MyElement();
 

@@ -1,4 +1,4 @@
-import { css, shadow, html } from '@joist/shadowed';
+import { css, shadow, html } from '@joist/shadow';
 import { injectable, Injected } from '@joist/di';
 
 import { Todo, TodoService, TodoStatus } from './services/todo.service.js';

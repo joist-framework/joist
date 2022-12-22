@@ -1,6 +1,6 @@
 import { Injected, injectable } from '@joist/di';
 import { observable } from '@joist/observable';
-import { shadow, css, html } from '@joist/shadowed';
+import { shadow, css, html } from '@joist/shadow';
 
 import {
   TodoAddedEvent,

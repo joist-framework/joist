@@ -1,55 +1,50 @@
 import { observable, observe, OnPropertyChanged, attr } from '@joist/observable';
-import { styled, css } from '@joist/styled';
-
-const template = document.createElement('template');
-template.innerHTML = /*html*/ `
-  <button id="dec">-</button>
-  
-  <slot></slot>
-
-  <button id="inc">+</button>
-`;
+import { css, html, shadow } from '@joist/shadow';
 
 @observable
-@styled
 export class CounterElement extends HTMLElement implements OnPropertyChanged {
-  static styles = [
-    css`
-      :host {
-        display: block;
-      }
+  static styles = css`
+    :host {
+      display: block;
+    }
 
-      * {
-        font-size: 200%;
-      }
+    * {
+      font-size: 200%;
+    }
 
-      slot {
-        width: 4rem;
-        display: inline-block;
-        text-align: center;
-      }
+    slot {
+      width: 4rem;
+      display: inline-block;
+      text-align: center;
+    }
 
-      button {
-        width: 4rem;
-        height: 4rem;
-        border: none;
-        border-radius: 10px;
-        background-color: seagreen;
-        color: white;
-        cursor: pointer;
-      }
-    `,
-  ];
+    button {
+      width: 4rem;
+      height: 4rem;
+      border: none;
+      border-radius: 10px;
+      background-color: seagreen;
+      color: white;
+      cursor: pointer;
+    }
+  `;
+
+  static template = html`
+    <button id="dec">-</button>
+
+    <slot></slot>
+
+    <button id="inc">+</button>
+  `;
 
   @observe @attr({ read: Number }) count = 0;
+
+  #shadow = shadow(this);
 
   constructor() {
     super();
 
-    const shadow = this.attachShadow({ mode: 'open' });
-    shadow.appendChild(template.content.cloneNode(true));
-    shadow.addEventListener('click', this.#onClick.bind(this));
-
+    this.#shadow.addEventListener('click', this.#onClick.bind(this));
     this.innerHTML = String(this.count);
   }
 

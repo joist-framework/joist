@@ -1,4 +1,4 @@
-import { shadow, css, html } from '@joist/shadowed';
+import { shadow, css, html } from '@joist/shadow';
 import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
 
 import { Todo, TodoStatus } from './services/todo.service.js';
