@@ -3,6 +3,46 @@ import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from 
 
 import { Todo, TodoStatus } from './services/todo.service.js';
 
+export const styles = css`
+  :host {
+    align-items: center;
+    display: flex;
+    padding: 1rem;
+  }
+
+  #name {
+    flex-grow: 1;
+  }
+
+  :host([status='complete']) #name {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  button {
+    border: none;
+    color: cornflowerblue;
+    cursor: pointer;
+    font-size: 1rem;
+    background: none;
+    margin-left: 0.5rem;
+  }
+
+  button#remove {
+    color: darkred;
+  }
+`;
+
+export const template = html`
+  <div id="name">
+    <slot></slot>
+  </div>
+
+  <button id="remove">remove</button>
+
+  <button id="complete">complete</button>
+`;
+
 @observable
 export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
   static create(todo: Todo) {
@@ -14,49 +54,9 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
     return card;
   }
 
-  static styles = css`
-    :host {
-      align-items: center;
-      display: flex;
-      padding: 1rem;
-    }
-
-    #name {
-      flex-grow: 1;
-    }
-
-    :host([status='complete']) #name {
-      text-decoration: line-through;
-      opacity: 0.5;
-    }
-
-    button {
-      border: none;
-      color: cornflowerblue;
-      cursor: pointer;
-      font-size: 1rem;
-      background: none;
-      margin-left: 0.5rem;
-    }
-
-    button#remove {
-      color: darkred;
-    }
-  `;
-
-  static template = html`
-    <div id="name">
-      <slot></slot>
-    </div>
-
-    <button id="remove">remove</button>
-
-    <button id="complete">complete</button>
-  `;
-
   @observe @attr status: TodoStatus = TodoStatus.Active;
 
-  #shadow = shadow(this);
+  #shadow = shadow(this, { styles, template });
   #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
   constructor() {

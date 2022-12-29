@@ -4,78 +4,83 @@ import { UpgradableElement } from '@joist/observable';
 
 import { TodoService, Todo, TodoStatus } from './services/todo.service.js';
 
+export const styles = css`
+  :host {
+    display: block;
+    background: #fff;
+  }
+
+  input {
+    box-sizing: border-box;
+    display: block;
+    padding: 1rem;
+    border: none;
+    background: rgba(0, 0, 0, 0.003);
+    box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
+    margin: 0;
+    width: 100%;
+    font-size: 24px;
+    line-height: 1.4em;
+    border: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  ::-webkit-input-placeholder {
+    font-style: italic;
+    font-weight: 300;
+    color: #e6e6e6;
+  }
+
+  ::-moz-placeholder {
+    font-style: italic;
+    font-weight: 300;
+    color: #e6e6e6;
+  }
+
+  ::input-placeholder {
+    font-style: italic;
+    font-weight: 300;
+    color: #e6e6e6;
+  }
+`;
+
+export const template = html`
+  <form>
+    <input
+      id="input"
+      name="todo"
+      placeholder="What needs to be done?"
+      autocomplete="off"
+      autofocus
+    />
+  </form>
+`;
+
 @injectable
 export class TodoFormElement extends UpgradableElement {
   static inject = [TodoService];
 
-  static styles = css`
-    :host {
-      display: block;
-      background: #fff;
-    }
+  #shadow: ShadowRoot;
+  #input: HTMLInputElement;
+  #todos: Injected<TodoService>;
 
-    input {
-      box-sizing: border-box;
-      display: block;
-      padding: 1rem;
-      border: none;
-      background: rgba(0, 0, 0, 0.003);
-      box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
-      margin: 0;
-      width: 100%;
-      font-size: 24px;
-      line-height: 1.4em;
-      border: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    :focus {
-      outline: none;
-    }
-
-    ::-webkit-input-placeholder {
-      font-style: italic;
-      font-weight: 300;
-      color: #e6e6e6;
-    }
-
-    ::-moz-placeholder {
-      font-style: italic;
-      font-weight: 300;
-      color: #e6e6e6;
-    }
-
-    ::input-placeholder {
-      font-style: italic;
-      font-weight: 300;
-      color: #e6e6e6;
-    }
-  `;
-
-  static template = html`
-    <form>
-      <input
-        id="input"
-        name="todo"
-        placeholder="What needs to be done?"
-        autocomplete="off"
-        autofocus
-      />
-    </form>
-  `;
-
-  #root = shadow(this);
-  #input = this.#root.querySelector<HTMLInputElement>('#input')!;
-
-  constructor(private getTodo: Injected<TodoService>) {
+  constructor(todos: Injected<TodoService>) {
     super();
 
-    this.#root.addEventListener('submit', this.#onSubmit.bind(this));
+    this.#todos = todos;
+    this.#shadow = shadow(this, { template, styles });
+    this.#input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
+
+    this.#shadow.addEventListener('submit', this.#onSubmit.bind(this));
   }
 
   #onSubmit(e: Event) {
-    const service = this.getTodo();
+    const service = this.#todos();
 
     e.preventDefault();
 

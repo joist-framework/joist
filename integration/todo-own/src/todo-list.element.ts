@@ -39,7 +39,9 @@ export class TodoListElement extends HTMLElement {
   constructor(private getTodoService: Injected<TodoService>) {
     super();
 
-    shadow(this);
+    const { styles, template } = TodoListElement;
+
+    shadow(this, { styles, template });
 
     this.addEventListener('remove', this.#onRemove.bind(this));
     this.addEventListener('complete', this.#onComplete.bind(this));

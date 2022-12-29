@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { shadow } from './shadow.js';
+import { shadow, ShadowOpts } from './shadow.js';
 import { css, html } from './tags.js';
 
 describe('shadow', () => {
@@ -17,14 +17,16 @@ describe('shadow', () => {
   });
 
   it('should apply a stylesheet', () => {
-    class MyElement extends HTMLElement {
-      static styles = css`
+    const dom: ShadowOpts = {
+      styles: css`
         :host {
           display: flex;
         }
-      `;
+      `,
+    };
 
-      shadow = shadow(this);
+    class MyElement extends HTMLElement {
+      shadow = shadow(this, dom);
     }
 
     customElements.define('shadow-2', MyElement);
@@ -35,16 +37,17 @@ describe('shadow', () => {
   });
 
   it('should apply html', () => {
-    class MyElement extends HTMLElement {
-      static styles = css`
+    const dom: ShadowOpts = {
+      styles: css`
         :host {
           display: flex;
         }
-      `;
+      `,
+      template: html`<slot></slot>`,
+    };
 
-      static template = html`<slot></slot>`;
-
-      shadow = shadow(this);
+    class MyElement extends HTMLElement {
+      shadow = shadow(this, dom);
     }
 
     customElements.define('shadow-3', MyElement);
