@@ -2,7 +2,7 @@ import { Injected, injectable } from '@joist/di';
 import { shadow, css, html } from '@joist/shadow';
 import { UpgradableElement } from '@joist/observable';
 
-import { TodoService, Todo, TodoStatus } from './services/todo.service.js';
+import { TodoService, Todo } from './services/todo.service.js';
 
 export const styles = css`
   :host {
@@ -85,7 +85,7 @@ export class TodoFormElement extends UpgradableElement {
     e.preventDefault();
 
     if (this.#input.value) {
-      service.addTodo(Todo.create(this.#input.value, TodoStatus.Active));
+      service.addTodo(Todo.create(this.#input.value, 'active'));
 
       this.#input.value = '';
     }

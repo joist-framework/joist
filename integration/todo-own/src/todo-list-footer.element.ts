@@ -1,7 +1,7 @@
 import { css, shadow, html } from '@joist/shadow';
 import { injectable, Injected } from '@joist/di';
 
-import { Todo, TodoService, TodoStatus } from './services/todo.service.js';
+import { Todo, TodoService } from './services/todo.service.js';
 
 const sfxs = new Map([
   ['one', 'item'],
@@ -89,9 +89,6 @@ export class TodoListFooterElement extends HTMLElement {
   }
 
   #getCompleteCount(todos: Todo[]) {
-    return todos.reduce(
-      (total, todo) => (todo.status === TodoStatus.Active ? total + 1 : total),
-      0
-    );
+    return todos.reduce((total, todo) => (todo.status === 'active' ? total + 1 : total), 0);
   }
 }

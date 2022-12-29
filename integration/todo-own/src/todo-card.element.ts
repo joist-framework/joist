@@ -1,7 +1,6 @@
 import { shadow, css, html } from '@joist/shadow';
-import { attr, UpgradableElement, observable, observe, OnPropertyChanged } from '@joist/observable';
 
-import { Todo, TodoStatus } from './services/todo.service.js';
+import { Todo } from './services/todo.service.js';
 
 export const styles = css`
   :host {
@@ -43,24 +42,17 @@ export const template = html`
   <button id="complete">complete</button>
 `;
 
-@observable
-export class TodoCardElement extends UpgradableElement implements OnPropertyChanged {
-  static create(todo: Todo) {
-    const card = new TodoCardElement();
-    card.id = todo.id;
-    card.status = todo.status;
-    card.innerHTML = todo.name;
+export class TodoCardElement extends HTMLElement {
+  static observedAttributes = ['status'];
 
-    return card;
-  }
-
-  @observe @attr status: TodoStatus = TodoStatus.Active;
-
-  #shadow = shadow(this, { styles, template });
-  #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
+  #shadow: ShadowRoot;
+  #completeBtn: HTMLButtonElement;
 
   constructor() {
     super();
+
+    this.#shadow = shadow(this, { styles, template });
+    this.#completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
     this.#shadow.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
@@ -69,9 +61,21 @@ export class TodoCardElement extends UpgradableElement implements OnPropertyChan
     });
   }
 
-  onPropertyChanged() {
-    const isActive = this.status === TodoStatus.Active;
+  attributeChangedCallback() {
+    const status = this.getAttribute('status');
+
+    const isActive = status === 'active';
 
     this.#completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }
+}
+
+export function createTodoCard(todo: Todo) {
+  const card = new TodoCardElement();
+  card.id = todo.id;
+  card.innerHTML = todo.name;
+
+  card.setAttribute('status', todo.status);
+
+  return card;
 }

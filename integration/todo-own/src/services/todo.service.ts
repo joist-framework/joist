@@ -2,10 +2,7 @@ import { service, Injected } from '@joist/di';
 
 import { AppStorage } from './storage.service.js';
 
-export const enum TodoStatus {
-  Active = 'active',
-  Complete = 'complete',
-}
+export type TodoStatus = 'active' | 'complete';
 
 export class Todo {
   static create(name: string, status: TodoStatus) {

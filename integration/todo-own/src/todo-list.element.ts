@@ -7,9 +7,8 @@ import {
   TodoUpdatedEvent,
   TodoRemovedEvent,
   TodoService,
-  TodoStatus,
 } from './services/todo.service.js';
-import { TodoCardElement } from './todo-card.element.js';
+import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
 @injectable
 @observable
@@ -53,7 +52,7 @@ export class TodoListElement extends HTMLElement {
 
     todos.forEach((todo) => {
       if (!this.querySelector('#' + todo.id)) {
-        this.appendChild(TodoCardElement.create(todo));
+        this.appendChild(createTodoCard(todo));
       }
     });
 
@@ -76,15 +75,17 @@ export class TodoListElement extends HTMLElement {
 
   #onComplete(e: Event) {
     if (e.target instanceof TodoCardElement) {
+      const status = e.target.getAttribute('status');
+
       this.getTodoService().updateTodo(e.target.id, {
-        status: e.target.status === TodoStatus.Active ? TodoStatus.Complete : TodoStatus.Active,
+        status: status === 'active' ? 'complete' : 'active',
       });
     }
   }
 
   #onTodoAdded(e: Event) {
     if (e instanceof TodoAddedEvent) {
-      this.appendChild(TodoCardElement.create(e.todo));
+      this.appendChild(createTodoCard(e.todo));
     }
   }
 
@@ -103,8 +104,9 @@ export class TodoListElement extends HTMLElement {
       const el = this.querySelector('#' + e.todo.id);
 
       if (el instanceof TodoCardElement) {
-        el.status = e.todo.status;
         el.innerHTML = e.todo.name;
+
+        el.setAttribute('status', e.todo.status);
       }
     }
   }
