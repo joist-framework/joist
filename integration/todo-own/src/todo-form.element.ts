@@ -65,14 +65,16 @@ export const template: ShadowTemplate = {
 export class TodoFormElement extends HTMLElement {
   static inject = [TodoService];
 
-  #shadow = shadow(this, template);
-  #input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
+  #shadow: ShadowRoot;
+  #input: HTMLInputElement;
   #todos: Injected<TodoService>;
 
   constructor(todos: Injected<TodoService>) {
     super();
 
     this.#todos = todos;
+    this.#shadow = shadow(this, template);
+    this.#input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
 
     this.#shadow.addEventListener('submit', this.#onSubmit.bind(this));
   }

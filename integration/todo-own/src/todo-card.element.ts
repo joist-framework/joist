@@ -2,7 +2,7 @@ import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
 
 import { Todo } from './services/todo.service.js';
 
-export const template: ShadowTemplate = {
+export const shadowOpts: ShadowTemplate = {
   css: css`
     :host {
       align-items: center;
@@ -46,11 +46,14 @@ export const template: ShadowTemplate = {
 export class TodoCardElement extends HTMLElement {
   static observedAttributes = ['status'];
 
-  #shadow = shadow(this, template);
-  #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
+  #shadow: ShadowRoot;
+  #completeBtn: HTMLButtonElement;
 
   constructor() {
     super();
+
+    this.#shadow = shadow(this, shadowOpts);
+    this.#completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
     this.#shadow.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {
