@@ -1,58 +1,56 @@
-import { shadow, css, html } from '@joist/shadow';
+import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
 
 import { Todo } from './services/todo.service.js';
 
-export const styles = css`
-  :host {
-    align-items: center;
-    display: flex;
-    padding: 1rem;
-  }
+export const template: ShadowTemplate = {
+  css: css`
+    :host {
+      align-items: center;
+      display: flex;
+      padding: 1rem;
+    }
 
-  #name {
-    flex-grow: 1;
-  }
+    #name {
+      flex-grow: 1;
+    }
 
-  :host([status='complete']) #name {
-    text-decoration: line-through;
-    opacity: 0.5;
-  }
+    :host([status='complete']) #name {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
 
-  button {
-    border: none;
-    color: cornflowerblue;
-    cursor: pointer;
-    font-size: 1rem;
-    background: none;
-    margin-left: 0.5rem;
-  }
+    button {
+      border: none;
+      color: cornflowerblue;
+      cursor: pointer;
+      font-size: 1rem;
+      background: none;
+      margin-left: 0.5rem;
+    }
 
-  button#remove {
-    color: darkred;
-  }
-`;
+    button#remove {
+      color: darkred;
+    }
+  `,
+  html: html`
+    <div id="name">
+      <slot></slot>
+    </div>
 
-export const template = html`
-  <div id="name">
-    <slot></slot>
-  </div>
+    <button id="remove">remove</button>
 
-  <button id="remove">remove</button>
-
-  <button id="complete">complete</button>
-`;
+    <button id="complete">complete</button>
+  `,
+};
 
 export class TodoCardElement extends HTMLElement {
   static observedAttributes = ['status'];
 
-  #shadow: ShadowRoot;
-  #completeBtn: HTMLButtonElement;
+  #shadow = shadow(this, template);
+  #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
   constructor() {
     super();
-
-    this.#shadow = shadow(this, { styles, template });
-    this.#completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
 
     this.#shadow.addEventListener('click', (e) => {
       if (e.target instanceof HTMLButtonElement) {

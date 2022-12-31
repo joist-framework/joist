@@ -1,19 +1,19 @@
 import { Result } from './result.js';
 
-export interface ShadowOpts {
-  styles?: Result<CSSStyleSheet | HTMLStyleElement>;
-  template?: Result<HTMLTemplateElement>;
+export interface ShadowTemplate {
+  css?: Result<CSSStyleSheet | HTMLStyleElement>;
+  html?: Result<HTMLTemplateElement>;
 }
 
-export function shadow(el: HTMLElement, opts?: ShadowOpts) {
+export function shadow(el: HTMLElement, template?: ShadowTemplate) {
   if (el.shadowRoot) {
     return el.shadowRoot;
   }
 
   const shadow = el.attachShadow({ mode: 'open' });
 
-  if (opts?.styles) {
-    const value = opts.styles.toValue();
+  if (template?.css) {
+    const value = template.css.toValue();
 
     if (value instanceof CSSStyleSheet) {
       shadow.adoptedStyleSheets = [value];
@@ -22,8 +22,8 @@ export function shadow(el: HTMLElement, opts?: ShadowOpts) {
     }
   }
 
-  if (opts?.template) {
-    shadow.append(opts.template.toValue().content.cloneNode(true));
+  if (template?.html) {
+    shadow.append(template.html.toValue().content.cloneNode(true));
   }
 
   return shadow;

@@ -15,7 +15,7 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 export class TodoListElement extends HTMLElement {
   static inject = [TodoService];
 
-  static styles = css`
+  static css = css`
     :host {
       display: block;
       background: #fff;
@@ -31,16 +31,16 @@ export class TodoListElement extends HTMLElement {
     }
   `;
 
-  static template = html`<slot></slot>`;
+  static html = html`<slot></slot>`;
 
   #listeners: Function[] = [];
 
   constructor(private getTodoService: Injected<TodoService>) {
     super();
 
-    const { styles, template } = TodoListElement;
+    const { css, html } = TodoListElement;
 
-    shadow(this, { styles, template });
+    shadow(this, { css, html });
 
     this.addEventListener('remove', this.#onRemove.bind(this));
     this.addEventListener('complete', this.#onComplete.bind(this));

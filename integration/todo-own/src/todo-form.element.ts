@@ -1,10 +1,10 @@
 import { Injected, injectable } from '@joist/di';
-import { shadow, css, html, ShadowOpts } from '@joist/shadow';
+import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
 
 import { TodoService, Todo } from './services/todo.service.js';
 
-export const opts: ShadowOpts = {
-  styles: css`
+export const template: ShadowTemplate = {
+  css: css`
     :host {
       display: block;
       background: #fff;
@@ -48,7 +48,7 @@ export const opts: ShadowOpts = {
       color: #e6e6e6;
     }
   `,
-  template: html`
+  html: html`
     <form>
       <input
         id="input"
@@ -65,16 +65,14 @@ export const opts: ShadowOpts = {
 export class TodoFormElement extends HTMLElement {
   static inject = [TodoService];
 
-  #shadow: ShadowRoot;
-  #input: HTMLInputElement;
+  #shadow = shadow(this, template);
+  #input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
   #todos: Injected<TodoService>;
 
   constructor(todos: Injected<TodoService>) {
     super();
 
     this.#todos = todos;
-    this.#shadow = shadow(this, opts);
-    this.#input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
 
     this.#shadow.addEventListener('submit', this.#onSubmit.bind(this));
   }
