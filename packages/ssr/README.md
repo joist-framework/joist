@@ -21,7 +21,7 @@ applicator.apply(document, [])
 ## Vite
 
 ```TS
-import { Applicator. NoopTemplateCache, FileSysTemplateLoader } from '@joist/ssr';
+import { Applicator, NoopTemplateCache, FileSysTemplateLoader } from '@joist/ssr';
 import { defineConfig } from 'vite';
 
 const applicator = new Applicator(
