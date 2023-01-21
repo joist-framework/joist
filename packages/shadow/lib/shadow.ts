@@ -1,11 +1,11 @@
-import { Result } from './result.js';
+import { CSSResult, HTMLResult } from './tags.js';
 
 export interface ShadowTemplate {
-  css?: Result<CSSStyleSheet | HTMLStyleElement>;
-  html?: Result<HTMLTemplateElement>;
+  css?: CSSResult | CSSResult[];
+  html?: HTMLResult;
 }
 
-export function shadow(el: HTMLElement, template?: ShadowTemplate) {
+export function shadow(el: HTMLElement, template?: ShadowTemplate): ShadowRoot {
   if (el.shadowRoot) {
     return el.shadowRoot;
   }
@@ -13,12 +13,12 @@ export function shadow(el: HTMLElement, template?: ShadowTemplate) {
   const shadow = el.attachShadow({ mode: 'open' });
 
   if (template?.css) {
-    const value = template.css.toValue();
-
-    if (value instanceof CSSStyleSheet) {
-      shadow.adoptedStyleSheets = [value];
-    } else if (value instanceof HTMLStyleElement) {
-      shadow.append(value);
+    if (Array.isArray(template.css)) {
+      template.css.forEach((result) => {
+        applyStyles(shadow, result);
+      });
+    } else {
+      applyStyles(shadow, template.css);
     }
   }
 
@@ -27,4 +27,14 @@ export function shadow(el: HTMLElement, template?: ShadowTemplate) {
   }
 
   return shadow;
+}
+
+function applyStyles(root: ShadowRoot, result: CSSResult) {
+  const value = result.toValue();
+
+  if (value instanceof CSSStyleSheet) {
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, value];
+  } else if (value instanceof HTMLStyleElement) {
+    root.append(value);
+  }
 }
