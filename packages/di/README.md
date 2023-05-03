@@ -24,7 +24,7 @@ class BarService {
   static inject = [FooService];
 
   constructor(foo: Injected<FooService>) {
-    console.log(foo.sayHello());
+    console.log(foo().sayHello());
   }
 }
 
