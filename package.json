@@ -26,7 +26,7 @@
     "ava": "^5.1.0",
     "clsx": "1.2.1",
     "lerna": "6.5.1",
-    "lit": "2.6.1",
+    "lit": "2.7.4",
     "rollup-plugin-minify-html-literals": "1.2.6",
     "tslib": "2.5.0",
     "typescript": "5.0.4",
