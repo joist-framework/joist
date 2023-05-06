@@ -1,16 +1,23 @@
-import { effect, EffectOptions } from './effect.js';
+import { effect } from './effect.js';
 
-export class ComputedValue<T> {
-  constructor(public value: T) {}
-  detach() {}
+class ComputedValue<T> {
+  get value() {
+    return this.#value;
+  }
+
+  detach = effect(() => {
+    this.#value = this.#cb();
+  });
+
+  #cb: () => T;
+  #value: T;
+
+  constructor(cb: () => T) {
+    this.#cb = cb;
+    this.#value = this.#cb();
+  }
 }
 
-export function computed<T>(fn: () => T, opts: Partial<EffectOptions>) {
-  const computed = new ComputedValue<T>(fn());
-
-  computed.detach = effect(() => {
-    computed.value = fn();
-  }, opts);
-
-  return computed;
+export function computed<T>(cb: () => T) {
+  return new ComputedValue(cb);
 }

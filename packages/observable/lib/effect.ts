@@ -1,40 +1,11 @@
-import { JoistChangeEvent } from './observable';
+export type EffectFn = () => void;
 
-export interface EffectOptions {
-  root: Window | HTMLElement | ShadowRoot;
-  once: boolean;
-}
+const effects: EffectFn[] = [];
 
-export function effect(
-  fn: (events: JoistChangeEvent[]) => void,
-  opts: Partial<EffectOptions> = {}
-) {
-  const { root, once } = { root: window, once: false, ...opts };
-
-  let scheduler: Promise<void> | null = null;
-  let events: JoistChangeEvent[] = [];
-
-  function cb(e: Event) {
-    if (!scheduler) {
-      scheduler = Promise.resolve().then(() => {
-        fn(events);
-
-        if (once) {
-          root.removeEventListener('joist-observable-change', cb);
-        }
-
-        events = [];
-        scheduler = null;
-      });
-    }
-
-    events.push(e as JoistChangeEvent);
-  }
-
-  // batch all observable events
-  root.addEventListener('joist-observable-change', cb);
+export function effect(cb: EffectFn): () => void {
+  const index = effects.push(cb) - 1;
 
   return () => {
-    root.removeEventListener('joist-observable-change', cb);
+    effects.splice(index, 1);
   };
 }

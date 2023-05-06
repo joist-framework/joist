@@ -1,6 +1,6 @@
 {
-  "name": "joist-3",
-  "version": "1.0.0",
+  "name": "joist",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,6 @@
   "dependencies": {
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
-    "@joist/query": "file:packages/query",
     "@joist/shadow": "file:packages/shadow",
     "@joist/ssr": "file:packages/ssr",
     "@joist/styled": "file:packages/styled"
@@ -28,10 +27,10 @@
     "clsx": "1.2.1",
     "lerna": "6.1.0",
     "lit": "2.5.0",
-    "puppeteer": "^19.4.1",
+    "puppeteer": "19.4.1",
     "rollup-plugin-minify-html-literals": "1.2.6",
-    "tslib": "2.4.1",
-    "typescript": "4.9.4",
-    "vite": "4.0.0"
+    "tslib": "2.5.0",
+    "typescript": "5.0.4",
+    "vite": "4.3.5"
   }
 }
