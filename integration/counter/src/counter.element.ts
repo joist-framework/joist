@@ -1,7 +1,7 @@
-import { css, html, shadow } from '@joist/shadow';
+import { css, html, template, styles } from '@joist/shadow';
 
 export class CounterElement extends HTMLElement {
-  static styles = css`
+  @styles styles = css`
     * {
       font-size: 200%;
     }
@@ -27,7 +27,7 @@ export class CounterElement extends HTMLElement {
     }
   `;
 
-  static template = html`
+  @template template = html`
     <button id="dec">-</button>
 
     <slot></slot>
@@ -38,11 +38,11 @@ export class CounterElement extends HTMLElement {
   constructor() {
     super();
 
-    const root = shadow(this);
+    this.shadowRoot!.addEventListener('click', this.#onClick.bind(this));
 
-    root.addEventListener('click', this.#onClick.bind(this));
-
-    this.innerHTML = this.innerHTML || '0';
+    if (!this.innerHTML) {
+      this.innerHTML = this.innerHTML || '0';
+    }
   }
 
   #onClick(e: Event) {

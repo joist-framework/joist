@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
+import { css, html, template, styles } from '@joist/shadow';
 
 import {
   TodoAddedEvent,
@@ -9,8 +9,11 @@ import {
 } from './services/todo.service.js';
 import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
-export const template: ShadowTemplate = {
-  css: css`
+@injectable
+export class TodoListElement extends HTMLElement {
+  static inject = [TodoService];
+
+  @styles styles = css`
     :host {
       display: block;
       background: #fff;
@@ -24,20 +27,14 @@ export const template: ShadowTemplate = {
     ::slotted(todo-card:last-child) {
       border-bottom: none;
     }
-  `,
-  html: html`<slot></slot>`,
-};
+  `;
 
-@injectable
-export class TodoListElement extends HTMLElement {
-  static inject = [TodoService];
+  @template template = html`<slot></slot>`,
 
   #listeners: Function[] = [];
 
   constructor(private getTodoService: Injected<TodoService>) {
     super();
-
-    shadow(this, template);
 
     this.addEventListener('remove', this.#onRemove.bind(this));
     this.addEventListener('complete', this.#onComplete.bind(this));
