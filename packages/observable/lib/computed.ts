@@ -1,6 +1,6 @@
-import { effect } from './effect.js';
+import { effect } from './observe.js';
 
-class ComputedValue<T> {
+export class ComputedValue<T> {
   get value() {
     return this.#value;
   }

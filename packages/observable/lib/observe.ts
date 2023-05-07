@@ -1,5 +1,8 @@
 let scheduler: Promise<any> | null = null;
-const effects: Array<() => undefined> = [];
+
+export type EffectFn = () => void;
+
+const effects = new Set<EffectFn>();
 
 export function observe(
   base: ClassAccessorDecoratorTarget<any, any>,
@@ -19,5 +22,13 @@ export function observe(
 
       base.set.call(this, value);
     },
+  };
+}
+
+export function effect(cb: EffectFn): () => void {
+  effects.add(cb);
+
+  return () => {
+    effects.delete(cb);
   };
 }
