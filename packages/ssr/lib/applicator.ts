@@ -2,7 +2,6 @@ import { CheerioAPI, load } from 'cheerio';
 
 import { TemplateCache } from './template-cache.js';
 import { TemplateLoader } from './template-loader.js';
-import { polyfill } from './dsd-polyfill.js';
 
 export interface ApplicatorOpts {
   templateCache: TemplateCache;
@@ -20,9 +19,6 @@ export class Applicator {
 
   async apply(document: string, elements: string[]) {
     const $ = load(document);
-    const body = $('body');
-
-    body.append(polyfill);
 
     return this.build($, elements);
   }

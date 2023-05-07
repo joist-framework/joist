@@ -1,6 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "files": ["lib.ts", "typings.d.ts"],
-  "include": ["lib"],
-  "exclude": ["target"]
-}
