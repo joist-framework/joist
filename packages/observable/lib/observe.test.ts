@@ -1,24 +1,43 @@
 import { expect } from '@open-wc/testing';
 
-import { observe, effect } from './observe.js';
+import { effect, observe } from './observe.js';
 
-describe('observable: attr()', () => {
-  it('should do stuff', (done) => {
+describe('observable: observe()', () => {
+  it('should work with static accessors', (done) => {
     class Counter {
-      @observe accessor value = 0;
+      @observe static accessor value = 0;
+
+      @effect static onChange() {
+        expect(Counter.value).to.equal(1);
+
+        done();
+      }
     }
 
-    const el = new Counter();
+    expect(Counter.value).to.equal(0);
 
-    expect(el.value).to.equal(0);
+    Counter.value++;
 
-    const detach = effect(() => {
-      expect(el.value).to.equal(1);
+    expect(Counter.value).to.equal(1);
+  });
 
-      done();
-      detach();
-    });
+  it('should work with instance accessors', (done) => {
+    class Counter {
+      @observe accessor value = 0;
 
-    el.value++;
+      @effect onChange() {
+        expect(this.value).to.equal(1);
+
+        done();
+      }
+    }
+
+    const couter = new Counter();
+
+    expect(couter.value).to.equal(0);
+
+    couter.value++;
+
+    expect(couter.value).to.equal(1);
   });
 });

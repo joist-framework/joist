@@ -2,5 +2,8 @@
   "extends": "../../tsconfig.json",
   "files": ["lib.ts"],
   "include": ["lib"],
-  "exclude": ["target"]
+  "exclude": ["target"],
+  "compilerOptions": {
+    "outDir": "target"
+  }
 }

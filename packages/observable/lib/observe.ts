@@ -1,23 +1,28 @@
-let scheduler: Promise<any> | null = null;
+const schedulers = new WeakMap<object, Promise<void>>();
+const effects = new WeakMap<object, Set<Function>>();
 
-export type EffectFn = () => void;
-
-const effects = new Set<EffectFn>();
-
-export function observe(
-  base: ClassAccessorDecoratorTarget<any, any>,
+export function observe<T extends object>(
+  base: ClassAccessorDecoratorTarget<T, any>,
   _: ClassAccessorDecoratorContext
-): ClassAccessorDecoratorResult<any, any> {
+): ClassAccessorDecoratorResult<T, any> {
   return {
-    set(value: unknown) {
+    set(value: any) {
+      let scheduler = schedulers.get(this);
+
       if (!scheduler) {
         scheduler = Promise.resolve().then(() => {
-          scheduler = null;
+          schedulers.delete(this);
 
-          for (let effect of effects) {
-            effect();
+          const instanceEffects = effects.get(this);
+
+          if (instanceEffects) {
+            for (let effect of instanceEffects) {
+              effect.call(this);
+            }
           }
         });
+
+        schedulers.set(this, scheduler);
       }
 
       base.set.call(this, value);
@@ -25,10 +30,15 @@ export function observe(
   };
 }
 
-export function effect(cb: EffectFn): () => void {
-  effects.add(cb);
+export function effect<T extends object>(value: Function, ctx: ClassMethodDecoratorContext<T>) {
+  ctx.addInitializer(function () {
+    let instanceEffects = effects.get(this);
 
-  return () => {
-    effects.delete(cb);
-  };
+    if (!instanceEffects) {
+      instanceEffects = new Set();
+      effects.set(this, instanceEffects);
+    }
+
+    instanceEffects.add(value);
+  });
 }

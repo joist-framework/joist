@@ -1,4 +1,5 @@
 import { css, html, template, styles } from '@joist/shadow';
+import { attr, effect, observe } from '@joist/observable';
 
 export class CounterElement extends HTMLElement {
   @styles styles = css`
@@ -35,27 +36,28 @@ export class CounterElement extends HTMLElement {
     <button id="inc">+</button>
   `;
 
+  @observe @attr accessor #value = 0;
+
   constructor() {
     super();
 
     this.shadowRoot!.addEventListener('click', this.#onClick.bind(this));
 
-    if (!this.innerHTML) {
-      this.innerHTML = this.innerHTML || '0';
-    }
+    effect(() => {
+      this.innerHTML = String(this.#value);
+    });
   }
 
   #onClick(e: Event) {
     const { id } = e.target as HTMLElement;
-    const current = Number(this.innerHTML);
 
     switch (id) {
       case 'inc':
-        this.innerHTML = String(current + 1);
+        this.#value++;
         break;
 
       case 'dec':
-        this.innerHTML = String(current - 1);
+        this.#value--;
         break;
     }
   }

@@ -5,7 +5,11 @@ export function attr<This extends HTMLElement>(
   return {
     init(value: unknown) {
       if (typeof ctx.name === 'string') {
-        this.setAttribute(ctx.name, String(value));
+        if (this.hasAttribute(ctx.name)) {
+          ctx.access.set(this, this.getAttribute(ctx.name));
+        } else {
+          this.setAttribute(ctx.name, String(value));
+        }
       }
     },
     set(value: unknown) {
