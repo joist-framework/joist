@@ -40,4 +40,19 @@ describe('observable: observe()', () => {
 
     expect(couter.value).to.equal(1);
   });
+
+  it('should return a set of changed props', (done) => {
+    class Counter {
+      @observe accessor value = 0;
+
+      @effect onChange(changes: Set<keyof this>) {
+        expect(changes.has('value')).to.be.true;
+
+        done();
+      }
+    }
+
+    const couter = new Counter();
+    couter.value++;
+  });
 });

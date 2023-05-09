@@ -1,6 +1,7 @@
 {
   "name": "@joist/observable",
   "version": "2.0.1",
+  "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
@@ -9,7 +10,7 @@
     }
   },
   "files": [
-    "target/build"
+    "target"
   ],
   "sideEffects": false,
   "description": "Monitor and respond to object changes",

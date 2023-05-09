@@ -6,15 +6,17 @@ export function attr<This extends HTMLElement>(
     init(value: unknown) {
       if (typeof ctx.name === 'string') {
         if (this.hasAttribute(ctx.name)) {
-          ctx.access.set(this, this.getAttribute(ctx.name));
+          const attrVal = this.getAttribute(ctx.name);
+
+          ctx.access.set(this, attrVal === '' ? true : this.getAttribute(ctx.name));
         } else {
-          this.setAttribute(ctx.name, String(value));
+          setAttribute(this, ctx.name, value);
         }
       }
     },
     set(value: unknown) {
       if (typeof ctx.name === 'string') {
-        this.setAttribute(ctx.name, String(value));
+        setAttribute(this, ctx.name, value);
       }
     },
     get() {
@@ -25,4 +27,17 @@ export function attr<This extends HTMLElement>(
       }
     },
   };
+}
+
+function setAttribute(el: HTMLElement, attr: string, value: unknown): void {
+  if (typeof value === 'boolean') {
+    if (value) {
+      el.setAttribute(attr, '');
+    } else;
+    {
+      el.removeAttribute(attr);
+    }
+  } else {
+    el.setAttribute(attr, String(value));
+  }
 }

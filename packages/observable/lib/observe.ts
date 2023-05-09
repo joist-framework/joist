@@ -1,25 +1,32 @@
 const schedulers = new WeakMap<object, Promise<void>>();
 const effects = new WeakMap<object, Set<Function>>();
+const changes = new WeakMap<object, Set<string | symbol>>();
 
-export function observe<T extends object>(
-  base: ClassAccessorDecoratorTarget<T, any>,
-  _: ClassAccessorDecoratorContext
-): ClassAccessorDecoratorResult<T, any> {
+export function observe<This extends object, Value>(
+  base: ClassAccessorDecoratorTarget<This, Value>,
+  ctx: ClassAccessorDecoratorContext<This, Value>
+): ClassAccessorDecoratorResult<This, Value> {
+  ctx.addInitializer(function () {
+    // initialize effect and change set
+    effects.set(this, new Set());
+    changes.set(this, new Set());
+  });
+
   return {
-    set(value: any) {
+    set(value: Value) {
       let scheduler = schedulers.get(this);
+      let changeSet = changes.get(this)!; // assume exists
+
+      changeSet.add(ctx.name);
 
       if (!scheduler) {
         scheduler = Promise.resolve().then(() => {
-          schedulers.delete(this);
-
-          const instanceEffects = effects.get(this);
-
-          if (instanceEffects) {
-            for (let effect of instanceEffects) {
-              effect.call(this);
-            }
+          for (let effect of effects.get(this)!) {
+            effect.call(this, new Set(changeSet));
           }
+
+          schedulers.delete(this);
+          changeSet.clear();
         });
 
         schedulers.set(this, scheduler);
@@ -30,15 +37,11 @@ export function observe<T extends object>(
   };
 }
 
-export function effect<T extends object>(value: Function, ctx: ClassMethodDecoratorContext<T>) {
+export function effect<T extends object>(
+  value: (changes: Set<keyof T>) => void,
+  ctx: ClassMethodDecoratorContext<T>
+) {
   ctx.addInitializer(function () {
-    let instanceEffects = effects.get(this);
-
-    if (!instanceEffects) {
-      instanceEffects = new Set();
-      effects.set(this, instanceEffects);
-    }
-
-    instanceEffects.add(value);
+    effects.get(this)?.add(value);
   });
 }
