@@ -1,2 +1,1 @@
-export { attr } from './lib/attr.js';
-export { observe } from './lib/observe.js';
+export { observe, effect } from './lib/observe.js';

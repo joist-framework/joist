@@ -14,17 +14,15 @@ npm i @joist/observable
 Any class decorated with `@observable` will call the supplied `onPropertyChanged` callback whenever one of the marked values is updated.
 
 ```TS
-import { observable, observe, Changes } from '@joist/observable';
+import { observe, effect } from '@joist/observable';
 
-@observable
-class State {
+class AppState {
   // Changes to these will trigger callback
   @observe todos: string[] = [];
   @observe userName?: string;
 
-  onPropertyChanged(changes: Changes) {
+  @effect onPropertyChanged(changes: Set<keyof this>) {
     console.log(changes);
-    // { todos: { value: ['Build Shit'], previousValue: [] }, userName: { value: 'Danny Blue', previousValue: undefined } }
   }
 }
 
@@ -32,98 +30,6 @@ const state = new State();
 
 state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
-```
-
-#### Observe Effects
-
-If you need to monitor changes across all observables on your page you can use the supplied `effect` function.
-`effect` accepts a function that will be called after all observables have settled. Even if 10 observables have 15 updates made, your callback will only be called once everything is complete.
-
-```TS
-import { observable, observe, effect } from '@joist/observable';
-
-@observable
-class Counter {
-  @observe value = 0;
-}
-
-const c1 = new Counter();
-const c2 = new Counter();
-
-effect(() => {
-  // only called once everything is settled
-  console.log(c1.value); // 2
-  console.log(c2.value); // 1
-});
-
-c1.value++;
-c1.value++;
-c2.value++;
-```
-
-#### Compute new values
-
-`computed` allows you to define a computed value that will only be recomputed after all changes have settled.
-
-```TS
-import { observable, observe, effect, computed } from '@joist/observable';
-
-@observable
-class Counter {
-  @observe value = 0;
-}
-
-const c1 = new Counter();
-const c2 = new Counter();
-const combined = computed(() => c1.value + c2.value);
-
-effect(() => {
-  console.log(combined.value); // 3
-});
-
-c1.value++;
-c1.value++;
-c2.value++;
-```
-
-#### Stop observing
-
-`effect` returns a function that allows you to detach from the update cycle. Useful if you need to only listen for one update or to perform some teardown logic.
-
-```TS
-import { effect } from '@joist/observable';
-
-const detach = effect(() => {
-  detach(); // this function will only be called once
-});
-```
-
-#### Custom Elements
-
-If you are using @observable with custom elements it is very likely that you will want to read from and write to attributes.
-In order to appropriately handle reading from and writting to attributes. Any class that extends HTMLElement can use the `@attr` decorator to define attribute behavior.
-
-```TS
-import { observable, observe, attr } from '@joist/observable';
-
-@observable
-class TestElement extends HTMLElement {
-  // reads as a string and writes directly to the name attribute
-  @observe @attr name = '';
-
-  // reads as a number and writes back a string
-  @observe
-  @attr({ read: Number })
-  count: number = 0;
-
-  // reads as a Date object and writes back a string
-  @observe
-  @attr<Date>({
-    read: (val) => new Date(val),
-    write: (val) => val.toString()
-  })
-  count = new Date();
-}
 ```
 
 ##### Upgrading Custom Element Properties
