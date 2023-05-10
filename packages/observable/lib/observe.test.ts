@@ -6,8 +6,6 @@ describe('observable: observe()', () => {
   it('should work with static accessors', (done) => {
     class Counter {
       @observe static accessor value = 0;
-      @observe static accessor value2 = 0;
-      @observe static accessor value3 = 0;
 
       @effect static onChange() {
         expect(Counter.value).to.equal(1);
@@ -23,25 +21,25 @@ describe('observable: observe()', () => {
     expect(Counter.value).to.equal(1);
   });
 
-  // it('should work with instance accessors', (done) => {
-  //   class Counter {
-  //     @observe accessor value = 0;
+  it('should work with instance accessors', (done) => {
+    class Counter {
+      @observe accessor value = 0;
 
-  //     @effect onChange() {
-  //       expect(this.value).to.equal(1);
+      @effect onChange() {
+        expect(this.value).to.equal(1);
 
-  //       done();
-  //     }
-  //   }
+        done();
+      }
+    }
 
-  //   const couter = new Counter();
+    const couter = new Counter();
 
-  //   expect(couter.value).to.equal(0);
+    expect(couter.value).to.equal(0);
 
-  //   couter.value++;
+    couter.value++;
 
-  //   expect(couter.value).to.equal(1);
-  // });
+    expect(couter.value).to.equal(1);
+  });
 
   // it('should return a set of changed props', (done) => {
   //   class Counter {
