@@ -1,4 +1,4 @@
-import { expect } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 import { effect, observe } from './observe.js';
 
@@ -74,5 +74,27 @@ describe('observable: observe()', () => {
     });
 
     counter.value++;
+  });
+
+  it('should upgrade custom elements', (done) => {
+    class Counter extends HTMLElement {
+      @observe accessor value = 0;
+
+      @effect onChange() {
+        expect(this.value).to.equal(101);
+
+        done();
+      }
+    }
+
+    fixture<any>(html`<observable-1></observable-1>`).then((el) => {
+      el.value = 100;
+
+      setTimeout(() => {
+        customElements.define('observable-1', Counter);
+
+        el.value++;
+      });
+    });
   });
 });
