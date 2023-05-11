@@ -1,6 +1,6 @@
 # Joist
 
-3.0 is in the working and is being rebuilt to take full advantage of the stage 3 decorator spec.
+[3.0](https://github.com/joist-framework/joist/tree/3.0) is in the working and is being rebuilt to take full advantage of the stage 3 decorator spec.
 
 Web components are awesome! Joist is a set of small libraries designed to add the bare minimum to web components to make you as productive as possible. The entire project started years ago when I made my first attempt at bringing dependency injection (@joist/di) to Custom Elements as a way to share state between them. Along the way, several other packages were added to solve different challenges.
 
