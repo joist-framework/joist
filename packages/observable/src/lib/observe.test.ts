@@ -90,11 +90,9 @@ describe('observable: observe()', () => {
     fixture<any>(html`<observable-1></observable-1>`).then((el) => {
       el.value = 100;
 
-      setTimeout(() => {
-        customElements.define('observable-1', Counter);
+      customElements.define('observable-1', Counter);
 
-        el.value++;
-      });
+      el.value++;
     });
   });
 });
