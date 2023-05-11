@@ -9,11 +9,9 @@ This toolkit is here to help provide just the functionality you need and nothing
 
 ### Packages
 
-| Package                                  | Description                                                           |
-| ---------------------------------------- | --------------------------------------------------------------------- |
-| [@joist/di](packages/di)                 | IOC container. Share state between elements                           |
-| [@joist/observable](packages/observable) | Observe changes to class properties and HTML attributes               |
-| [@joist/query](packages/query)           | query custom elements and assign to property.                         |
-| [@joist/styled](packages/styled)         | Apply styles to shadow dom. (Constructable stylesheets with fallback) |
-
-[Try it out with Vite and Stackblitz!](https://stackblitz.com/github/joist-framework/starter-app-vite?file=index.html)
+| Package                                  | Description                                                     |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| [@joist/di](packages/di)                 | IOC container. Share state between elements                     |
+| [@joist/element](packages/element)       | utilities for custom elements                                   |
+| [@joist/observable](packages/observable) | Observe changes to class properties                             |
+| [@joist/ssr](packages/ssr)               | configure and prerender webcomponents as declarative shadow dom |

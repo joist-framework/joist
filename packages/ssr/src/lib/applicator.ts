@@ -38,7 +38,7 @@ export class Applicator {
           await this.#templateCache.set(element, elementTemplate);
         }
 
-        if (node.find('> template[shadowroot]').length === 0) {
+        if (node.find('> template[shadowrootmode]').length === 0) {
           node.prepend(elementTemplate);
         }
       }
@@ -53,7 +53,7 @@ export class Applicator {
       this.#templateLoader.loadCSS(tag),
     ]);
 
-    return `<template shadowroot="open">
+    return `<template shadowroot="open" shadowrootmode="open">
       ${styles ? `<style>${styles}</style>` : ''}
       ${html || ''}
     </template>

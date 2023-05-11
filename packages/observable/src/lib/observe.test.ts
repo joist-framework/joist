@@ -32,13 +32,13 @@ describe('observable: observe()', () => {
       }
     }
 
-    const couter = new Counter();
+    const counter = new Counter();
 
-    expect(couter.value).to.equal(0);
+    expect(counter.value).to.equal(0);
 
-    couter.value++;
+    counter.value++;
 
-    expect(couter.value).to.equal(1);
+    expect(counter.value).to.equal(1);
   });
 
   it('should return a set of changed props', (done) => {
@@ -52,7 +52,27 @@ describe('observable: observe()', () => {
       }
     }
 
-    const couter = new Counter();
-    couter.value++;
+    const counter = new Counter();
+    counter.value++;
+  });
+
+  it('should work as an even emitter', (done) => {
+    class Counter extends EventTarget {
+      @observe accessor value = 0;
+
+      @effect onChange() {
+        this.dispatchEvent(new Event('changed'));
+      }
+    }
+
+    const counter = new Counter();
+
+    counter.addEventListener('changed', () => {
+      expect(counter.value).to.equal(1);
+
+      done();
+    });
+
+    counter.value++;
   });
 });

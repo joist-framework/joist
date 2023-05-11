@@ -16,16 +16,13 @@
     "@joist/ssr": "file:packages/ssr"
   },
   "devDependencies": {
-    "@microsoft/fast-element": "1.12.0",
     "@open-wc/testing": "3.1.8",
-    "@playwright/test": "1.33.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.1.1",
     "@web/test-runner": "^0.16.1",
     "ava": "^5.2.0",
     "clsx": "1.2.1",
     "lerna": "6.6.2",
-    "lit": "2.7.4",
     "rollup-plugin-minify-html-literals": "1.2.6",
     "tslib": "2.5.0",
     "typescript": "5.0.4",

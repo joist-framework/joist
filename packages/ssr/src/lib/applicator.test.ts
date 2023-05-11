@@ -38,21 +38,21 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
 
         <body>
             <mock-header>
-                <template shadowroot="open">
+                <template shadowroot="open" shadowrootmode="open">
                     <style>:host { content: 'css for mock-header'}</style>
                     <div>html for mock-header</div>
                 </template>
             </mock-header>
 
             <mock-content>
-                <template shadowroot="open">
+                <template shadowroot="open" shadowrootmode="open">
                     <style>:host { content: 'css for mock-content'}</style>
                     <div>html for mock-content</div>
                 </template>
             </mock-content>
 
             <mock-footer>
-                <template shadowroot="open">
+                <template shadowroot="open" shadowrootmode="open">
                 <style>:host { content: 'css for mock-footer'}</style>
                 <div>html for mock-footer</div>
                 </template>
@@ -96,13 +96,13 @@ test('should apply declarative shadow dom recursively', async (t) => {
 
         <body>
             <mock-foo>
-                <template shadowroot="open">
+                <template shadowroot="open" shadowrootmode="open">
                     <style>:host { content: 'css for mock-foo'}</style>
                     <mock-bar>
-                        <template shadowroot="open">
+                        <template shadowroot="open" shadowrootmode="open">
                             <style>:host { content: 'css for mock-bar'}</style>
                             <mock-baz>
-                                <template shadowroot="open">
+                                <template shadowroot="open" shadowrootmode="open">
                                     <style>:host { content: 'css for mock-baz'}</style>
                                     <div>html for mock-baz</div>
                                 </template>
