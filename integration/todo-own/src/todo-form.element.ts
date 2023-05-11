@@ -1,10 +1,13 @@
 import { Injected, injectable } from '@joist/di';
-import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
+import { css, html, template, styles, listen } from '@joist/element';
 
 import { TodoService, Todo } from './services/todo.service.js';
 
-export const template: ShadowTemplate = {
-  css: css`
+@injectable
+export class TodoFormElement extends HTMLElement {
+  static inject = [TodoService];
+
+  @styles styles = css`
     :host {
       display: block;
       background: #fff;
@@ -47,8 +50,9 @@ export const template: ShadowTemplate = {
       font-weight: 300;
       color: #e6e6e6;
     }
-  `,
-  html: html`
+  `;
+
+  @template template = html`
     <form>
       <input
         id="input"
@@ -58,12 +62,7 @@ export const template: ShadowTemplate = {
         autofocus
       />
     </form>
-  `,
-};
-
-@injectable
-export class TodoFormElement extends HTMLElement {
-  static inject = [TodoService];
+  `;
 
   #shadow: ShadowRoot;
   #input: HTMLInputElement;
@@ -73,13 +72,11 @@ export class TodoFormElement extends HTMLElement {
     super();
 
     this.#todos = todos;
-    this.#shadow = shadow(this, template);
+    this.#shadow = this.shadowRoot!;
     this.#input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
-
-    this.#shadow.addEventListener('submit', this.#onSubmit.bind(this));
   }
 
-  #onSubmit(e: Event) {
+  @listen('submit') onSubmit(e: Event) {
     const service = this.#todos();
 
     e.preventDefault();

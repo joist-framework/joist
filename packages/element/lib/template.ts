@@ -24,11 +24,7 @@ export function styles<This extends HTMLElement>(
     const root = shadow();
     const value = res.toValue();
 
-    if (value instanceof CSSStyleSheet) {
-      root.adoptedStyleSheets = [...root.adoptedStyleSheets, value];
-    } else if (value instanceof HTMLStyleElement) {
-      root.append(value);
-    }
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, value];
 
     return res;
   };

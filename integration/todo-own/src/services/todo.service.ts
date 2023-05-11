@@ -1,4 +1,4 @@
-import { service, Injected } from '@joist/di';
+import { Injected } from '@joist/di';
 
 import { AppStorage } from './storage.service.js';
 
@@ -34,8 +34,8 @@ export class TodoRemovedEvent extends Event {
   }
 }
 
-@service
 export class TodoService extends EventTarget {
+  static service = true;
   static inject = [AppStorage];
 
   #todos: Todo[] = [];

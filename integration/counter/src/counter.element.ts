@@ -1,5 +1,5 @@
-import { css, html, template, styles } from '@joist/shadow';
-import { attr, effect, observe } from '@joist/observable';
+import { css, html, template, styles, attr, listen } from '@joist/element';
+import { effect, observe } from '@joist/observable';
 
 export class CounterElement extends HTMLElement {
   @styles styles = css`
@@ -38,17 +38,11 @@ export class CounterElement extends HTMLElement {
 
   @observe @attr accessor #value = 0;
 
-  constructor() {
-    super();
-
-    this.shadowRoot!.addEventListener('click', this.#onClick.bind(this));
-
-    effect(() => {
-      this.innerHTML = String(this.#value);
-    });
+  @effect onChange() {
+    this.innerHTML = String(this.#value);
   }
 
-  #onClick(e: Event) {
+  @listen('click') onClick(e: Event) {
     const { id } = e.target as HTMLElement;
 
     switch (id) {

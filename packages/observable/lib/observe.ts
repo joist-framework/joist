@@ -20,8 +20,12 @@ export function observe<This extends object, Value>(
 
       if (!scheduler) {
         scheduler = Promise.resolve().then(() => {
-          for (let effect of effects.get(this)!) {
-            effect.call(this, changeSet);
+          const effectFns = effects.get(this);
+
+          if (effectFns) {
+            for (let effect of effectFns) {
+              effect.call(this, changeSet);
+            }
           }
 
           schedulers.delete(this);
@@ -43,6 +47,14 @@ export function effect<T extends object>(
   ctx: ClassMethodDecoratorContext<T>
 ) {
   ctx.addInitializer(function () {
-    effects.get(this)?.add(value);
+    let effectFns = effects.get(this);
+
+    if (!effectFns) {
+      effectFns = new Set();
+
+      effects.set(this, effectFns);
+    }
+
+    effectFns.add(value);
   });
 }

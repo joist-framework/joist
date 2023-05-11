@@ -86,13 +86,4 @@ describe('Injector', () => {
 
     expect(parent.get(A)).to.equal(app.get(A));
   });
-
-  it('should allow a provider to be defined with the token only', () => {
-    class A {}
-
-    const parent = new Injector();
-    const app = new Injector([A], parent);
-
-    expect(parent.get(A)).to.not.equal(app.get(A));
-  });
 });

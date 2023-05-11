@@ -1,11 +1,10 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { Injected } from './injector.js';
-import { service } from './service.js';
 import { injectable } from './injectable.js';
 
 describe('@injectable()', () => {
-  it('should allow a custom element to be injected with deps (decorator)', () => {
+  it('should allow a custom element to be injected with deps', () => {
     class Foo {}
 
     class Bar {}
@@ -22,24 +21,6 @@ describe('@injectable()', () => {
     customElements.define('injectable-1', MyElement);
 
     const el = document.createElement('injectable-1') as MyElement;
-
-    expect(el.foo()).to.be.instanceOf(Foo);
-  });
-
-  it('should allow a custom element to be injected with deps (function)', () => {
-    class Foo {}
-
-    class MyElement extends HTMLElement {
-      static inject = [Foo];
-
-      constructor(public foo: Injected<Foo>) {
-        super();
-      }
-    }
-
-    customElements.define('injectable-2', injectable(MyElement));
-
-    const el = document.createElement('injectable-2') as MyElement;
 
     expect(el.foo()).to.be.instanceOf(Foo);
   });
@@ -88,11 +69,12 @@ describe('@injectable()', () => {
   });
 
   it('should handle parent HTML Injectors', async () => {
-    @service
-    class A {}
+    class A {
+      static service = true;
+    }
 
-    @service
     class B {
+      static service = true;
       static inject = [A];
 
       constructor(public a: Injected<A>) {}

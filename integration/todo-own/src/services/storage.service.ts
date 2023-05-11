@@ -1,12 +1,11 @@
-import { service } from '@joist/di';
-
 export interface Storage {
   loadJSON<T>(key: string): Promise<T | undefined>;
   saveJSON<T>(key: string, val: T): Promise<boolean>;
 }
 
-@service
 export class AppStorage implements Storage {
+  static service = true;
+
   #data = new Map<string, any>();
 
   loadJSON<T>(key: string): Promise<T | undefined> {

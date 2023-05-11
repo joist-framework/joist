@@ -17,11 +17,11 @@ export abstract class Result<T> {
 
   toValue(): T {
     if (!this.#valueRes) {
-      this.#valueRes = this.toVal(this.toString());
+      this.#valueRes = this.createValue(this.toString());
     }
 
     return this.#valueRes;
   }
 
-  abstract toVal(str: string): T;
+  abstract createValue(str: string): T;
 }

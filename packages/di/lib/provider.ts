@@ -1,15 +1,12 @@
-export type ClassProviderToken<T> = {
-  [key: string]: any;
+export type ProviderToken<T> = {
+  service?: boolean;
+  inject?: ProviderToken<any>[];
+  providers?: Provider<any>[];
+
   new (...args: any[]): T;
 };
 
-export type AbstractClassProviderToken<T> = Function & { prototype: T; [key: string]: any };
-
-export type ProviderToken<T> = ClassProviderToken<T> | AbstractClassProviderToken<T>;
-
-export interface ProviderDef<T> {
+export interface Provider<T> {
   provide: ProviderToken<T>;
-  use: ClassProviderToken<T>;
+  use: ProviderToken<T>;
 }
-
-export type Provider<T> = ProviderDef<T> | ClassProviderToken<T>;

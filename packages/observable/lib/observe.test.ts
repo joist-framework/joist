@@ -41,43 +41,18 @@ describe('observable: observe()', () => {
     expect(couter.value).to.equal(1);
   });
 
-  // it('should return a set of changed props', (done) => {
-  //   class Counter {
-  //     @observe accessor value = 0;
+  it('should return a set of changed props', (done) => {
+    class Counter {
+      @observe accessor value = 0;
 
-  //     @effect onChange(changes: Set<keyof this>) {
-  //       expect(changes.has('value')).to.be.true;
+      @effect onChange(changes: Set<keyof this>) {
+        expect(changes.has('value')).to.be.true;
 
-  //       done();
-  //     }
-  //   }
+        done();
+      }
+    }
 
-  //   const couter = new Counter();
-  //   couter.value++;
-  // });
-
-  // it('should upgrade custom elements', async () => {
-  //   class CounterElement extends HTMLElement {
-  //     @observe accessor value = 0;
-
-  //     hello = 'world';
-  //   }
-
-  //   const el = await fixture<any>(html`<observable-el-1></observable-el-1>`);
-  //   el.value = 100;
-
-  //   console.log(el.value); // 100
-  //   console.log(el.hello); // undefined
-
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       customElements.define('observable-el-1', CounterElement);
-
-  //       console.log(el.value); // 100
-  //       console.log(el.hello); // world
-
-  //       resolve();
-  //     }, 100);
-  //   });
-  // });
+    const couter = new Counter();
+    couter.value++;
+  });
 });

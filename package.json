@@ -12,7 +12,7 @@
   "dependencies": {
     "@joist/di": "file:packages/di",
     "@joist/observable": "file:packages/observable",
-    "@joist/shadow": "file:packages/shadow",
+    "@joist/element": "file:packages/element",
     "@joist/ssr": "file:packages/ssr"
   },
   "devDependencies": {
@@ -26,7 +26,6 @@
     "clsx": "1.2.1",
     "lerna": "6.6.2",
     "lit": "2.7.4",
-    "puppeteer": "20.1.2",
     "rollup-plugin-minify-html-literals": "1.2.6",
     "tslib": "2.5.0",
     "typescript": "5.0.4",

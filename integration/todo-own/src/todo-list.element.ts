@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { css, html, template, styles } from '@joist/shadow';
+import { css, html, template, styles, listen } from '@joist/element';
 
 import {
   TodoAddedEvent,
@@ -29,19 +29,19 @@ export class TodoListElement extends HTMLElement {
     }
   `;
 
-  @template template = html`<slot></slot>`,
+  @template template = html`<slot></slot>`;
 
   #listeners: Function[] = [];
+  #todo: Injected<TodoService>;
 
-  constructor(private getTodoService: Injected<TodoService>) {
+  constructor(todo: Injected<TodoService>) {
     super();
 
-    this.addEventListener('remove', this.#onRemove.bind(this));
-    this.addEventListener('complete', this.#onComplete.bind(this));
+    this.#todo = todo;
   }
 
   async connectedCallback() {
-    const service = this.getTodoService();
+    const service = this.#todo();
     const todos = await service.getTodos();
 
     todos.forEach((todo) => {
@@ -61,17 +61,17 @@ export class TodoListElement extends HTMLElement {
     this.#listeners.forEach((remove) => remove());
   }
 
-  #onRemove(e: Event) {
+  @listen('remove') onRemove(e: Event) {
     if (e.target instanceof TodoCardElement) {
-      this.getTodoService().removeTodo(e.target.id);
+      this.#todo().removeTodo(e.target.id);
     }
   }
 
-  #onComplete(e: Event) {
+  @listen('complete') onComplete(e: Event) {
     if (e.target instanceof TodoCardElement) {
       const status = e.target.getAttribute('status');
 
-      this.getTodoService().updateTodo(e.target.id, {
+      this.#todo().updateTodo(e.target.id, {
         status: status === 'active' ? 'complete' : 'active',
       });
     }

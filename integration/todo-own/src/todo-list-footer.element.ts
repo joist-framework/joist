@@ -1,4 +1,4 @@
-import { css, shadow, html, ShadowTemplate } from '@joist/shadow';
+import { css, html, template, styles, listen } from '@joist/element';
 import { injectable, Injected } from '@joist/di';
 
 import { Todo, TodoService } from './services/todo.service.js';
@@ -8,8 +8,15 @@ const sfxs = new Map([
   ['other', 'items'],
 ]);
 
-export const template: ShadowTemplate = {
-  css: css`
+class PluralRules extends Intl.PluralRules {
+  static service = true;
+}
+
+@injectable
+export class TodoListFooterElement extends HTMLElement {
+  static inject = [TodoService, PluralRules];
+
+  @styles styles = css`
     :host {
       --card-height: 50px;
 
@@ -47,46 +54,35 @@ export const template: ShadowTemplate = {
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
         0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
     }
-  `,
-  html: html`
+  `;
+
+  @template template = html`
     <div id="footer"><slot></slot> left</div>
 
     <div id="decoration"></div>
-  `,
-};
-
-@injectable
-export class TodoListFooterElement extends HTMLElement {
-  static inject = [TodoService, Intl.PluralRules];
+  `;
 
   #todo: Injected<TodoService>;
-  #pr: Injected<Intl.PluralRules>;
+  #pr: Injected<PluralRules>;
 
-  constructor(todo: Injected<TodoService>, pr: Injected<Intl.PluralRules>) {
+  constructor(todo: Injected<TodoService>, pr: Injected<PluralRules>) {
     super();
-
-    shadow(this, template);
 
     this.#todo = todo;
     this.#pr = pr;
   }
 
-  connectedCallback() {
+  @listen('todo_updated')
+  @listen('todo_addeed')
+  @listen('todo_removed')
+  async onTodoUpdate() {
     const todo = this.#todo();
     const pr = this.#pr();
 
-    const onTodoUpdate = async () => {
-      const todos = await todo.getTodos();
-      const activeCount = this.#getCompleteCount(todos);
+    const todos = await todo.getTodos();
+    const activeCount = this.#getCompleteCount(todos);
 
-      this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
-    };
-
-    onTodoUpdate();
-
-    todo.addEventListener('todo_updated', onTodoUpdate);
-    todo.addEventListener('todo_added', onTodoUpdate);
-    todo.addEventListener('todo_removed', onTodoUpdate);
+    this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
   }
 
   #getCompleteCount(todos: Todo[]) {

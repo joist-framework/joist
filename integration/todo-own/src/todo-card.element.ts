@@ -1,9 +1,11 @@
-import { shadow, css, html, ShadowTemplate } from '@joist/shadow';
+import { css, html, template, styles, listen, attr } from '@joist/element';
 
 import { Todo } from './services/todo.service.js';
 
-export const template: ShadowTemplate = {
-  css: css`
+export class TodoCardElement extends HTMLElement {
+  static observedAttributes = ['status'];
+
+  @styles styles = css`
     :host {
       align-items: center;
       display: flex;
@@ -31,8 +33,9 @@ export const template: ShadowTemplate = {
     button#remove {
       color: darkred;
     }
-  `,
-  html: html`
+  `;
+
+  @template template = html`
     <div id="name">
       <slot></slot>
     </div>
@@ -40,29 +43,20 @@ export const template: ShadowTemplate = {
     <button id="remove">remove</button>
 
     <button id="complete">complete</button>
-  `,
-};
+  `;
 
-export class TodoCardElement extends HTMLElement {
-  static observedAttributes = ['status'];
+  @attr accessor status = '';
 
-  #shadow = shadow(this, template);
-  #completeBtn = this.#shadow.querySelector<HTMLButtonElement>('#complete')!;
+  #completeBtn = this.shadowRoot!.querySelector<HTMLButtonElement>('#complete')!;
 
-  constructor() {
-    super();
-
-    this.#shadow.addEventListener('click', (e) => {
-      if (e.target instanceof HTMLButtonElement) {
-        this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
-      }
-    });
+  @listen('click') onClick(e: Event) {
+    if (e.target instanceof HTMLButtonElement) {
+      this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
+    }
   }
 
   attributeChangedCallback() {
-    const status = this.getAttribute('status');
-
-    const isActive = status === 'active';
+    const isActive = this.status === 'active';
 
     this.#completeBtn.innerHTML = isActive ? 'complete' : 'active';
   }

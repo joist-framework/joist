@@ -1,5 +1,4 @@
-import { ProviderToken, Provider, ClassProviderToken } from './provider.js';
-import { readProviderDeps, isProvidedInRoot } from './utils.js';
+import { ProviderToken, Provider } from './provider.js';
 
 export type Injected<T> = () => T;
 
@@ -28,31 +27,29 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      if ('use' in provider) {
-        return this.createAndCache(provider.use);
-      } else {
-        return this.createAndCache(provider);
-      }
+      return this.createAndCache(provider.use);
     }
 
     // check for a parent and attempt to get there
     if (this.parent) {
-      if (this.parent.has(token) || isProvidedInRoot(token)) {
+      if (this.parent.has(token) || token.service) {
         return this.parent.get(token);
       }
     }
 
     // If nothing else treat as a local class provider
-    return this.createAndCache(token as ClassProviderToken<T>);
+    return this.createAndCache(token as ProviderToken<T>);
   }
 
-  create<T>(P: ClassProviderToken<T>): T {
-    const deps = readProviderDeps(P);
+  create<T>(P: ProviderToken<T>): T {
+    if (!P.inject) {
+      return new P();
+    }
 
-    return new P(...deps.map((dep) => () => this.get(dep)));
+    return new P(...P.inject.map((dep) => () => this.get(dep)));
   }
 
-  private createAndCache<T>(token: ClassProviderToken<T>): T {
+  private createAndCache<T>(token: ProviderToken<T>): T {
     const instance = this.create(token);
 
     this.instances.set(token, instance);
@@ -65,8 +62,6 @@ export class Injector {
       return undefined;
     }
 
-    return this.providers.find((provider) => {
-      return provider === token || provider.provide === token;
-    });
+    return this.providers.find((provider) => provider.provide === token);
   }
 }

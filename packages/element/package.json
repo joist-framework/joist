@@ -1,20 +1,15 @@
 {
-  "name": "@joist/shadow",
+  "name": "@joist/element",
   "version": "2.0.1",
-  "main": "./target/build/lib.js",
-  "module": "./target/build/lib.js",
+  "main": "./target/lib.js",
+  "module": "./target/lib.js",
   "exports": {
     ".": {
-      "import": "./target/build/lib.js"
-    },
-    "./styled": {
-      "import": "./target/build/lib/styled.js"
+      "import": "./target/lib.js"
     }
   },
   "files": [
-    "target/build",
-    "observable/package.json",
-    "styled/package.json"
+    "target"
   ],
   "sideEffects": false,
   "description": "Intelligently apply styles to WebComponents",

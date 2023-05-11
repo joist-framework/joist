@@ -1,7 +1,6 @@
 import { expect } from '@open-wc/testing';
 
 import { Injector, Injected } from './injector.js';
-import { service } from './service.js';
 import { environment, clearEnvironment } from './environment.js';
 import { injectable } from './injectable.js';
 
@@ -13,8 +12,9 @@ describe('environment', () => {
   });
 
   it('should use the root injector when creating services', () => {
-    @service
-    class MyService {}
+    class MyService {
+      static service = true;
+    }
 
     @injectable
     class MyElement extends HTMLElement {

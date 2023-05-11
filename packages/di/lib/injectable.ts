@@ -1,27 +1,21 @@
-import { Provider, ProviderToken } from './provider.js';
+import { ProviderToken } from './provider.js';
 import { Injector } from './injector.js';
 import { environment } from './environment.js';
 
-export interface Injectable {
-  inject?: ProviderToken<any>[];
-  providers?: Provider<any>[];
-
-  new (...args: any[]): HTMLElement;
-}
-
-export function injectable<T extends Injectable>(CustomElement: T) {
-  const { inject, providers } = CustomElement;
-
-  return class InjectableElement extends CustomElement {
+export function injectable<T extends ProviderToken<HTMLElement>>(
+  CustomElement: T,
+  _ctx: ClassDecoratorContext
+) {
+  return class extends CustomElement {
     injector: Injector;
 
     constructor(...args: any[]) {
-      const injector = new Injector(providers, environment());
+      const injector = new Injector(CustomElement.providers, environment());
 
-      if (args.length || !inject) {
+      if (args.length || !CustomElement.inject) {
         super(...args);
       } else {
-        super(...inject.map((dep) => () => injector.get(dep)));
+        super(...CustomElement.inject.map((dep) => () => injector.get(dep)));
       }
 
       this.injector = injector;
@@ -29,8 +23,8 @@ export function injectable<T extends Injectable>(CustomElement: T) {
 
     connectedCallback() {
       // only mark as an injector root if element defines providers
-      if (providers) {
-        this.setAttribute('joist-injector-root', 'true');
+      if (CustomElement.providers) {
+        this.setAttribute('joist-injector-root', '');
       }
 
       this.addEventListener('finddiroot', (e) => {
@@ -39,13 +33,13 @@ export function injectable<T extends Injectable>(CustomElement: T) {
         if (parentInjector) {
           this.injector.parent = parentInjector;
         }
-
-        if (super.connectedCallback) {
-          super.connectedCallback();
-        }
       });
 
       this.dispatchEvent(new Event('finddiroot'));
+
+      if (super.connectedCallback) {
+        super.connectedCallback();
+      }
     }
 
     disconnectedCallback() {
