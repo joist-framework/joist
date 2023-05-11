@@ -21,7 +21,13 @@ export function attr<This extends HTMLElement>(
     },
     get() {
       if (typeof ctx.name === 'string') {
-        return this.getAttribute(ctx.name);
+        const attr = this.getAttribute(ctx.name);
+
+        if (attr === '') {
+          return true;
+        }
+
+        return attr;
       } else {
         return '';
       }
@@ -33,8 +39,7 @@ function setAttribute(el: HTMLElement, attr: string, value: unknown): void {
   if (typeof value === 'boolean') {
     if (value) {
       el.setAttribute(attr, '');
-    } else;
-    {
+    } else {
       el.removeAttribute(attr);
     }
   } else {

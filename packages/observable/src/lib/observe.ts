@@ -1,8 +1,10 @@
 // metadata
 const schedulers = new WeakMap<object, Promise<void>>();
 const changes = new WeakMap<object, Set<string | symbol>>();
-const effects = new WeakMap<object, Set<Function>>();
 const upgradableProps = new WeakMap<object, Map<string | symbol, unknown>>();
+
+// TODO: this one may not be worth it. could just call a named method on object
+const effects = new WeakMap<object, Set<Function>>();
 
 export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
