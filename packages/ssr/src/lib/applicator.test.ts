@@ -57,18 +57,6 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
                 <div>html for mock-footer</div>
                 </template>
             </mock-footer>
-            
-            <script>
-            (function attachShadowRoots(root) {
-            root.querySelectorAll("template[shadowroot]").forEach(template => {
-                const mode = template.getAttribute("shadowroot");
-                const shadowRoot = template.parentNode.attachShadow({ mode });
-                shadowRoot.appendChild(template.content);
-                template.remove();
-                attachShadowRoots(shadowRoot);
-            });
-            })(document);
-            </script>
         </body>
     </html>
   `)
@@ -123,18 +111,6 @@ test('should apply declarative shadow dom recursively', async (t) => {
                     </mock-bar>
                 </template>
             </mock-foo>
-            
-            <script>
-            (function attachShadowRoots(root) {
-            root.querySelectorAll("template[shadowroot]").forEach(template => {
-                const mode = template.getAttribute("shadowroot");
-                const shadowRoot = template.parentNode.attachShadow({ mode });
-                shadowRoot.appendChild(template.content);
-                template.remove();
-                attachShadowRoots(shadowRoot);
-            });
-            })(document);
-            </script>
         </body>
     </html>
   `)

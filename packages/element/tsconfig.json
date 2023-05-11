@@ -1,9 +1,8 @@
 {
   "extends": "../../tsconfig.json",
-  "files": ["lib.ts", "typings.d.ts"],
   "compilerOptions": {
     "outDir": "target"
   },
-  "include": ["lib"],
+  "include": ["src", "typings.d.ts"],
   "exclude": ["target"]
 }

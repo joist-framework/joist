@@ -7,6 +7,9 @@
   "exports": {
     ".": {
       "import": "./target/lib.js"
+    },
+    "./*": {
+      "import": "./target/lib/*.js"
     }
   },
   "files": [
@@ -33,7 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc && wtr --config ../../wtr.config.mjs",
+    "test": "tsc && wtr --config ../../wtr.config.mjs --port 8002",
     "build": "tsc"
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"

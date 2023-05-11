@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 import { FileSysTemplateLoader } from './template-loader.js';
 
-const dirname = join(fileURLToPath(new URL('.', import.meta.url)), '../../../lib/testing');
+const dirname = join(fileURLToPath(new URL('.', import.meta.url)), '../../src/testing');
 
 test('FileSysTemplateLoader: should read from defined paths', async (t) => {
   const loader = new FileSysTemplateLoader(

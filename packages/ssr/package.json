@@ -1,16 +1,19 @@
 {
   "name": "@joist/ssr",
   "version": "2.0.1",
-  "main": "./target/build/lib.js",
-  "module": "./target/build/lib.js",
   "type": "module",
+  "main": "./target/lib.js",
+  "module": "./target/lib.js",
   "exports": {
     ".": {
-      "import": "./target/build/lib.js"
+      "import": "./target/lib.js"
+    },
+    "./*": {
+      "import": "./target/lib/*.js"
     }
   },
   "files": [
-    "target/build"
+    "target"
   ],
   "sideEffects": false,
   "description": "server side render shadow dom (Declarative Shadow DOM)",
@@ -28,8 +31,8 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && ava target/test/**/*.test.js",
-    "build": "tsc -p tsconfig.build.json"
+    "test": "tsc && ava target/**/*.test.js",
+    "build": "tsc"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
