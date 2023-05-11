@@ -80,6 +80,12 @@ describe('observable: observe()', () => {
     class Counter extends HTMLElement {
       @observe accessor value = 0;
 
+      constructor() {
+        super();
+
+        expect(this.value).to.equal(100);
+      }
+
       @effect onChange() {
         expect(this.value).to.equal(101);
 
