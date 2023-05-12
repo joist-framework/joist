@@ -1,12 +1,11 @@
-// metadata
-const schedulers = new WeakMap<object, Promise<void>>();
-const changes = new WeakMap<object, Set<string | symbol>>();
-const upgradableProps = new WeakMap<object, Map<string | symbol, unknown>>();
+interface ObservableMeta {
+  scheduler$$?: Promise<void> | null;
+  upgradeableProps$$?: Map<string | symbol, unknown>;
+  changes$$?: Set<string | symbol>;
+  effects$$?: Set<Function>;
+}
 
-// TODO: this one may not be worth it. could just call a named method on object
-const effects = new WeakMap<object, Set<Function>>();
-
-export function observe<This extends object, Value>(
+export function observe<This extends object & ObservableMeta, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
   ctx: ClassAccessorDecoratorContext<This, Value>
 ): ClassAccessorDecoratorResult<This, Value> {
@@ -22,76 +21,51 @@ export function observe<This extends object, Value>(
       // if there is a value, delete it and cache it for init
       delete (<any>this)[ctx.name];
 
-      let upgradable = upgradableProps.get(this);
-
-      if (!upgradable) {
-        upgradable = new Map();
-        upgradableProps.set(this, upgradable);
-      }
-
-      upgradable.set(ctx.name, value);
+      this.upgradeableProps$$ = this.upgradeableProps$$ || new Map();
+      this.upgradeableProps$$.set(ctx.name, value);
     }
   });
 
   return {
     init(value) {
-      const props = upgradableProps.get(this);
-
-      if (props) {
-        if (props.has(ctx.name)) {
-          return props.get(ctx.name) as Value;
+      if (this.upgradeableProps$$) {
+        if (this.upgradeableProps$$.has(ctx.name)) {
+          return this.upgradeableProps$$.get(ctx.name) as Value;
         }
       }
 
       return value;
     },
     set(value) {
-      let scheduler = schedulers.get(this);
-      let changeSet = changes.get(this);
+      this.changes$$ = this.changes$$ || new Set();
 
-      if (!changeSet) {
-        changeSet = new Set();
-
-        changes.set(this, changeSet);
-      }
-
-      if (!scheduler) {
-        scheduler = Promise.resolve().then(() => {
-          const effectFns = effects.get(this);
-
-          if (effectFns) {
-            for (let effect of effectFns) {
-              effect.call(this, changeSet);
+      if (!this.scheduler$$) {
+        this.scheduler$$ = Promise.resolve().then(() => {
+          if (this.effects$$) {
+            for (let effect of this.effects$$) {
+              effect.call(this, this.changes$$);
             }
           }
 
-          schedulers.delete(this);
-          changes.delete(this);
+          this.scheduler$$ = null;
+          this.changes$$?.clear();
         });
-
-        schedulers.set(this, scheduler);
       }
 
-      changeSet.add(ctx.name);
+      this.changes$$.add(ctx.name);
 
       base.set.call(this, value);
     },
   };
 }
 
-export function effect<T extends object>(
+export function effect<T extends object & ObservableMeta>(
   value: (changes: Set<keyof T>) => void,
   ctx: ClassMethodDecoratorContext<T>
 ) {
   ctx.addInitializer(function () {
-    let effectFns = effects.get(this);
+    this.effects$$ = this.effects$$ || new Set();
 
-    if (!effectFns) {
-      effectFns = new Set();
-
-      effects.set(this, effectFns);
-    }
-
-    effectFns.add(value);
+    this.effects$$.add(value);
   });
 }
