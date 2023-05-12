@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "install": "npx lerna run build",
+    "install": "lerna run build",
     "integration": "wireit"
   },
   "wireit": {
@@ -50,7 +50,6 @@
     "@types/node": "^20.1.1",
     "@web/test-runner": "^0.16.1",
     "ava": "^5.2.0",
-    "clsx": "1.2.1",
     "lerna": "6.6.2",
     "serve": "^14.2.0",
     "tslib": "2.5.0",
