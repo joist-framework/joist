@@ -7,7 +7,18 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Todo App (Own)</title>
+    <title>Todo App</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@joist/di": "../../node_modules/@joist/di/target/lib.js",
+          "@joist/element": "../../node_modules/@joist/element/target/lib.js",
+          "@joist/observable": "../../node_modules/@joist/observable/target/lib.js",
+          "tslib": "../../node_modules/tslib/tslib.es6.js"
+        }
+      }
+    </script>
   </head>
 
   <body>
@@ -107,11 +118,11 @@
     </local-storage-ctx>
 
     <script type="module">
-      import { StorageCtxElement } from './src/storage.ctx';
-      import { TodoCardElement } from './src/todo-card.element';
-      import { TodoFormElement } from './src/todo-form.element';
-      import { TodoListFooterElement } from './src/todo-list-footer.element';
-      import { TodoListElement } from './src/todo-list.element';
+      import { StorageCtxElement } from './target/storage.ctx.js';
+      import { TodoCardElement } from './target/todo-card.element.js';
+      import { TodoFormElement } from './target/todo-form.element.js';
+      import { TodoListFooterElement } from './target/todo-list-footer.element.js';
+      import { TodoListElement } from './target/todo-list.element.js';
 
       customElements.define('local-storage-ctx', StorageCtxElement);
       customElements.define('todo-list', TodoListElement);
@@ -126,7 +137,7 @@
       }
 
       async function initDebug() {
-        const { TodoLoggerElement } = await import('./src/todo-logger.element.ts');
+        const { TodoLoggerElement } = await import('./target/todo-logger.element.ts');
 
         customElements.define('todo-logger', TodoLoggerElement);
       }

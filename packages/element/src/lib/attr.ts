@@ -1,23 +1,29 @@
 export function attr<This extends HTMLElement>(
-  _: ClassAccessorDecoratorTarget<This, unknown>,
+  base: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   return {
     init(value: unknown) {
       if (typeof ctx.name === 'string') {
         if (this.hasAttribute(ctx.name)) {
-          const attrVal = this.getAttribute(ctx.name);
+          if (this.getAttribute(ctx.name) === '') {
+            return true;
+          }
 
-          ctx.access.set(this, attrVal === '' ? true : this.getAttribute(ctx.name));
-        } else {
-          setAttribute(this, ctx.name, value);
+          return this.getAttribute(ctx.name);
+        } else if (typeof value === 'boolean' && value) {
+          this.setAttribute(ctx.name, String(value));
         }
       }
+
+      return value;
     },
     set(value: unknown) {
       if (typeof ctx.name === 'string') {
         setAttribute(this, ctx.name, value);
       }
+
+      base.set.call(this, value);
     },
     get() {
       if (typeof ctx.name === 'string') {

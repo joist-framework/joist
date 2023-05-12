@@ -36,8 +36,28 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && wtr --config ../../wtr.config.mjs --port 8002",
-    "build": "tsc"
+    "test": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
+    },
+    "test": {
+      "command": "wtr --config ../../wtr.config.mjs --port 8002",
+      "dependencies": [
+        "build"
+      ]
+    }
   },
   "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
 }

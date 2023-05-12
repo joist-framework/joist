@@ -1,4 +1,4 @@
-import { css, html, template, styles, listen } from '@joist/element';
+import { css, html, template, styles } from '@joist/element';
 import { injectable, Injected } from '@joist/di';
 
 import { Todo, TodoService } from './services/todo.service.js';
@@ -72,17 +72,22 @@ export class TodoListFooterElement extends HTMLElement {
     this.#pr = pr;
   }
 
-  @listen('todo_updated')
-  @listen('todo_addeed')
-  @listen('todo_removed')
-  async onTodoUpdate() {
+  connectedCallback() {
     const todo = this.#todo();
     const pr = this.#pr();
 
-    const todos = await todo.getTodos();
-    const activeCount = this.#getCompleteCount(todos);
+    const onTodoUpdate = async () => {
+      const todos = await todo.getTodos();
+      const activeCount = this.#getCompleteCount(todos);
 
-    this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
+      this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
+    };
+
+    onTodoUpdate();
+
+    todo.addEventListener('todo_updated', onTodoUpdate);
+    todo.addEventListener('todo_added', onTodoUpdate);
+    todo.addEventListener('todo_removed', onTodoUpdate);
   }
 
   #getCompleteCount(todos: Todo[]) {

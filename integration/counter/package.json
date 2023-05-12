@@ -1,21 +1,30 @@
 {
-  "name": "@integration/own",
+  "name": "@integration/counter",
   "version": "2.0.0",
-  "sideEffects": false,
   "private": true,
-  "description": "Dependency Injection in ~800 bytes",
+  "description": "",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
   },
-  "keywords": [
-    "TypeScript",
-    "DI",
-    "Dependency Injection"
-  ],
+  "keywords": [],
   "author": "deebloo",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/deebloo/joist/issues"
+  "scripts": {
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
+    }
   }
 }

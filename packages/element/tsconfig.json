@@ -3,6 +3,5 @@
   "compilerOptions": {
     "outDir": "target"
   },
-  "include": ["src", "typings.d.ts"],
-  "exclude": ["target"]
+  "include": ["src", "typings.d.ts"]
 }

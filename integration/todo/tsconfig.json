@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2016",
-    "noEmit": true
+    "outDir": "target"
   },
   "include": ["src"]
 }

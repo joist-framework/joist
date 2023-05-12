@@ -7,7 +7,17 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Todo App (Own)</title>
+    <title>Counter</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@joist/element": "../../node_modules/@joist/element/target/lib.js",
+          "@joist/observable": "../../node_modules/@joist/observable/target/lib.js",
+          "tslib": "../../node_modules/tslib/tslib.es6.js"
+        }
+      }
+    </script>
   </head>
 
   <body>
@@ -22,10 +32,6 @@
 
     <joist-counter>0</joist-counter>
 
-    <script type="module">
-      import { CounterElement } from './src/counter.element.ts';
-
-      customElements.define('joist-counter', CounterElement);
-    </script>
+    <script type="module" src="./target/counter.js"></script>
   </body>
 </html>

@@ -1,7 +1,9 @@
-import { css, html, template, styles, attr, listen } from '@joist/element';
+import { css, html, template, styles, listen, define, attr } from '@joist/element';
 import { effect, observe } from '@joist/observable';
 
 export class CounterElement extends HTMLElement {
+  @define static tagName = 'joist-counter';
+
   @styles styles = css`
     * {
       font-size: 200%;
@@ -36,10 +38,10 @@ export class CounterElement extends HTMLElement {
     <button id="inc">+</button>
   `;
 
-  @observe @attr accessor #value = 0;
+  @observe @attr accessor value = 0;
 
   @effect onChange() {
-    this.innerHTML = String(this.#value);
+    this.innerHTML = String(this.value);
   }
 
   @listen('click') onClick(e: Event) {
@@ -47,11 +49,11 @@ export class CounterElement extends HTMLElement {
 
     switch (id) {
       case 'inc':
-        this.#value++;
+        this.value++;
         break;
 
       case 'dec':
-        this.#value--;
+        this.value--;
         break;
     }
   }

@@ -5,6 +5,8 @@
 **/.cache
 **/*.d.ts
 !**/vite-env.d.ts
+target
+.wireit
 
 # dependencies
 **/node_modules/

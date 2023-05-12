@@ -1,6 +1,6 @@
 import { css, html, template, styles, listen, attr } from '@joist/element';
 
-import { Todo } from './services/todo.service.js';
+import { Todo, TodoStatus } from './services/todo.service.js';
 
 export class TodoCardElement extends HTMLElement {
   static observedAttributes = ['status'];
@@ -45,9 +45,10 @@ export class TodoCardElement extends HTMLElement {
     <button id="complete">complete</button>
   `;
 
-  @attr accessor status = '';
+  @attr accessor status: TodoStatus = 'active';
 
-  #completeBtn = this.shadowRoot!.querySelector<HTMLButtonElement>('#complete')!;
+  #shadow = this.shadowRoot!;
+  complete = this.#shadow.querySelector('#complete')!;
 
   @listen('click') onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement) {
@@ -58,7 +59,7 @@ export class TodoCardElement extends HTMLElement {
   attributeChangedCallback() {
     const isActive = this.status === 'active';
 
-    this.#completeBtn.innerHTML = isActive ? 'complete' : 'active';
+    this.complete.innerHTML = isActive ? 'complete' : 'active';
   }
 }
 

@@ -64,16 +64,14 @@ export class TodoFormElement extends HTMLElement {
     </form>
   `;
 
-  #shadow: ShadowRoot;
-  #input: HTMLInputElement;
+  #shadow = this.shadowRoot!;
+  #input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
   #todos: Injected<TodoService>;
 
   constructor(todos: Injected<TodoService>) {
     super();
 
     this.#todos = todos;
-    this.#shadow = this.shadowRoot!;
-    this.#input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
   }
 
   @listen('submit') onSubmit(e: Event) {

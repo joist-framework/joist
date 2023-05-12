@@ -6,7 +6,7 @@ export function listen<This extends HTMLElement>(event: string) {
       setTimeout(() => {
         const root = this.shadowRoot || this;
 
-        root.addEventListener(event, value);
+        root.addEventListener(event, value.bind(this));
       });
     });
   };

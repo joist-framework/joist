@@ -5,14 +5,43 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "install": "npx lerna run build"
+    "install": "npx lerna run build",
+    "integration": "wireit"
+  },
+  "wireit": {
+    "integration": {
+      "command": "serve",
+      "service": true,
+      "dependencies": [
+        {
+          "script": "./integration/counter:build",
+          "cascade": false
+        },
+        {
+          "script": "./integration/todo:build",
+          "cascade": false
+        },
+        {
+          "script": "./packages/di:build",
+          "cascade": false
+        },
+        {
+          "script": "./packages/element:build",
+          "cascade": false
+        },
+        {
+          "script": "./packages/observable:build",
+          "cascade": false
+        }
+      ]
+    }
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@joist/di": "file:packages/di",
-    "@joist/observable": "file:packages/observable",
     "@joist/element": "file:packages/element",
+    "@joist/observable": "file:packages/observable",
     "@joist/ssr": "file:packages/ssr"
   },
   "devDependencies": {
@@ -23,9 +52,9 @@
     "ava": "^5.2.0",
     "clsx": "1.2.1",
     "lerna": "6.6.2",
-    "rollup-plugin-minify-html-literals": "1.2.6",
+    "serve": "^14.2.0",
     "tslib": "2.5.0",
     "typescript": "5.0.4",
-    "vite": "4.3.5"
+    "wireit": "^0.9.5"
   }
 }

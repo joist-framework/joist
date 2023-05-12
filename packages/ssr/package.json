@@ -31,8 +31,28 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && ava target/**/*.test.js",
-    "build": "tsc"
+    "test": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
+    },
+    "test": {
+      "command": "ava target/**/*.test.js",
+      "dependencies": [
+        "build"
+      ]
+    }
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
