@@ -1,8 +1,10 @@
+type EffectFn = (changes: Set<string | symbol>) => void;
+
 interface ObservableMeta {
-  scheduler$$?: Promise<void> | null;
-  upgradeableProps$$?: Map<string | symbol, unknown>;
-  changes$$?: Set<string | symbol>;
-  effects$$?: Set<Function>;
+  s$$?: Promise<void> | null; // scheduler
+  p$$?: Map<string | symbol, unknown>; // upgradeable props
+  c$$?: Set<string | symbol>; // changeset
+  e$$?: Set<EffectFn>; // effects
 }
 
 export function observe<This extends object & ObservableMeta, Value>(
@@ -11,8 +13,9 @@ export function observe<This extends object & ObservableMeta, Value>(
 ): ClassAccessorDecoratorResult<This, Value> {
   // handle upgradable values (specifically custom elements)
   ctx.addInitializer(function (this: This) {
-    let value;
+    let value: Value | undefined;
 
+    // attempt to read value.
     try {
       value = ctx.access.get(this);
     } catch {}
@@ -21,38 +24,38 @@ export function observe<This extends object & ObservableMeta, Value>(
       // if there is a value, delete it and cache it for init
       delete (<any>this)[ctx.name];
 
-      this.upgradeableProps$$ = this.upgradeableProps$$ || new Map();
-      this.upgradeableProps$$.set(ctx.name, value);
+      this.p$$ = this.p$$ || new Map();
+      this.p$$.set(ctx.name, value);
     }
   });
 
   return {
     init(value) {
-      if (this.upgradeableProps$$) {
-        if (this.upgradeableProps$$.has(ctx.name)) {
-          return this.upgradeableProps$$.get(ctx.name) as Value;
+      if (this.p$$) {
+        if (this.p$$.has(ctx.name)) {
+          return this.p$$.get(ctx.name) as Value;
         }
       }
 
       return value;
     },
     set(value) {
-      this.changes$$ = this.changes$$ || new Set();
+      this.c$$ = this.c$$ || new Set();
 
-      if (!this.scheduler$$) {
-        this.scheduler$$ = Promise.resolve().then(() => {
-          if (this.effects$$) {
-            for (let effect of this.effects$$) {
-              effect.call(this, this.changes$$);
+      if (!this.s$$) {
+        this.s$$ = Promise.resolve().then(() => {
+          if (this.e$$ && this.c$$) {
+            for (let effect of this.e$$) {
+              effect.call(this, this.c$$);
             }
           }
 
-          this.scheduler$$ = null;
-          this.changes$$?.clear();
+          this.s$$ = null;
+          this.c$$?.clear();
         });
       }
 
-      this.changes$$.add(ctx.name);
+      this.c$$.add(ctx.name);
 
       base.set.call(this, value);
     },
@@ -60,12 +63,12 @@ export function observe<This extends object & ObservableMeta, Value>(
 }
 
 export function effect<T extends object & ObservableMeta>(
-  value: (changes: Set<keyof T>) => void,
+  value: EffectFn,
   ctx: ClassMethodDecoratorContext<T>
 ) {
   ctx.addInitializer(function () {
-    this.effects$$ = this.effects$$ || new Set();
+    this.e$$ = this.e$$ || new Set();
 
-    this.effects$$.add(value);
+    this.e$$.add(value);
   });
 }

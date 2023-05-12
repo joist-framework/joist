@@ -31,7 +31,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "tsc && ava target/**/*.test.js",
+    "test": "tsc -p tsconfig.test.json && ava target/**/*.test.js",
     "build": "tsc"
   },
   "dependencies": {

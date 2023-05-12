@@ -7,7 +7,7 @@ describe('observable: observe()', () => {
     class Counter {
       @observe static accessor value = 0;
 
-      @effect static onChange() {
+      @effect static onPropChanged() {
         expect(Counter.value).to.equal(1);
 
         done();
@@ -25,7 +25,9 @@ describe('observable: observe()', () => {
     class Counter {
       @observe accessor value = 0;
 
-      @effect onChange() {
+      // confirm it works with private methods
+      // @ts-ignore
+      @effect #onChange() {
         expect(this.value).to.equal(1);
 
         done();
@@ -45,7 +47,7 @@ describe('observable: observe()', () => {
     class Counter {
       @observe accessor value = 0;
 
-      @effect onChange(changes: Set<keyof this>) {
+      @effect onChange(changes: Set<symbol | string>) {
         expect(changes.has('value')).to.be.true;
 
         done();
