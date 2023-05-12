@@ -1,16 +1,14 @@
 export function attr<This extends HTMLElement>(
-  base: ClassAccessorDecoratorTarget<This, unknown>,
+  _: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   return {
     init(value: unknown) {
       if (typeof ctx.name === 'string') {
         if (this.hasAttribute(ctx.name)) {
-          if (this.getAttribute(ctx.name) === '') {
-            return true;
-          }
+          const attr = this.getAttribute(ctx.name);
 
-          return this.getAttribute(ctx.name);
+          return attr === '' ? true : attr;
         } else if (typeof value === 'boolean' && value) {
           this.setAttribute(ctx.name, String(value));
         }
@@ -22,18 +20,12 @@ export function attr<This extends HTMLElement>(
       if (typeof ctx.name === 'string') {
         setAttribute(this, ctx.name, value);
       }
-
-      base.set.call(this, value);
     },
     get() {
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);
 
-        if (attr === '') {
-          return true;
-        }
-
-        return attr;
+        return attr === '' ? true : attr;
       } else {
         return '';
       }
