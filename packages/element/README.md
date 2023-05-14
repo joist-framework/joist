@@ -1,29 +1,36 @@
-# Styled
+# Element
 
 Create a shadow root and apply styles and html as defined
 
 #### Installation:
 
 ```BASH
-npm i @joist/shadow
+npm i @joist/element
 ```
 
 #### Example:
 
 ```TS
-import { shadow, css, html} from '@joist/shadow';
+import { styles, template, css, html, define } from '@joist/element';
 
-@shadow
 export class MyElement extends HTMLElement {
-  static styles = css`
+  @define static tagName = 'my-element';
+  
+  @styles styles = css`
     :host {
       display: block;
       color: red;
     }
   `;
 
-  static template = html`
+  @template template = html`
     <slot></slot>
   `
+  
+  @attr value = 0;
+  
+  @listen('click') onClick() {
+    console.log('clicked!')
+  }
 }
 ```
