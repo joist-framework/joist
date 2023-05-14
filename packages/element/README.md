@@ -27,7 +27,7 @@ export class MyElement extends HTMLElement {
     <slot></slot>
   `;
   
-  @attr value = 0;
+  @attr accessor value = 0;
   
   @listen('click') onClick() {
     console.log('clicked!')
