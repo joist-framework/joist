@@ -1,5 +1,5 @@
 export function attr<This extends HTMLElement>(
-  _: ClassAccessorDecoratorTarget<This, unknown>,
+  base: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   return {
@@ -8,8 +8,23 @@ export function attr<This extends HTMLElement>(
         if (this.hasAttribute(ctx.name)) {
           const attr = this.getAttribute(ctx.name);
 
-          return attr === '' ? true : attr;
-        } else if (typeof value === 'boolean' && value) {
+          // treat as boolean
+          if (attr === '') {
+            return true;
+          }
+
+          // treat as number
+          if (typeof value === 'number') {
+            return Number(attr);
+          }
+
+          // treat as string
+          return attr;
+        } else if (value === true) {
+          // set boolean attribute
+          this.setAttribute(ctx.name, '');
+        } else {
+          // set key/value attribute
           this.setAttribute(ctx.name, String(value));
         }
       }
@@ -18,29 +33,38 @@ export function attr<This extends HTMLElement>(
     },
     set(value: unknown) {
       if (typeof ctx.name === 'string') {
-        setAttribute(this, ctx.name, value);
+        if (typeof value === 'boolean') {
+          if (value) {
+            this.setAttribute(ctx.name, '');
+          } else {
+            this.removeAttribute(ctx.name);
+          }
+        } else {
+          this.setAttribute(ctx.name, String(value));
+        }
       }
+
+      base.set.call(this, value);
     },
     get() {
+      const ogValue = base.get.call(this);
+
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);
 
-        return attr === '' ? true : attr;
+        if (attr === '') {
+          return true;
+        }
+
+        // treat as number
+        if (typeof ogValue === 'number') {
+          return Number(attr);
+        }
+
+        return attr;
       } else {
-        return '';
+        return ogValue;
       }
     },
   };
-}
-
-function setAttribute(el: HTMLElement, attr: string, value: unknown): void {
-  if (typeof value === 'boolean') {
-    if (value) {
-      el.setAttribute(attr, '');
-    } else {
-      el.removeAttribute(attr);
-    }
-  } else {
-    el.setAttribute(attr, String(value));
-  }
 }

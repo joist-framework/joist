@@ -50,8 +50,32 @@ describe('observable: attr()', () => {
 
     customElements.define('attr-test-4', MyElement);
 
-    const el = await fixture<MyElement>(html`<attr-test-4 hello=""></attr-test-4>`);
+    const el = await fixture<MyElement>(html`<attr-test-4 hello></attr-test-4>`);
 
     expect(el.hello).to.equal(true);
+  });
+
+  it('should read attributes as number if prop is of type number', async () => {
+    class MyElement extends HTMLElement {
+      @attr accessor value = 0;
+    }
+
+    customElements.define('attr-test-5', MyElement);
+
+    const el = await fixture<MyElement>(html`<attr-test-5 value="100"></attr-test-5>`);
+
+    expect(el.value).to.equal(100);
+  });
+
+  it('should NOT read attributes as number if prop is of type string', async () => {
+    class MyElement extends HTMLElement {
+      @attr accessor value = '0';
+    }
+
+    customElements.define('attr-test-6', MyElement);
+
+    const el = await fixture<MyElement>(html`<attr-test-6 value="100"></attr-test-6>`);
+
+    expect(el.value).to.equal('100');
   });
 });
