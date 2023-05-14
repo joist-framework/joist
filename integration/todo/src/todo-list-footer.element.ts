@@ -1,4 +1,4 @@
-import { css, html, template, styles } from '@joist/element';
+import { css, html, template, styles, define } from '@joist/element';
 import { injectable, Injected } from '@joist/di';
 
 import { Todo, TodoService } from './services/todo.service.js';
@@ -14,6 +14,8 @@ class PluralRules extends Intl.PluralRules {
 
 @injectable
 export class TodoListFooterElement extends HTMLElement {
+  @define
+  static tagName = 'todo-list-footer';
   static inject = [TodoService, PluralRules];
 
   @styles styles = css`

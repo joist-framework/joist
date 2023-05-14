@@ -1,10 +1,12 @@
 import { Injected, injectable } from '@joist/di';
-import { css, html, template, styles, listen } from '@joist/element';
+import { css, html, template, styles, listen, define } from '@joist/element';
 
 import { TodoService, Todo } from './services/todo.service.js';
 
 @injectable
 export class TodoFormElement extends HTMLElement {
+  @define
+  static tagName = 'todo-form';
   static inject = [TodoService];
 
   @styles styles = css`

@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { css, html, template, styles, listen } from '@joist/element';
+import { css, html, template, styles, listen, define } from '@joist/element';
 
 import {
   TodoAddedEvent,
@@ -11,6 +11,8 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
 @injectable
 export class TodoListElement extends HTMLElement {
+  @define
+  static tagName = 'todo-list';
   static inject = [TodoService];
 
   @styles styles = css`
