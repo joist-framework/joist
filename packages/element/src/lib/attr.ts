@@ -52,6 +52,7 @@ export function attr<This extends HTMLElement>(
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);
 
+        // treat as attribute
         if (attr === '') {
           return true;
         }
@@ -61,6 +62,7 @@ export function attr<This extends HTMLElement>(
           return Number(attr);
         }
 
+        // treat as string
         return attr;
       } else {
         return ogValue;
