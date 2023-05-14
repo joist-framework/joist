@@ -1,6 +1,6 @@
 {
   "name": "@joist/di",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
