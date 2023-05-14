@@ -25,7 +25,7 @@ export class MyElement extends HTMLElement {
 
   @template template = html`
     <slot></slot>
-  `
+  `;
   
   @attr value = 0;
   
