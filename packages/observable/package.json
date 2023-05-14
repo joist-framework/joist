@@ -41,7 +41,7 @@
   },
   "wireit": {
     "build": {
-      "command": "tsc --build --pretty",
+      "command": "tsc -p tsconfig.test.json --pretty",
       "clean": "if-file-deleted",
       "files": [
         "src/**",

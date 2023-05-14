@@ -1,18 +1,15 @@
-type EffectFn = (changes: Set<string | symbol>) => void;
+import { EffectFn, MetaData } from './meta.js';
 
-interface ObservableMeta {
-  s$$?: Promise<void> | null; // scheduler
-  p$$?: Map<string | symbol, unknown>; // upgradeable props
-  c$$?: Set<string | symbol>; // changeset
-  e$$?: Set<EffectFn>; // effects
-}
+const metaData = new MetaData();
 
-export function observe<This extends object & ObservableMeta, Value>(
+export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
   ctx: ClassAccessorDecoratorContext<This, Value>
 ): ClassAccessorDecoratorResult<This, Value> {
   // handle upgradable values (specifically custom elements)
   ctx.addInitializer(function (this: This) {
+    const meta = metaData.read(this);
+
     let value: Value | undefined;
 
     // attempt to read value.
@@ -24,51 +21,43 @@ export function observe<This extends object & ObservableMeta, Value>(
       // if there is a value, delete it and cache it for init
       delete (<any>this)[ctx.name];
 
-      this.p$$ = this.p$$ || new Map();
-      this.p$$.set(ctx.name, value);
+      meta.upgradable.set(ctx.name, value);
     }
   });
 
   return {
     init(value) {
-      if (this.p$$) {
-        if (this.p$$.has(ctx.name)) {
-          return this.p$$.get(ctx.name) as Value;
-        }
+      const meta = metaData.read(this);
+
+      if (meta.upgradable.has(ctx.name)) {
+        return meta.upgradable.get(ctx.name) as Value;
       }
 
       return value;
     },
     set(value) {
-      this.c$$ = this.c$$ || new Set();
+      const meta = metaData.read(this);
 
-      if (!this.s$$) {
-        this.s$$ = Promise.resolve().then(() => {
-          if (this.e$$ && this.c$$) {
-            for (let effect of this.e$$) {
-              effect.call(this, this.c$$);
-            }
+      if (meta.scheduler === null) {
+        meta.scheduler = Promise.resolve().then(() => {
+          for (let effect of meta.effects) {
+            effect.call(this, meta.changes);
           }
 
-          this.s$$ = null;
-          this.c$$?.clear();
+          meta.scheduler = null;
+          meta.changes.clear();
         });
       }
 
-      this.c$$.add(ctx.name);
+      meta.changes!.add(ctx.name);
 
       base.set.call(this, value);
     },
   };
 }
 
-export function effect<T extends object & ObservableMeta>(
-  value: EffectFn,
-  ctx: ClassMethodDecoratorContext<T>
-) {
+export function effect<T extends object>(value: EffectFn, ctx: ClassMethodDecoratorContext<T>) {
   ctx.addInitializer(function () {
-    this.e$$ = this.e$$ || new Set();
-
-    this.e$$.add(value);
+    metaData.read(this).effects.add(value);
   });
 }
