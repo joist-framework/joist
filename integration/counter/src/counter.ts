@@ -39,7 +39,7 @@ export class CounterElement extends HTMLElement {
     <button id="inc">+</button>
   `;
 
-  @attr accessor value = 0;
+  @attr accessor value = 100;
 
   attributeChangedCallback() {
     this.innerHTML = String(this.value);

@@ -4,6 +4,7 @@ import { Todo, TodoStatus } from './services/todo.service.js';
 
 export class TodoCardElement extends HTMLElement {
   @tagName static tagName = 'todo-card';
+
   static observedAttributes = ['status'];
 
   @styles styles = css`

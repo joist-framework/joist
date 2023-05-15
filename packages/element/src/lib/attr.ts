@@ -25,6 +25,7 @@ export function attr<This extends HTMLElement>(
         // should set attributes AFTER init to allow setup to complete
         // If we do not do this the attributeChangedCallback could fire before init.
         // If the user attempts to read or write to this property it will fail
+        // this also normalizes when the attributeChangedCallback is called in different rendering scenarios
         Promise.resolve().then(() => {
           const cached = get.call(this);
 
@@ -33,7 +34,11 @@ export function attr<This extends HTMLElement>(
             this.setAttribute(ctx.name.toString(), '');
           } else {
             // set key/value attribute
-            this.setAttribute(ctx.name.toString(), String(cached));
+            const attrValue = String(cached);
+
+            if (attrValue !== this.getAttribute(ctx.name.toString())) {
+              this.setAttribute(ctx.name.toString(), String(cached));
+            }
           }
         });
       }
