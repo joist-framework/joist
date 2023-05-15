@@ -1,5 +1,5 @@
 export function attr<This extends HTMLElement>(
-  base: ClassAccessorDecoratorTarget<This, unknown>,
+  { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   return {
@@ -20,13 +20,22 @@ export function attr<This extends HTMLElement>(
 
           // treat as string
           return attr;
-        } else if (value === true) {
-          // set boolean attribute
-          this.setAttribute(ctx.name, '');
-        } else {
-          // set key/value attribute
-          this.setAttribute(ctx.name, String(value));
         }
+
+        // should set attributes AFTER init to allow setup to complete
+        // If we do not do this the attributeChangedCallback could fire before init.
+        // If the user attempts to read or write to this property it will fail
+        Promise.resolve().then(() => {
+          const cached = get.call(this);
+
+          if (cached === true) {
+            // set boolean attribute
+            this.setAttribute(ctx.name.toString(), '');
+          } else {
+            // set key/value attribute
+            this.setAttribute(ctx.name.toString(), String(cached));
+          }
+        });
       }
 
       return value;
@@ -44,10 +53,10 @@ export function attr<This extends HTMLElement>(
         }
       }
 
-      base.set.call(this, value);
+      return set.call(this, value);
     },
     get() {
-      const ogValue = base.get.call(this);
+      const ogValue = get.call(this);
 
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);

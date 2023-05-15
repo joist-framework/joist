@@ -8,16 +8,13 @@
     }
   },
   "targetDefaults": {
-    "start": {
-      "dependsOn": ["build"]
-    },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["^test", "build"]
     },
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["{projectRoot}/src/**", "{projectRoot}/tsconfig.json"],
-      "outputs": ["{projectRoot}/target/**"]
+      "inputs": ["{projectRoot}/src/**/*", "{projectRoot}/tsconfig.json"],
+      "outputs": ["{projectRoot}/target/**/*"]
     }
   }
 }

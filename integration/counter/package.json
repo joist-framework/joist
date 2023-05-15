@@ -7,8 +7,7 @@
   "author": "deebloo",
   "license": "MIT",
   "scripts": {
-    "serve": "serve",
-    "build": "tsc"
+    "build": "tsc --build --pretty"
   },
   "dependencies": {
     "@joist/di": "*",

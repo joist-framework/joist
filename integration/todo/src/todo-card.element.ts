@@ -49,7 +49,7 @@ export class TodoCardElement extends HTMLElement {
   @attr accessor status: TodoStatus = 'active';
 
   #shadow = this.shadowRoot!;
-  complete = this.#shadow.querySelector('#complete')!;
+  #complete = this.#shadow.querySelector('#complete')!;
 
   @listen('click') onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement) {
@@ -60,7 +60,7 @@ export class TodoCardElement extends HTMLElement {
   attributeChangedCallback() {
     const isActive = this.status === 'active';
 
-    this.complete.innerHTML = isActive ? 'complete' : 'active';
+    this.#complete.innerHTML = isActive ? 'complete' : 'active';
   }
 }
 
@@ -68,8 +68,7 @@ export function createTodoCard(todo: Todo) {
   const card = new TodoCardElement();
   card.id = todo.id;
   card.innerHTML = todo.name;
-
-  card.setAttribute('status', todo.status);
+  card.status = todo.status;
 
   return card;
 }

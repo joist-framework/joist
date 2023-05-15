@@ -3,7 +3,7 @@ export function listen<This extends HTMLElement>(event: string) {
     ctx.addInitializer(function () {
       // method initializers are run before fields and accessors.
       // we want to wait till after all have run so we can check if there is a shadowRoot or not.
-      setTimeout(() => {
+      Promise.resolve().then(() => {
         const root = this.shadowRoot || this;
 
         root.addEventListener(event, value.bind(this));

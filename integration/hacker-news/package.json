@@ -11,7 +11,7 @@
   "author": "deebloo",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --build --pretty"
   },
   "dependencies": {
     "@joist/di": "*",
