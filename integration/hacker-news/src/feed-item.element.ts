@@ -1,11 +1,30 @@
-import { injectable } from '@joist/di';
-import { css, tagName, html, styles, template } from '@joist/element';
+import { css, tagName, html, styles, template, attr } from '@joist/element';
+import { FeedItem } from './hn.service';
 
-@injectable
-export class HNFeedElement extends HTMLElement {
+export class HNFeedItemElement extends HTMLElement {
+  static from(item: FeedItem) {
+    const el = new HNFeedItemElement();
+
+    el.points = el.points;
+    el.url = item.url;
+    el.comments = item.num_comments;
+
+    el.innerHTML = item.title;
+
+    return el;
+  }
+
   @tagName static tagName = 'hn-feed-item';
 
-  @styles styles = css``;
+  @styles styles = css`
+    :host {
+      display: block;
+    }
+  `;
 
-  @template template = html`<h1>Hello World</h1>`;
+  @template template = html`<slot></slot>`;
+
+  @attr accessor points = 0;
+  @attr accessor url = '';
+  @attr accessor comments = 0;
 }

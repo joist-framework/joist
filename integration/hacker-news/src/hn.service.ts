@@ -33,8 +33,8 @@ export class HnService {
   static service = true;
 
   getFrontPage() {
-    return fetch('http://hn.algolia.com/api/v1/search?tags=front_page').then<FeedResponse[]>(
-      (res) => res.json()
+    return fetch('http://hn.algolia.com/api/v1/search?tags=front_page').then<FeedResponse>((res) =>
+      res.json()
     );
   }
 }
