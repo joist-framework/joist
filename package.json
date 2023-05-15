@@ -9,6 +9,9 @@
     "packages/*",
     "integration/*"
   ],
+  "scripts": {
+    "install": "npx lerna run build"
+  },
   "dependencies": {
     "@joist/di": "*",
     "@joist/element": "*",
