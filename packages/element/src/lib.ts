@@ -3,4 +3,4 @@ export { css, html, CSSResult, HTMLResult } from './lib/tags.js';
 export { styles, template } from './lib/template.js';
 export { attr } from './lib/attr.js';
 export { listen } from './lib/listen.js';
-export { define } from './lib/define.js';
+export { tagName } from './lib/tag-name.js';

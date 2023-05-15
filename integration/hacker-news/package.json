@@ -1,7 +1,6 @@
 {
-  "name": "@integration/todo",
+  "name": "@integration/hacker-news",
   "version": "2.0.0",
-  "sideEffects": false,
   "private": true,
   "description": "",
   "repository": {

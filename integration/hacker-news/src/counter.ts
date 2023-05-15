@@ -1,9 +1,8 @@
 import { css, html, template, styles, listen, tagName, attr } from '@joist/element';
+import { effect, observe } from '@joist/observable';
 
 export class CounterElement extends HTMLElement {
   @tagName static tagName = 'joist-counter';
-
-  static observedAttributes = ['value'];
 
   @styles styles = css`
     * {
@@ -34,14 +33,14 @@ export class CounterElement extends HTMLElement {
   @template template = html`
     <button id="dec">-</button>
 
-    <slot>3</slot>
+    <slot></slot>
 
     <button id="inc">+</button>
   `;
 
-  @attr accessor value = 0;
+  @observe @attr accessor value = 0;
 
-  attributeChangedCallback() {
+  @effect onChange() {
     this.innerHTML = String(this.value);
   }
 

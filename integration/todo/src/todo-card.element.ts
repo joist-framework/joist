@@ -1,10 +1,9 @@
-import { css, html, template, styles, listen, attr, define } from '@joist/element';
+import { css, html, template, styles, listen, attr, tagName } from '@joist/element';
 
 import { Todo, TodoStatus } from './services/todo.service.js';
 
 export class TodoCardElement extends HTMLElement {
-  @define
-  static tagName = 'todo-card';
+  @tagName static tagName = 'todo-card';
   static observedAttributes = ['status'];
 
   @styles styles = css`

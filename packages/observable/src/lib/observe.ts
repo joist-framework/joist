@@ -49,7 +49,7 @@ export function observe<This extends object, Value>(
         });
       }
 
-      meta.changes!.add(ctx.name);
+      meta.changes.add(ctx.name);
 
       base.set.call(this, value);
     },

@@ -1,0 +1,23 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build"]
+      }
+    }
+  },
+  "targetDefaults": {
+    "start": {
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "dependsOn": ["build"]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["{projectRoot}/src/**", "{projectRoot}/tsconfig.json"],
+      "outputs": ["{projectRoot}/target/**"]
+    }
+  }
+}

@@ -2,47 +2,18 @@
   "name": "joist",
   "version": "3.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
-  "scripts": {
-    "install": "lerna run build",
-    "integration": "wireit"
-  },
-  "wireit": {
-    "integration": {
-      "command": "serve",
-      "service": true,
-      "dependencies": [
-        {
-          "script": "./integration/counter:build",
-          "cascade": false
-        },
-        {
-          "script": "./integration/todo:build",
-          "cascade": false
-        },
-        {
-          "script": "./packages/di:build",
-          "cascade": false
-        },
-        {
-          "script": "./packages/element:build",
-          "cascade": false
-        },
-        {
-          "script": "./packages/observable:build",
-          "cascade": false
-        }
-      ]
-    }
-  },
   "author": "",
   "license": "ISC",
+  "workspaces": [
+    "packages/*",
+    "integration/*"
+  ],
   "dependencies": {
-    "@joist/di": "file:packages/di",
-    "@joist/element": "file:packages/element",
-    "@joist/observable": "file:packages/observable",
-    "@joist/ssr": "file:packages/ssr"
+    "@joist/di": "*",
+    "@joist/element": "*",
+    "@joist/observable": "*",
+    "@joist/ssr": "*"
   },
   "devDependencies": {
     "@open-wc/testing": "3.1.8",
@@ -50,10 +21,9 @@
     "@types/node": "^20.1.1",
     "@web/test-runner": "^0.16.1",
     "ava": "^5.2.0",
-    "lerna": "6.6.2",
+    "lerna": "^6.6.2",
     "serve": "^14.2.0",
     "tslib": "2.5.0",
-    "typescript": "5.0.4",
-    "wireit": "^0.9.5"
+    "typescript": "5.0.4"
   }
 }

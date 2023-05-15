@@ -1,10 +1,10 @@
 export type EffectFn = (changes: Set<string | symbol>) => void;
 
-export interface ObservableMetaData {
-  scheduler: Promise<void> | null;
-  upgradable: Map<string | symbol, unknown>;
-  changes: Set<string | symbol>;
-  effects: Set<EffectFn>;
+export class ObservableMetaData {
+  scheduler: Promise<void> | null = null;
+  upgradable = new Map<string | symbol, unknown>();
+  changes = new Set<string | symbol>();
+  effects = new Set<EffectFn>();
 }
 
 export class MetaData {
@@ -15,12 +15,7 @@ export class MetaData {
       return this.#data.get(value) as ObservableMetaData;
     }
 
-    const data: ObservableMetaData = {
-      changes: new Set(),
-      effects: new Set(),
-      upgradable: new Map(),
-      scheduler: null,
-    };
+    const data = new ObservableMetaData();
 
     this.#data.set(value, data);
 
