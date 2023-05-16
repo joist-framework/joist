@@ -68,18 +68,22 @@ export function attr<This extends HTMLElement>(
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);
 
-        // treat as attribute
-        if (attr === '') {
-          return true;
+        if (attr) {
+          // treat as attribute
+          if (attr === '') {
+            return true;
+          }
+
+          // treat as number
+          if (typeof ogValue === 'number') {
+            return Number(attr);
+          }
+
+          // if not attribute value assume not set yet
+          return attr;
         }
 
-        // treat as number
-        if (typeof ogValue === 'number') {
-          return Number(attr);
-        }
-
-        // treat as string
-        return attr;
+        return ogValue;
       } else {
         return ogValue;
       }
