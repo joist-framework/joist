@@ -4,11 +4,7 @@
   "description": "",
   "type": "module",
   "author": "",
-  "license": "ISC",
-  "workspaces": [
-    "packages/*",
-    "integration/*"
-  ],
+  "license": "MIT",
   "scripts": {
     "install": "npm run build",
     "start": "wireit",
