@@ -29,15 +29,17 @@ export function attr<This extends HTMLElement>(
         Promise.resolve().then(() => {
           const cached = get.call(this);
 
-          if (cached === true) {
-            // set boolean attribute
-            this.setAttribute(ctx.name.toString(), '');
-          } else {
-            // set key/value attribute
-            const attrValue = String(cached);
+          if (cached !== null && cached !== undefined && cached !== '') {
+            if (cached === true) {
+              // set boolean attribute
+              this.setAttribute(ctx.name.toString(), '');
+            } else {
+              // set key/value attribute
+              const attrValue = String(cached);
 
-            if (attrValue !== this.getAttribute(ctx.name.toString())) {
-              this.setAttribute(ctx.name.toString(), String(cached));
+              if (attrValue !== this.getAttribute(ctx.name.toString())) {
+                this.setAttribute(ctx.name.toString(), String(cached));
+              }
             }
           }
         });

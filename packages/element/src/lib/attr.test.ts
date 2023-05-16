@@ -78,4 +78,20 @@ describe('observable: attr()', () => {
 
     expect(el.value).to.equal('100');
   });
+
+  it('should not write undefined props to attributes', async () => {
+    class MyElement extends HTMLElement {
+      @attr accessor value1 = undefined;
+      @attr accessor value2 = null;
+      @attr accessor value3 = '';
+    }
+
+    customElements.define('attr-test-7', MyElement);
+
+    const el = await fixture<MyElement>(html`<attr-test-7></attr-test-6>`);
+
+    expect(el.hasAttribute('value1')).to.be.false;
+    expect(el.hasAttribute('value2')).to.be.false;
+    expect(el.hasAttribute('value3')).to.be.false;
+  });
 });
