@@ -19,6 +19,7 @@
   "wireit": {
     "start": {
       "command": "serve",
+      "service": true,
       "dependencies": [
         {
           "script": "build:libs",
