@@ -23,7 +23,4 @@ jobs:
         run: npm ci
 
       - name: Lib Tests
-        run: npx lerna run test
-
-      - name: Publish
-        run: npx lerna publish --canary --preid canary.$(date +"%s") --dist-tag canary --yes
+        run: npm test --workspaces
