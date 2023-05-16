@@ -1,11 +1,11 @@
-import { css, html, template, styles, listen, tagName, attr } from '@joist/element';
+import { css, html, shadow, listen, tagName, attr } from '@joist/element';
 
 export class CounterElement extends HTMLElement {
   @tagName static tagName = 'joist-counter';
 
   static observedAttributes = ['value'];
 
-  @styles styles = css`
+  @shadow styles = css`
     * {
       font-size: 200%;
     }
@@ -31,10 +31,10 @@ export class CounterElement extends HTMLElement {
     }
   `;
 
-  @template template = html`
+  @shadow dom = html`
     <button id="dec">-</button>
 
-    <slot>3</slot>
+    <slot></slot>
 
     <button id="inc">+</button>
   `;

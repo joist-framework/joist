@@ -1,4 +1,4 @@
-import { css, html, template, styles, listen, attr, tagName } from '@joist/element';
+import { css, html, shadow, listen, attr, tagName } from '@joist/element';
 
 import { Todo, TodoStatus } from './services/todo.service.js';
 
@@ -7,7 +7,7 @@ export class TodoCardElement extends HTMLElement {
 
   static observedAttributes = ['status'];
 
-  @styles styles = css`
+  @shadow styles = css`
     :host {
       align-items: center;
       display: flex;
@@ -37,7 +37,7 @@ export class TodoCardElement extends HTMLElement {
     }
   `;
 
-  @template template = html`
+  @shadow dom = html`
     <div id="name">
       <slot></slot>
     </div>

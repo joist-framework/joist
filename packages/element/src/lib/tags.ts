@@ -1,11 +1,11 @@
-import { Result } from './result.js';
+import { TemplateResult } from './result.js';
 
-export class HTMLResult extends Result<HTMLTemplateElement> {
-  createValue(str: string): HTMLTemplateElement {
+export class HTMLResult extends TemplateResult {
+  apply(root: ShadowRoot): void {
     const el = document.createElement('template');
-    el.innerHTML = str;
+    el.innerHTML = this.strings.join(',');
 
-    return el;
+    root.append(el.content.cloneNode(true));
   }
 }
 
@@ -13,12 +13,12 @@ export function html(strings: TemplateStringsArray): HTMLResult {
   return new HTMLResult(strings);
 }
 
-export class CSSResult extends Result<CSSStyleSheet> {
-  createValue(str: string): CSSStyleSheet {
+export class CSSResult extends TemplateResult {
+  apply(root: ShadowRoot): void {
     const sheet = new CSSStyleSheet();
-    sheet.replaceSync(str);
+    sheet.replaceSync(this.strings.join(''));
 
-    return sheet;
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
   }
 }
 

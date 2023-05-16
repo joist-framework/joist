@@ -1,4 +1,4 @@
-import { css, html, template, styles, tagName } from '@joist/element';
+import { css, html, shadow, tagName } from '@joist/element';
 import { injectable, Injected } from '@joist/di';
 
 import { Todo, TodoService } from './services/todo.service.js';
@@ -15,9 +15,10 @@ class PluralRules extends Intl.PluralRules {
 @injectable
 export class TodoListFooterElement extends HTMLElement {
   @tagName static tagName = 'todo-list-footer';
+
   static inject = [TodoService, PluralRules];
 
-  @styles styles = css`
+  @shadow styles = css`
     :host {
       --card-height: 50px;
 
@@ -57,7 +58,7 @@ export class TodoListFooterElement extends HTMLElement {
     }
   `;
 
-  @template template = html`
+  @shadow template = html`
     <div id="footer"><slot></slot> left</div>
 
     <div id="decoration"></div>
@@ -86,9 +87,9 @@ export class TodoListFooterElement extends HTMLElement {
 
     onTodoUpdate();
 
-    todo.addEventListener('todo_updated', onTodoUpdate);
-    todo.addEventListener('todo_added', onTodoUpdate);
-    todo.addEventListener('todo_removed', onTodoUpdate);
+    todo.listen('todo_updated', onTodoUpdate);
+    todo.listen('todo_added', onTodoUpdate);
+    todo.listen('todo_removed', onTodoUpdate);
   }
 
   #getCompleteCount(todos: Todo[]) {

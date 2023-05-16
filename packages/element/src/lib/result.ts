@@ -1,27 +1,11 @@
-export abstract class Result<T> {
-  #raw: TemplateStringsArray;
-  #stringRes: string | null = null;
-  #valueRes: T | null = null;
+export abstract class TemplateResult {
+  strings: TemplateStringsArray;
+  values: any[];
 
-  constructor(raw: TemplateStringsArray) {
-    this.#raw = raw;
+  constructor(raw: TemplateStringsArray, ...values: any[]) {
+    this.strings = raw;
+    this.values = values;
   }
 
-  toString(): string {
-    if (!this.#stringRes) {
-      this.#stringRes = this.#raw.toString();
-    }
-
-    return this.#stringRes;
-  }
-
-  toValue(): T {
-    if (!this.#valueRes) {
-      this.#valueRes = this.createValue(this.toString());
-    }
-
-    return this.#valueRes;
-  }
-
-  abstract createValue(str: string): T;
+  abstract apply(root: ShadowRoot): void;
 }

@@ -12,11 +12,22 @@
   "author": "deebloo",
   "license": "MIT",
   "scripts": {
-    "build": "tsc --build --pretty"
+    "build": "wireit"
   },
-  "dependencies": {
-    "@joist/di": "*",
-    "@joist/element": "*",
-    "@joist/observable": "*"
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**"
+      ],
+      "dependencies": [
+        "../../:build:libs"
+      ]
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Injected, injectable } from '@joist/di';
-import { css, tagName, html, styles, template } from '@joist/element';
+import { css, tagName, html, shadow } from '@joist/element';
 
 import { HnService } from './hn.service.js';
 import { HNFeedItemElement } from './feed-item.element.js';
@@ -10,13 +10,13 @@ export class HNFeedElement extends HTMLElement {
 
   static inject = [HnService];
 
-  @styles styles = css`
+  @shadow styles = css`
     :host {
       display: contents;
     }
   `;
 
-  @template template = html`<slot></slot>`;
+  @shadow template = html`<slot></slot>`;
 
   #hn: Injected<HnService>;
 

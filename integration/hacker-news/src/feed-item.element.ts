@@ -1,4 +1,4 @@
-import { css, tagName, html, styles, template, attr } from '@joist/element';
+import { css, tagName, html, shadow, attr } from '@joist/element';
 import { FeedItem } from './hn.service';
 
 export class HNFeedItemElement extends HTMLElement {
@@ -16,13 +16,13 @@ export class HNFeedItemElement extends HTMLElement {
 
   @tagName static tagName = 'hn-feed-item';
 
-  @styles styles = css`
+  @shadow styles = css`
     :host {
       display: block;
     }
   `;
 
-  @template template = html`<slot></slot>`;
+  @shadow template = html`<slot></slot>`;
 
   @attr accessor points = 0;
   @attr accessor url = '';

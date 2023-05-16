@@ -10,13 +10,55 @@
     "integration/*"
   ],
   "scripts": {
-    "install": "npx lerna run build"
+    "install": "npm run build",
+    "start": "wireit",
+    "test": "wireit",
+    "build:libs": "wireit",
+    "build:integration": "wireit"
+  },
+  "wireit": {
+    "start": {
+      "command": "serve",
+      "dependencies": [
+        {
+          "script": "build:libs",
+          "cascade": false
+        },
+        {
+          "script": "build:integration",
+          "cascade": false
+        }
+      ]
+    },
+    "build:libs": {
+      "dependencies": [
+        "./packages/di:build",
+        "./packages/element:build",
+        "./packages/observable:build",
+        "./packages/ssr:build"
+      ]
+    },
+    "build:integration": {
+      "dependencies": [
+        "./integration/counter:build",
+        "./integration/hacker-news:build",
+        "./integration/todo:build"
+      ]
+    },
+    "test": {
+      "dependencies": [
+        "./packages/di:test",
+        "./packages/element:test",
+        "./packages/observable:test",
+        "./packages/ssr:test"
+      ]
+    }
   },
   "dependencies": {
-    "@joist/di": "*",
-    "@joist/element": "*",
-    "@joist/observable": "*",
-    "@joist/ssr": "*"
+    "@joist/di": "file:packages/di",
+    "@joist/element": "file:packages/element",
+    "@joist/observable": "file:packages/observable",
+    "@joist/ssr": "file:packages/ssr"
   },
   "devDependencies": {
     "@open-wc/testing": "3.1.8",
@@ -24,10 +66,10 @@
     "@types/node": "^20.1.1",
     "@web/test-runner": "^0.16.1",
     "ava": "^5.2.0",
-    "lerna": "^6.6.2",
-    "nx": "^16.1.4",
+    "lit-html": "^2.7.4",
     "serve": "^14.2.0",
     "tslib": "2.5.0",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "wireit": "^0.9.5"
   }
 }

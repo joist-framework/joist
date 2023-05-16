@@ -1,12 +1,12 @@
 import { expect } from '@open-wc/testing';
 
 import { css, html } from './tags.js';
-import { styles, template } from './template.js';
+import { shadow } from './shadow.js';
 
 describe('template', () => {
   it('should apply a stylesheet', () => {
     class MyElement extends HTMLElement {
-      @styles styles = css`
+      @shadow styles = css`
         :host {
           display: flex;
         }
@@ -22,13 +22,13 @@ describe('template', () => {
 
   it('should apply html', () => {
     class MyElement extends HTMLElement {
-      @styles styles = css`
+      @shadow styles = css`
         :host {
           display: flex;
         }
       `;
 
-      @template template = html`<slot></slot>`;
+      @shadow template = html`<slot></slot>`;
     }
 
     customElements.define('template-2', MyElement);
