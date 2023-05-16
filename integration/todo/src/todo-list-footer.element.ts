@@ -1,7 +1,7 @@
 import { css, html, shadow, tagName } from '@joist/element';
 import { injectable, Injected } from '@joist/di';
 
-import { Todo, TodoService } from './services/todo.service.js';
+import { TodoService } from './services/todo.service.js';
 
 const sfxs = new Map([
   ['one', 'item'],
@@ -66,6 +66,7 @@ export class TodoListFooterElement extends HTMLElement {
 
   #todo: Injected<TodoService>;
   #pr: Injected<PluralRules>;
+  #listeners: Function[] = [];
 
   constructor(todo: Injected<TodoService>, pr: Injected<PluralRules>) {
     super();
@@ -76,23 +77,32 @@ export class TodoListFooterElement extends HTMLElement {
 
   connectedCallback() {
     const todo = this.#todo();
-    const pr = this.#pr();
 
     const onTodoUpdate = async () => {
-      const todos = await todo.getTodos();
-      const activeCount = this.#getCompleteCount(todos);
+      const activeCount = await this.#getCompleteCount();
 
-      this.innerHTML = `${activeCount} ${sfxs.get(pr.select(activeCount))}`;
+      this.innerHTML = `${activeCount} ${sfxs.get(this.#pr().select(activeCount))}`;
     };
 
     onTodoUpdate();
 
-    todo.listen('todo_updated', onTodoUpdate);
-    todo.listen('todo_added', onTodoUpdate);
-    todo.listen('todo_removed', onTodoUpdate);
+    this.#listeners = [
+      todo.listen('todo_updated', onTodoUpdate),
+      todo.listen('todo_added', onTodoUpdate),
+      todo.listen('todo_removed', onTodoUpdate),
+    ];
   }
 
-  #getCompleteCount(todos: Todo[]) {
+  disconnectedCallback() {
+    for (let remove of this.#listeners) {
+      remove();
+    }
+  }
+
+  async #getCompleteCount() {
+    const todo = this.#todo();
+    const todos = await todo.getTodos();
+
     return todos.reduce((total, todo) => (todo.status === 'active' ? total + 1 : total), 0);
   }
 }

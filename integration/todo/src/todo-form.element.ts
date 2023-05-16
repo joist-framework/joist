@@ -6,6 +6,7 @@ import { TodoService, Todo } from './services/todo.service.js';
 @injectable
 export class TodoFormElement extends HTMLElement {
   @tagName static tagName = 'todo-form';
+
   static inject = [TodoService];
 
   @shadow styles = css`
@@ -65,8 +66,7 @@ export class TodoFormElement extends HTMLElement {
     </form>
   `;
 
-  #shadow = this.shadowRoot!;
-  #input = this.#shadow.querySelector<HTMLInputElement>('#input')!;
+  #input = this.shadowRoot!.querySelector<HTMLInputElement>('#input')!;
   #todos: Injected<TodoService>;
 
   constructor(todos: Injected<TodoService>) {

@@ -5,40 +5,38 @@
   "type": "module",
   "author": "",
   "license": "MIT",
+  "workspaces": [
+    "packages/**"
+  ],
   "scripts": {
-    "install": "npm run build:integration",
+    "install": "wireit",
     "start": "wireit",
-    "test": "wireit",
-    "build:libs": "wireit",
-    "build:integration": "wireit"
+    "build": "wireit",
+    "test": "wireit"
   },
   "wireit": {
+    "install": {
+      "dependencies": [
+        "build"
+      ]
+    },
     "start": {
       "command": "serve",
       "service": true,
       "dependencies": [
         {
-          "script": "build:libs",
-          "cascade": false
-        },
-        {
-          "script": "build:integration",
+          "script": "build",
           "cascade": false
         }
       ]
     },
-    "build:libs": {
+    "build": {
       "dependencies": [
         "./packages/di:build",
         "./packages/element:build",
         "./packages/observable:build",
-        "./packages/ssr:build"
-      ]
-    },
-    "build:integration": {
-      "dependencies": [
+        "./packages/ssr:build",
         "./integration/counter:build",
-        "./integration/hacker-news:build",
         "./integration/todo:build"
       ]
     },
@@ -50,12 +48,6 @@
         "./packages/ssr:test"
       ]
     }
-  },
-  "dependencies": {
-    "@joist/di": "file:packages/di",
-    "@joist/element": "file:packages/element",
-    "@joist/observable": "file:packages/observable",
-    "@joist/ssr": "file:packages/ssr"
   },
   "devDependencies": {
     "@open-wc/testing": "3.1.8",
