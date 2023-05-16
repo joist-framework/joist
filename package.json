@@ -6,7 +6,7 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "install": "npm run build",
+    "install": "npm run build:integration",
     "start": "wireit",
     "test": "wireit",
     "build:libs": "wireit",
