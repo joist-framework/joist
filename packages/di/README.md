@@ -23,7 +23,7 @@ class FooService {
 class BarService {
   static inject = [FooService];
 
-  constructor(private foo: Injected<FooService>) { }
+  constructor(public foo: Injected<FooService>) { }
 
   sayHello() {
     return this.foo().sayHello();
@@ -49,7 +49,7 @@ class FooService {
 class BarService {
   static inject = [FooService];
 
-  constructor(private foo: Injected<FooService>) {}
+  constructor(public foo: Injected<FooService>) {}
 
   sayHello() {
     return 'Hello From BarService and ' + this.foo().sayHello();
@@ -73,13 +73,12 @@ app.get(BarService).sayHello(); // Hello from BarService and IT HAS BEEN OVERRID
 
 #### Root Service
 
-If you have nested injectors and you want to make sure the same instance is provided to all decorate your service with `@service()`.
+If you have nested injectors and you want to make sure the same instance is provided to all you can mark your class as a "service".
 
 ```TS
-import { service } from '@joist/di';
-
-@service
 class FooService {
+  static service = true;
+
   sayHello() {
     return 'Hello From FooService';
   }
@@ -93,8 +92,6 @@ Joist DI was built with custom elements in mind. Custom elements are an example 
 Since the browser will be what initializes your custom elements we need to be able to tell the browser how to pass arguments.
 
 The `@injectable` decorator allows the Joist Dependency Injector to pass arguments to your custom element when instances of your element is created.
-
-`@injectable` also injects your services in a lazy way. Instead of passing direct instances of your services it passes a function that be called when you need your service instance. This allows the injector to look for parent injectors which are only availabel after connectedCallback.
 
 #### Inject dependency into your custom element constructor
 
@@ -183,6 +180,7 @@ class MyElement extends HTMLElement {
   }
 
   connectedCallback() {
+    // run in connected callback so your element can check its parents
     const { primary } = this.colors();
 
     this.style.background = primary;
