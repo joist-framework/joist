@@ -1,6 +1,6 @@
 {
   "name": "@joist/ssr",
-  "version": "3.0.0-0",
+  "version": "3.0.0-2",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
