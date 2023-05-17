@@ -55,7 +55,8 @@
         "tsconfig.json"
       ],
       "output": [
-        "target/**"
+        "target/**",
+        "tsconfig.tsbuildinfo"
       ]
     },
     "test": {
