@@ -9,43 +9,21 @@
     "packages/**"
   ],
   "scripts": {
-    "install": "wireit",
-    "start": "wireit",
-    "build": "wireit",
-    "test": "wireit"
+    "start": "wireit"
   },
   "wireit": {
-    "install": {
-      "dependencies": [
-        "build"
-      ]
-    },
     "start": {
       "command": "serve",
       "service": true,
       "dependencies": [
         {
-          "script": "build",
+          "script": "./integration/counter:build",
+          "cascade": false
+        },
+        {
+          "script": "./integration/todo:build",
           "cascade": false
         }
-      ]
-    },
-    "build": {
-      "dependencies": [
-        "./packages/di:build",
-        "./packages/element:build",
-        "./packages/observable:build",
-        "./packages/ssr:build",
-        "./integration/counter:build",
-        "./integration/todo:build"
-      ]
-    },
-    "test": {
-      "dependencies": [
-        "./packages/di:test",
-        "./packages/element:test",
-        "./packages/observable:test",
-        "./packages/ssr:test"
       ]
     }
   },

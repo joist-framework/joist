@@ -53,6 +53,10 @@
     },
     "test": {
       "command": "wtr --config ../../wtr.config.mjs --port 8002",
+      "files": [
+        "target/**"
+      ],
+      "output": [],
       "dependencies": [
         "build"
       ]

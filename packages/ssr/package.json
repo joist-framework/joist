@@ -48,6 +48,10 @@
     },
     "test": {
       "command": "ava target/**/*.test.js",
+      "files": [
+        "target/**"
+      ],
+      "output": [],
       "dependencies": [
         "build"
       ]
