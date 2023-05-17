@@ -5,11 +5,11 @@ export abstract class ShadowResult {
   #shadow: ShadowRoot | undefined = undefined;
 
   get shadow() {
-    if (!this.shadow) {
+    if (!this.#shadow) {
       throw new Error('ShadowResult has not been applied');
     }
 
-    return this.#shadow as ShadowRoot;
+    return this.#shadow;
   }
 
   constructor(raw: TemplateStringsArray, ...values: any[]) {
