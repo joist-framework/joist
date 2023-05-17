@@ -1,11 +1,11 @@
 import { ShadowResult } from './result.js';
 
 export class HTMLResult extends ShadowResult {
-  query<T extends Element>(query: string) {
+  query<T extends Element>(query: keyof HTMLElementTagNameMap) {
     return this.shadow.querySelector<T>(query);
   }
 
-  queryAll<T extends Element>(query: string) {
+  queryAll<T extends Element>(query: keyof HTMLElementTagNameMap) {
     return this.shadow.querySelectorAll<T>(query);
   }
 
