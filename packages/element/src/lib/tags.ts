@@ -1,12 +1,24 @@
 import { ShadowResult } from './result.js';
 
+type Tags = keyof HTMLElementTagNameMap;
+type SVGTags = keyof SVGElementTagNameMap;
+type MathTags = keyof MathMLElementTagNameMap;
+
 export class HTMLResult extends ShadowResult {
-  query<T extends Element>(query: keyof HTMLElementTagNameMap) {
-    return this.shadow.querySelector<T>(query);
+  query<K extends Tags>(selectors: K): HTMLElementTagNameMap[K] | null;
+  query<K extends SVGTags>(selectors: K): SVGElementTagNameMap[K] | null;
+  query<K extends MathTags>(selectors: K): MathMLElementTagNameMap[K] | null;
+  query<E extends Element = Element>(selectors: string): E | null;
+  query<K extends Tags>(query: K) {
+    return this.shadow.querySelector<K>(query);
   }
 
-  queryAll<T extends Element>(query: keyof HTMLElementTagNameMap) {
-    return this.shadow.querySelectorAll<T>(query);
+  queryAll<K extends Tags>(selectors: K): NodeListOf<HTMLElementTagNameMap[K]>;
+  queryAll<K extends SVGTags>(selectors: K): NodeListOf<SVGElementTagNameMap[K]>;
+  queryAll<K extends MathTags>(selectors: K): NodeListOf<MathMLElementTagNameMap[K]>;
+  queryAll<E extends Element = Element>(selectors: string): NodeListOf<E>;
+  queryAll<K extends Tags>(query: K) {
+    return this.shadow.querySelectorAll<K>(query);
   }
 
   apply(root: ShadowRoot): void {
