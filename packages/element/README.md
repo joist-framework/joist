@@ -11,19 +11,19 @@ npm i @joist/element
 #### Example:
 
 ```TS
-import { styles, template, css, html, define, listen, attr } from '@joist/element';
+import { shadow, css, html, define, listen, attr } from '@joist/element';
 
 export class MyElement extends HTMLElement {
-  @define static tagName = 'my-element';
+  @tagName static tagName = 'my-element';
   
-  @styles styles = css`
+  @shadow styles = css`
     :host {
       display: block;
       color: red;
     }
   `;
 
-  @template template = html`
+  @shadow template = html`
     <slot></slot>
   `;
   
