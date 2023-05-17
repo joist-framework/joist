@@ -1,22 +1,8 @@
-import { TemplateResult } from './result.js';
+import { ShadowResult } from './result.js';
 
-export function shadow<This extends HTMLElement, T extends TemplateResult>(
+export function shadow<This extends HTMLElement, T extends ShadowResult>(
   _: undefined,
   ctx: ClassFieldDecoratorContext<This, T>
-) {
-  const shadow = applyShadow(ctx);
-
-  return (result: T) => {
-    const root = shadow();
-
-    result.apply(root);
-
-    return result;
-  };
-}
-
-function applyShadow<This extends HTMLElement>(
-  ctx: ClassFieldDecoratorContext<This> | ClassMethodDecoratorContext<This>
 ) {
   let shadow: ShadowRoot;
 
@@ -24,5 +10,9 @@ function applyShadow<This extends HTMLElement>(
     shadow = this.shadowRoot || this.attachShadow({ mode: 'open' });
   });
 
-  return () => shadow;
+  return (result: T) => {
+    result.execute(shadow);
+
+    return result;
+  };
 }

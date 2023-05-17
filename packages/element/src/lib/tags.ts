@@ -1,6 +1,14 @@
-import { TemplateResult } from './result.js';
+import { ShadowResult } from './result.js';
 
-export class HTMLResult extends TemplateResult {
+export class HTMLResult extends ShadowResult {
+  query<T extends Element>(query: string) {
+    return this.shadow.querySelector<T>(query);
+  }
+
+  queryAll<T extends Element>(query: string) {
+    return this.shadow.querySelectorAll<T>(query);
+  }
+
   apply(root: ShadowRoot): void {
     const el = document.createElement('template');
     el.innerHTML = this.strings.join(',');
@@ -9,11 +17,15 @@ export class HTMLResult extends TemplateResult {
   }
 }
 
-export function html(strings: TemplateStringsArray): HTMLResult {
-  return new HTMLResult(strings);
+export function html(strings: TemplateStringsArray, ...values: any[]): HTMLResult {
+  return new HTMLResult(strings, ...values);
 }
 
-export class CSSResult extends TemplateResult {
+export class CSSResult extends ShadowResult {
+  append(result: CSSResult) {
+    result.apply(this.shadow);
+  }
+
   apply(root: ShadowRoot): void {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(this.strings.join(''));
@@ -22,6 +34,6 @@ export class CSSResult extends TemplateResult {
   }
 }
 
-export function css(strings: TemplateStringsArray): CSSResult {
-  return new CSSResult(strings);
+export function css(strings: TemplateStringsArray, ...values: any[]): CSSResult {
+  return new CSSResult(strings, ...values);
 }

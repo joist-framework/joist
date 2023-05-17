@@ -49,8 +49,7 @@ export class TodoCardElement extends HTMLElement {
 
   @attr accessor status: TodoStatus = 'active';
 
-  #shadow = this.shadowRoot!;
-  #complete = this.#shadow.querySelector('#complete')!;
+  #complete = this.dom.query('#complete')!;
 
   @listen('click') onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement) {

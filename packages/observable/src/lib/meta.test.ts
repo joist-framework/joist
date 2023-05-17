@@ -17,8 +17,7 @@ describe('meta:meta', () => {
   it('should return the same metadata object after init', () => {
     const key = {};
     const data = new MetaData();
-    const res = data.read(key);
 
-    expect(res).to.equal(data.read(key));
+    expect(data.read(key)).to.equal(data.read(key));
   });
 });

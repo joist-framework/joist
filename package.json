@@ -13,7 +13,7 @@
   },
   "wireit": {
     "start": {
-      "command": "serve",
+      "command": "serve -p 9000",
       "service": true,
       "dependencies": [
         {

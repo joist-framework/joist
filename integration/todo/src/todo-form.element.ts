@@ -54,7 +54,7 @@ export class TodoFormElement extends HTMLElement {
     }
   `;
 
-  @shadow template = html`
+  @shadow dom = html`
     <form>
       <input
         id="input"
@@ -66,7 +66,7 @@ export class TodoFormElement extends HTMLElement {
     </form>
   `;
 
-  #input = this.shadowRoot!.querySelector<HTMLInputElement>('#input')!;
+  #input = this.dom.query<HTMLInputElement>('#input')!;
   #todos: Injected<TodoService>;
 
   constructor(todos: Injected<TodoService>) {
