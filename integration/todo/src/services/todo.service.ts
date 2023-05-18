@@ -82,17 +82,21 @@ export class TodoService extends EventTarget {
   }
 
   updateTodo(id: string, patch: Partial<Todo>) {
+    let updated: Todo | undefined = undefined;
+
     this.#todos = this.#todos.map((todo) => {
       if (todo.id === id) {
-        const updated = { ...todo, ...patch };
-
-        this.dispatchEvent(new TodoUpdatedEvent(updated));
+        updated = { ...todo, ...patch };
 
         return updated;
       }
 
       return todo;
     });
+
+    if (updated) {
+      this.dispatchEvent(new TodoUpdatedEvent(updated));
+    }
   }
 
   listen(event: string, cb: EventListener) {

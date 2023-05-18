@@ -4,6 +4,8 @@ type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
 type MathTags = keyof MathMLElementTagNameMap;
 
+const htmlTemplateCache = new WeakMap<TemplateStringsArray, HTMLTemplateElement>();
+
 export class HTMLResult extends ShadowResult {
   query<K extends Tags>(selectors: K): HTMLElementTagNameMap[K] | null;
   query<K extends SVGTags>(selectors: K): SVGElementTagNameMap[K] | null;
@@ -22,10 +24,19 @@ export class HTMLResult extends ShadowResult {
   }
 
   apply(root: ShadowRoot): void {
-    const el = document.createElement('template');
-    el.innerHTML = this.strings.join(',');
+    let template: HTMLTemplateElement;
 
-    root.append(el.content.cloneNode(true));
+    if (htmlTemplateCache.has(this.strings)) {
+      template = htmlTemplateCache.get(this.strings) as HTMLTemplateElement;
+    } else {
+      template = document.createElement('template');
+      template.innerHTML = this.strings.join(',');
+      htmlTemplateCache.set(this.strings, template);
+    }
+
+    root.append(template.content.cloneNode(true));
+
+    console.log(htmlTemplateCache);
   }
 }
 
@@ -34,18 +45,33 @@ export function html(strings: TemplateStringsArray, ...values: any[]): HTMLResul
 }
 
 export class CSSResult extends ShadowResult {
+  constructor(strings: TemplateStringsArray) {
+    super(strings);
+  }
+
   append(result: CSSResult) {
     result.apply(this.shadow);
   }
 
   apply(root: ShadowRoot): void {
     const sheet = new CSSStyleSheet();
+
     sheet.replaceSync(this.strings.join(''));
 
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
   }
 }
 
-export function css(strings: TemplateStringsArray, ...values: any[]): CSSResult {
-  return new CSSResult(strings, ...values);
+const cssResultCache = new WeakMap<TemplateStringsArray, CSSResult>();
+
+export function css(strings: TemplateStringsArray): CSSResult {
+  if (cssResultCache.has(strings)) {
+    return cssResultCache.get(strings) as CSSResult;
+  }
+
+  const result = new CSSResult(strings);
+
+  cssResultCache.set(strings, result);
+
+  return result;
 }
