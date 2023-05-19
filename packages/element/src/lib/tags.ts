@@ -54,8 +54,6 @@ export class HTMLResult extends ShadowResult {
     }
 
     root.append(template.content.cloneNode(true));
-
-    console.log(htmlTemplateCache);
   }
 }
 
