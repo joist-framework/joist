@@ -1,14 +1,14 @@
 /**
  * NOTE: TemplateStringsArray can be used to cache via a WeakMap.
- * 
+ *
  * function html(strs: TemplateStringsArray) {
  *   return strs
  * }
- * 
+ *
  * class Foo {
  *   hello = html`world`;
  * }
- * 
+ *
  * // these will be the same instance of TemplateStringsArray
  * new Foo().hello === new Foo().hello
  */
@@ -48,8 +48,8 @@ export class HTMLResult extends ShadowResult {
       template = htmlTemplateCache.get(this.strings) as HTMLTemplateElement;
     } else {
       template = document.createElement('template');
-      // TODO: check perf .join vs iteration
-      template.innerHTML = this.strings.join(',');
+
+      template.innerHTML = concat(this.strings);
       htmlTemplateCache.set(this.strings, template);
     }
 
@@ -75,8 +75,7 @@ export class CSSResult extends ShadowResult {
   apply(root: ShadowRoot): void {
     const sheet = new CSSStyleSheet();
 
-    // TODO: check perf .join vs iteration
-    sheet.replaceSync(this.strings.join(''));
+    sheet.replaceSync(concat(this.strings));
 
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
   }
@@ -95,4 +94,14 @@ export function css(strings: TemplateStringsArray): CSSResult {
   cssResultCache.set(strings, result);
 
   return result;
+}
+
+function concat(strings: TemplateStringsArray) {
+  let res = '';
+
+  for (let i = 0; i < strings.length; i++) {
+    res += strings[i];
+  }
+
+  return res;
 }
