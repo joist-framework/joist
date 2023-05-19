@@ -19,7 +19,7 @@ type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
 type MathTags = keyof MathMLElementTagNameMap;
 
-const htmlTemplateCache = new WeakMap<TemplateStringsArray, HTMLTemplateElement>();
+export const htmlTemplateCache = new WeakMap<TemplateStringsArray, HTMLTemplateElement>();
 
 export class HTMLResult extends ShadowResult {
   query<K extends Tags>(selectors: K): HTMLElementTagNameMap[K] | null;

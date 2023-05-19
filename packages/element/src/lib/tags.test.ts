@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { css, html } from './tags.js';
+import { css, html, htmlTemplateCache } from './tags.js';
 
 describe('tags', () => {
   it('should ensure return the same CSSResult', () => {
@@ -22,5 +22,6 @@ describe('tags', () => {
     const b = new Test();
 
     expect(a.dom.strings).to.equal(b.dom.strings);
+    expect(htmlTemplateCache.get(a.dom.strings)).to.equal(htmlTemplateCache.get(b.dom.strings));
   });
 });
