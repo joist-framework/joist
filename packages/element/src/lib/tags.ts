@@ -1,3 +1,18 @@
+/**
+ * NOTE: TemplateStringsArray can be used to cache via a WeakMap.
+ * 
+ * function html(strs: TemplateStringsArray) {
+ *   return strs
+ * }
+ * 
+ * class Foo {
+ *   hello = html`world`;
+ * }
+ * 
+ * // these will be the same instance of TemplateStringsArray
+ * new Foo().hello === new Foo().hello
+ */
+
 import { ShadowResult } from './result.js';
 
 type Tags = keyof HTMLElementTagNameMap;
@@ -23,6 +38,9 @@ export class HTMLResult extends ShadowResult {
     return this.shadow.querySelectorAll<K>(query);
   }
 
+  /**
+   * THe HTMLTemplateElement itself will be cached but a new instance of the result returned
+   */
   apply(root: ShadowRoot): void {
     let template: HTMLTemplateElement;
 
@@ -30,6 +48,7 @@ export class HTMLResult extends ShadowResult {
       template = htmlTemplateCache.get(this.strings) as HTMLTemplateElement;
     } else {
       template = document.createElement('template');
+      // TODO: check perf .join vs iteration
       template.innerHTML = this.strings.join(',');
       htmlTemplateCache.set(this.strings, template);
     }
@@ -56,6 +75,7 @@ export class CSSResult extends ShadowResult {
   apply(root: ShadowRoot): void {
     const sheet = new CSSStyleSheet();
 
+    // TODO: check perf .join vs iteration
     sheet.replaceSync(this.strings.join(''));
 
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
@@ -64,6 +84,7 @@ export class CSSResult extends ShadowResult {
 
 const cssResultCache = new WeakMap<TemplateStringsArray, CSSResult>();
 
+// the entire result is cached
 export function css(strings: TemplateStringsArray): CSSResult {
   if (cssResultCache.has(strings)) {
     return cssResultCache.get(strings) as CSSResult;
