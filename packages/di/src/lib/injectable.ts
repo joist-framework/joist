@@ -15,7 +15,15 @@ export function injectable<T extends ProviderToken<HTMLElement>>(
       if (args.length || !CustomElement.inject) {
         super(...args);
       } else {
-        super(...CustomElement.inject.map((dep) => () => injector.get(dep)));
+        const deps = [];
+
+        for (let i = 0; i < CustomElement.inject.length; i++) {
+          const dep = CustomElement.inject[i];
+
+          deps.push(() => injector.get(dep));
+        }
+
+        super(...deps);
       }
 
       injectors.set(this, injector);
