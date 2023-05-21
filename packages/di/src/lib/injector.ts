@@ -46,7 +46,15 @@ export class Injector {
       return new P();
     }
 
-    return new P(...P.inject.map((dep) => () => this.get(dep)));
+    const deps = [];
+
+    for (let i = 0; i < P.inject.length; i++) {
+      const dep = P.inject[i];
+
+      deps.push(() => this.get(dep));
+    }
+
+    return new P(...deps);
   }
 
   private createAndCache<T>(token: ProviderToken<T>): T {
