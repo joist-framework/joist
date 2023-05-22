@@ -12,7 +12,7 @@
     }
   },
   "files": [
-    "target/build"
+    "target"
   ],
   "sideEffects": false,
   "description": "Dependency Injection for Vanilla JS classes",

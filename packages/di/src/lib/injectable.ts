@@ -8,7 +8,7 @@ export function injectable<T extends ProviderToken<HTMLElement>>(
   CustomElement: T,
   _ctx: ClassDecoratorContext
 ) {
-  return class Injectable extends CustomElement implements Injectable {
+  return class extends CustomElement {
     constructor(...args: any[]) {
       const injector = new Injector(CustomElement.providers, environment());
 
