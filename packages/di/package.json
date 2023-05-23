@@ -35,17 +35,10 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "wireit",
     "test": "wireit",
     "build": "wireit"
   },
   "wireit": {
-    "prepare": {
-      "dependencies": [
-        "build",
-        "test"
-      ]
-    },
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",

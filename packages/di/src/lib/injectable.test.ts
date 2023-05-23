@@ -1,19 +1,16 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { injectable } from './injectable.js';
-import { inject } from './inject.js';
+import { Inject, inject } from './inject.js';
 import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps', () => {
     class Foo {}
-
     class Bar {}
 
     @injectable
     class MyElement extends HTMLElement {
-      static inject = [Foo, Bar];
-
       foo = inject(Foo);
       bar = inject(Bar);
     }
@@ -32,7 +29,6 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
       foo = inject(Foo);
@@ -45,15 +41,15 @@ describe('@injectable()', () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
-  it('should pass an instance of the injector to the service', () => {
+  it('should provide a usable inject function in the constructor', () => {
     class A {}
 
     @injectable
     class B {
-      a = inject(A);
+      a: A;
 
-      onInject() {
-        expect(this.a()).to.be.instanceOf(A);
+      constructor(inject: Inject) {
+        this.a = inject(A)();
       }
     }
 
