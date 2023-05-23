@@ -1,16 +1,13 @@
 import { ProviderToken } from './provider.js';
 import { Injector, injectors } from './injector.js';
 import { environment } from './environment.js';
-import { Inject } from './inject.js';
 
 export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown) {
   return class extends Base {
     constructor(..._: any[]) {
       const injector = new Injector(Base.providers, environment());
 
-      const inject: Inject = (token) => () => injector.get(token);
-
-      super(inject);
+      super((token: ProviderToken<any>) => injector.get(token));
 
       injectors.set(this, injector);
 
@@ -22,6 +19,10 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown)
             injector.setParent(parentInjector);
           }
         });
+      }
+
+      if (typeof super.onInject === 'function') {
+        super.onInject();
       }
     }
 

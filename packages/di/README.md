@@ -32,11 +32,12 @@ class BarService {
 
 @injectable
 class BazService {
-  // to access services in the constructor you need to use the provided inject function
-  constructor(inject: Inject) {
-    const bar = inject(BarService)();
+  bar = inject(BarService);
 
-    console.log(bar.sayHello())
+  // services cannot be accessed in the constructor.
+  // the onInject callback will be called when injectors have resolved
+  onInject() {
+    console.log(this.bar().sayHello())
   }
 }
 

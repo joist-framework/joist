@@ -1,7 +1,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { injectable } from './injectable.js';
-import { Inject, inject } from './inject.js';
+import { inject } from './inject.js';
 import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
@@ -29,6 +29,7 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
+      static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
       foo = inject(Foo);
@@ -41,15 +42,15 @@ describe('@injectable()', () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
-  it('should provide a usable inject function in the constructor', () => {
+  it('should pass an instance of the injector to the service', () => {
     class A {}
 
     @injectable
     class B {
-      a: A;
+      a = inject(A);
 
-      constructor(inject: Inject) {
-        this.a = inject(A)();
+      onInject() {
+        expect(this.a()).to.be.instanceOf(A);
       }
     }
 
