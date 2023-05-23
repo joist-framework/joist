@@ -5,16 +5,14 @@ export function inject<This extends object, T extends object>(
   token: ProviderToken<T>
 ): Injected<T> {
   return function (this: This) {
-    if (typeof this === 'undefined') {
-      throw new Error(
-        `injected service called in constructor. use the onInject lifecycle hook instead`
-      );
-    }
-
     const injector = injectors.get(this);
 
     if (!injector) {
-      throw new Error(`${this} is not injectable`);
+      const name = Object.getPrototypeOf(this.constructor).name;
+
+      throw new Error(
+        `${name} is either not injectable or a service is being called in the constructor. \n Either add the @injectable to your class or use the onInject callback method.`
+      );
     }
 
     return injector.get(token);

@@ -1,13 +1,13 @@
 import { ProviderToken } from './provider.js';
-import { Injector, injectors } from './injector.js';
+import { Injectable, Injector, injectors } from './injector.js';
 import { environment } from './environment.js';
 
-export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown) {
-  return class extends Base {
+export function injectable<T extends ProviderToken<any> & Injectable>(Base: T, _ctx: unknown) {
+  return class InjectableBase extends Base {
     constructor(..._: any[]) {
       const injector = new Injector(Base.providers, environment());
 
-      super((token: ProviderToken<any>) => injector.get(token));
+      super();
 
       injectors.set(this, injector);
 
@@ -20,17 +20,21 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown)
           }
         });
       }
+    }
 
-      if (typeof super.onInject === 'function') {
+    onInject() {
+      if (super.onInject) {
         super.onInject();
       }
     }
 
     connectedCallback() {
-      this.dispatchEvent(new Event('finddiroot'));
+      if (this instanceof HTMLElement) {
+        this.dispatchEvent(new Event('finddiroot'));
 
-      if (super.connectedCallback) {
-        super.connectedCallback();
+        if (super.connectedCallback) {
+          super.connectedCallback();
+        }
       }
     }
 
@@ -38,7 +42,7 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown)
       const injector = injectors.get(this);
 
       if (injector) {
-        delete injector.parent;
+        injector.setParent(undefined);
       }
 
       if (super.disconnectedCallback) {

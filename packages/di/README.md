@@ -11,7 +11,7 @@ npm i @joist/di
 #### Example:
 
 ```TS
-import { Injector, Inject, injectable, inject } from '@joist/di';
+import { Injector, injectable, inject } from '@joist/di';
 
 // Any class can be injected
 class FooService {
@@ -33,6 +33,11 @@ class BarService {
 @injectable
 class BazService {
   #bar = inject(BarService);
+
+  constructor() {
+    // will throw error
+    console.log(this.bar().sayHello())
+  }
 
   // services cannot be accessed in the constructor.
   // the onInject callback will be called when injectors have resolved
