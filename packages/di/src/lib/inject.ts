@@ -1,13 +1,11 @@
 import { ProviderToken } from './provider.js';
-import { Injected, injectors } from './injector.js';
+import { Injectable, Injected } from './injector.js';
 
-export function inject<This extends object, T extends object>(
+export function inject<This extends Injectable, T extends object>(
   token: ProviderToken<T>
 ): Injected<T> {
   return function (this: This) {
-    const injector = injectors.get(this);
-
-    if (!injector) {
+    if (this.injector$$ === undefined) {
       const name = Object.getPrototypeOf(this.constructor).name;
 
       throw new Error(
@@ -15,6 +13,6 @@ export function inject<This extends object, T extends object>(
       );
     }
 
-    return injector.get(token);
+    return this.injector$$.get(token);
   };
 }

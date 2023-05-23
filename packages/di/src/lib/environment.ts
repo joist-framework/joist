@@ -8,5 +8,5 @@ export function environment(): Injector {
 
 export function clearEnvironment(): void {
   rootInjector.providers = [];
-  rootInjector.instances = new WeakMap();
+  rootInjector.clear();
 }

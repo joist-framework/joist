@@ -1,15 +1,17 @@
 import { ProviderToken } from './provider.js';
-import { Injectable, Injector, injectors } from './injector.js';
+import { Injectable, Injector } from './injector.js';
 import { environment } from './environment.js';
 
-export function injectable<T extends ProviderToken<any> & Injectable>(Base: T, _ctx: unknown) {
-  return class InjectableBase extends Base {
+export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
+  return class InjectableBase extends Base implements Injectable {
+    injector$$: Injector | undefined = undefined;
+
     constructor(..._: any[]) {
       const injector = new Injector(Base.providers, environment());
 
       super();
 
-      injectors.set(this, injector);
+      this.injector$$ = injector;
 
       if (this instanceof HTMLElement) {
         this.addEventListener('finddiroot', (e) => {
@@ -39,10 +41,8 @@ export function injectable<T extends ProviderToken<any> & Injectable>(Base: T, _
     }
 
     disconnectedCallback() {
-      const injector = injectors.get(this);
-
-      if (injector) {
-        injector.setParent(undefined);
+      if (this.injector$$ !== undefined) {
+        this.injector$$.setParent(undefined);
       }
 
       if (super.disconnectedCallback) {
@@ -60,8 +60,8 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    if (injectors.has(part)) {
-      return injectors.get(part) as Injector;
+    if ('injector$$' in part && part.injector$$ instanceof Injector) {
+      return part.injector$$;
     }
   }
 

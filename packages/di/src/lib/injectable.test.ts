@@ -29,7 +29,6 @@ describe('@injectable()', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
       foo = inject(Foo);
