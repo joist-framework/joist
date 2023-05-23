@@ -1,6 +1,6 @@
 {
   "name": "@joist/ssr",
-  "version": "3.0.0-next.10",
+  "version": "3.0.0-next.11",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -31,17 +31,10 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "wireit",
     "test": "wireit",
     "build": "wireit"
   },
   "wireit": {
-    "prepare": {
-      "dependencies": [
-        "build",
-        "test"
-      ]
-    },
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",

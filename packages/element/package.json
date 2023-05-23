@@ -1,6 +1,6 @@
 {
   "name": "@joist/element",
-  "version": "3.0.0-next.10",
+  "version": "3.0.0-next.11",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
@@ -35,17 +35,10 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "wireit",
     "test": "wireit",
     "build": "wireit"
   },
   "wireit": {
-    "prepare": {
-      "dependencies": [
-        "build",
-        "test"
-      ]
-    },
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
