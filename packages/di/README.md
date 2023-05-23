@@ -32,7 +32,7 @@ class BarService {
 
 @injectable
 class BazService {
-  bar = inject(BarService);
+  #bar = inject(BarService);
 
   // services cannot be accessed in the constructor.
   // the onInject callback will be called when injectors have resolved
@@ -44,5 +44,5 @@ class BazService {
 
 const app = new Injector();
 
-app.get(BarService).sayHello(); // Hello from BarService and Hello from FooService
+app.get(BazService);
 ```
