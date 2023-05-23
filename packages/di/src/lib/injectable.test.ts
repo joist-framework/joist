@@ -1,7 +1,8 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { Injected } from './injector.js';
 import { injectable } from './injectable.js';
+import { inject } from './inject.js';
+import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps', () => {
@@ -13,9 +14,8 @@ describe('@injectable()', () => {
     class MyElement extends HTMLElement {
       static inject = [Foo, Bar];
 
-      constructor(public foo: Injected<Foo>, public bar: Injected<Bar>) {
-        super();
-      }
+      foo = inject(Foo);
+      bar = inject(Bar);
     }
 
     customElements.define('injectable-1', MyElement);
@@ -23,27 +23,6 @@ describe('@injectable()', () => {
     const el = document.createElement('injectable-1') as MyElement;
 
     expect(el.foo()).to.be.instanceOf(Foo);
-  });
-
-  it('should accept arguments if passed in manually (decorator)', () => {
-    class Foo {}
-
-    class Bar extends Foo {}
-
-    @injectable
-    class MyElement extends HTMLElement {
-      static inject = [Foo];
-
-      constructor(public foo: Injected<Foo>) {
-        super();
-      }
-    }
-
-    customElements.define('injectable-3', MyElement);
-
-    const el = new MyElement(() => new Bar());
-
-    expect(el.foo()).to.be.instanceOf(Bar);
   });
 
   it('should locally override a provider', () => {
@@ -56,9 +35,7 @@ describe('@injectable()', () => {
       static inject = [Foo];
       static providers = [{ provide: Foo, use: Bar }];
 
-      constructor(public foo: Injected<Foo>) {
-        super();
-      }
+      foo = inject(Foo);
     }
 
     customElements.define('injectable-4', MyElement);
@@ -68,16 +45,31 @@ describe('@injectable()', () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
+  it('should pass an instance of the injector to the service', () => {
+    class A {}
+
+    @injectable
+    class B {
+      a = inject(A);
+
+      onInject() {
+        expect(this.a()).to.be.instanceOf(A);
+      }
+    }
+
+    new Injector().get(B);
+  });
+
   it('should handle parent HTML Injectors', async () => {
     class A {
       static service = true;
     }
 
+    @injectable
     class B {
       static service = true;
-      static inject = [A];
 
-      constructor(public a: Injected<A>) {}
+      a = inject(A);
     }
 
     class AltA implements A {}
@@ -92,11 +84,7 @@ describe('@injectable()', () => {
 
     @injectable
     class Child extends HTMLElement {
-      static inject = [B];
-
-      constructor(public b: Injected<B>) {
-        super();
-      }
+      b = inject(B);
     }
 
     customElements.define('injectable-parent-1', Parent);

@@ -35,12 +35,7 @@ export function attr<This extends HTMLElement>(
               this.setAttribute(ctx.name.toString(), '');
             } else {
               // set key/value attribute
-              const attrValue = String(cached);
-
-              // TODO: check logic here. If we get to this step there should be no way there is an attribute set
-              if (attrValue !== this.getAttribute(ctx.name.toString())) {
-                this.setAttribute(ctx.name.toString(), String(cached));
-              }
+              this.setAttribute(ctx.name.toString(), String(cached));
             }
           }
         });

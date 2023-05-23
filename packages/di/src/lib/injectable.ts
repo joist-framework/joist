@@ -1,40 +1,29 @@
 import { ProviderToken } from './provider.js';
-import { Injector } from './injector.js';
+import { Injector, injectors } from './injector.js';
 import { environment } from './environment.js';
 
-const injectors = new WeakMap<EventTarget, Injector>();
+export function injectable<T extends ProviderToken<any>>(Base: T, _ctx: unknown) {
+  return class extends Base {
+    constructor(..._: any[]) {
+      const injector = new Injector(Base.providers, environment());
 
-export function injectable<T extends ProviderToken<HTMLElement>>(
-  CustomElement: T,
-  _ctx: ClassDecoratorContext
-) {
-  return class extends CustomElement {
-    constructor(...args: any[]) {
-      const injector = new Injector(CustomElement.providers, environment());
-
-      if (args.length || !CustomElement.inject) {
-        super(...args);
-      } else {
-        const deps = [];
-
-        for (let i = 0; i < CustomElement.inject.length; i++) {
-          const dep = CustomElement.inject[i];
-
-          deps.push(() => injector.get(dep));
-        }
-
-        super(...deps);
-      }
+      super();
 
       injectors.set(this, injector);
 
-      this.addEventListener('finddiroot', (e) => {
-        const parentInjector = findInjectorRoot(e);
+      if (this instanceof HTMLElement) {
+        this.addEventListener('finddiroot', (e) => {
+          const parentInjector = findInjectorRoot(e);
 
-        if (parentInjector) {
-          injector.parent = parentInjector;
-        }
-      });
+          if (parentInjector) {
+            injector.parent = parentInjector;
+          }
+        });
+      }
+
+      if (typeof super.onInject === 'function') {
+        super.onInject();
+      }
     }
 
     connectedCallback() {

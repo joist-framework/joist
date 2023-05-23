@@ -1,6 +1,5 @@
 export type ProviderToken<T> = {
   service?: boolean;
-  inject?: ProviderToken<any>[];
   providers?: Provider<any>[];
 
   new (...args: any[]): T;

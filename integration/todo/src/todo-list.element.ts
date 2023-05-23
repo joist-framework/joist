@@ -1,4 +1,4 @@
-import { Injected, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 import { css, html, shadow, listen, tagName } from '@joist/element';
 
 import {
@@ -12,8 +12,6 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 @injectable
 export class TodoListElement extends HTMLElement {
   @tagName static tagName = 'todo-list';
-
-  static inject = [TodoService];
 
   @shadow styles = css`
     :host {
@@ -34,13 +32,7 @@ export class TodoListElement extends HTMLElement {
   @shadow template = html`<slot></slot>`;
 
   #listeners: Function[] = [];
-  #todo: Injected<TodoService>;
-
-  constructor(todo: Injected<TodoService>) {
-    super();
-
-    this.#todo = todo;
-  }
+  #todo = inject(TodoService);
 
   async connectedCallback() {
     const service = this.#todo();

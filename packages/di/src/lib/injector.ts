@@ -2,10 +2,17 @@ import { ProviderToken, Provider } from './provider.js';
 
 export type Injected<T> = () => T;
 
-export class Injector {
-  public instances = new WeakMap<ProviderToken<any>, any>();
+export const injectors = new WeakMap<object, Injector>();
 
-  constructor(public providers: Provider<any>[] = [], public parent?: Injector) {}
+export class Injector {
+  instances = new WeakMap<ProviderToken<any>, any>();
+  parent: Injector | undefined = undefined;
+
+  constructor(public providers: Provider<any>[] = [], parent?: Injector) {
+    if (parent) {
+      this.parent = parent;
+    }
+  }
 
   has<T>(token: ProviderToken<T>): boolean {
     const hasLocally = this.instances.has(token) || !!this.findProvider(token);
@@ -17,17 +24,23 @@ export class Injector {
     return this.parent ? this.parent.has(token) : false;
   }
 
-  get<T>(token: ProviderToken<T>): T {
+  get<T extends object>(token: ProviderToken<T>): T {
     // check for a local instance
     if (this.instances.has(token)) {
-      return this.instances.get(token);
+      return this.instances.get(token)!;
     }
 
     const provider = this.findProvider(token);
 
     // check for a provider definition
     if (provider) {
-      return this.createAndCache(provider.use);
+      const instance = this.createAndCache<T>(provider.use);
+
+      if (injectors.has(instance)) {
+        injectors.get(instance)!.setParent(this);
+      }
+
+      return instance;
     }
 
     // check for a parent and attempt to get there
@@ -37,34 +50,28 @@ export class Injector {
       }
     }
 
-    // If nothing else treat as a local class provider
-    return this.createAndCache(token as ProviderToken<T>);
+    const instance = this.createAndCache(token);
+
+    if (injectors.has(instance)) {
+      injectors.get(instance)!.setParent(this);
+    }
+
+    return instance;
   }
 
-  create<T>(P: ProviderToken<T>): T {
-    if (!P.inject) {
-      return new P();
-    }
-
-    const deps = [];
-
-    for (let i = 0; i < P.inject.length; i++) {
-      const dep = P.inject[i];
-
-      deps.push(() => this.get(dep));
-    }
-
-    return new P(...deps);
+  setParent(parent: Injector) {
+    this.parent = parent;
   }
 
   private createAndCache<T>(token: ProviderToken<T>): T {
-    const instance = this.create(token);
+    const instance = new token();
 
     this.instances.set(token, instance);
 
     return instance;
   }
 
+  // TODO: optimize for speed
   private findProvider(token: ProviderToken<any>): Provider<any> | undefined {
     if (!this.providers) {
       return undefined;

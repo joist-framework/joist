@@ -61,37 +61,26 @@ export function html(strings: TemplateStringsArray, ...values: any[]): HTMLResul
   return new HTMLResult(strings, ...values);
 }
 
+export const styleSheetCache = new WeakMap<TemplateStringsArray, CSSStyleSheet>();
+
 export class CSSResult extends ShadowResult {
-  constructor(strings: TemplateStringsArray) {
-    super(strings);
-  }
-
-  append(result: CSSResult) {
-    result.apply(this.shadow);
-  }
-
   apply(root: ShadowRoot): void {
-    const sheet = new CSSStyleSheet();
+    let sheet: CSSStyleSheet;
 
-    sheet.replaceSync(concat(this.strings));
+    if (styleSheetCache.has(this.strings)) {
+      sheet = styleSheetCache.get(this.strings) as CSSStyleSheet;
+    } else {
+      sheet = new CSSStyleSheet();
+
+      sheet.replaceSync(concat(this.strings));
+    }
 
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
   }
 }
 
-const cssResultCache = new WeakMap<TemplateStringsArray, CSSResult>();
-
-// the entire result is cached
 export function css(strings: TemplateStringsArray): CSSResult {
-  if (cssResultCache.has(strings)) {
-    return cssResultCache.get(strings) as CSSResult;
-  }
-
-  const result = new CSSResult(strings);
-
-  cssResultCache.set(strings, result);
-
-  return result;
+  return new CSSResult(strings);
 }
 
 function concat(strings: TemplateStringsArray) {

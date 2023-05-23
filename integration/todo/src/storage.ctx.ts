@@ -32,6 +32,11 @@ class AppLocalStorage implements Storage {
 export class LocalStorageCtx extends HTMLElement {
   @tagName static tagName = 'local-storage-ctx';
 
+  static providers = [
+    { provide: TodoService, use: TodoService },
+    { provide: AppStorage, use: AppLocalStorage },
+  ];
+
   @shadow styles = css`
     :host {
       display: contents;
@@ -39,9 +44,4 @@ export class LocalStorageCtx extends HTMLElement {
   `;
 
   @shadow dom = html`<slot></slot>`;
-
-  static providers = [
-    { provide: TodoService, use: TodoService },
-    { provide: AppStorage, use: AppLocalStorage },
-  ];
 }

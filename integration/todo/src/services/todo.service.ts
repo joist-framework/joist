@@ -1,4 +1,4 @@
-import { Injected } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 import { observe, effect } from '@joist/observable';
 
 import { AppStorage } from './storage.service.js';
@@ -35,22 +35,17 @@ export class TodoRemovedEvent extends Event {
   }
 }
 
+@injectable
 export class TodoService extends EventTarget {
   static service = true;
-  static inject = [AppStorage];
 
   @observe accessor #todos: Todo[] = [];
-  @observe accessor #store: AppStorage;
   @observe accessor #initialized = false;
 
-  constructor(store: Injected<AppStorage>) {
-    super();
-
-    this.#store = store();
-  }
+  #store = inject(AppStorage);
 
   @effect syncTodosToStorage() {
-    this.#store.saveJSON('joist_todo', this.#todos);
+    this.#store().saveJSON('joist_todo', this.#todos);
   }
 
   async getTodos(): Promise<Todo[]> {
@@ -58,15 +53,17 @@ export class TodoService extends EventTarget {
       return this.#todos;
     }
 
-    return this.#store.loadJSON<Todo[]>('joist_todo').then((todos) => {
-      this.#initialized = true;
+    return this.#store()
+      .loadJSON<Todo[]>('joist_todo')
+      .then((todos) => {
+        this.#initialized = true;
 
-      if (todos) {
-        this.#todos = todos;
-      }
+        if (todos) {
+          this.#todos = todos;
+        }
 
-      return this.#todos;
-    });
+        return this.#todos;
+      });
   }
 
   addTodo(todo: Todo) {

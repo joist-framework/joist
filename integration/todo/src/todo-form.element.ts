@@ -1,4 +1,4 @@
-import { Injected, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 import { css, html, shadow, listen, tagName } from '@joist/element';
 
 import { TodoService, Todo } from './services/todo.service.js';
@@ -6,8 +6,6 @@ import { TodoService, Todo } from './services/todo.service.js';
 @injectable
 export class TodoFormElement extends HTMLElement {
   @tagName static tagName = 'todo-form';
-
-  static inject = [TodoService];
 
   @shadow styles = css`
     :host {
@@ -67,13 +65,7 @@ export class TodoFormElement extends HTMLElement {
   `;
 
   #input = this.dom.query<HTMLInputElement>('#input')!;
-  #todos: Injected<TodoService>;
-
-  constructor(todos: Injected<TodoService>) {
-    super();
-
-    this.#todos = todos;
-  }
+  #todos = inject(TodoService);
 
   @listen('submit') onSubmit(e: Event) {
     const service = this.#todos();

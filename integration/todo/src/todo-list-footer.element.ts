@@ -1,5 +1,5 @@
 import { css, html, shadow, tagName } from '@joist/element';
-import { injectable, Injected } from '@joist/di';
+import { inject, injectable } from '@joist/di';
 
 import { TodoService } from './services/todo.service.js';
 
@@ -15,8 +15,6 @@ class PluralRules extends Intl.PluralRules {
 @injectable
 export class TodoListFooterElement extends HTMLElement {
   @tagName static tagName = 'todo-list-footer';
-
-  static inject = [TodoService, PluralRules];
 
   @shadow styles = css`
     :host {
@@ -64,16 +62,9 @@ export class TodoListFooterElement extends HTMLElement {
     <div id="decoration"></div>
   `;
 
-  #todo: Injected<TodoService>;
-  #pr: Injected<PluralRules>;
+  #todo = inject(TodoService);
+  #pr = inject(PluralRules);
   #listeners: Function[] = [];
-
-  constructor(todo: Injected<TodoService>, pr: Injected<PluralRules>) {
-    super();
-
-    this.#todo = todo;
-    this.#pr = pr;
-  }
 
   connectedCallback() {
     const todo = this.#todo();

@@ -1,8 +1,9 @@
 import { expect } from '@open-wc/testing';
 
-import { Injector, Injected } from './injector.js';
+import { Injector } from './injector.js';
 import { environment, clearEnvironment } from './environment.js';
 import { injectable } from './injectable.js';
+import { inject } from './inject.js';
 
 describe('environment', () => {
   afterEach(clearEnvironment);
@@ -18,11 +19,7 @@ describe('environment', () => {
 
     @injectable
     class MyElement extends HTMLElement {
-      static inject = [MyService];
-
-      constructor(public my: Injected<MyService>) {
-        super();
-      }
+      my = inject(MyService);
     }
 
     customElements.define('env-1', MyElement);
