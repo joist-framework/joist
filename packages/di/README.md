@@ -51,3 +51,51 @@ const app = new Injector();
 
 app.get(BazService);
 ```
+
+#### Custom Elements:
+
+```TS
+import { injectable, inject } from '@joist/di';
+
+class Colors {
+  primary = 'red';
+  secodnary = 'green';
+}
+
+@injectable
+class ColorCtx extends HTMLElement {
+  static providers = [
+    {
+      provide: Colors,
+      use: class implements Colors {
+        primary = 'orange';
+        secondary = 'purple';
+      },
+    },
+  ];
+}
+
+@injectable
+class MyElement extends HTMLElement {
+  #colors = inject(Colors);
+
+  connectedCallback() {
+    const { primary } = this.colors();
+
+    this.style.background = primary;
+  }
+}
+
+customElements.define('color-ctx', ColorCtx);
+customElements.define('my-element', MyElement);
+```
+
+```HTML
+<!-- Default Colors -->
+<my-element></my-element>
+
+<!-- Special color ctx -->
+<color-ctx>
+  <my-element></my-element>
+</color-ctx>
+```
