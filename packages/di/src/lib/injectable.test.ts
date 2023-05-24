@@ -41,7 +41,7 @@ describe('@injectable()', () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
-  it('should pass an instance of the injector to the service', () => {
+  it('should call the onInject lifecycle hook', () => {
     class A {}
 
     @injectable

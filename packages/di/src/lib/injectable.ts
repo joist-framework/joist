@@ -3,22 +3,28 @@ import { Injectable, Injector } from './injector.js';
 import { environment } from './environment.js';
 
 export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
-  return class InjectableBase extends Base implements Injectable {
-    injector$$: Injector | undefined = undefined;
+  return withInjector(Base);
+}
+
+/**
+ * This mixin is applied by the @injectable decorator.
+ * Id defines an instance injector and registers custom element lifecycle hooks
+ */
+function withInjector<T extends ProviderToken<any>>(Base: T) {
+  return class InjectableNode extends Base implements Injectable {
+    injector$$ = new Injector(Base.providers);
 
     constructor(..._: any[]) {
-      const injector = new Injector(Base.providers, environment());
-
       super();
-
-      this.injector$$ = injector;
 
       if (this instanceof HTMLElement) {
         this.addEventListener('finddiroot', (e) => {
           const parentInjector = findInjectorRoot(e);
 
           if (parentInjector) {
-            injector.setParent(parentInjector);
+            this.injector$$.setParent(parentInjector);
+          } else {
+            this.injector$$.setParent(environment());
           }
         });
       }
@@ -41,9 +47,7 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
     }
 
     disconnectedCallback() {
-      if (this.injector$$ !== undefined) {
-        this.injector$$.setParent(undefined);
-      }
+      this.injector$$.setParent(undefined);
 
       if (super.disconnectedCallback) {
         super.disconnectedCallback();

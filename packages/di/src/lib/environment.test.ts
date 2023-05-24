@@ -1,4 +1,4 @@
-import { expect } from '@open-wc/testing';
+import { expect, fixture, html } from '@open-wc/testing';
 
 import { Injector } from './injector.js';
 import { environment, clearEnvironment } from './environment.js';
@@ -12,7 +12,7 @@ describe('environment', () => {
     expect(environment()).to.be.instanceOf(Injector);
   });
 
-  it('should use the root injector when creating services', () => {
+  it('should use the root injector when creating services', async () => {
     class MyService {
       static service = true;
     }
@@ -24,7 +24,7 @@ describe('environment', () => {
 
     customElements.define('env-1', MyElement);
 
-    const el = document.createElement('env-1') as MyElement;
+    const el = await fixture<MyElement>(html`<env-1></env-1>`);
 
     expect(el.my()).to.equal(environment().get(MyService));
   });

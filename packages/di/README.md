@@ -5,7 +5,7 @@ Dependency Injection in ~800 bytes. This allows you to inject services into othe
 #### Installation:
 
 ```BASH
-npm i @joist/di
+npm i @joist/di@next
 ```
 
 #### Example:
