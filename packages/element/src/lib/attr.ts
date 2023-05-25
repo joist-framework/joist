@@ -30,9 +30,11 @@ export function attr<This extends HTMLElement>(
           const cached = get.call(this);
 
           if (cached !== null && cached !== undefined && cached !== '') {
-            if (cached === true) {
-              // set boolean attribute
-              this.setAttribute(ctx.name.toString(), '');
+            if (typeof cached === 'boolean') {
+              if (cached === true) {
+                // set boolean attribute
+                this.setAttribute(ctx.name.toString(), '');
+              }
             } else {
               // set key/value attribute
               this.setAttribute(ctx.name.toString(), String(cached));
