@@ -1,18 +1,31 @@
-import { ProviderToken } from './provider.js';
-import { Injectable, Injector } from './injector.js';
+import { Provider, ProviderToken } from './provider.js';
+import { Injectable, Injector, rootServices } from './injector.js';
 import { environment } from './environment.js';
 
-export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
-  return withInjector(Base);
+export function injectable<T extends ProviderToken<any>>(
+  def: {
+    provideInRoot?: boolean;
+    providers?: Provider<any>[];
+  } = {}
+) {
+  return function (Base: T, _: unknown) {
+    const token = withInjector(Base, def.providers);
+
+    if (def.provideInRoot) {
+      rootServices.add(token);
+    }
+
+    return token;
+  };
 }
 
 /**
  * This mixin is applied by the @injectable decorator.
  * Id defines an instance injector and registers custom element lifecycle hooks
  */
-function withInjector<T extends ProviderToken<any>>(Base: T) {
+function withInjector<T extends ProviderToken<any>>(Base: T, providers: Provider<any>[] = []) {
   return class InjectableNode extends Base implements Injectable {
-    injector$$ = new Injector(Base.providers);
+    injector$$ = new Injector(providers);
 
     constructor(..._: any[]) {
       super();
@@ -21,7 +34,7 @@ function withInjector<T extends ProviderToken<any>>(Base: T) {
         this.addEventListener('finddiroot', (e) => {
           const parentInjector = findInjectorRoot(e);
 
-          if (parentInjector) {
+          if (parentInjector !== null) {
             this.injector$$.setParent(parentInjector);
           } else {
             this.injector$$.setParent(environment());

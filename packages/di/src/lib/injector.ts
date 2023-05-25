@@ -7,6 +7,9 @@ export type Injectable = object & {
   onInject?(): void;
 };
 
+// Track which dependencies are services.
+export const rootServices = new WeakSet<ProviderToken<any>>();
+
 export class Injector {
   #instances = new WeakMap<ProviderToken<any>, any>();
   #parent: Injector | undefined = undefined;
@@ -42,7 +45,7 @@ export class Injector {
 
     // check for a parent and attempt to get there
     if (this.#parent) {
-      if (this.#parent.has(token) || token.service) {
+      if (this.#parent.has(token) || rootServices.has(token)) {
         return this.#parent.get(token);
       }
     }
@@ -64,8 +67,13 @@ export class Injector {
     this.#instances.set(token, instance);
 
     if (instance.injector$$) {
+      // set the this injector instance as a parent.
+      // this means that each calling injector will be the parent of what it creates.
+      // this allows the created service to navigate up it's chain to find a root
       instance.injector$$.setParent(this);
 
+      // the on inject lifecycle hook should be called after the parent is defined.
+      // this ensures that services are initialized when the chain is settled
       if (instance.onInject) {
         instance.onInject();
       }

@@ -1,7 +1,4 @@
 export type ProviderToken<T> = {
-  service?: boolean;
-  providers?: Provider<any>[];
-
   new (...args: any[]): T;
 };
 

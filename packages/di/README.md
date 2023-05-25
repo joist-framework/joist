@@ -21,7 +21,9 @@ class FooService {
 }
 
 // classes must be decorated with @injectable to use the inject function
-@injectable
+@injectable({
+  provideInRoot: true // classes marked with the "service" flag will attempt to find a root injector
+})
 class BarService {
   foo = inject(FooService);
 
@@ -30,7 +32,7 @@ class BarService {
   }
 }
 
-@injectable
+@injectable()
 class BazService {
   #bar = inject(BarService);
 
@@ -62,9 +64,8 @@ class Colors {
   secodnary = 'green';
 }
 
-@injectable
-class ColorCtx extends HTMLElement {
-  static providers = [
+@injectable({
+  providers: [
     {
       provide: Colors,
       use: class implements Colors {
@@ -72,10 +73,11 @@ class ColorCtx extends HTMLElement {
         secondary = 'purple';
       },
     },
-  ];
-}
+  ]
+})
+class ColorCtx extends HTMLElement { }
 
-@injectable
+@injectable()
 class MyElement extends HTMLElement {
   #colors = inject(Colors);
 

@@ -18,7 +18,7 @@ describe('Injector', () => {
     class A {}
     class B {}
 
-    @injectable
+    @injectable()
     class MyService {
       a = inject(A);
       b = inject(B);
@@ -34,22 +34,22 @@ describe('Injector', () => {
   it('should create a new instance of a provider that has a full dep tree', () => {
     class A {}
 
-    @injectable
+    @injectable()
     class B {
       a = inject(A);
     }
 
-    @injectable
+    @injectable()
     class C {
       b = inject(B);
     }
 
-    @injectable
+    @injectable()
     class D {
       c = inject(C);
     }
 
-    @injectable
+    @injectable()
     class E {
       d = inject(D);
     }
@@ -63,7 +63,7 @@ describe('Injector', () => {
   it('should override a provider if explicitly instructed', () => {
     class A {}
 
-    @injectable
+    @injectable()
     class B {
       a = inject(A);
     }

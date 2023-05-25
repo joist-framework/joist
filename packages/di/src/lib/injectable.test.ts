@@ -9,7 +9,7 @@ describe('@injectable()', () => {
     class Foo {}
     class Bar {}
 
-    @injectable
+    @injectable()
     class MyElement extends HTMLElement {
       foo = inject(Foo);
       bar = inject(Bar);
@@ -27,10 +27,10 @@ describe('@injectable()', () => {
 
     class Bar extends Foo {}
 
-    @injectable
+    @injectable({
+      providers: [{ provide: Foo, use: Bar }],
+    })
     class MyElement extends HTMLElement {
-      static providers = [{ provide: Foo, use: Bar }];
-
       foo = inject(Foo);
     }
 
@@ -44,7 +44,7 @@ describe('@injectable()', () => {
   it('should call the onInject lifecycle hook', () => {
     class A {}
 
-    @injectable
+    @injectable()
     class B {
       a = inject(A);
 
@@ -61,7 +61,7 @@ describe('@injectable()', () => {
       static service = true;
     }
 
-    @injectable
+    @injectable()
     class B {
       static service = true;
 
@@ -70,15 +70,15 @@ describe('@injectable()', () => {
 
     class AltA implements A {}
 
-    @injectable
-    class Parent extends HTMLElement {
-      static providers = [
+    @injectable({
+      providers: [
         { provide: B, use: B },
         { provide: A, use: AltA },
-      ];
-    }
+      ],
+    })
+    class Parent extends HTMLElement {}
 
-    @injectable
+    @injectable()
     class Child extends HTMLElement {
       b = inject(B);
     }

@@ -35,10 +35,10 @@ export class TodoRemovedEvent extends Event {
   }
 }
 
-@injectable
+@injectable({
+  provideInRoot: true,
+})
 export class TodoService extends EventTarget {
-  static service = true;
-
   @observe accessor #todos: Todo[] = [];
   @observe accessor #initialized = false;
 
