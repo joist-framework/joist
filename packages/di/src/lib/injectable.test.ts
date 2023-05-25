@@ -57,14 +57,15 @@ describe('@injectable()', () => {
   });
 
   it('should handle parent HTML Injectors', async () => {
-    class A {
-      static service = true;
-    }
+    @injectable({
+      provideInRoot: true,
+    })
+    class A {}
 
-    @injectable()
+    @injectable({
+      provideInRoot: true,
+    })
     class B {
-      static service = true;
-
       a = inject(A);
     }
 
@@ -95,5 +96,51 @@ describe('@injectable()', () => {
     const child = el.querySelector<Child>('injectable-child-1')!;
 
     expect(child.b().a()).to.be.instanceOf(AltA);
+  });
+
+  it('should handle changing contexts', async () => {
+    class A {}
+    class AltA implements A {}
+
+    @injectable({
+      providers: [{ provide: A, use: A }],
+    })
+    class Ctx1 extends HTMLElement {}
+
+    @injectable({
+      providers: [{ provide: A, use: AltA }],
+    })
+    class Ctx2 extends HTMLElement {}
+
+    @injectable()
+    class Child extends HTMLElement {
+      a = inject(A);
+    }
+
+    customElements.define('ctx-1', Ctx1);
+    customElements.define('ctx-2', Ctx2);
+    customElements.define('ctx-child-1', Child);
+
+    const el = await fixture(html`
+      <ctx-1>
+        <ctx-child-1></ctx-child-1>
+      </ctx-2>
+
+      <ctx-2></ctx-2>
+    `);
+
+    const ctx2 = el.querySelector('ctx-2')!;
+
+    let child = el.querySelector<Child>('ctx-child-1')!;
+
+    expect(child.a()).to.be.instanceOf(A);
+
+    child.remove();
+
+    ctx2?.append(child);
+
+    child = el.querySelector<Child>('ctx-child-1')!;
+
+    expect(child.a()).to.be.instanceOf(AltA);
   });
 });
