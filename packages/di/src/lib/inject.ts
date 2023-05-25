@@ -4,7 +4,13 @@ import { Injectable, Injected } from './injector.js';
 export function inject<This extends Injectable, T extends object>(
   token: ProviderToken<T>
 ): Injected<T> {
+  let cache: T | undefined = undefined; // cache closer to the object
+
   return function (this: This) {
+    if (cache) {
+      return cache;
+    }
+
     if (this.injector$$ === undefined) {
       const name = Object.getPrototypeOf(this.constructor).name;
 
@@ -13,6 +19,8 @@ export function inject<This extends Injectable, T extends object>(
       );
     }
 
-    return this.injector$$.get(token);
+    cache = this.injector$$.get(token);
+
+    return cache;
   };
 }
