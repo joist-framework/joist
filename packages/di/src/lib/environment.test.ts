@@ -13,12 +13,10 @@ describe('environment', () => {
   });
 
   it('should use the root injector when creating services', async () => {
-    @injectable({
-      provideInRoot: true,
-    })
-    class MyService {}
+    @injectable
+    class MyService { }
 
-    @injectable()
+    @injectable
     class MyElement extends HTMLElement {
       my = inject(MyService);
     }

@@ -45,9 +45,7 @@ export class Injector {
 
     // check for a parent and attempt to get there
     if (this.#parent) {
-      if (this.#parent.has(token) || rootServices.has(token)) {
-        return this.#parent.get(token);
-      }
+      return this.#parent.get(token);
     }
 
     return this.#createAndCache(token);

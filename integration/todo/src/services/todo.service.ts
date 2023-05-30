@@ -14,7 +14,7 @@ export class Todo {
     public readonly id: string,
     public readonly name: string,
     public readonly status: TodoStatus
-  ) {}
+  ) { }
 }
 
 export class TodoUpdatedEvent extends Event {
@@ -35,9 +35,7 @@ export class TodoRemovedEvent extends Event {
   }
 }
 
-@injectable({
-  provideInRoot: true,
-})
+@injectable
 export class TodoService extends EventTarget {
   @observe accessor #todos: Todo[] = [];
   @observe accessor #initialized = false;

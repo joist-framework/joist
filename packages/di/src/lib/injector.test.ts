@@ -6,7 +6,7 @@ import { injectable } from './injectable.js';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
-    class A {}
+    class A { }
 
     const app = new Injector();
 
@@ -15,10 +15,10 @@ describe('Injector', () => {
   });
 
   it('should inject providers in the correct order', () => {
-    class A {}
-    class B {}
+    class A { }
+    class B { }
 
-    @injectable()
+    @injectable
     class MyService {
       a = inject(A);
       b = inject(B);
@@ -32,24 +32,24 @@ describe('Injector', () => {
   });
 
   it('should create a new instance of a provider that has a full dep tree', () => {
-    class A {}
+    class A { }
 
-    @injectable()
+    @injectable
     class B {
       a = inject(A);
     }
 
-    @injectable()
+    @injectable
     class C {
       b = inject(B);
     }
 
-    @injectable()
+    @injectable
     class D {
       c = inject(C);
     }
 
-    @injectable()
+    @injectable
     class E {
       d = inject(D);
     }
@@ -61,21 +61,21 @@ describe('Injector', () => {
   });
 
   it('should override a provider if explicitly instructed', () => {
-    class A {}
+    class A { }
 
-    @injectable()
+    @injectable
     class B {
       a = inject(A);
     }
 
-    class AltA extends A {}
+    class AltA extends A { }
     const app = new Injector([{ provide: A, use: AltA }]);
 
     expect(app.get(B).a()).to.be.instanceOf(AltA);
   });
 
   it('should return an existing instance from a parent injector', () => {
-    class A {}
+    class A { }
 
     const parent = new Injector();
 

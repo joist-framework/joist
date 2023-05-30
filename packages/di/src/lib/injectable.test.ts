@@ -1,15 +1,15 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { injectable } from './injectable.js';
+import { injectable, provide } from './injectable.js';
 import { inject } from './inject.js';
 import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps', () => {
-    class Foo {}
-    class Bar {}
+    class Foo { }
+    class Bar { }
 
-    @injectable()
+    @injectable
     class MyElement extends HTMLElement {
       foo = inject(Foo);
       bar = inject(Bar);
@@ -23,14 +23,14 @@ describe('@injectable()', () => {
   });
 
   it('should locally override a provider', () => {
-    class Foo {}
+    class Foo { }
 
-    class Bar extends Foo {}
+    class Bar extends Foo { }
 
-    @injectable({
-      providers: [{ provide: Foo, use: Bar }],
-    })
+    @injectable
     class MyElement extends HTMLElement {
+      @provide static providers = [{ provide: Foo, use: Bar }];
+
       foo = inject(Foo);
     }
 
@@ -42,9 +42,9 @@ describe('@injectable()', () => {
   });
 
   it('should call the onInject lifecycle hook', () => {
-    class A {}
+    class A { }
 
-    @injectable()
+    @injectable
     class B {
       a = inject(A);
 
@@ -57,29 +57,25 @@ describe('@injectable()', () => {
   });
 
   it('should handle parent HTML Injectors', async () => {
-    @injectable({
-      provideInRoot: true,
-    })
-    class A {}
+    @injectable
+    class A { }
 
-    @injectable({
-      provideInRoot: true,
-    })
+    @injectable
     class B {
       a = inject(A);
     }
 
-    class AltA implements A {}
+    class AltA implements A { }
 
-    @injectable({
-      providers: [
+    @injectable
+    class Parent extends HTMLElement {
+      static providers = [
         { provide: B, use: B },
         { provide: A, use: AltA },
-      ],
-    })
-    class Parent extends HTMLElement {}
+      ]
+    }
 
-    @injectable()
+    @injectable
     class Child extends HTMLElement {
       b = inject(B);
     }
@@ -99,20 +95,20 @@ describe('@injectable()', () => {
   });
 
   it('should handle changing contexts', async () => {
-    class A {}
-    class AltA implements A {}
+    class A { }
+    class AltA implements A { }
 
-    @injectable({
-      providers: [{ provide: A, use: A }],
-    })
-    class Ctx1 extends HTMLElement {}
+    @injectable
+    class Ctx1 extends HTMLElement {
+      static providers = [{ provide: A, use: A }]
+    }
 
-    @injectable({
-      providers: [{ provide: A, use: AltA }],
-    })
-    class Ctx2 extends HTMLElement {}
+    @injectable
+    class Ctx2 extends HTMLElement {
+      static providers = [{ provide: A, use: AltA }]
+    }
 
-    @injectable()
+    @injectable
     class Child extends HTMLElement {
       a = inject(A);
     }

@@ -21,9 +21,7 @@ class FooService {
 }
 
 // classes must be decorated with @injectable to use the inject function
-@injectable({
-  provideInRoot: true // classes marked with the "service" flag will attempt to find a root injector
-})
+@injectable
 class BarService {
   foo = inject(FooService);
 
@@ -32,14 +30,9 @@ class BarService {
   }
 }
 
-@injectable()
+@injectable
 class BazService {
   #bar = inject(BarService);
-
-  constructor() {
-    // will throw error
-    console.log(this.bar().sayHello())
-  }
 
   // services cannot be accessed in the constructor.
   // the onInject callback will be called when injectors have resolved
@@ -64,8 +57,9 @@ class Colors {
   secodnary = 'green';
 }
 
-@injectable({
-  providers: [
+@injectable
+class ColorCtx extends HTMLElement {
+  @provide static providers = [
     {
       provide: Colors,
       use: class implements Colors {
@@ -74,10 +68,9 @@ class Colors {
       },
     },
   ]
-})
-class ColorCtx extends HTMLElement { }
+}
 
-@injectable()
+@injectable
 class MyElement extends HTMLElement {
   #colors = inject(Colors);
 

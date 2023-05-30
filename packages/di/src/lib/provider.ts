@@ -1,5 +1,7 @@
 export type ProviderToken<T> = {
-  new (...args: any[]): T;
+  providers?: Provider<any>[];
+
+  new(...args: any[]): T;
 };
 
 export interface Provider<T> {

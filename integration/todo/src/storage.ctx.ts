@@ -12,7 +12,7 @@ class AppLocalStorage implements Storage {
       if (res) {
         return JSON.parse(res);
       }
-    } catch {}
+    } catch { }
 
     return undefined;
   }
@@ -28,13 +28,13 @@ class AppLocalStorage implements Storage {
   }
 }
 
-@injectable({
-  providers: [
-    { provide: TodoService, use: TodoService },
-    { provide: AppStorage, use: AppLocalStorage },
-  ],
-})
+@injectable
 export class LocalStorageCtx extends HTMLElement {
+  static providers = [
+    { provide: TodoService, use: TodoService },
+    { provide: AppStorage, use: AppLocalStorage }
+  ]
+
   @tagName static tagName = 'local-storage-ctx';
 
   @shadow styles = css`
