@@ -66,7 +66,7 @@ export function attr<This extends HTMLElement>(
       if (typeof ctx.name === 'string') {
         const attr = this.getAttribute(ctx.name);
 
-        if (attr) {
+        if (attr !== null) {
           // treat as boolean
           if (attr === '') {
             return true;
