@@ -14,7 +14,7 @@ export class Todo {
     public readonly id: string,
     public readonly name: string,
     public readonly status: TodoStatus
-  ) { }
+  ) {}
 }
 
 export class TodoUpdatedEvent extends Event {
@@ -35,15 +35,30 @@ export class TodoRemovedEvent extends Event {
   }
 }
 
+export class TodoSyncEvent extends Event {
+  constructor() {
+    super('todo_sync');
+  }
+}
+
 @injectable
 export class TodoService extends EventTarget {
   @observe accessor #todos: Todo[] = [];
   @observe accessor #initialized = false;
 
+  totalActive = 0;
+
   #store = inject(AppStorage);
 
   @effect syncTodosToStorage() {
     this.#store().saveJSON('joist_todo', this.#todos);
+
+    this.totalActive = this.#todos.reduce(
+      (total, todo) => (todo.status === 'active' ? total + 1 : total),
+      0
+    );
+
+    this.dispatchEvent(new TodoSyncEvent());
   }
 
   async getTodos(): Promise<Todo[]> {

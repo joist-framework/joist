@@ -1,7 +1,7 @@
 import { inject, injectable } from '@joist/di';
 import { css, html, shadow, listen, tagName } from '@joist/element';
 
-import { TodoService, Todo } from './services/todo.service.js';
+import { TodoService, Todo } from '../services/todo.service.js';
 
 @injectable
 export class TodoFormElement extends HTMLElement {

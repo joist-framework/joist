@@ -1,35 +1,36 @@
 import { ProviderToken, Provider } from './provider.js';
 
-export type Injected<T> = () => T;
-
+// defines available properties that will be on a class instance that can use the inject function
 export type Injectable = object & {
   injector$$?: Injector;
   onInject?(): void;
 };
 
-// Track which dependencies are services.
-export const rootServices = new WeakSet<ProviderToken<any>>();
-
+/**
+ * Injectors create and store instances of services.
+ * A service is any constructable class.
+ * When calling Injector.get, the injector will resolve as following.
+ *
+ * 1. Do I have a cached instance locally?
+ * 2. Do I have a local provider definition for the token?
+ * 3. Do I have a parent? Check parent for 1 and 2
+ * 5. All clear, go ahead and construct and cache the requested service
+ *
+ * RootInjector --> Injector --> Injector
+ *                      |------> Injector
+ *                      |------> Injector
+ */
 export class Injector {
+  // ke track of isntances. One Token can have one instance
   #instances = new WeakMap<ProviderToken<any>, any>();
+
   #parent: Injector | undefined = undefined;
 
   constructor(public providers: Provider<any>[] = [], parent?: Injector) {
-    if (parent) {
-      this.#parent = parent;
-    }
+    this.setParent(parent);
   }
 
-  has<T>(token: ProviderToken<T>): boolean {
-    const hasLocally = this.#instances.has(token) || !!this.#findProvider(token);
-
-    if (hasLocally) {
-      return true;
-    }
-
-    return this.#parent ? this.#parent.has(token) : false;
-  }
-
+  // resolves and retuns and instance of the requested service
   get<T extends Injectable>(token: ProviderToken<T>): T {
     // check for a local instance
     if (this.#instances.has(token)) {

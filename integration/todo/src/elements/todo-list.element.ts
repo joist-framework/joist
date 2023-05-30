@@ -6,7 +6,7 @@ import {
   TodoUpdatedEvent,
   TodoRemovedEvent,
   TodoService,
-} from './services/todo.service.js';
+} from '../services/todo.service.js';
 import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
 @injectable

@@ -1,7 +1,7 @@
 import { css, html, shadow, tagName } from '@joist/element';
 import { inject, injectable } from '@joist/di';
 
-import { TodoService } from './services/todo.service.js';
+import { TodoService } from '../services/todo.service.js';
 
 const sfxs = new Map([
   ['one', 'item'],
@@ -70,30 +70,17 @@ export class TodoListFooterElement extends HTMLElement {
     const todo = this.#todo();
 
     const onTodoUpdate = async () => {
-      const activeCount = await this.#getCompleteCount();
-
-      this.innerHTML = `${activeCount} ${sfxs.get(this.#pr().select(activeCount))}`;
+      this.innerHTML = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
     };
 
     onTodoUpdate();
 
-    this.#listeners = [
-      todo.listen('todo_updated', onTodoUpdate),
-      todo.listen('todo_added', onTodoUpdate),
-      todo.listen('todo_removed', onTodoUpdate),
-    ];
+    this.#listeners = [todo.listen('todo_sync', onTodoUpdate)];
   }
 
   disconnectedCallback() {
     for (let remove of this.#listeners) {
       remove();
     }
-  }
-
-  async #getCompleteCount() {
-    const todo = this.#todo();
-    const todos = await todo.getTodos();
-
-    return todos.reduce((total, todo) => (todo.status === 'active' ? total + 1 : total), 0);
   }
 }

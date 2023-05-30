@@ -59,7 +59,7 @@ class Colors {
 
 @injectable
 class ColorCtx extends HTMLElement {
-  @provide static providers = [
+  static providers = [
     {
       provide: Colors,
       use: class implements Colors {

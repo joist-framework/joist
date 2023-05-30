@@ -1,5 +1,7 @@
 import { ProviderToken } from './provider.js';
-import { Injectable, Injected } from './injector.js';
+import { Injectable } from './injector.js';
+
+export type Injected<T> = () => T;
 
 export function inject<This extends Injectable, T extends object>(
   token: ProviderToken<T>
