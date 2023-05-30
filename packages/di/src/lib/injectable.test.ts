@@ -1,13 +1,13 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { injectable, provide } from './injectable.js';
+import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps', () => {
-    class Foo { }
-    class Bar { }
+    class Foo {}
+    class Bar {}
 
     @injectable
     class MyElement extends HTMLElement {
@@ -23,13 +23,13 @@ describe('@injectable()', () => {
   });
 
   it('should locally override a provider', () => {
-    class Foo { }
+    class Foo {}
 
-    class Bar extends Foo { }
+    class Bar extends Foo {}
 
     @injectable
     class MyElement extends HTMLElement {
-      @provide static providers = [{ provide: Foo, use: Bar }];
+      static providers = [{ provide: Foo, use: Bar }];
 
       foo = inject(Foo);
     }
@@ -42,7 +42,7 @@ describe('@injectable()', () => {
   });
 
   it('should call the onInject lifecycle hook', () => {
-    class A { }
+    class A {}
 
     @injectable
     class B {
@@ -58,21 +58,21 @@ describe('@injectable()', () => {
 
   it('should handle parent HTML Injectors', async () => {
     @injectable
-    class A { }
+    class A {}
 
     @injectable
     class B {
       a = inject(A);
     }
 
-    class AltA implements A { }
+    class AltA implements A {}
 
     @injectable
     class Parent extends HTMLElement {
       static providers = [
         { provide: B, use: B },
         { provide: A, use: AltA },
-      ]
+      ];
     }
 
     @injectable
@@ -95,17 +95,17 @@ describe('@injectable()', () => {
   });
 
   it('should handle changing contexts', async () => {
-    class A { }
-    class AltA implements A { }
+    class A {}
+    class AltA implements A {}
 
     @injectable
     class Ctx1 extends HTMLElement {
-      static providers = [{ provide: A, use: A }]
+      static providers = [{ provide: A, use: A }];
     }
 
     @injectable
     class Ctx2 extends HTMLElement {
-      static providers = [{ provide: A, use: AltA }]
+      static providers = [{ provide: A, use: AltA }];
     }
 
     @injectable

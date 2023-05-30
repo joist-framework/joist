@@ -1,32 +1,18 @@
-import { Provider, ProviderToken } from './provider.js';
+import { ProviderToken } from './provider.js';
 import { Injectable, Injector } from './injector.js';
 import { environment } from './environment.js';
 
-const providers = new WeakMap<object, Provider<any>[]>()
-
 export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
-  return withInjector(Base, () => providers.get(Base) || []);
-};
-
-export function provide<This extends object, Value extends Provider<any>[]>(
-  _: undefined,
-  _ctx: ClassFieldDecoratorContext<This, Value>
-) {
-  return function (this: This, value: Value) {
-    providers.set(this, value);
-
-    return value;
-  }
+  return withInjector(Base);
 }
-
 
 /**
  * This mixin is applied by the @injectable decorator.
  * Id defines an instance injector and registers custom element lifecycle hooks
  */
-function withInjector<T extends ProviderToken<any>>(Base: T, providers: () => Provider<any>[]) {
+function withInjector<T extends ProviderToken<any>>(Base: T) {
   return class InjectableNode extends Base implements Injectable {
-    injector$$ = new Injector(providers());
+    injector$$ = new Injector(Base.providers);
 
     constructor(..._: any[]) {
       super();
