@@ -5,7 +5,7 @@ import { environment } from './environment.js';
 const providers = new WeakMap<object, Provider<any>[]>()
 
 export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
-  return withInjector(Base, providers.get(Base));
+  return withInjector(Base, () => providers.get(Base) || []);
 };
 
 export function provide<This extends object, Value extends Provider<any>[]>(
@@ -24,9 +24,9 @@ export function provide<This extends object, Value extends Provider<any>[]>(
  * This mixin is applied by the @injectable decorator.
  * Id defines an instance injector and registers custom element lifecycle hooks
  */
-function withInjector<T extends ProviderToken<any>>(Base: T, providers?: Provider<any>[]) {
+function withInjector<T extends ProviderToken<any>>(Base: T, providers: () => Provider<any>[]) {
   return class InjectableNode extends Base implements Injectable {
-    injector$$ = new Injector(providers);
+    injector$$ = new Injector(providers());
 
     constructor(..._: any[]) {
       super();
