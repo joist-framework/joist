@@ -16,9 +16,12 @@ export type Injectable = object & {
  * 3. Do I have a parent? Check parent for 1 and 2
  * 5. All clear, go ahead and construct and cache the requested service
  *
- * RootInjector --> Injector --> Injector
- *                      |------> Injector
- *                      |------> Injector
+ * RootInjector --> InjectorA --> InjectorB
+ *                       |------> InjectorC
+ *                       |------> InjectorD --> InjectorE
+ *
+ * in the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cached.
+ * If Inject B then requests the same token, it will recieve the same cached instance,
  */
 export class Injector {
   // ke track of isntances. One Token can have one instance
