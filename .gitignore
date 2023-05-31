@@ -8,6 +8,7 @@
 target
 .wireit
 tsconfig.tsbuildinfo
+coverage
 
 # dependencies
 **/node_modules/
