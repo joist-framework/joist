@@ -95,15 +95,23 @@ describe('observable: attr()', () => {
     expect(el.hasAttribute('value3')).to.be.false;
   });
 
-  it('should hold initial value if not attribute', async () => {
+  it('should read and parse the correct values', async () => {
     class MyElement extends HTMLElement {
-      @attr accessor value = 100;
+      @attr accessor value1 = 100; // no attribute
+      @attr accessor value2 = 0; // number
+      @attr accessor value3 = false; // boolean
+      @attr accessor value4 = 'hello'; // string
     }
 
     customElements.define('attr-test-8', MyElement);
 
-    const el = await fixture<MyElement>(html`<attr-test-8></attr-test-8>`);
+    const el = await fixture<MyElement>(
+      html`<attr-test-8 value2="2" value3 value4="world"></attr-test-8>`
+    );
 
-    expect(el.value).to.equal(100);
+    expect(el.value1).to.equal(100);
+    expect(el.value2).to.equal(2);
+    expect(el.value3).to.equal(true);
+    expect(el.value4).to.equal('world');
   });
 });
