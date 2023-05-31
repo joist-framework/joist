@@ -23,10 +23,10 @@ class FooService {
 // classes must be decorated with @injectable to use the inject function
 @injectable
 class BarService {
-  foo = inject(FooService);
+  #foo = inject(FooService);
 
   sayHello() {
-    return this.foo().sayHello();
+    return this.#foo().sayHello();
   }
 }
 
@@ -40,7 +40,6 @@ class BazService {
     console.log(this.bar().sayHello())
   }
 }
-
 
 const app = new Injector();
 
