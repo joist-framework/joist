@@ -16,4 +16,3 @@ This toolkit is here to help provide just the functionality you need and nothing
 | [@joist/di](packages/di)                 | IOC container. Share state between elements                     |
 | [@joist/element](packages/element)       | utilities for custom elements                                   |
 | [@joist/observable](packages/observable) | Observe changes to class properties                             |
-| [@joist/ssr](packages/ssr)               | configure and prerender webcomponents as declarative shadow dom |
