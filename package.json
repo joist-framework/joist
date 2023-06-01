@@ -17,13 +17,15 @@
       "service": true,
       "dependencies": [
         {
-          "script": "./integration/counter:build",
-          "cascade": false
-        },
-        {
-          "script": "./integration/todo:build",
+          "script": "integration",
           "cascade": false
         }
+      ]
+    },
+    "integration": {
+      "dependencies": [
+        "./integration/todo:build",
+        "./integration/counter:build"
       ]
     }
   },
