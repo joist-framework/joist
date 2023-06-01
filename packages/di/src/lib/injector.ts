@@ -69,14 +69,18 @@ export class Injector {
     this.#instances.set(token, instance);
 
     if (instance.injector$$ instanceof Injector) {
-      // set the this injector instance as a parent.
-      // this means that each calling injector will be the parent of what it creates.
-      // this allows the created service to navigate up it's chain to find a root
+      /**
+       * set the this injector instance as a parent.
+       * this means that each calling injector will be the parent of what it creates.
+       * this allows the created service to navigate up it's chain to find a root
+       */
       instance.injector$$.setParent(this);
 
-      // the on inject lifecycle hook should be called after the parent is defined.
-      // this ensures that services are initialized when the chain is settled
-      // this is required since the parent is set after the instance is constructed
+      /**
+       * the on inject lifecycle hook should be called after the parent is defined.
+       * this ensures that services are initialized when the chain is settled
+       * this is required since the parent is set after the instance is constructed
+       */
       if (instance.onInject) {
         instance.onInject();
       }
