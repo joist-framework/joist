@@ -93,3 +93,41 @@ customElements.define('my-element', MyElement);
   <my-element></my-element>
 </color-ctx>
 ```
+
+#### No decorators no problem:
+
+While this library is built with decorators in mind it is designed so that it can be used without them.
+
+```TS
+import { Injector, injectable, inject } from '@joist/di';
+
+class FooService {
+  sayHello() {
+    return 'Hello From FooService';
+  }
+}
+
+const BarService = injectable(
+  class {
+    #foo = inject(FooService);
+
+    sayHello() {
+      return this.#foo().sayHello();
+    }
+  }
+)
+
+const BazService = injectable(
+  class {
+    #bar = inject(BarService);
+
+    onInject() {
+      console.log(this.bar().sayHello())
+    }
+  }
+);
+
+const app = new Injector();
+
+app.get(BazService);
+```

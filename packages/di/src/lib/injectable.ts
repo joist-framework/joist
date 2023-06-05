@@ -2,7 +2,7 @@ import { ProviderToken } from './provider.js';
 import { Injectable, Injector } from './injector.js';
 import { environment } from './environment.js';
 
-export function injectable<T extends ProviderToken<any>>(Base: T, _: unknown) {
+export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
   return withInjector(Base);
 }
 

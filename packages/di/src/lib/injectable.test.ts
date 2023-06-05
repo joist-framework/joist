@@ -27,16 +27,15 @@ describe('@injectable()', () => {
 
     class Bar extends Foo {}
 
-    @injectable
-    class MyElement extends HTMLElement {
-      static providers = [{ provide: Foo, use: Bar }];
+    const MyElement = injectable(
+      class {
+        static providers = [{ provide: Foo, use: Bar }];
 
-      foo = inject(Foo);
-    }
+        foo = inject(Foo);
+      }
+    );
 
-    customElements.define('injectable-4', MyElement);
-
-    const el = document.createElement('injectable-4') as MyElement;
+    const el = new MyElement();
 
     expect(el.foo()).to.be.instanceOf(Bar);
   });
