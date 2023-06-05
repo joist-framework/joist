@@ -2,6 +2,8 @@
 
 Adds the ability to monitor class properties (static and instance) for changes
 
+## NOTE: This lastest version uses the stage-3 decorator proposal. This requires typescript >= 5.0 and many other tools do not yet support this latest syntax.
+
 #### Installation:
 
 ```BASH
