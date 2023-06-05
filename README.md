@@ -1,7 +1,5 @@
 # Joist
 
-## NOTE: This lastest version uses the stage-3 decorator proposal. This requires typescript >= 5.0 and many other tools do not yet support this latest syntax. (most notably esbuild which is used by vite)
-
 Web components are awesome! Joist is a set of small libraries designed to add the bare minimum to web components to make you as productive as possible. The entire project started years ago when I made my first attempt at bringing dependency injection (@joist/di) to Custom Elements as a way to share state between them. Along the way, several other packages were added to solve different challenges.
 
 When you have to integrate with many different applications, many different frameworks with many different technologies you need a toolkit to help.
