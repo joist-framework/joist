@@ -121,13 +121,13 @@ const BazService = injectable(
   class {
     #bar = inject(BarService);
 
-    onInject() {
-      console.log(this.bar().sayHello())
+    sayHello() {
+      console.log(this.bar().sayHello());
     }
   }
 );
 
 const app = new Injector();
 
-app.get(BazService);
+app.get(BazService).sayHello();
 ```
