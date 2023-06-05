@@ -2,6 +2,8 @@
 
 Create a shadow root and apply styles and html as defined
 
+## NOTE: This lastest version uses the stage-3 decorator proposal. This requires typescript >= 5.0 and many other tools do not yet support this latest syntax.
+
 #### Installation:
 
 ```BASH
