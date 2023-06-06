@@ -22,10 +22,12 @@ export function attr<This extends HTMLElement>(
           return attr;
         }
 
-        // should set attributes AFTER init to allow setup to complete
-        // this causes attribute changed callback to fire
-        // If the user attempts to read or write to this property in that cb it will fail
-        // this also normalizes when the attributeChangedCallback is called in different rendering scenarios
+        /**
+         * should set attributes AFTER init to allow setup to complete
+         * this causes attribute changed callback to fire
+         * If the user attempts to read or write to this property in that cb it will fail
+         * this also normalizes when the attributeChangedCallback is called in different rendering scenarios
+         */
         Promise.resolve().then(() => {
           const cached = get.call(this);
 

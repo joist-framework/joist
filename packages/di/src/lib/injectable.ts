@@ -3,14 +3,6 @@ import { Injectable, Injector } from './injector.js';
 import { environment } from './environment.js';
 
 export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
-  return withInjector(Base);
-}
-
-/**
- * This mixin is applied by the @injectable decorator.
- * Id defines an instance injector and registers custom element lifecycle hooks
- */
-function withInjector<T extends ProviderToken<any>>(Base: T) {
   return class InjectableNode extends Base implements Injectable {
     injector$$ = new Injector(Base.providers);
 
