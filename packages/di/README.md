@@ -37,7 +37,7 @@ class BazService {
   // services cannot be accessed in the constructor.
   // the onInject callback will be called when injectors have resolved
   onInject() {
-    console.log(this.bar().sayHello())
+    console.log(this.#bar().sayHello())
   }
 }
 
@@ -74,7 +74,7 @@ class MyElement extends HTMLElement {
   #colors = inject(Colors);
 
   connectedCallback() {
-    const { primary } = this.colors();
+    const { primary } = this.#colors();
 
     this.style.background = primary;
   }
@@ -122,7 +122,7 @@ const BazService = injectable(
     #bar = inject(BarService);
 
     sayHello() {
-      console.log(this.bar().sayHello());
+      console.log(this.#bar().sayHello());
     }
   }
 );
