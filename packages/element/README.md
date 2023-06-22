@@ -13,7 +13,7 @@ npm i @joist/element@next
 #### Example:
 
 ```TS
-import { shadow, css, html, define, listen, attr } from '@joist/element';
+import { tagName, shadow, css, html, attr, listen } from '@joist/element';
 
 export class MyElement extends HTMLElement {
   // define a custom element
