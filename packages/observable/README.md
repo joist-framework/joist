@@ -14,8 +14,8 @@ npm i @joist/observable@next
 import { observe, effect } from '@joist/observable';
 
 class AppState {
-  @observe todos: string[] = [];
-  @observe userName?: string;
+  @observe accessor todos: string[] = [];
+  @observe accessor userName?: string;
 
   @effect onChange(changes: Set<string | symbol>) {
     console.log(changes);
