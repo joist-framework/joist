@@ -9,17 +9,19 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
     constructor(..._: any[]) {
       super();
 
-      if (this instanceof HTMLElement) {
-        this.addEventListener('finddiroot', (e) => {
-          const parentInjector = findInjectorRoot(e);
+      try {
+        if (this instanceof HTMLElement) {
+          this.addEventListener('finddiroot', (e) => {
+            const parentInjector = findInjectorRoot(e);
 
-          if (parentInjector !== null) {
-            this.injector$$.setParent(parentInjector);
-          } else {
-            this.injector$$.setParent(environment());
-          }
-        });
-      }
+            if (parentInjector !== null) {
+              this.injector$$.setParent(parentInjector);
+            } else {
+              this.injector$$.setParent(environment());
+            }
+          });
+        }
+      } catch {}
     }
 
     onInject() {
@@ -29,13 +31,15 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
     }
 
     connectedCallback() {
-      if (this instanceof HTMLElement) {
-        this.dispatchEvent(new Event('finddiroot'));
+      try {
+        if (this instanceof HTMLElement) {
+          this.dispatchEvent(new Event('finddiroot'));
 
-        if (super.connectedCallback) {
-          super.connectedCallback();
+          if (super.connectedCallback) {
+            super.connectedCallback();
+          }
         }
-      }
+      } catch {}
     }
 
     disconnectedCallback() {
