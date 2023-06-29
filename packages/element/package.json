@@ -1,6 +1,7 @@
 {
   "name": "@joist/element",
   "version": "3.0.0-next.19",
+  "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
