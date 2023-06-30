@@ -37,6 +37,8 @@ class Car {
   tires = inject(Tires);
 
   accelerate() {
+    // the inject function returns a function
+    // this means that services are not initalized until they are called
     return this.engine().accelerate();
   }
 }
