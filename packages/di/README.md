@@ -21,6 +21,10 @@ import { Injector, injectable, inject } from '@joist/di';
 
 class Engine {
   type: 'gas' | 'electric' = 'gas';
+
+  accelerate() {
+    return 'vroom'
+  }
 }
 
 class Tires {
@@ -31,19 +35,27 @@ class Tires {
 class Car {
   engine = inject(Engine)
   tires = inject(Tires);
+
+  accelerate() {
+    return this.engine().accelerate();
+  }
 }
 
 const app1 = new Injector();
 const car1 = app1.get(Car);
 
-// gas, 16
-console.log(car.engine(), car.tires());
+// vroom, 16
+console.log(car.accelerate(), car.tires().size);
 
 const app2 = new Injector([
   {
     provide: Engine,
     use: class extends Engine {
-      type = 'electric'
+      type = 'electric';
+
+      accelerate() {
+        return 'hmmmmmmmm'
+      }
     }
   },
   {
@@ -56,8 +68,8 @@ const app2 = new Injector([
 
 const car2 = app2.get(Car);
 
-// electric, 20
-console.log(car.engine(), car.tires());
+//hmmmmmmmm, 20
+console.log(car.accelerate(), car.tires().size);
 ```
 
 #### Custom Elements:
