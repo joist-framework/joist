@@ -7,7 +7,7 @@ Create a shadow root and apply styles and html as defined
 #### Installation:
 
 ```BASH
-npm i @joist/element@next
+npm i @joist/element@rc
 ```
 
 #### Example:

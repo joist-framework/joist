@@ -1,52 +1,68 @@
 # Di
 
-Dependency Injection in ~800 bytes. This allows you to inject services into other class instances (including custom elements).
+Dependency Injection in ~800 bytes.
+
+Allows you to inject services into other class instances (including custom elements and node).
 
 #### Installation:
 
 ```BASH
-npm i @joist/di@next
+npm i @joist/di@rc
 ```
 
 #### Example:
 
+Classes that are decoratored with `@injectable` can use the `inject()` function to inject a class instance.
+
+Different implementations can be provided for services.
+
 ```TS
 import { Injector, injectable, inject } from '@joist/di';
 
-// Any class can be injected
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
+class Engine {
+  type: 'gas' | 'electric' = 'gas';
 }
 
-// classes must be decorated with @injectable to use the inject function
-@injectable
-class BarService {
-  #foo = inject(FooService);
-
-  sayHello() {
-    return this.#foo().sayHello();
-  }
+class Tires {
+  size = 16;
 }
 
 @injectable
-class BazService {
-  #bar = inject(BarService);
-
-  // services cannot be accessed in the constructor.
-  // the onInject callback will be called when injectors have resolved
-  onInject() {
-    console.log(this.#bar().sayHello())
-  }
+class Car {
+  engine = inject(Engine)
+  tires = inject(Tires);
 }
 
-const app = new Injector();
+const app1 = new Injector();
+const car1 = app1.get(Car);
 
-app.get(BazService);
+// gas, 16
+console.log(car.engine(), car.tires());
+
+const app2 = new Injector([
+  {
+    provide: Engine,
+    use: class extends Engine {
+      type = 'electric'
+    }
+  },
+  {
+    provide: Tires,
+    use: class extends Tires {
+      size = 20
+    }
+  }
+]);
+
+const car2 = app2.get(Car);
+
+// electric, 20
+console.log(car.engine(), car.tires());
 ```
 
 #### Custom Elements:
+
+Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
 
 ```TS
 import { injectable, inject } from '@joist/di';
@@ -58,6 +74,7 @@ class Colors {
 
 @injectable
 class ColorCtx extends HTMLElement {
+  // services can be scoped to a particular injectable
   static providers = [
     {
       provide: Colors,
@@ -101,33 +118,24 @@ While this library is built with decorators in mind it is designed so that it ca
 ```TS
 import { Injector, injectable, inject } from '@joist/di';
 
-class FooService {
-  sayHello() {
-    return 'Hello From FooService';
-  }
+class Engine {
+  type: 'gas' | 'electric' = 'gas';
 }
 
-const BarService = injectable(
+class Tires {
+  size = 16;
+}
+
+const Car = injectable(
   class {
-    #foo = inject(FooService);
-
-    sayHello() {
-      return this.#foo().sayHello();
-    }
-  }
-)
-
-const BazService = injectable(
-  class {
-    #bar = inject(BarService);
-
-    sayHello() {
-      console.log(this.#bar().sayHello());
-    }
+    engine = inject(Engine)
+    tires = inject(Tires);
   }
 );
 
 const app = new Injector();
+const car = app.get(Car);
 
-app.get(BazService).sayHello();
+// gas, 16
+console.log(car.engine(), car.tires());
 ```
