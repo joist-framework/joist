@@ -23,7 +23,7 @@ class Engine {
   type: 'gas' | 'electric' = 'gas';
 
   accelerate() {
-    return 'vroom'
+    return 'vroom';
   }
 }
 
@@ -33,7 +33,7 @@ class Tires {
 
 @injectable
 class Car {
-  engine = inject(Engine)
+  engine = inject(Engine);
   tires = inject(Tires);
 
   accelerate() {
@@ -56,14 +56,14 @@ const app2 = new Injector([
       type = 'electric';
 
       accelerate() {
-        return 'hmmmmmmmm'
+        return 'hmmmmmmmm';
       }
     }
   },
   {
     provide: Tires,
     use: class extends Tires {
-      size = 20
+      size = 20;
     }
   }
 ]);
@@ -142,7 +142,7 @@ class Tires {
 
 const Car = injectable(
   class {
-    engine = inject(Engine)
+    engine = inject(Engine);
     tires = inject(Tires);
   }
 );
