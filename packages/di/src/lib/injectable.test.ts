@@ -115,27 +115,29 @@ describe('@injectable()', () => {
 
     customElements.define('ctx-1', Ctx1);
     customElements.define('ctx-2', Ctx2);
-    customElements.define('ctx-child-1', Child);
+    customElements.define('ctx-child', Child);
 
     const el = await fixture(html`
-      <ctx-1>
-        <ctx-child-1></ctx-child-1>
-      </ctx-1>
+      <div>
+        <ctx-1>
+          <ctx-child></ctx-child>
+        </ctx-1>
 
-      <ctx-2></ctx-2>
+        <ctx-2></ctx-2>
+      </div>
     `);
 
     const ctx2 = el.querySelector('ctx-2')!;
 
-    let child = el.querySelector<Child>('ctx-child-1')!;
+    let child = el.querySelector<Child>('ctx-child')!;
 
     expect(child.a()).to.be.instanceOf(A);
 
     child.remove();
 
-    ctx2?.append(child);
+    ctx2.append(child);
 
-    child = el.querySelector<Child>('ctx-child-1')!;
+    child = el.querySelector<Child>('ctx-child')!;
 
     expect(child.a()).to.be.instanceOf(AltA);
   });
