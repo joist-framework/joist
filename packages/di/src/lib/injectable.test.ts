@@ -120,7 +120,7 @@ describe('@injectable()', () => {
     const el = await fixture(html`
       <ctx-1>
         <ctx-child-1></ctx-child-1>
-      </ctx-2>
+      </ctx-1>
 
       <ctx-2></ctx-2>
     `);
