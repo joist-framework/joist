@@ -43,13 +43,13 @@ class Car {
   }
 }
 
-const app1 = new Injector();
-const car1 = app1.get(Car);
+const factory1 = new Injector();
+const car1 = factory1.get(Car);
 
 // vroom, 16
-console.log(car.accelerate(), car.tires().size);
+console.log(car1.accelerate(), car1.tires().size);
 
-const app2 = new Injector([
+const factory2 = new Injector([
   {
     provide: Engine,
     use: class extends Engine {
@@ -68,10 +68,10 @@ const app2 = new Injector([
   }
 ]);
 
-const car2 = app2.get(Car);
+const car2 = factory2.get(Car);
 
 //hmmmmmmmm, 20
-console.log(car.accelerate(), car.tires().size);
+console.log(car2.accelerate(), car2.tires().size);
 ```
 
 #### Custom Elements:
