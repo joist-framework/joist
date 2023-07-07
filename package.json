@@ -34,7 +34,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.1.1",
     "@web/test-runner": "^0.16.1",
-    "@web/test-runner-puppeteer": "^0.13.1",
+    "@web/test-runner-playwright": "^0.10.1",
     "ava": "^5.2.0",
     "browser-sync": "^2.29.3",
     "tslib": "2.6.0",

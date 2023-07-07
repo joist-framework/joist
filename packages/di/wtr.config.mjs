@@ -1,4 +1,4 @@
-import { puppeteerLauncher } from '@web/test-runner-puppeteer';
+import { playwrightLauncher } from '@web/test-runner-playwright';
 
 export default {
   port: 8000,
@@ -6,10 +6,8 @@ export default {
   nodeResolve: true,
   files: 'target/**/*.test.js',
   browsers: [
-    puppeteerLauncher({
-      launchOptions: {
-        headless: 'new',
-      },
-    }),
+    playwrightLauncher({ product: 'chromium' }),
+    playwrightLauncher({ product: 'firefox' }),
+    playwrightLauncher({ product: 'webkit' }),
   ],
 };
