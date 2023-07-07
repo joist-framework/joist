@@ -53,7 +53,7 @@
       ]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs --port 8002",
+      "command": "wtr --config wtr.config.mjs",
       "files": [
         "target/**"
       ],
