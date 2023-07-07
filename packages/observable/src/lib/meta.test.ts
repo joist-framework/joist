@@ -8,7 +8,6 @@ describe('meta:meta', () => {
 
     expect(data).to.deep.equal({
       changes: new Set(),
-      effects: new Set(),
       upgradable: new Map(),
       scheduler: null,
     });

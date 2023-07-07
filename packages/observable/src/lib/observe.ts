@@ -1,10 +1,19 @@
+// ensure that the metadata symbol exists
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+
 import { EffectFn, MetaData } from './meta.js';
 
 const metaData = new MetaData();
 
+export interface ObservableCtx {
+  metadata: {
+    effects?: Set<EffectFn>;
+  };
+}
+
 export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
-  ctx: ClassAccessorDecoratorContext<This, Value>
+  ctx: ClassAccessorDecoratorContext<This, Value> & ObservableCtx
 ): ClassAccessorDecoratorResult<This, Value> {
   // handle upgradable values (specifically custom elements)
   ctx.addInitializer(function (this: This) {
@@ -40,8 +49,10 @@ export function observe<This extends object, Value>(
 
       if (meta.scheduler === null) {
         meta.scheduler = Promise.resolve().then(() => {
-          for (let effect of meta.effects) {
-            effect.call(this, meta.changes);
+          if (ctx.metadata.effects) {
+            for (let effect of ctx.metadata.effects) {
+              effect.call(this, meta.changes);
+            }
           }
 
           meta.scheduler = null;
@@ -56,8 +67,10 @@ export function observe<This extends object, Value>(
   };
 }
 
-export function effect<T extends object>(value: EffectFn, ctx: ClassMethodDecoratorContext<T>) {
-  ctx.addInitializer(function () {
-    metaData.read(this).effects.add(value);
-  });
+export function effect<T extends object>(
+  value: EffectFn,
+  ctx: ClassMethodDecoratorContext<T> & ObservableCtx
+) {
+  ctx.metadata.effects ??= new Set();
+  ctx.metadata.effects.add(value);
 }
