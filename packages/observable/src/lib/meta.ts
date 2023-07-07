@@ -4,7 +4,6 @@ export class ObservableMetaData {
   scheduler: Promise<void> | null = null;
   upgradable = new Map<string | symbol, unknown>();
   changes = new Set<string | symbol>();
-  effects = new Set<EffectFn>();
 }
 
 export class MetaData {

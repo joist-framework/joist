@@ -1,26 +1,24 @@
 name: Test and Publish
 
 on:
+  pull_request:
   push:
     branches: [main]
     paths-ignore:
       - 'README.md'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - run: echo //registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN} > .npmrc
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
       - name: Bootstrap
         run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
       - name: Lib Tests
         run: npm test --workspaces
