@@ -39,6 +39,6 @@
     "browser-sync": "^2.29.3",
     "tslib": "2.6.0",
     "typescript": "^5.2.0-dev.20230705",
-    "wireit": "^0.9.5"
+    "wireit": "^0.10.0"
   }
 }
