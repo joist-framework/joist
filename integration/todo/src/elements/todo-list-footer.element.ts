@@ -1,5 +1,5 @@
 import { css, html, shadow, tagName } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/inject';
 
 import { TodoService } from '../services/todo.service.js';
 

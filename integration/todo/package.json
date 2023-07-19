@@ -27,7 +27,7 @@
         "tsconfig.tsbuildinfo"
       ],
       "dependencies": [
-        "../../packages/di:build",
+        "../../packages/inject:build",
         "../../packages/element:build",
         "../../packages/observable:build"
       ]

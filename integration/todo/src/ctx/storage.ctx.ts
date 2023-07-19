@@ -1,4 +1,4 @@
-import { injectable } from '@joist/di';
+import { injectable } from '@joist/inject';
 import { css, html, shadow, tagName } from '@joist/element';
 
 import { AppStorage, Storage } from '../services/storage.service.js';

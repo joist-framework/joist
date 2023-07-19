@@ -1,5 +1,5 @@
 {
-  "name": "@joist/di",
+  "name": "@joist/inject",
   "version": "3.0.0-rc.2",
   "type": "module",
   "main": "./target/lib.js",

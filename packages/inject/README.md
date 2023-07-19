@@ -7,7 +7,7 @@ Allows you to inject services into other class instances (including custom eleme
 #### Installation:
 
 ```BASH
-npm i @joist/di@rc
+npm i @joist/inject@rc
 ```
 
 #### Example:
@@ -17,7 +17,7 @@ Classes that are decoratored with `@injectable` can use the `inject()` function 
 Different implementations can be provided for services.
 
 ```TS
-import { Injector, injectable, inject } from '@joist/di';
+import { Injector, injectable, inject } from '@joist/inject';
 
 class Engine {
   type: 'gas' | 'electric' = 'gas';
@@ -79,7 +79,7 @@ console.log(car2.accelerate(), car2.tires().size);
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
 
 ```TS
-import { injectable, inject } from '@joist/di';
+import { injectable, inject } from '@joist/inject';
 
 class Colors {
   primary = 'red';
@@ -130,7 +130,7 @@ customElements.define('my-element', MyElement);
 While this library is built with decorators in mind it is designed so that it can be used without them.
 
 ```TS
-import { Injector, injectable, inject } from '@joist/di';
+import { Injector, injectable, inject } from '@joist/inject';
 
 class Engine {
   type: 'gas' | 'electric' = 'gas';

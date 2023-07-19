@@ -1,4 +1,4 @@
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/inject';
 import { observe, effect } from '@joist/observable';
 
 import { AppStorage } from './storage.service.js';

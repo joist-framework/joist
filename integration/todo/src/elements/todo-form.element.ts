@@ -1,4 +1,4 @@
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from '@joist/inject';
 import { css, html, shadow, listen, tagName } from '@joist/element';
 
 import { TodoService, Todo } from '../services/todo.service.js';
