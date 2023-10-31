@@ -13,6 +13,7 @@
     }
   },
   "files": [
+    "src",
     "target"
   ],
   "sideEffects": false,
