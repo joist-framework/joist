@@ -7,7 +7,7 @@ Allows you to inject services into other class instances (including custom eleme
 #### Installation:
 
 ```BASH
-npm i @joist/di@rc
+npm i @joist/di
 ```
 
 #### Example:
