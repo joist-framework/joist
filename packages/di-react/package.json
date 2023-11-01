@@ -1,0 +1,69 @@
+{
+  "name": "@joist/di-react",
+  "version": "3.0.7",
+  "type": "module",
+  "main": "./target/lib.js",
+  "module": "./target/lib.js",
+  "exports": {
+    ".": {
+      "import": "./target/lib.js"
+    },
+    "./*": {
+      "import": "./target/lib/*.js"
+    }
+  },
+  "files": [
+    "src",
+    "target"
+  ],
+  "sideEffects": false,
+  "description": "React hooks for dependency injection",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/joist.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "DI",
+    "Dependency Injection",
+    "WebComponents",
+    "React"
+  ],
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/joist/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
+    },
+    "test": {
+      "command": "wtr --config wtr.config.mjs",
+      "files": [
+        "target/**"
+      ],
+      "output": [],
+      "dependencies": [
+        "build"
+      ]
+    }
+  },
+  "gitHead": "e6e36105708633b45a0585b066a89f07a7ac78cb"
+}
