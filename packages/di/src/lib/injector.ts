@@ -1,8 +1,8 @@
+import { INJECTABLES } from './injectable.js';
 import { ProviderToken, Provider } from './provider.js';
 
 // defines available properties that will be on a class instance that can use the inject function
 export type Injectable = object & {
-  injector$$?: Injector;
   onInject?(): void;
 };
 
@@ -68,13 +68,15 @@ export class Injector {
 
     this.#instances.set(token, instance);
 
-    if (instance.injector$$ instanceof Injector) {
+    const injector = INJECTABLES.get(instance);
+
+    if (injector) {
       /**
        * set the this injector instance as a parent.
        * this means that each calling injector will be the parent of what it creates.
        * this allows the created service to navigate up it's chain to find a root
        */
-      instance.injector$$.setParent(this);
+      injector.setParent(this);
 
       /**
        * the on inject lifecycle hook should be called after the parent is defined.

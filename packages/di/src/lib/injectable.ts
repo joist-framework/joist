@@ -1,13 +1,17 @@
 import { ProviderToken } from './provider.js';
-import { Injectable, Injector } from './injector.js';
+import { Injector } from './injector.js';
 import { environment } from './environment.js';
 
-export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
-  return class InjectableNode extends Base implements Injectable {
-    injector$$ = new Injector(Base.providers);
+export const INJECTABLES = new WeakMap<object, Injector>();
 
+export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
+  return class InjectableNode extends Base {
     constructor(..._: any[]) {
       super();
+
+      const injector = new Injector(Base.providers);
+
+      INJECTABLES.set(this, injector);
 
       try {
         if (this instanceof HTMLElement) {
@@ -15,9 +19,9 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
             const parentInjector = findInjectorRoot(e);
 
             if (parentInjector !== null) {
-              this.injector$$.setParent(parentInjector);
+              injector.setParent(parentInjector);
             } else {
-              this.injector$$.setParent(environment());
+              injector.setParent(environment());
             }
           });
         }
@@ -43,7 +47,11 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
     }
 
     disconnectedCallback() {
-      this.injector$$.setParent(undefined);
+      const injector = INJECTABLES.get(this);
+
+      if (injector) {
+        injector.setParent(undefined);
+      }
 
       if (super.disconnectedCallback) {
         super.disconnectedCallback();
@@ -60,8 +68,10 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    if ('injector$$' in part && part.injector$$ instanceof Injector) {
-      return part.injector$$;
+    const injector = INJECTABLES.get(part);
+
+    if (injector) {
+      return injector;
     }
   }
 

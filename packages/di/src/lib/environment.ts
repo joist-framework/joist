@@ -1,9 +1,13 @@
 import { Injector } from './injector.js';
 import { Provider } from './provider.js';
 
-const rootInjector = new Injector();
+let rootInjector: Injector;
 
 export function environment(): Injector {
+  if (!rootInjector) {
+    rootInjector = new Injector();
+  }
+
   return rootInjector;
 }
 
