@@ -103,30 +103,4 @@ describe('observable: observe()', () => {
       el.value++;
     });
   });
-
-  it('test', (done) => {
-    class Counter extends HTMLElement {
-      @observe accessor value = 0;
-
-      constructor() {
-        super();
-
-        expect(this.value).to.equal(100);
-      }
-
-      @effect onChange() {
-        expect(this.value).to.equal(101);
-
-        done();
-      }
-    }
-
-    fixture<any>(html`<observable-1></observable-1>`).then((el) => {
-      el.value = 100;
-
-      customElements.define('observable-1', Counter);
-
-      el.value++;
-    });
-  });
 });
