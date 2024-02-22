@@ -20,7 +20,7 @@ class AppState {
   }
 }
 
-const state = new State();
+const state = new AppState();
 
 state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
