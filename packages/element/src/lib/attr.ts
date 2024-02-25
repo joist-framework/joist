@@ -1,52 +1,17 @@
+// ensure that the metadata symbol exists
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+
+import { ElementMetadata } from './element';
+
 export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
+  ctx.metadata.el ??= new ElementMetadata();
+  const meta = ctx.metadata.el as ElementMetadata;
+  meta.attrs.push(String(ctx.name));
+
   return {
-    init(value: unknown) {
-      if (typeof ctx.name === 'string') {
-        if (this.hasAttribute(ctx.name)) {
-          const attr = this.getAttribute(ctx.name);
-
-          // treat as boolean
-          if (attr === '') {
-            return true;
-          }
-
-          // treat as number
-          if (typeof value === 'number') {
-            return Number(attr);
-          }
-
-          // treat as string
-          return attr;
-        }
-
-        /**
-         * should set attributes AFTER init to allow setup to complete
-         * this causes attribute changed callback to fire
-         * If the user attempts to read or write to this property in that cb it will fail
-         * this also normalizes when the attributeChangedCallback is called in different rendering scenarios
-         */
-        Promise.resolve().then(() => {
-          const cached = get.call(this);
-
-          if (cached !== null && cached !== undefined && cached !== '') {
-            if (typeof cached === 'boolean') {
-              if (cached === true) {
-                // set boolean attribute
-                this.setAttribute(ctx.name.toString(), '');
-              }
-            } else {
-              // set key/value attribute
-              this.setAttribute(ctx.name.toString(), String(cached));
-            }
-          }
-        });
-      }
-
-      return value;
-    },
     set(value: unknown) {
       if (typeof ctx.name === 'string') {
         if (typeof value === 'boolean') {

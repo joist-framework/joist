@@ -3,22 +3,6 @@ import { expect, fixture, html } from '@open-wc/testing';
 import { attr } from './attr.js';
 
 describe('observable: attr()', () => {
-  it('should write default value to attribute', async () => {
-    class MyElement extends HTMLElement {
-      @attr accessor value1 = 'hello'; // no attribute
-      @attr accessor value2 = 0; // number
-      @attr accessor value3 = true; // boolean
-    }
-
-    customElements.define('attr-test-1', MyElement);
-
-    const el = await fixture(html`<attr-test-1></attr-test-1>`);
-
-    expect(el.getAttribute('value1')).to.equal('hello');
-    expect(el.getAttribute('value2')).to.equal('0');
-    expect(el.getAttribute('value3')).to.equal('');
-  });
-
   it('should read and parse the correct values', async () => {
     class MyElement extends HTMLElement {
       @attr accessor value1 = 100; // no attribute
