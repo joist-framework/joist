@@ -1,11 +1,10 @@
-import { css, html, shadow, listen, attr, tagName } from '@joist/element';
+import { css, html, shadow, listen, attr, tagName, element } from '@joist/element';
 
 import { Todo, TodoStatus } from '../services/todo.service.js';
 
+@element
 export class TodoCardElement extends HTMLElement {
   @tagName static tagName = 'todo-card';
-
-  static observedAttributes = ['status'];
 
   @shadow styles = css`
     :host {

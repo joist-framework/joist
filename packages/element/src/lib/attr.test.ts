@@ -2,7 +2,7 @@ import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attr.js';
 
-describe('observable: attr()', () => {
+describe('@attr()', () => {
   it('should read and parse the correct values', async () => {
     class MyElement extends HTMLElement {
       @attr accessor value1 = 100; // no attribute

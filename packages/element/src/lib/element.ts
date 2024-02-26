@@ -1,29 +1,35 @@
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+
 export class ElementMetadata {
   attrs: string[] = [];
+  tagName?: (val: unknown) => unknown;
 }
 
 export interface ElementCtx {
-  metadata: {
-    el: ElementMetadata;
-  };
+  el?: ElementMetadata;
 }
 
 export function element<T extends new (...args: any[]) => HTMLElement>(
   Base: T,
   ctx: ClassDecoratorContext<T>
 ) {
-  const { metadata } = ctx as unknown as ElementCtx;
+  ctx.metadata.el ??= new ElementMetadata();
+  const meta = ctx.metadata.el as ElementMetadata;
+
+  ctx.addInitializer(function (this: T) {
+    const val = meta.tagName!(this) as string;
+
+    if (!customElements.get(val)) {
+      customElements.define(val, this);
+    }
+  });
 
   return class JoistElement extends Base {
     // make all attrs observable
-    static observedAttributes = [...metadata.el.attrs];
-
-    constructor(...args: any[]) {
-      super(...args);
-    }
+    static observedAttributes = [...meta.attrs];
 
     connectedCallback() {
-      for (let attr of metadata.el.attrs) {
+      for (let attr of meta.attrs) {
         const value = Reflect.get(this, attr);
 
         // reflect values back to attributes

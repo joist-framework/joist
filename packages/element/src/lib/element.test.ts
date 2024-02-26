@@ -4,7 +4,7 @@ import { attr } from './attr.js';
 import { element } from './element.js';
 import { tagName } from './tag-name.js';
 
-describe('element()', () => {
+describe('@element()', () => {
   it('should write default value to attribute', async () => {
     @element
     class MyElement extends HTMLElement {

@@ -1,7 +1,7 @@
 // ensure that the metadata symbol exists
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-import { ElementMetadata } from './element';
+import { ElementMetadata } from './element.js';
 
 export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,

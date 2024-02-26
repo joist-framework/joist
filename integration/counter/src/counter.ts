@@ -1,9 +1,8 @@
-import { css, html, shadow, listen, tagName, attr } from '@joist/element';
+import { css, html, shadow, listen, tagName, attr, element } from '@joist/element';
 
+@element
 export class CounterElement extends HTMLElement {
   @tagName static tagName = 'joist-counter';
-
-  static observedAttributes = ['value'];
 
   @shadow styles = css`
     * {

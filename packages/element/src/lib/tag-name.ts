@@ -1,11 +1,10 @@
-export function tagName(_val: unknown, _ctx: ClassFieldDecoratorContext) {
-  return function (this: CustomElementConstructor, val: string) {
-    Promise.resolve().then(() => {
-      if (!customElements.get(val)) {
-        customElements.define(val, this);
-      }
-    });
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-    return val;
-  };
+import { ElementCtx, ElementMetadata } from './element.js';
+
+export function tagName(_val: unknown, ctx: ClassFieldDecoratorContext & { metadata: ElementCtx }) {
+  ctx.metadata.el ??= new ElementMetadata();
+  const meta = ctx.metadata.el as ElementMetadata;
+
+  meta.tagName = ctx.access.get;
 }
