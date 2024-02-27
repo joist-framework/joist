@@ -2,7 +2,7 @@
 
 export class ElementMetadata {
   attrs: string[] = [];
-  tagName?: (val: unknown) => unknown;
+  tagName?: (val: any) => string;
 }
 
 export interface ElementCtx {
@@ -17,10 +17,12 @@ export function element<T extends new (...args: any[]) => HTMLElement>(
   const meta = ctx.metadata.el as ElementMetadata;
 
   ctx.addInitializer(function (this: T) {
-    const val = meta.tagName!(this) as string;
+    if (meta.tagName) {
+      const val = meta.tagName(this);
 
-    if (!customElements.get(val)) {
-      customElements.define(val, this);
+      if (!customElements.get(val)) {
+        customElements.define(val, this);
+      }
     }
   });
 
