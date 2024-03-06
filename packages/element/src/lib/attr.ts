@@ -1,14 +1,10 @@
-// ensure that the metadata symbol exists
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
-
-import { ElementMetadata } from './element.js';
+import { metadataStore } from './metadata.js';
 
 export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
-  ctx.metadata.el ??= new ElementMetadata();
-  const meta = ctx.metadata.el as ElementMetadata;
+  const meta = metadataStore.read(ctx.metadata);
   meta.attrs.push(String(ctx.name));
 
   return {

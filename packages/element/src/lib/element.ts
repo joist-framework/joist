@@ -1,20 +1,10 @@
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
-
-export class ElementMetadata {
-  attrs: string[] = [];
-  tagName?: (val: any) => string;
-}
-
-export interface ElementCtx {
-  el?: ElementMetadata;
-}
+import { metadataStore } from './metadata.js';
 
 export function element<T extends new (...args: any[]) => HTMLElement>(
   Base: T,
   ctx: ClassDecoratorContext<T>
 ) {
-  ctx.metadata.el ??= new ElementMetadata();
-  const meta = ctx.metadata.el as ElementMetadata;
+  const meta = metadataStore.read(ctx.metadata);
 
   ctx.addInitializer(function (this: T) {
     if (meta.tagName) {

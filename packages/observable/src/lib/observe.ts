@@ -1,23 +1,14 @@
 // ensure that the metadata symbol exists
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-import { EffectFn, MetaData } from './meta.js';
-
-const metaData = new MetaData();
-
-export interface ObservableCtx {
-  metadata: {
-    effects?: Set<EffectFn>;
-  };
-}
+import { EffectFn, instanceMetadataStore, observableMetadataStore } from './meta.js';
 
 export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
-  ctx: ClassAccessorDecoratorContext<This, Value> & ObservableCtx
+  ctx: ClassAccessorDecoratorContext<This, Value>
 ): ClassAccessorDecoratorResult<This, Value> {
   // handle upgradable values (specifically custom elements)
   ctx.addInitializer(function (this: This) {
-    const meta = metaData.read(this);
+    const instanceMeta = instanceMetadataStore.read(this);
 
     let value: Value | undefined;
 
@@ -30,47 +21,44 @@ export function observe<This extends object, Value>(
       // if there is a value, delete it and cache it for init
       delete (<any>this)[ctx.name];
 
-      meta.upgradable.set(ctx.name, value);
+      instanceMeta.upgradable.set(ctx.name, value);
     }
   });
 
   return {
     init(value) {
-      const meta = metaData.read(this);
+      const instanceMeta = instanceMetadataStore.read(this);
 
-      if (meta.upgradable.has(ctx.name)) {
-        return meta.upgradable.get(ctx.name) as Value;
+      if (instanceMeta.upgradable.has(ctx.name)) {
+        return instanceMeta.upgradable.get(ctx.name) as Value;
       }
 
       return value;
     },
     set(value) {
-      const meta = metaData.read(this);
+      const instanceMeta = instanceMetadataStore.read(this);
+      const observableMeta = observableMetadataStore.read(ctx.metadata);
 
-      if (meta.scheduler === null) {
-        meta.scheduler = Promise.resolve().then(() => {
-          if (ctx.metadata.effects) {
-            for (let effect of ctx.metadata.effects) {
-              effect.call(this, meta.changes);
-            }
+      if (instanceMeta.scheduler === null) {
+        instanceMeta.scheduler = Promise.resolve().then(() => {
+          for (let effect of observableMeta.effects) {
+            effect.call(this, instanceMeta.changes);
           }
 
-          meta.scheduler = null;
-          meta.changes.clear();
+          instanceMeta.scheduler = null;
+          instanceMeta.changes.clear();
         });
       }
 
-      meta.changes.add(ctx.name);
+      instanceMeta.changes.add(ctx.name);
 
       base.set.call(this, value);
     },
   };
 }
 
-export function effect<T extends object>(
-  value: EffectFn,
-  ctx: ClassMethodDecoratorContext<T> & ObservableCtx
-) {
-  ctx.metadata.effects ??= new Set();
-  ctx.metadata.effects.add(value);
+export function effect<T extends object>(value: EffectFn, ctx: ClassMethodDecoratorContext<T>) {
+  const data = observableMetadataStore.read(ctx.metadata);
+
+  data.effects.add(value);
 }
