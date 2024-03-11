@@ -11,7 +11,7 @@ export abstract class MetadataStore<Metadata> {
     if (!data) {
       data = this.init();
 
-      this.#data.set(value, this.init());
+      this.#data.set(value, data);
     }
 
     return data;
