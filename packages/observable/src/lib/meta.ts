@@ -18,7 +18,6 @@ export abstract class MetadataStore<T> {
 
 export class ObservableInstanceMetadata {
   scheduler: Promise<void> | null = null;
-  upgradable = new Map<string | symbol, unknown>();
   changes = new Set<string | symbol>();
 }
 
