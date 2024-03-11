@@ -6,36 +6,23 @@ export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
   ctx: ClassAccessorDecoratorContext<This, Value>
 ): ClassAccessorDecoratorResult<This, Value> {
-  // handle upgradable values (specifically custom elements)
-  ctx.addInitializer(function (this: This) {
-    const instanceMeta = instanceMetadataStore.read(this);
-
-    let value: Value | undefined;
-
-    // attempt to read value.
-    try {
-      value = ctx.access.get(this);
-    } catch {}
-
-    if (value) {
-      // if there is a value, delete it and cache it for init
-      delete (<any>this)[ctx.name];
-
-      instanceMeta.upgradable.set(ctx.name, value);
-    }
-  });
-
   return {
     init(value) {
-      const instanceMeta = instanceMetadataStore.read(this);
+      // let val: Value | null = null;
 
-      if (instanceMeta.upgradable.has(ctx.name)) {
-        return instanceMeta.upgradable.get(ctx.name) as Value;
-      }
+      // try {
+      //   val = ctx.access.get(this);
+      // } catch {}
+
+      // if (val !== null) {
+      //   return val;
+      // }
 
       return value;
     },
     set(value) {
+      console.log('SETTING VALUE', value);
+
       const instanceMeta = instanceMetadataStore.read(this);
       const observableMeta = observableMetadataStore.read(ctx.metadata);
 
