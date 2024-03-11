@@ -8,21 +8,22 @@ export function observe<This extends object, Value>(
 ): ClassAccessorDecoratorResult<This, Value> {
   return {
     init(value) {
-      // let val: Value | null = null;
+      let val: Value | null = null;
 
-      // try {
-      //   val = ctx.access.get(this);
-      // } catch {}
+      try {
+        val = ctx.access.get(this);
+      } catch {}
 
-      // if (val !== null) {
-      //   return val;
-      // }
+      if (val) {
+        // ensures that upgraded custom elements work
+        delete (<any>this)[ctx.name];
+
+        return val;
+      }
 
       return value;
     },
     set(value) {
-      console.log('SETTING VALUE', value);
-
       const instanceMeta = instanceMetadataStore.read(this);
       const observableMeta = observableMetadataStore.read(ctx.metadata);
 
