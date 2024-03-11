@@ -46,7 +46,8 @@
       "clean": "if-file-deleted",
       "files": [
         "src/**",
-        "tsconfig.json"
+        "tsconfig.json",
+        "../../tsconfig.json"
       ],
       "output": [
         "target/**",

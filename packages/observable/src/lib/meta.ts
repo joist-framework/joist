@@ -2,18 +2,22 @@
 
 export type EffectFn = (changes: Set<string | symbol>) => void;
 
-export abstract class MetadataStore<T> {
-  #data = new WeakMap<object, T>();
+export abstract class MetadataStore<Metadata> {
+  #data = new WeakMap<object, Metadata>();
 
-  read<T extends object>(value: T) {
-    if (!this.#data.has(value)) {
+  read<T extends object>(value: T): Metadata {
+    let data = this.#data.get(value);
+
+    if (!data) {
+      data = this.init();
+
       this.#data.set(value, this.init());
     }
 
-    return this.#data.get(value)!;
+    return data;
   }
 
-  abstract init(): T;
+  abstract init(): Metadata;
 }
 
 export class ObservableInstanceMetadata {

@@ -1,12 +1,12 @@
 import { metadataStore } from './metadata.js';
 
-export function element<T extends new (...args: any[]) => HTMLElement>(
-  Base: T,
-  ctx: ClassDecoratorContext<T>
+export function element<Target extends CustomElementConstructor>(
+  Base: Target,
+  ctx: ClassDecoratorContext<Target>
 ) {
   const meta = metadataStore.read(ctx.metadata);
 
-  ctx.addInitializer(function (this: T) {
+  ctx.addInitializer(function (this: Target) {
     if (meta.tagName) {
       const val = meta.tagName(this);
 
