@@ -10,16 +10,17 @@ export function observe<This extends object, Value>(
     init(value) {
       let val: Value | null = null;
 
+      // START: Make upgradable custom elements work
       try {
         val = ctx.access.get(this);
       } catch {}
 
       if (val) {
-        // ensures that upgraded custom elements work
         delete (<any>this)[ctx.name];
 
         return val;
       }
+      // END
 
       return value;
     },
