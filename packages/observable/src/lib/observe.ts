@@ -1,6 +1,4 @@
-// ensure that the metadata symbol exists
-
-import { EffectFn, instanceMetadataStore, observableMetadataStore } from './meta.js';
+import { EffectFn, instanceMetadataStore, observableMetadataStore } from './metadata.js';
 
 export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,

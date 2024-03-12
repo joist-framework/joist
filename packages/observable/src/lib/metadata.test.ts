@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { ObservableInstanceMetaDataStore } from './meta.js';
+import { ObservableInstanceMetaDataStore } from './metadata.js';
 
 describe('meta:meta', () => {
   it('should return default metadata', () => {
