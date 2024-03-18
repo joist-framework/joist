@@ -19,6 +19,15 @@ export function element<Target extends CustomElementConstructor>(
   return class JoistElement extends Base {
     // make all attrs observable
     static observedAttributes = [...meta.attrs];
+    constructor(...args: any[]) {
+      super(...args);
+
+      const root = this.shadowRoot || this;
+
+      for (let [event, listener] of meta.listeners) {
+        root.addEventListener(event, listener.bind(this));
+      }
+    }
 
     connectedCallback() {
       for (let attr of meta.attrs) {

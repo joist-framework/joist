@@ -17,6 +17,7 @@ export abstract class MetadataStore<T> {
 export class ElementMetadata {
   attrs: string[] = [];
   tagName?: (val: any) => string;
+  listeners = new Map<string, (e: Event) => void>();
 }
 
 export class ElementMetadataStore extends MetadataStore<ElementMetadata> {
