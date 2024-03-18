@@ -2,16 +2,14 @@
 
 export type EffectFn = (changes: Set<string | symbol>) => void;
 
-export abstract class MetadataStore<Metadata> {
-  #data = new WeakMap<object, Metadata>();
-
-  read<T extends object>(value: T): Metadata {
-    let data = this.#data.get(value);
+export abstract class MetadataStore<Metadata> extends WeakMap<object, Metadata> {
+  read(key: object): Metadata {
+    let data = this.get(key);
 
     if (!data) {
       data = this.init();
 
-      this.#data.set(value, data);
+      this.set(key, data);
     }
 
     return data;
