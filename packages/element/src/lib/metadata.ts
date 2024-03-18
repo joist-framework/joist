@@ -1,29 +1,19 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-export abstract class MetadataStore<T> {
-  #data = new WeakMap<object, T>();
-
-  read<T extends object>(value: T) {
-    if (!this.#data.has(value)) {
-      this.#data.set(value, this.init());
-    }
-
-    return this.#data.get(value)!;
-  }
-
-  abstract init(): T;
-}
-
 export class ElementMetadata {
   attrs: string[] = [];
   tagName?: (val: any) => string;
   listeners = new Map<string, (e: Event) => void>();
 }
 
-export class ElementMetadataStore extends MetadataStore<ElementMetadata> {
-  init() {
-    return new ElementMetadata();
+export class MetadataStore extends WeakMap<object, ElementMetadata> {
+  read(value: object) {
+    if (!this.has(value)) {
+      this.set(value, new ElementMetadata());
+    }
+
+    return this.get(value)!;
   }
 }
 
-export const metadataStore = new ElementMetadataStore();
+export const metadataStore = new MetadataStore();
