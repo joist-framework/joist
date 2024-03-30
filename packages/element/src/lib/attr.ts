@@ -1,49 +1,44 @@
 import { metadataStore } from './metadata.js';
 
 export function attr<This extends HTMLElement>(
-  { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
+  { get }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
+  const name = String(ctx.name);
   const meta = metadataStore.read(ctx.metadata);
-  meta.attrs.push(String(ctx.name));
+  meta.attrs.push(name);
 
   return {
     set(value: unknown) {
-      if (typeof ctx.name === 'string') {
-        if (typeof value === 'boolean') {
-          if (value) {
-            this.setAttribute(ctx.name, '');
-          } else {
-            this.removeAttribute(ctx.name);
-          }
+      if (typeof value === 'boolean') {
+        if (value) {
+          this.setAttribute(name, '');
         } else {
-          this.setAttribute(ctx.name, String(value));
+          this.removeAttribute(name);
         }
+      } else {
+        this.setAttribute(name, String(value));
       }
-
-      return set.call(this, value);
     },
     get() {
       const ogValue = get.call(this);
+      const attr = this.getAttribute(name);
 
-      if (typeof ctx.name === 'string') {
-        const attr = this.getAttribute(ctx.name);
-
-        if (attr !== null) {
-          // treat as boolean
-          if (attr === '') {
-            return true;
-          }
-
-          // treat as number
-          if (typeof ogValue === 'number') {
-            return Number(attr);
-          }
-
-          // treat as string
-          return attr;
+      if (attr !== null) {
+        // treat as boolean
+        if (attr === '') {
+          return true;
         }
+
+        // treat as number
+        if (typeof ogValue === 'number') {
+          return Number(attr);
+        }
+
+        // treat as string
+        return attr;
       }
+
 
       // no readable value return original
       return ogValue;
