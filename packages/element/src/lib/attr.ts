@@ -1,7 +1,7 @@
 import { metadataStore } from './metadata.js';
 
 export function attr<This extends HTMLElement>(
-  { get }: ClassAccessorDecoratorTarget<This, unknown>,
+  { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   const name = String(ctx.name);
@@ -10,15 +10,15 @@ export function attr<This extends HTMLElement>(
 
   return {
     set(value: unknown) {
-      if (typeof value === 'boolean') {
-        if (value) {
-          this.setAttribute(name, '');
-        } else {
-          this.removeAttribute(name);
-        }
+      if (value === true) {
+        this.setAttribute(name, '');
+      } else if (value === false) {
+        this.removeAttribute(name);
       } else {
         this.setAttribute(name, String(value));
       }
+
+      set.call(this, value)
     },
     get() {
       const ogValue = get.call(this);
@@ -38,7 +38,6 @@ export function attr<This extends HTMLElement>(
         // treat as string
         return attr;
       }
-
 
       // no readable value return original
       return ogValue;
