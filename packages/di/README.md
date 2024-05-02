@@ -111,6 +111,7 @@ class MyElement extends HTMLElement {
   }
 }
 
+// Note: To use parent providers, the parent elements need to be defined first in correct order!
 customElements.define('color-ctx', ColorCtx);
 customElements.define('my-element', MyElement);
 ```
