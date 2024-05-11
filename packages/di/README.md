@@ -74,6 +74,25 @@ const car2 = factory2.get(Car);
 console.log(car2.accelerate(), car2.tires().size);
 ```
 
+#### Factories
+
+In addition to defining providers with classes you can also use factory functions.
+
+```ts
+abstract class Logger {
+  abstract log(...args: any[]): void
+}
+
+const app = new Injector([
+  {
+    provide: Logger,
+    factory() {
+      return console 
+    }
+  }
+]);
+```
+
 #### Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
