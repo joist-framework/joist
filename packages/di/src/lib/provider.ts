@@ -6,5 +6,7 @@ export type ProviderToken<T> = {
 
 export interface Provider<T> {
   provide: ProviderToken<T>;
-  use: ProviderToken<T>;
+  use?: ProviderToken<T>;
+  factory?(): T;
 }
+

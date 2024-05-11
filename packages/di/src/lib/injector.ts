@@ -44,7 +44,15 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      return this.#createAndCache<T>(provider.use);
+      if (provider.use) {
+        const use = provider.use;
+
+        return this.#createAndCache<T>(token, () => new use());
+      } else if (provider.factory) {
+        const facotory = provider.factory;
+
+        return this.#createAndCache<T>(token, facotory);
+      }
     }
 
     // check for a parent and attempt to get there
@@ -52,7 +60,7 @@ export class Injector {
       return this.#parent.get(token);
     }
 
-    return this.#createAndCache(token);
+    return this.#createAndCache(token, () => new token());
   }
 
   setParent(parent: Injector | undefined) {
@@ -63,8 +71,8 @@ export class Injector {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T extends Injectable>(token: ProviderToken<T>): T {
-    const instance = new token();
+  #createAndCache<T extends Injectable>(token: ProviderToken<T>, factory: () => T): T {
+    const instance = factory();
 
     this.#instances.set(token, instance);
 
