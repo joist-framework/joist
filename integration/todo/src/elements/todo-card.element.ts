@@ -1,10 +1,10 @@
-import { css, html, shadow, listen, attr, tagName, element } from '@joist/element';
+import { css, html, shadow, listen, attr, tagName, element } from "@joist/element";
 
-import { Todo, TodoStatus } from '../services/todo.service.js';
+import { Todo, TodoStatus } from "../services/todo.service.js";
 
 @element
 export class TodoCardElement extends HTMLElement {
-  @tagName static tagName = 'todo-card';
+  @tagName static tagName = "todo-card";
 
   @shadow styles = css`
     :host {
@@ -17,7 +17,7 @@ export class TodoCardElement extends HTMLElement {
       flex-grow: 1;
     }
 
-    :host([status='complete']) #name {
+    :host([status="complete"]) #name {
       text-decoration: line-through;
       opacity: 0.5;
     }
@@ -46,20 +46,20 @@ export class TodoCardElement extends HTMLElement {
     <button id="complete">complete</button>
   `;
 
-  @attr accessor status: TodoStatus = 'active';
+  @attr accessor status: TodoStatus = "active";
 
-  #complete = this.dom.query('#complete')!;
+  #complete = this.dom.query("#complete")!;
 
-  @listen('click') onClick(e: Event) {
+  @listen("click") onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement) {
       this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
     }
   }
 
   attributeChangedCallback() {
-    const isActive = this.status === 'active';
+    const isActive = this.status === "active";
 
-    this.#complete.innerHTML = isActive ? 'complete' : 'active';
+    this.#complete.innerHTML = isActive ? "complete" : "active";
   }
 }
 

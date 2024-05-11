@@ -1,8 +1,8 @@
-import { metadataStore } from './metadata.js';
+import { metadataStore } from "./metadata.js";
 
 export function element<Target extends CustomElementConstructor>(
   Base: Target,
-  ctx: ClassDecoratorContext<Target>
+  ctx: ClassDecoratorContext<Target>,
 ) {
   const meta = metadataStore.read(ctx.metadata);
 
@@ -34,11 +34,11 @@ export function element<Target extends CustomElementConstructor>(
         const value = Reflect.get(this, attr);
 
         // reflect values back to attributes
-        if (value !== null && value !== undefined && value !== '') {
-          if (typeof value === 'boolean') {
+        if (value !== null && value !== undefined && value !== "") {
+          if (typeof value === "boolean") {
             if (value === true) {
               // set boolean attribute
-              this.setAttribute(attr, '');
+              this.setAttribute(attr, "");
             }
           } else {
             // set key/value attribute

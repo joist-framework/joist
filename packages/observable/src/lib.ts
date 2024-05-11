@@ -1,1 +1,1 @@
-export { observe, effect } from './lib/observe.js';
+export { observe, effect } from "./lib/observe.js";

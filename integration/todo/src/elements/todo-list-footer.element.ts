@@ -1,11 +1,11 @@
-import { css, html, shadow, tagName, element } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { css, html, shadow, tagName, element } from "@joist/element";
+import { inject, injectable } from "@joist/di";
 
-import { TodoService } from '../services/todo.service.js';
+import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
-  ['one', 'item'],
-  ['other', 'items'],
+  ["one", "item"],
+  ["other", "items"],
 ]);
 
 class PluralRules extends Intl.PluralRules {
@@ -15,7 +15,7 @@ class PluralRules extends Intl.PluralRules {
 @injectable
 @element
 export class TodoListFooterElement extends HTMLElement {
-  @tagName static tagName = 'todo-list-footer';
+  @tagName static tagName = "todo-list-footer";
 
   @shadow styles = css`
     :host {
@@ -44,7 +44,7 @@ export class TodoListFooterElement extends HTMLElement {
 
     #decoration {
       background: white;
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       right: 0;
@@ -52,8 +52,12 @@ export class TodoListFooterElement extends HTMLElement {
       left: 0;
       height: calc(var(--card-height) - 11px);
       overflow: hidden;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
-        0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
+      box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.2),
+        0 8px 0 -3px #f6f6f6,
+        0 9px 1px -3px rgba(0, 0, 0, 0.2),
+        0 16px 0 -6px #f6f6f6,
+        0 17px 2px -6px rgba(0, 0, 0, 0.2);
     }
   `;
 
@@ -76,7 +80,7 @@ export class TodoListFooterElement extends HTMLElement {
 
     onTodoUpdate();
 
-    this.#listeners = [todo.listen('todo_sync', onTodoUpdate)];
+    this.#listeners = [todo.listen("todo_sync", onTodoUpdate)];
   }
 
   disconnectedCallback() {

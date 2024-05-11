@@ -1,6 +1,6 @@
-import { ProviderToken } from './provider.js';
-import { Injector } from './injector.js';
-import { environment } from './environment.js';
+import { ProviderToken } from "./provider.js";
+import { Injector } from "./injector.js";
+import { environment } from "./environment.js";
 
 export const INJECTABLES = new WeakMap<object, Injector>();
 
@@ -15,7 +15,7 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
 
       try {
         if (this instanceof HTMLElement) {
-          this.addEventListener('finddiroot', (e) => {
+          this.addEventListener("finddiroot", (e) => {
             const parentInjector = findInjectorRoot(e);
 
             if (parentInjector !== null) {
@@ -37,7 +37,7 @@ export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
     connectedCallback() {
       try {
         if (this instanceof HTMLElement) {
-          this.dispatchEvent(new Event('finddiroot'));
+          this.dispatchEvent(new Event("finddiroot"));
 
           if (super.connectedCallback) {
             super.connectedCallback();

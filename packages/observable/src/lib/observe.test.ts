@@ -1,9 +1,9 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html } from "@open-wc/testing";
 
-import { effect, observe } from './observe.js';
+import { effect, observe } from "./observe.js";
 
-describe('observable: observe()', () => {
-  it('should work with static accessors', (done) => {
+describe("observable: observe()", () => {
+  it("should work with static accessors", (done) => {
     class Counter {
       @observe static accessor value = 0;
 
@@ -21,7 +21,7 @@ describe('observable: observe()', () => {
     expect(Counter.value).to.equal(1);
   });
 
-  it('should work with instance accessors', (done) => {
+  it("should work with instance accessors", (done) => {
     class Counter {
       @observe accessor value = 0;
 
@@ -43,12 +43,12 @@ describe('observable: observe()', () => {
     expect(counter.value).to.equal(1);
   });
 
-  it('should return a set of changed props', (done) => {
+  it("should return a set of changed props", (done) => {
     class Counter {
       @observe accessor value = 0;
 
       @effect onChange(changes: Set<symbol | string>) {
-        expect(changes.has('value')).to.be.true;
+        expect(changes.has("value")).to.be.true;
 
         done();
       }
@@ -58,18 +58,18 @@ describe('observable: observe()', () => {
     counter.value++;
   });
 
-  it('should work as an even emitter', (done) => {
+  it("should work as an even emitter", (done) => {
     class Counter extends EventTarget {
       @observe accessor value = 0;
 
       @effect onChange() {
-        this.dispatchEvent(new Event('changed'));
+        this.dispatchEvent(new Event("changed"));
       }
     }
 
     const counter = new Counter();
 
-    counter.addEventListener('changed', () => {
+    counter.addEventListener("changed", () => {
       expect(counter.value).to.equal(1);
 
       done();
@@ -78,7 +78,7 @@ describe('observable: observe()', () => {
     counter.value++;
   });
 
-  it('should upgrade custom elements', (done) => {
+  it("should upgrade custom elements", (done) => {
     class Counter extends HTMLElement {
       @observe accessor value = 0;
 
@@ -98,11 +98,11 @@ describe('observable: observe()', () => {
     fixture<any>(html`<observable-1></observable-1>`).then((el) => {
       el.value = 100;
 
-      customElements.whenDefined('observable-1').then(() => {
+      customElements.whenDefined("observable-1").then(() => {
         el.value++;
       });
 
-      customElements.define('observable-1', Counter);
+      customElements.define("observable-1", Counter);
     });
   });
 });

@@ -1,7 +1,7 @@
-import { CheerioAPI, load } from 'cheerio';
+import { CheerioAPI, load } from "cheerio";
 
-import { TemplateCache } from './template-cache.js';
-import { TemplateLoader } from './template-loader.js';
+import { TemplateCache } from "./template-cache.js";
+import { TemplateLoader } from "./template-loader.js";
 
 export interface ApplicatorOpts {
   templateCache: TemplateCache;
@@ -38,7 +38,7 @@ export class Applicator {
           await this.#templateCache.set(element, elementTemplate);
         }
 
-        if (node.find('> template[shadowrootmode]').length === 0) {
+        if (node.find("> template[shadowrootmode]").length === 0) {
           node.prepend(elementTemplate);
         }
       }
@@ -54,8 +54,8 @@ export class Applicator {
     ]);
 
     return `<template shadowroot="open" shadowrootmode="open">
-      ${styles ? `<style>${styles}</style>` : ''}
-      ${html || ''}
+      ${styles ? `<style>${styles}</style>` : ""}
+      ${html || ""}
     </template>
   `;
   }

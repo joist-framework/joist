@@ -1,12 +1,12 @@
-import { inject, injectable } from '@joist/di';
-import { css, html, shadow, listen, tagName, element } from '@joist/element';
+import { inject, injectable } from "@joist/di";
+import { css, html, shadow, listen, tagName, element } from "@joist/element";
 
-import { TodoService, Todo } from '../services/todo.service.js';
+import { TodoService, Todo } from "../services/todo.service.js";
 
 @injectable
 @element
 export class TodoFormElement extends HTMLElement {
-  @tagName static tagName = 'todo-form';
+  @tagName static tagName = "todo-form";
 
   @shadow styles = css`
     :host {
@@ -65,18 +65,18 @@ export class TodoFormElement extends HTMLElement {
     </form>
   `;
 
-  #input = this.dom.query<HTMLInputElement>('#input')!;
+  #input = this.dom.query<HTMLInputElement>("#input")!;
   #todos = inject(TodoService);
 
-  @listen('submit') onSubmit(e: Event) {
+  @listen("submit") onSubmit(e: Event) {
     const service = this.#todos();
 
     e.preventDefault();
 
     if (this.#input.value) {
-      service.addTodo(Todo.create(this.#input.value, 'active'));
+      service.addTodo(Todo.create(this.#input.value, "active"));
 
-      this.#input.value = '';
+      this.#input.value = "";
     }
   }
 }

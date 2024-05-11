@@ -1,8 +1,8 @@
-import { expect } from '@open-wc/testing';
-import { css, html, htmlTemplateCache, styleSheetCache } from './tags.js';
+import { expect } from "@open-wc/testing";
+import { css, html, htmlTemplateCache, styleSheetCache } from "./tags.js";
 
-describe('tags', () => {
-  it('should ensure return the same CSSResult', () => {
+describe("tags", () => {
+  it("should ensure return the same CSSResult", () => {
     class Test {
       styles = css`Hello World`;
     }
@@ -14,7 +14,7 @@ describe('tags', () => {
     expect(styleSheetCache.get(a.styles.strings)).to.equal(styleSheetCache.get(b.styles.strings));
   });
 
-  it('should cache the HTMLTemplateElement', () => {
+  it("should cache the HTMLTemplateElement", () => {
     class Test {
       dom = html`Hello World`;
     }

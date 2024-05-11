@@ -1,8 +1,8 @@
-import { css, html, shadow, listen, tagName, attr, element } from '@joist/element';
+import { css, html, shadow, listen, tagName, attr, element } from "@joist/element";
 
 @element
 export class CounterElement extends HTMLElement {
-  @tagName static tagName = 'joist-counter';
+  @tagName static tagName = "joist-counter";
 
   @shadow styles = css`
     * {
@@ -44,15 +44,15 @@ export class CounterElement extends HTMLElement {
     this.innerHTML = String(this.value);
   }
 
-  @listen('click') onClick(e: Event) {
+  @listen("click") onClick(e: Event) {
     const { id } = e.target as HTMLElement;
 
     switch (id) {
-      case 'inc':
+      case "inc":
         this.value++;
         break;
 
-      case 'dec':
+      case "dec":
         this.value--;
         break;
     }

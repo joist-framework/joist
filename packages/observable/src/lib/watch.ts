@@ -1,4 +1,4 @@
-import { EffectFn, observableMetadataStore } from './metadata.js';
+import { EffectFn, observableMetadataStore } from "./metadata.js";
 
 export function watch(value: new () => object, cb: EffectFn) {
   const key = value[Symbol.metadata];

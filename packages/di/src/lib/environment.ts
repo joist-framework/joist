@@ -1,5 +1,5 @@
-import { Injector } from './injector.js';
-import { Provider } from './provider.js';
+import { Injector } from "./injector.js";
+import { Provider } from "./provider.js";
 
 let rootInjector: Injector;
 

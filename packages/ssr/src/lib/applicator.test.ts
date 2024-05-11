@@ -1,10 +1,10 @@
-import test from 'ava';
+import test from "ava";
 
-import { Applicator } from './applicator.js';
-import { NoopTemplateCache } from './template-cache.js';
-import { TemplateLoader } from './template-loader.js';
+import { Applicator } from "./applicator.js";
+import { NoopTemplateCache } from "./template-cache.js";
+import { TemplateLoader } from "./template-loader.js";
 
-test('should apply declarative shadow dom to specified elements', async (t) => {
+test("should apply declarative shadow dom to specified elements", async (t) => {
   class MockTemplateLoader implements TemplateLoader {
     loadCSS(tag: string): Promise<string | null> {
       return Promise.resolve(`:host { content: 'css for ${tag}' }`);
@@ -28,7 +28,7 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
     </html>
   `;
 
-  const res = await applicator.apply(document, ['mock-header', 'mock-content', 'mock-footer']);
+  const res = await applicator.apply(document, ["mock-header", "mock-content", "mock-footer"]);
 
   t.is(
     trim(res),
@@ -59,11 +59,11 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
             </mock-footer>
         </body>
     </html>
-  `)
+  `),
   );
 });
 
-test('should apply declarative shadow dom recursively', async (t) => {
+test("should apply declarative shadow dom recursively", async (t) => {
   class MockTemplateLoader implements TemplateLoader {
     async loadCSS(tag: string): Promise<string | null> {
       return `:host { content: 'css for ${tag}' }`;
@@ -71,10 +71,10 @@ test('should apply declarative shadow dom recursively', async (t) => {
 
     async loadHTML(tag: string): Promise<string | null> {
       switch (tag) {
-        case 'mock-foo':
+        case "mock-foo":
           return `<mock-bar></mock-bar>`;
 
-        case 'mock-bar':
+        case "mock-bar":
           return `<mock-baz></mock-baz>`;
       }
 
@@ -86,7 +86,7 @@ test('should apply declarative shadow dom recursively', async (t) => {
 
   const document = `<mock-foo></mock-foo>`;
 
-  const res = await applicator.apply(document, ['mock-foo', 'mock-bar', 'mock-baz']);
+  const res = await applicator.apply(document, ["mock-foo", "mock-bar", "mock-baz"]);
 
   t.is(
     trim(res),
@@ -113,10 +113,10 @@ test('should apply declarative shadow dom recursively', async (t) => {
             </mock-foo>
         </body>
     </html>
-  `)
+  `),
   );
 });
 
 function trim(value: string) {
-  return value.replace(/\s+/g, '').replace(/(\r\n|\n|\r)/gm, '');
+  return value.replace(/\s+/g, "").replace(/(\r\n|\n|\r)/gm, "");
 }

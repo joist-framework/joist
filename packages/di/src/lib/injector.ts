@@ -1,5 +1,5 @@
-import { INJECTABLES } from './injectable.js';
-import { ProviderToken, Provider } from './provider.js';
+import { INJECTABLES } from "./injectable.js";
+import { ProviderToken, Provider } from "./provider.js";
 
 // defines available properties that will be on a class instance that can use the inject function
 export type Injectable = object & {
@@ -29,7 +29,10 @@ export class Injector {
 
   #parent: Injector | undefined = undefined;
 
-  constructor(public providers: Provider<any>[] = [], parent?: Injector) {
+  constructor(
+    public providers: Provider<any>[] = [],
+    parent?: Injector,
+  ) {
     this.setParent(parent);
   }
 
@@ -49,11 +52,13 @@ export class Injector {
 
         return this.#createAndCache<T>(token, () => new use());
       } else if (provider.factory) {
-        const facotory = provider.factory;
+        const factory = provider.factory;
 
-        return this.#createAndCache<T>(token, facotory);
+        return this.#createAndCache<T>(token, factory);
       } else {
-        throw new Error(`Provider for ${token.name} found but is missing either 'use' or 'factory'`)
+        throw new Error(
+          `Provider for ${token.name} found but is missing either 'use' or 'factory'`,
+        );
       }
     }
 
@@ -73,8 +78,11 @@ export class Injector {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T extends Injectable>(token: ProviderToken<T>, factory: () => T): T {
-    const instance = factory();
+  #createAndCache<T extends Injectable>(
+    token: ProviderToken<T>,
+    factory: (injector: Injector) => T,
+  ): T {
+    const instance = factory(this);
 
     this.#instances.set(token, instance);
 

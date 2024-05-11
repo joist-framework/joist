@@ -1,10 +1,10 @@
-import { expect } from '@open-wc/testing';
+import { expect } from "@open-wc/testing";
 
-import { css, html } from './tags.js';
-import { shadow } from './shadow.js';
+import { css, html } from "./tags.js";
+import { shadow } from "./shadow.js";
 
-describe('template', () => {
-  it('should apply a stylesheet', () => {
+describe("template", () => {
+  it("should apply a stylesheet", () => {
     class MyElement extends HTMLElement {
       @shadow styles = css`
         :host {
@@ -13,14 +13,14 @@ describe('template', () => {
       `;
     }
 
-    customElements.define('template-1', MyElement);
+    customElements.define("template-1", MyElement);
 
     const el = new MyElement();
 
     expect(el.shadowRoot!.adoptedStyleSheets.length).to.eq(1);
   });
 
-  it('should apply html', () => {
+  it("should apply html", () => {
     class MyElement extends HTMLElement {
       @shadow styles = css`
         :host {
@@ -31,10 +31,10 @@ describe('template', () => {
       @shadow template = html`<slot></slot>`;
     }
 
-    customElements.define('template-2', MyElement);
+    customElements.define("template-2", MyElement);
 
     const el = new MyElement();
 
-    expect(el.shadowRoot?.innerHTML).to.eq('<slot></slot>');
+    expect(el.shadowRoot?.innerHTML).to.eq("<slot></slot>");
   });
 });
