@@ -105,4 +105,20 @@ describe('Injector', () => {
 
     expect(injector.get(Service).hello()).to.equal("you");
   });
+
+  it('should throw an error if provider is missing both factory and use', () => {
+    class Service {
+      hello() {
+        return "world"
+      }
+    }
+
+    const injector = new Injector([
+      {
+        provide: Service
+      }
+    ]);
+
+    expect(() => injector.get(Service)).to.throw("Provider for Service found but is missing either 'use' or 'factory'");
+  });
 });

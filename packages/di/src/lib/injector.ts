@@ -52,6 +52,8 @@ export class Injector {
         const facotory = provider.factory;
 
         return this.#createAndCache<T>(token, facotory);
+      } else {
+        throw new Error(`Provider for ${token.name} found but is missing either 'use' or 'factory'`)
       }
     }
 
