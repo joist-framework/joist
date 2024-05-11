@@ -83,4 +83,26 @@ describe('Injector', () => {
 
     expect(parent.get(A)).to.equal(app.get(A));
   });
+
+  it('should use a factory if provided', () => {
+    class Service {
+      hello() {
+        return "world"
+      }
+    }
+
+    const injector = new Injector([
+      {
+        provide: Service, factory() {
+          return {
+            hello() {
+              return "you"
+            }
+          }
+        }
+      }
+    ]);
+
+    expect(injector.get(Service).hello()).to.equal("you");
+  });
 });
