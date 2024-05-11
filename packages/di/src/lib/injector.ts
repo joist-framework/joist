@@ -27,7 +27,7 @@ export class Injector {
   // ke track of isntances. One Token can have one instance
   #instances = new WeakMap<ProviderToken<any>, any>();
 
-  #parent: Injector | undefined = undefined;
+  parent: Injector | undefined = undefined;
 
   constructor(
     public providers: Provider<any>[] = [],
@@ -63,15 +63,15 @@ export class Injector {
     }
 
     // check for a parent and attempt to get there
-    if (this.#parent) {
-      return this.#parent.get(token);
+    if (this.parent) {
+      return this.parent.get(token);
     }
 
     return this.#createAndCache(token, () => new token());
   }
 
   setParent(parent: Injector | undefined) {
-    this.#parent = parent;
+    this.parent = parent;
   }
 
   clear() {
