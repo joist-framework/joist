@@ -8,6 +8,6 @@ export default {
   browsers: [
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'firefox' }),
-    playwrightLauncher({ product: 'webkit' }),
-  ],
+    playwrightLauncher({ product: 'webkit' })
+  ]
 };

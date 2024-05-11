@@ -18,7 +18,7 @@ export function attr<This extends HTMLElement>(
         this.setAttribute(name, String(value));
       }
 
-      set.call(this, value)
+      set.call(this, value);
     },
     get() {
       const ogValue = get.call(this);
@@ -41,6 +41,6 @@ export function attr<This extends HTMLElement>(
 
       // no readable value return original
       return ogValue;
-    },
+    }
   };
 }

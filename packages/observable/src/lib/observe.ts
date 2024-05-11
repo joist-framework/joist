@@ -40,7 +40,7 @@ export function observe<This extends object, Value>(
       instanceMeta.changes.add(ctx.name);
 
       base.set.call(this, value);
-    },
+    }
   };
 }
 

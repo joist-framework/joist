@@ -50,7 +50,7 @@ export class Applicator {
   async #buildTemplate(tag: string) {
     const [html, styles] = await Promise.all([
       this.#templateLoader.loadHTML(tag),
-      this.#templateLoader.loadCSS(tag),
+      this.#templateLoader.loadCSS(tag)
     ]);
 
     return `<template shadowroot="open" shadowrootmode="open">

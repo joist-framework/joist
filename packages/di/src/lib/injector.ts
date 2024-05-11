@@ -29,7 +29,10 @@ export class Injector {
 
   #parent: Injector | undefined = undefined;
 
-  constructor(public providers: Provider<any>[] = [], parent?: Injector) {
+  constructor(
+    public providers: Provider<any>[] = [],
+    parent?: Injector
+  ) {
     this.setParent(parent);
   }
 
@@ -44,7 +47,19 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      return this.#createAndCache<T>(provider.use);
+      if (provider.use) {
+        const use = provider.use;
+
+        return this.#createAndCache<T>(token, () => new use());
+      } else if (provider.factory) {
+        const factory = provider.factory;
+
+        return this.#createAndCache<T>(token, factory);
+      } else {
+        throw new Error(
+          `Provider for ${token.name} found but is missing either 'use' or 'factory'`
+        );
+      }
     }
 
     // check for a parent and attempt to get there
@@ -52,7 +67,7 @@ export class Injector {
       return this.#parent.get(token);
     }
 
-    return this.#createAndCache(token);
+    return this.#createAndCache(token, () => new token());
   }
 
   setParent(parent: Injector | undefined) {
@@ -63,8 +78,11 @@ export class Injector {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T extends Injectable>(token: ProviderToken<T>): T {
-    const instance = new token();
+  #createAndCache<T extends Injectable>(
+    token: ProviderToken<T>,
+    factory: (injector: Injector) => T
+  ): T {
+    const instance = factory(this);
 
     this.#instances.set(token, instance);
 

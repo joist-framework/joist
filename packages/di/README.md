@@ -74,6 +74,25 @@ const car2 = factory2.get(Car);
 console.log(car2.accelerate(), car2.tires().size);
 ```
 
+#### Factories
+
+In addition to defining providers with classes you can also use factory functions.
+
+```ts
+abstract class Logger {
+  abstract log(...args: any[]): void;
+}
+
+const app = new Injector([
+  {
+    provide: Logger,
+    factory() {
+      return console;
+    }
+  }
+]);
+```
+
 #### Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
@@ -126,6 +145,17 @@ customElements.define('my-element', MyElement);
 </color-ctx>
 ```
 
+#### Environment
+
+When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
+If you need to define something in this environment you can do so with the `defineEnvironment` method.
+
+````ts
+import { defineEnvironment } from '@joist/di';
+
+defineEnvironment([{ provide: MyService, use: SomeOtherService }]);
+```
+
 #### No decorators no problem:
 
 While this library is built with decorators in mind it is designed so that it can be used without them.
@@ -153,4 +183,4 @@ const car = app.get(Car);
 
 // gas, 16
 console.log(car.engine(), car.tires());
-```
+````

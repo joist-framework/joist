@@ -6,7 +6,7 @@ import { Injector } from './injector.js';
 
 describe('inject', () => {
   it('should work', () => {
-    class HelloService { }
+    class HelloService {}
 
     @injectable
     class HelloWorld extends HTMLElement {
@@ -62,8 +62,8 @@ describe('inject', () => {
         provide: FooService,
         use: class extends FooService {
           value = '100';
-        },
-      },
+        }
+      }
     ]);
 
     expect(parent.get(BarService).foo().value).to.equal('100');
