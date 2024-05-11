@@ -124,4 +124,25 @@ describe('Injector', () => {
       "Provider for Service found but is missing either 'use' or 'factory'"
     );
   });
+
+  it('should pass factories and instance of the injector', (done) => {
+    class Service {
+      hello() {
+        return 'world';
+      }
+    }
+
+    const injector = new Injector([
+      {
+        provide: Service,
+        factory(i) {
+          expect(i).to.equal(injector);
+
+          done();
+        }
+      }
+    ]);
+
+    injector.get(Service);
+  });
 });
