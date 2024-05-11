@@ -31,7 +31,7 @@ export class Injector {
 
   constructor(
     public providers: Provider<any>[] = [],
-    parent?: Injector,
+    parent?: Injector
   ) {
     this.setParent(parent);
   }
@@ -57,7 +57,7 @@ export class Injector {
         return this.#createAndCache<T>(token, factory);
       } else {
         throw new Error(
-          `Provider for ${token.name} found but is missing either 'use' or 'factory'`,
+          `Provider for ${token.name} found but is missing either 'use' or 'factory'`
         );
       }
     }
@@ -80,7 +80,7 @@ export class Injector {
 
   #createAndCache<T extends Injectable>(
     token: ProviderToken<T>,
-    factory: (injector: Injector) => T,
+    factory: (injector: Injector) => T
   ): T {
     const instance = factory(this);
 

@@ -32,7 +32,7 @@ describe('@injectable()', () => {
         static providers = [{ provide: Foo, use: Bar }];
 
         foo = inject(Foo);
-      },
+      }
     );
 
     const el = new MyElement();
@@ -62,7 +62,7 @@ describe('@injectable()', () => {
     const B = injectable(
       class {
         a = inject(A);
-      },
+      }
     );
 
     class AltA implements A {}
@@ -71,7 +71,7 @@ describe('@injectable()', () => {
     class Parent extends HTMLElement {
       static providers = [
         { provide: B, use: B },
-        { provide: A, use: AltA },
+        { provide: A, use: AltA }
       ];
     }
 

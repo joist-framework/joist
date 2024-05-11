@@ -2,7 +2,7 @@ import { metadataStore } from './metadata.js';
 
 export function element<Target extends CustomElementConstructor>(
   Base: Target,
-  ctx: ClassDecoratorContext<Target>,
+  ctx: ClassDecoratorContext<Target>
 ) {
   const meta = metadataStore.read(ctx.metadata);
 

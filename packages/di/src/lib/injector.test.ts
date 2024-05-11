@@ -98,10 +98,10 @@ describe('Injector', () => {
           return {
             hello() {
               return 'you';
-            },
+            }
           };
-        },
-      },
+        }
+      }
     ]);
 
     expect(injector.get(Service).hello()).to.equal('you');
@@ -116,12 +116,12 @@ describe('Injector', () => {
 
     const injector = new Injector([
       {
-        provide: Service,
-      },
+        provide: Service
+      }
     ]);
 
     expect(() => injector.get(Service)).to.throw(
-      "Provider for Service found but is missing either 'use' or 'factory'",
+      "Provider for Service found but is missing either 'use' or 'factory'"
     );
   });
 });

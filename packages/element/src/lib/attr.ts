@@ -2,7 +2,7 @@ import { metadataStore } from './metadata.js';
 
 export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
-  ctx: ClassAccessorDecoratorContext<This>,
+  ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
   const name = String(ctx.name);
   const meta = metadataStore.read(ctx.metadata);
@@ -41,6 +41,6 @@ export function attr<This extends HTMLElement>(
 
       // no readable value return original
       return ogValue;
-    },
+    }
   };
 }

@@ -9,7 +9,7 @@ const dirname = join(fileURLToPath(new URL('.', import.meta.url)), '../../src/te
 test('FileSysTemplateLoader: should read from defined paths', async (t) => {
   const loader = new FileSysTemplateLoader(
     (tag) => join(dirname, 'elements', tag, tag + '.html'),
-    (tag) => join(dirname, 'elements', tag, tag + '.css'),
+    (tag) => join(dirname, 'elements', tag, tag + '.css')
   );
 
   const html = await loader.loadHTML('my-element');

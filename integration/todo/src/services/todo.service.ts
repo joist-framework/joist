@@ -13,7 +13,7 @@ export class Todo {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly status: TodoStatus,
+    public readonly status: TodoStatus
   ) {}
 }
 
@@ -55,7 +55,7 @@ export class TodoService extends EventTarget {
 
     this.totalActive = this.#todos.reduce(
       (total, todo) => (todo.status === 'active' ? total + 1 : total),
-      0,
+      0
     );
 
     this.dispatchEvent(new TodoSyncEvent());

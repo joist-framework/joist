@@ -2,7 +2,7 @@ import { EffectFn, instanceMetadataStore, observableMetadataStore } from './meta
 
 export function observe<This extends object, Value>(
   base: ClassAccessorDecoratorTarget<This, Value>,
-  ctx: ClassAccessorDecoratorContext<This, Value>,
+  ctx: ClassAccessorDecoratorContext<This, Value>
 ): ClassAccessorDecoratorResult<This, Value> {
   return {
     init(value) {
@@ -40,7 +40,7 @@ export function observe<This extends object, Value>(
       instanceMeta.changes.add(ctx.name);
 
       base.set.call(this, value);
-    },
+    }
   };
 }
 

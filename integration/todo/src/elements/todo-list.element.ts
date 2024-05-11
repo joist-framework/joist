@@ -5,7 +5,7 @@ import {
   TodoAddedEvent,
   TodoUpdatedEvent,
   TodoRemovedEvent,
-  TodoService,
+  TodoService
 } from '../services/todo.service.js';
 import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
@@ -48,7 +48,7 @@ export class TodoListElement extends HTMLElement {
     this.#listeners = [
       service.listen('todo_added', this.#onTodoAdded.bind(this)),
       service.listen('todo_removed', this.#onTodoRemoved.bind(this)),
-      service.listen('todo_updated', this.#onTodoChanged.bind(this)),
+      service.listen('todo_updated', this.#onTodoChanged.bind(this))
     ];
   }
 
@@ -67,7 +67,7 @@ export class TodoListElement extends HTMLElement {
       const status = e.target.getAttribute('status');
 
       this.#todo().updateTodo(e.target.id, {
-        status: status === 'active' ? 'complete' : 'active',
+        status: status === 'active' ? 'complete' : 'active'
       });
     }
   }

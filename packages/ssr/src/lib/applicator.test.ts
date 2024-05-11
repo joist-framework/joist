@@ -59,7 +59,7 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
             </mock-footer>
         </body>
     </html>
-  `),
+  `)
   );
 });
 
@@ -113,7 +113,7 @@ test('should apply declarative shadow dom recursively', async (t) => {
             </mock-foo>
         </body>
     </html>
-  `),
+  `)
   );
 });
 

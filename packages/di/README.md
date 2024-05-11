@@ -88,8 +88,8 @@ const app = new Injector([
     provide: Logger,
     factory() {
       return console;
-    },
-  },
+    }
+  }
 ]);
 ```
 

@@ -33,7 +33,7 @@ class AppLocalStorage implements Storage {
 export class LocalStorageCtx extends HTMLElement {
   static providers = [
     { provide: TodoService, use: TodoService },
-    { provide: AppStorage, use: AppLocalStorage },
+    { provide: AppStorage, use: AppLocalStorage }
   ];
 
   @tagName static tagName = 'local-storage-ctx';

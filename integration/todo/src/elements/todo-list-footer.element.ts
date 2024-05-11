@@ -5,7 +5,7 @@ import { TodoService } from '../services/todo.service.js';
 
 const sfxs = new Map([
   ['one', 'item'],
-  ['other', 'items'],
+  ['other', 'items']
 ]);
 
 class PluralRules extends Intl.PluralRules {

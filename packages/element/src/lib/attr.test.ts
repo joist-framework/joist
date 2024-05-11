@@ -14,7 +14,7 @@ describe('@attr()', () => {
     customElements.define('attr-test-2', MyElement);
 
     const el = await fixture<MyElement>(
-      html`<attr-test-2 value2="2" value3 value4="world"></attr-test-2>`,
+      html`<attr-test-2 value2="2" value3 value4="world"></attr-test-2>`
     );
 
     expect(el.value1).to.equal(100);
