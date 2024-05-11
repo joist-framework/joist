@@ -1,6 +1,6 @@
-import { ProviderToken } from "./provider.js";
-import { Injectable } from "./injector.js";
-import { INJECTABLES } from "./injectable.js";
+import { ProviderToken } from './provider.js';
+import { Injectable } from './injector.js';
+import { INJECTABLES } from './injectable.js';
 
 export type Injected<T> = () => T;
 

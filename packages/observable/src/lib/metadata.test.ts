@@ -1,8 +1,8 @@
-import { expect } from "@open-wc/testing";
-import { ObservableInstanceMetaDataStore } from "./metadata.js";
+import { expect } from '@open-wc/testing';
+import { ObservableInstanceMetaDataStore } from './metadata.js';
 
-describe("meta:meta", () => {
-  it("should return default metadata", () => {
+describe('meta:meta', () => {
+  it('should return default metadata', () => {
     const key = {};
     const data = new ObservableInstanceMetaDataStore().read(key);
 
@@ -12,7 +12,7 @@ describe("meta:meta", () => {
     });
   });
 
-  it("should return the same metadata object after init", () => {
+  it('should return the same metadata object after init', () => {
     const key = {};
     const data = new ObservableInstanceMetaDataStore();
 

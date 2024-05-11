@@ -1,4 +1,4 @@
-import { ShadowResult } from "./result.js";
+import { ShadowResult } from './result.js';
 
 export function shadow<This extends HTMLElement, T extends ShadowResult>(
   _: undefined,
@@ -6,7 +6,7 @@ export function shadow<This extends HTMLElement, T extends ShadowResult>(
 ) {
   return function (this: This, result: T) {
     if (!this.shadowRoot) {
-      this.attachShadow({ mode: "open" });
+      this.attachShadow({ mode: 'open' });
     }
 
     result.execute(this.shadowRoot!);

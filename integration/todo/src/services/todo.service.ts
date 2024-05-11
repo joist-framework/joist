@@ -1,13 +1,13 @@
-import { inject, injectable } from "@joist/di";
-import { observe, effect } from "@joist/observable";
+import { inject, injectable } from '@joist/di';
+import { observe, effect } from '@joist/observable';
 
-import { AppStorage } from "./storage.service.js";
+import { AppStorage } from './storage.service.js';
 
-export type TodoStatus = "active" | "complete";
+export type TodoStatus = 'active' | 'complete';
 
 export class Todo {
   static create(name: string, status: TodoStatus) {
-    return new Todo("todo--" + crypto.randomUUID(), name, status);
+    return new Todo('todo--' + crypto.randomUUID(), name, status);
   }
 
   constructor(
@@ -19,25 +19,25 @@ export class Todo {
 
 export class TodoUpdatedEvent extends Event {
   constructor(public todo: Todo) {
-    super("todo_updated");
+    super('todo_updated');
   }
 }
 
 export class TodoAddedEvent extends Event {
   constructor(public todo: Todo) {
-    super("todo_added");
+    super('todo_added');
   }
 }
 
 export class TodoRemovedEvent extends Event {
   constructor(public todo: string) {
-    super("todo_removed");
+    super('todo_removed');
   }
 }
 
 export class TodoSyncEvent extends Event {
   constructor() {
-    super("todo_sync");
+    super('todo_sync');
   }
 }
 
@@ -51,10 +51,10 @@ export class TodoService extends EventTarget {
   #store = inject(AppStorage);
 
   @effect syncTodosToStorage() {
-    this.#store().saveJSON("joist_todo", this.#todos);
+    this.#store().saveJSON('joist_todo', this.#todos);
 
     this.totalActive = this.#todos.reduce(
-      (total, todo) => (todo.status === "active" ? total + 1 : total),
+      (total, todo) => (todo.status === 'active' ? total + 1 : total),
       0,
     );
 
@@ -67,7 +67,7 @@ export class TodoService extends EventTarget {
     }
 
     return this.#store()
-      .loadJSON<Todo[]>("joist_todo")
+      .loadJSON<Todo[]>('joist_todo')
       .then((todos) => {
         this.#initialized = true;
 

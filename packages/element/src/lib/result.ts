@@ -6,7 +6,7 @@ export abstract class ShadowResult {
 
   get shadow() {
     if (!this.#shadow) {
-      throw new Error("ShadowResult has not been applied");
+      throw new Error('ShadowResult has not been applied');
     }
 
     return this.#shadow;

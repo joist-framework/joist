@@ -1,10 +1,10 @@
-import { expect } from "@open-wc/testing";
+import { expect } from '@open-wc/testing';
 
-import { observe } from "./observe.js";
-import { watch } from "./watch.js";
+import { observe } from './observe.js';
+import { watch } from './watch.js';
 
-describe("observable: observe()", () => {
-  it("should watch externally from the class", (done) => {
+describe('observable: observe()', () => {
+  it('should watch externally from the class', (done) => {
     class Counter {
       @observe static accessor value = 0;
     }

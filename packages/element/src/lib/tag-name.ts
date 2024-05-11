@@ -1,4 +1,4 @@
-import { metadataStore } from "./metadata.js";
+import { metadataStore } from './metadata.js';
 
 export function tagName<This extends typeof HTMLElement>(
   _val: unknown,

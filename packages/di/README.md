@@ -80,16 +80,16 @@ In addition to defining providers with classes you can also use factory function
 
 ```ts
 abstract class Logger {
-  abstract log(...args: any[]): void
+  abstract log(...args: any[]): void;
 }
 
 const app = new Injector([
   {
     provide: Logger,
     factory() {
-      return console 
-    }
-  }
+      return console;
+    },
+  },
 ]);
 ```
 

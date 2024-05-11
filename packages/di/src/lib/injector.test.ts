@@ -1,11 +1,11 @@
-import { expect } from "@open-wc/testing";
+import { expect } from '@open-wc/testing';
 
-import { Injector } from "./injector.js";
-import { inject } from "./inject.js";
-import { injectable } from "./injectable.js";
+import { Injector } from './injector.js';
+import { inject } from './inject.js';
+import { injectable } from './injectable.js';
 
-describe("Injector", () => {
-  it("should create a new instance of a single provider", () => {
+describe('Injector', () => {
+  it('should create a new instance of a single provider', () => {
     class A {}
 
     const app = new Injector();
@@ -14,7 +14,7 @@ describe("Injector", () => {
     expect(app.get(A)).to.equal(app.get(A));
   });
 
-  it("should inject providers in the correct order", () => {
+  it('should inject providers in the correct order', () => {
     class A {}
     class B {}
 
@@ -31,7 +31,7 @@ describe("Injector", () => {
     expect(instance.b()).to.be.instanceOf(B);
   });
 
-  it("should create a new instance of a provider that has a full dep tree", () => {
+  it('should create a new instance of a provider that has a full dep tree', () => {
     class A {}
 
     @injectable
@@ -60,7 +60,7 @@ describe("Injector", () => {
     expect(instance.d().c().b().a()).to.be.instanceOf(A);
   });
 
-  it("should override a provider if explicitly instructed", () => {
+  it('should override a provider if explicitly instructed', () => {
     class A {}
 
     @injectable
@@ -74,7 +74,7 @@ describe("Injector", () => {
     expect(app.get(B).a()).to.be.instanceOf(AltA);
   });
 
-  it("should return an existing instance from a parent injector", () => {
+  it('should return an existing instance from a parent injector', () => {
     class A {}
 
     const parent = new Injector();
@@ -84,10 +84,10 @@ describe("Injector", () => {
     expect(parent.get(A)).to.equal(app.get(A));
   });
 
-  it("should use a factory if provided", () => {
+  it('should use a factory if provided', () => {
     class Service {
       hello() {
-        return "world";
+        return 'world';
       }
     }
 
@@ -97,20 +97,20 @@ describe("Injector", () => {
         factory() {
           return {
             hello() {
-              return "you";
+              return 'you';
             },
           };
         },
       },
     ]);
 
-    expect(injector.get(Service).hello()).to.equal("you");
+    expect(injector.get(Service).hello()).to.equal('you');
   });
 
-  it("should throw an error if provider is missing both factory and use", () => {
+  it('should throw an error if provider is missing both factory and use', () => {
     class Service {
       hello() {
-        return "world";
+        return 'world';
       }
     }
 

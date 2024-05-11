@@ -13,7 +13,7 @@
  * new Foo().hello === new Foo().hello
  */
 
-import { ShadowResult } from "./result.js";
+import { ShadowResult } from './result.js';
 
 type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
@@ -47,7 +47,7 @@ export class HTMLResult extends ShadowResult {
     if (htmlTemplateCache.has(this.strings)) {
       template = htmlTemplateCache.get(this.strings) as HTMLTemplateElement;
     } else {
-      template = document.createElement("template");
+      template = document.createElement('template');
 
       template.innerHTML = concat(this.strings);
       htmlTemplateCache.set(this.strings, template);
@@ -84,7 +84,7 @@ export function css(strings: TemplateStringsArray): CSSResult {
 }
 
 function concat(strings: TemplateStringsArray) {
-  let res = "";
+  let res = '';
 
   for (let i = 0; i < strings.length; i++) {
     res += strings[i];

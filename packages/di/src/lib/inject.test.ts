@@ -1,11 +1,11 @@
-import { expect } from "@open-wc/testing";
+import { expect } from '@open-wc/testing';
 
-import { inject } from "./inject.js";
-import { injectable } from "./injectable.js";
-import { Injector } from "./injector.js";
+import { inject } from './inject.js';
+import { injectable } from './injectable.js';
+import { Injector } from './injector.js';
 
-describe("inject", () => {
-  it("should work", () => {
+describe('inject', () => {
+  it('should work', () => {
     class HelloService {}
 
     @injectable
@@ -13,14 +13,14 @@ describe("inject", () => {
       hello = inject(HelloService);
     }
 
-    customElements.define("inject-1", HelloWorld);
+    customElements.define('inject-1', HelloWorld);
 
     expect(new HelloWorld().hello()).to.be.instanceOf(HelloService);
   });
 
-  it("should throw error if called in constructor", () => {
+  it('should throw error if called in constructor', () => {
     class FooService {
-      value = "1";
+      value = '1';
     }
 
     @injectable
@@ -37,7 +37,7 @@ describe("inject", () => {
     try {
       parent.get(BarService);
 
-      throw new Error("Should not succeed");
+      throw new Error('Should not succeed');
     } catch (err) {
       const error = err as Error;
 
@@ -47,9 +47,9 @@ describe("inject", () => {
     }
   });
 
-  it("should use the calling injector as parent", () => {
+  it('should use the calling injector as parent', () => {
     class FooService {
-      value = "1";
+      value = '1';
     }
 
     @injectable
@@ -61,11 +61,11 @@ describe("inject", () => {
       {
         provide: FooService,
         use: class extends FooService {
-          value = "100";
+          value = '100';
         },
       },
     ]);
 
-    expect(parent.get(BarService).foo().value).to.equal("100");
+    expect(parent.get(BarService).foo().value).to.equal('100');
   });
 });

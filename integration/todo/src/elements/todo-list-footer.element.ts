@@ -1,11 +1,11 @@
-import { css, html, shadow, tagName, element } from "@joist/element";
-import { inject, injectable } from "@joist/di";
+import { css, html, shadow, tagName, element } from '@joist/element';
+import { inject, injectable } from '@joist/di';
 
-import { TodoService } from "../services/todo.service.js";
+import { TodoService } from '../services/todo.service.js';
 
 const sfxs = new Map([
-  ["one", "item"],
-  ["other", "items"],
+  ['one', 'item'],
+  ['other', 'items'],
 ]);
 
 class PluralRules extends Intl.PluralRules {
@@ -15,7 +15,7 @@ class PluralRules extends Intl.PluralRules {
 @injectable
 @element
 export class TodoListFooterElement extends HTMLElement {
-  @tagName static tagName = "todo-list-footer";
+  @tagName static tagName = 'todo-list-footer';
 
   @shadow styles = css`
     :host {
@@ -44,7 +44,7 @@ export class TodoListFooterElement extends HTMLElement {
 
     #decoration {
       background: white;
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       right: 0;
@@ -80,7 +80,7 @@ export class TodoListFooterElement extends HTMLElement {
 
     onTodoUpdate();
 
-    this.#listeners = [todo.listen("todo_sync", onTodoUpdate)];
+    this.#listeners = [todo.listen('todo_sync', onTodoUpdate)];
   }
 
   disconnectedCallback() {

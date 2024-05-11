@@ -1,11 +1,11 @@
-import { expect, fixture, html } from "@open-wc/testing";
+import { expect, fixture, html } from '@open-wc/testing';
 
-import { injectable } from "./injectable.js";
-import { inject } from "./inject.js";
-import { Injector } from "./injector.js";
+import { injectable } from './injectable.js';
+import { inject } from './inject.js';
+import { Injector } from './injector.js';
 
-describe("@injectable()", () => {
-  it("should allow a custom element to be injected with deps", () => {
+describe('@injectable()', () => {
+  it('should allow a custom element to be injected with deps', () => {
     class Foo {}
     class Bar {}
 
@@ -15,14 +15,14 @@ describe("@injectable()", () => {
       bar = inject(Bar);
     }
 
-    customElements.define("injectable-1", MyElement);
+    customElements.define('injectable-1', MyElement);
 
-    const el = document.createElement("injectable-1") as MyElement;
+    const el = document.createElement('injectable-1') as MyElement;
 
     expect(el.foo()).to.be.instanceOf(Foo);
   });
 
-  it("should locally override a provider", () => {
+  it('should locally override a provider', () => {
     class Foo {}
 
     class Bar extends Foo {}
@@ -40,7 +40,7 @@ describe("@injectable()", () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
-  it("should call the onInject lifecycle hook", () => {
+  it('should call the onInject lifecycle hook', () => {
     class A {}
 
     @injectable
@@ -55,7 +55,7 @@ describe("@injectable()", () => {
     new Injector().get(B);
   });
 
-  it("should handle parent HTML Injectors", async () => {
+  it('should handle parent HTML Injectors', async () => {
     @injectable
     class A {}
 
@@ -80,8 +80,8 @@ describe("@injectable()", () => {
       b = inject(B);
     }
 
-    customElements.define("injectable-parent-1", Parent);
-    customElements.define("injectable-child-1", Child);
+    customElements.define('injectable-parent-1', Parent);
+    customElements.define('injectable-child-1', Child);
 
     const el = await fixture(html`
       <injectable-parent-1>
@@ -89,12 +89,12 @@ describe("@injectable()", () => {
       </injectable-parent-1>
     `);
 
-    const child = el.querySelector<Child>("injectable-child-1")!;
+    const child = el.querySelector<Child>('injectable-child-1')!;
 
     expect(child.b().a()).to.be.instanceOf(AltA);
   });
 
-  it("should handle changing contexts", async () => {
+  it('should handle changing contexts', async () => {
     class A {}
     class AltA implements A {}
 
@@ -113,9 +113,9 @@ describe("@injectable()", () => {
       a = inject(A);
     }
 
-    customElements.define("ctx-1", Ctx1);
-    customElements.define("ctx-2", Ctx2);
-    customElements.define("ctx-child", Child);
+    customElements.define('ctx-1', Ctx1);
+    customElements.define('ctx-2', Ctx2);
+    customElements.define('ctx-child', Child);
 
     const el = await fixture(html`
       <div>
@@ -127,9 +127,9 @@ describe("@injectable()", () => {
       </div>
     `);
 
-    const ctx2 = el.querySelector("ctx-2")!;
+    const ctx2 = el.querySelector('ctx-2')!;
 
-    let child = el.querySelector<Child>("ctx-child")!;
+    let child = el.querySelector<Child>('ctx-child')!;
 
     expect(child.a()).to.be.instanceOf(A);
 
@@ -137,7 +137,7 @@ describe("@injectable()", () => {
 
     ctx2.append(child);
 
-    child = el.querySelector<Child>("ctx-child")!;
+    child = el.querySelector<Child>('ctx-child')!;
 
     expect(child.a()).to.be.instanceOf(AltA);
   });

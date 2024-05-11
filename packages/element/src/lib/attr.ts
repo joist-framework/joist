@@ -1,4 +1,4 @@
-import { metadataStore } from "./metadata.js";
+import { metadataStore } from './metadata.js';
 
 export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
@@ -11,7 +11,7 @@ export function attr<This extends HTMLElement>(
   return {
     set(value: unknown) {
       if (value === true) {
-        this.setAttribute(name, "");
+        this.setAttribute(name, '');
       } else if (value === false) {
         this.removeAttribute(name);
       } else {
@@ -26,12 +26,12 @@ export function attr<This extends HTMLElement>(
 
       if (attr !== null) {
         // treat as boolean
-        if (attr === "") {
+        if (attr === '') {
           return true;
         }
 
         // treat as number
-        if (typeof ogValue === "number") {
+        if (typeof ogValue === 'number') {
           return Number(attr);
         }
 

@@ -1,4 +1,4 @@
-import { metadataStore } from "./metadata.js";
+import { metadataStore } from './metadata.js';
 
 export function listen<This extends HTMLElement>(event: string) {
   return (value: (e: Event) => void, ctx: ClassMethodDecoratorContext<This>) => {

@@ -1,18 +1,18 @@
-import { inject, injectable } from "@joist/di";
-import { css, html, shadow, listen, tagName, element } from "@joist/element";
+import { inject, injectable } from '@joist/di';
+import { css, html, shadow, listen, tagName, element } from '@joist/element';
 
 import {
   TodoAddedEvent,
   TodoUpdatedEvent,
   TodoRemovedEvent,
   TodoService,
-} from "../services/todo.service.js";
-import { createTodoCard, TodoCardElement } from "./todo-card.element.js";
+} from '../services/todo.service.js';
+import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
 @injectable
 @element
 export class TodoListElement extends HTMLElement {
-  @tagName static tagName = "todo-list";
+  @tagName static tagName = 'todo-list';
 
   @shadow styles = css`
     :host {
@@ -40,15 +40,15 @@ export class TodoListElement extends HTMLElement {
     const todos = await service.getTodos();
 
     todos.forEach((todo) => {
-      if (!this.querySelector("#" + todo.id)) {
+      if (!this.querySelector('#' + todo.id)) {
         this.appendChild(createTodoCard(todo));
       }
     });
 
     this.#listeners = [
-      service.listen("todo_added", this.#onTodoAdded.bind(this)),
-      service.listen("todo_removed", this.#onTodoRemoved.bind(this)),
-      service.listen("todo_updated", this.#onTodoChanged.bind(this)),
+      service.listen('todo_added', this.#onTodoAdded.bind(this)),
+      service.listen('todo_removed', this.#onTodoRemoved.bind(this)),
+      service.listen('todo_updated', this.#onTodoChanged.bind(this)),
     ];
   }
 
@@ -56,18 +56,18 @@ export class TodoListElement extends HTMLElement {
     this.#listeners.forEach((remove) => remove());
   }
 
-  @listen("remove") onRemove(e: Event) {
+  @listen('remove') onRemove(e: Event) {
     if (e.target instanceof TodoCardElement) {
       this.#todo().removeTodo(e.target.id);
     }
   }
 
-  @listen("complete") onComplete(e: Event) {
+  @listen('complete') onComplete(e: Event) {
     if (e.target instanceof TodoCardElement) {
-      const status = e.target.getAttribute("status");
+      const status = e.target.getAttribute('status');
 
       this.#todo().updateTodo(e.target.id, {
-        status: status === "active" ? "complete" : "active",
+        status: status === 'active' ? 'complete' : 'active',
       });
     }
   }
@@ -80,7 +80,7 @@ export class TodoListElement extends HTMLElement {
 
   #onTodoRemoved(e: Event) {
     if (e instanceof TodoRemovedEvent) {
-      const el = this.querySelector("#" + e.todo);
+      const el = this.querySelector('#' + e.todo);
 
       if (el instanceof TodoCardElement) {
         this.removeChild(el);
@@ -90,12 +90,12 @@ export class TodoListElement extends HTMLElement {
 
   #onTodoChanged(e: Event) {
     if (e instanceof TodoUpdatedEvent) {
-      const el = this.querySelector("#" + e.todo.id);
+      const el = this.querySelector('#' + e.todo.id);
 
       if (el instanceof TodoCardElement) {
         el.innerHTML = e.todo.name;
 
-        el.setAttribute("status", e.todo.status);
+        el.setAttribute('status', e.todo.status);
       }
     }
   }

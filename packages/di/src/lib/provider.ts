@@ -1,4 +1,4 @@
-import { Injector } from "./injector.js";
+import { Injector } from './injector.js';
 
 export type ProviderToken<T> = {
   providers?: Provider<any>[];

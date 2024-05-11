@@ -1,5 +1,5 @@
-import { INJECTABLES } from "./injectable.js";
-import { ProviderToken, Provider } from "./provider.js";
+import { INJECTABLES } from './injectable.js';
+import { ProviderToken, Provider } from './provider.js';
 
 // defines available properties that will be on a class instance that can use the inject function
 export type Injectable = object & {
