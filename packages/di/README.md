@@ -79,8 +79,8 @@ console.log(car2.accelerate(), car2.tires().size);
 In addition to defining providers with classes you can also use factory functions.
 
 ```ts
-abstract class Logger {
-  abstract log(...args: any[]): void;
+class Logger {
+  log(..._: any[]): void {};
 }
 
 const app = new Injector([
