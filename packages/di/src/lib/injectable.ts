@@ -1,10 +1,10 @@
-import { ProviderToken } from './provider.js';
+import { ConstructableToken } from './provider.js';
 import { Injector } from './injector.js';
 import { environment } from './environment.js';
 
 export const INJECTABLES = new WeakMap<object, Injector>();
 
-export function injectable<T extends ProviderToken<any>>(Base: T, _?: unknown) {
+export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
     constructor(..._: any[]) {
       super();
