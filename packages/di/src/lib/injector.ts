@@ -1,5 +1,5 @@
 import { INJECTABLES } from './injectable.js';
-import { ProviderToken, Provider } from './provider.js';
+import { InjectionToken, Provider, StaticToken } from './provider.js';
 
 // defines available properties that will be on a class instance that can use the inject function
 export type Injectable = object & {
@@ -24,8 +24,8 @@ export type Injectable = object & {
  * If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
  */
 export class Injector {
-  // ke track of isntances. One Token can have one instance
-  #instances = new WeakMap<ProviderToken<any>, any>();
+  // ke track of instances. One Token can have one instance
+  #instances = new WeakMap<InjectionToken<any>, any>();
 
   parent: Injector | undefined = undefined;
 
@@ -33,11 +33,11 @@ export class Injector {
     public providers: Provider<any>[] = [],
     parent?: Injector
   ) {
-    this.setParent(parent);
+    this.parent = parent;
   }
 
   // resolves and retuns and instance of the requested service
-  get<T extends Injectable>(token: ProviderToken<T>): T {
+  get<T extends Injectable>(token: InjectionToken<T>): T {
     // check for a local instance
     if (this.#instances.has(token)) {
       return this.#instances.get(token)!;
@@ -60,6 +60,8 @@ export class Injector {
           `Provider for ${token.name} found but is missing either 'use' or 'factory'`
         );
       }
+    } else if (token instanceof StaticToken) {
+      throw new Error(`Provider not found for ${token}`);
     }
 
     // check for a parent and attempt to get there
@@ -79,7 +81,7 @@ export class Injector {
   }
 
   #createAndCache<T extends Injectable>(
-    token: ProviderToken<T>,
+    token: InjectionToken<T>,
     factory: (injector: Injector) => T
   ): T {
     const instance = factory(this);
@@ -109,7 +111,7 @@ export class Injector {
     return instance;
   }
 
-  #findProvider(token: ProviderToken<any>): Provider<any> | undefined {
+  #findProvider(token: InjectionToken<any>): Provider<any> | undefined {
     if (!this.providers) {
       return undefined;
     }
