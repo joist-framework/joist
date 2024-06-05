@@ -3,6 +3,7 @@ import { expect } from '@open-wc/testing';
 import { Injector } from './injector.js';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
+import { Provider, StaticToken } from './provider.js';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
@@ -144,5 +145,31 @@ describe('Injector', () => {
     ]);
 
     injector.get(Service);
+  });
+
+  it('should create an instance from a StaticToken factory', () => {
+    const token = new StaticToken('test', () => 'Hello World');
+    const injector = new Injector();
+
+    const res = injector.get(token);
+
+    expect(res).to.equal('Hello World');
+  });
+
+  it('should allow static token to be overridden', () => {
+    const token = new StaticToken<string>('test');
+
+    const provider: Provider<string> = {
+      provide: token,
+      factory() {
+        return 'Hello World';
+      }
+    };
+
+    const injector = new Injector([provider]);
+
+    const res = injector.get(token);
+
+    expect(res).to.equal('Hello World');
   });
 });

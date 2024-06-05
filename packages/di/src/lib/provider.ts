@@ -1,11 +1,12 @@
 import { Injector } from './injector.js';
 
-// @ts-ignore
 export class StaticToken<T> {
-  name: string;
+  name;
+  factory;
 
-  constructor(name: string) {
+  constructor(name: string, factory?: () => T) {
     this.name = name;
+    this.factory = factory;
   }
 }
 

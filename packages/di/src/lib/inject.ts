@@ -1,10 +1,9 @@
 import { ConstructableToken } from './provider.js';
-import { Injectable } from './injector.js';
 import { INJECTABLES } from './injectable.js';
 
 export type Injected<T> = () => T;
 
-export function inject<This extends Injectable, T extends object>(
+export function inject<This extends object, T extends object>(
   token: ConstructableToken<T>
 ): Injected<T> {
   return function (this: This) {
