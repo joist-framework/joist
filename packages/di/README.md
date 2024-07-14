@@ -152,7 +152,11 @@ graph LR
   InjectorD --> InjectorE;
 ```
 In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
-If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
+If InjectorB then requests the same token, it will recieve the same cached instance from RootInjector.
+
+On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there. 
+InjectorB would given a NEW instances created from RootInjector.
+This is because InjectorB does not fall under InjectorD.
 
 
 #### Custom Elements:
