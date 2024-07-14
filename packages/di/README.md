@@ -154,7 +154,7 @@ Injectors can be defined with a parent element. The top most parent will (by def
 4. All clear, go ahead and construct and cache the requested service
 
 ```mermaid
-graph LR
+graph TD
   RootInjector --> InjectorA;
   InjectorA -->InjectorB;
   InjectorA --> InjectorC;
