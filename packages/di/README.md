@@ -134,6 +134,27 @@ const testApp = new Injector([
 const api = testApp.get(ApiService);
 ```
 
+### Parent/Child relationship
+
+Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
+
+1. Do I have a cached instance locally?
+2. Do I have a local provider definition for the token?
+3. Do I have a parent? Check parent for 1 and 2
+4. All clear, go ahead and construct and cache the requested service
+
+```mermaid
+graph LR
+  RootInjector --> InjectorA;
+  InjectorA -->InjectorB;
+  InjectorA --> InjectorC;
+  InjectorA --> InjectorD;
+  InjectorD --> InjectorE;
+```
+In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
+If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
+
+
 #### Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
