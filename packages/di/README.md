@@ -157,6 +157,7 @@ If InjectorB then requests the same token, it will recieve the same cached insta
 On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there. 
 InjectorB would given a NEW instances created from RootInjector.
 This is because InjectorB does not fall under InjectorD.
+This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
 
 
 #### Custom Elements:
