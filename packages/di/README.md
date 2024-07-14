@@ -93,6 +93,47 @@ const app = new Injector([
 ]);
 ```
 
+#### Testing
+
+Dependency injection can make testing easy without requiring test framework level mock.
+
+```TS
+import { Injector, injectable, inject } from '@joist/di';
+
+@injectable
+class HttpService {
+  fetch(url: string, init?: RequestInit) {
+    return fetch(url, init);
+  }
+}
+
+class ApiService {
+  #http = inject(HttpService);
+
+  getData() {
+    return this.#http()
+      .fetch('/api/v1/users')
+      .then((res) => res.json());
+  }
+}
+
+// unit test
+const testApp = new Injector([
+  {
+    provide: HttpService,
+    use: class extends HttpService {
+      async fetch() {
+        // return whatever response we like
+        return Response.json({ fname: 'Danny', lname: 'Blue' });
+      }
+    },
+  },
+]);
+
+// our test instance will be using our mock when making http requests
+const api = testApp.get(ApiService);
+```
+
 #### Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
