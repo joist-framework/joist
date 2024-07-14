@@ -9,7 +9,7 @@ Allows you to inject services into other class instances (including custom eleme
 - [Example Usage](#example)  
 - [Factories](#factories)  
 - [Testing](#testing)
-- [Parent Child relationship](#parentchild-relationship)
+- [Parent/Child Relationship](#parentchild-relationship)
 - [Custom Elements](#custom-elements)
 - [Environment](#environment)
 
