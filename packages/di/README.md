@@ -4,7 +4,7 @@ Dependency Injection in ~800 bytes.
 
 Allows you to inject services into other class instances (including custom elements and node).
 
-#### Table of Contents  
+## Table of Contents  
 - [Installation](#installation)  
 - [Example Usage](#example)  
 - [Factories](#factories)  
