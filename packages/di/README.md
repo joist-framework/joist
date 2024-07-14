@@ -14,13 +14,13 @@ Allows you to inject services into other class instances (including custom eleme
 - [Environment](#environment)
 
 
-#### Installation:
+## Installation:
 
 ```BASH
 npm i @joist/di
 ```
 
-#### Example:
+## Example:
 
 Classes that are decoratored with `@injectable` can use the `inject()` function to inject a class instance.
 
@@ -84,7 +84,7 @@ const car2 = factory2.get(Car);
 console.log(car2.accelerate(), car2.tires().size);
 ```
 
-#### Factories
+## Factories
 
 In addition to defining providers with classes you can also use factory functions.
 
@@ -103,7 +103,7 @@ const app = new Injector([
 ]);
 ```
 
-#### Testing
+## Testing
 
 Dependency injection can make testing easy without requiring test framework level mock.
 
@@ -144,7 +144,7 @@ const testApp = new Injector([
 const api = testApp.get(ApiService);
 ```
 
-#### Parent/Child relationship
+## Parent/Child relationship
 
 Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
 
@@ -170,7 +170,7 @@ This is because InjectorB does not fall under InjectorD.
 This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
 
 
-#### Custom Elements:
+## Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
 
@@ -222,7 +222,7 @@ customElements.define('my-element', MyElement);
 </color-ctx>
 ```
 
-#### Environment
+## Environment
 
 When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
 If you need to define something in this environment you can do so with the `defineEnvironment` method.
