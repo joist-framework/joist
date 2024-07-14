@@ -4,6 +4,16 @@ Dependency Injection in ~800 bytes.
 
 Allows you to inject services into other class instances (including custom elements and node).
 
+#### Table of Contents  
+- [Installation](#installation)  
+- [Example Usage](#example)  
+- [Factories](#factories)  
+- [Testing](#testing)
+- [Parent Child relationship](#parentchild-relationship)
+- [Custom Elements](#custom-elements)
+- [Environment](#environment)
+
+
 #### Installation:
 
 ```BASH
@@ -134,7 +144,7 @@ const testApp = new Injector([
 const api = testApp.get(ApiService);
 ```
 
-### Parent/Child relationship
+#### Parent/Child relationship
 
 Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
 
