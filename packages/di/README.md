@@ -4,15 +4,16 @@ Dependency Injection in ~800 bytes.
 
 Allows you to inject services into other class instances (including custom elements and node).
 
-## Table of Contents  
-- [Installation](#installation)  
-- [Example Usage](#example)  
-- [Factories](#factories)  
+## Table of Contents
+
+- [Installation](#installation)
+- [Example Usage](#example)
+- [Factories](#factories)
+- [Static Tokens](#static-tokens)
 - [Testing](#testing)
 - [Parent/Child Relationship](#parentchild-relationship)
 - [Custom Elements](#custom-elements)
 - [Environment](#environment)
-
 
 ## Installation:
 
@@ -90,7 +91,7 @@ In addition to defining providers with classes you can also use factory function
 
 ```ts
 class Logger {
-  log(..._: any[]): void {};
+  log(..._: any[]): void {}
 }
 
 const app = new Injector([
@@ -101,6 +102,42 @@ const app = new Injector([
     }
   }
 ]);
+```
+
+## Static Tokens
+
+In most cases a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
+
+```ts
+// token that resolves to a string
+const URL_TOKEN = new StaticToken<string>('app_url');
+
+const app = new Injector([
+  {
+    provide: URL_TOKEN,
+    factory: () => '/my-app-url/'
+  }
+]);
+```
+
+### Default values
+
+A static token can be provided a default factory function to use on creation.
+
+```ts
+const URL_TOKEN = new StaticToken<string>('app_url', () => '/default-url/');
+```
+
+### Async values
+
+Static tokens can also leverage promises for cases when you need to async create your service instances.
+
+```ts
+const URL_TOKEN = new StaticToken<string>('app_url', () => Promise.resolve('/default-url/'));
+
+const app = new Injector();
+
+const url = await app.get(URL_TOKEN);
 ```
 
 ## Testing
@@ -161,14 +198,14 @@ graph TD
   InjectorA --> InjectorD;
   InjectorD --> InjectorE;
 ```
+
 In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
 If InjectorB then requests the same token, it will recieve the same cached instance from RootInjector.
 
-On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there. 
+On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there.
 InjectorB would given a NEW instances created from RootInjector.
 This is because InjectorB does not fall under InjectorD.
 This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
-
 
 ## Custom Elements:
 
