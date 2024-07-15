@@ -4,13 +4,23 @@ Dependency Injection in ~800 bytes.
 
 Allows you to inject services into other class instances (including custom elements and node).
 
-#### Installation:
+## Table of Contents
+
+- [Installation](#installation)
+- [Example Usage](#example)
+- [Factories](#factories)
+- [Testing](#testing)
+- [Parent/Child Relationship](#parentchild-relationship)
+- [Custom Elements](#custom-elements)
+- [Environment](#environment)
+
+## Installation:
 
 ```BASH
 npm i @joist/di
 ```
 
-#### Example:
+## Example:
 
 Classes that are decoratored with `@injectable` can use the `inject()` function to inject a class instance.
 
@@ -74,13 +84,13 @@ const car2 = factory2.get(Car);
 console.log(car2.accelerate(), car2.tires().size);
 ```
 
-#### Factories
+## Factories
 
 In addition to defining providers with classes you can also use factory functions.
 
 ```ts
-abstract class Logger {
-  abstract log(...args: any[]): void;
+class Logger {
+  log(..._: any[]): void {}
 }
 
 const app = new Injector([
@@ -93,7 +103,74 @@ const app = new Injector([
 ]);
 ```
 
-#### Custom Elements:
+## Testing
+
+Dependency injection can make testing easy without requiring test framework level mock.
+
+```TS
+import { Injector, injectable, inject } from '@joist/di';
+
+@injectable
+class HttpService {
+  fetch(url: string, init?: RequestInit) {
+    return fetch(url, init);
+  }
+}
+
+class ApiService {
+  #http = inject(HttpService);
+
+  getData() {
+    return this.#http()
+      .fetch('/api/v1/users')
+      .then((res) => res.json());
+  }
+}
+
+// unit test
+const testApp = new Injector([
+  {
+    provide: HttpService,
+    use: class extends HttpService {
+      async fetch() {
+        // return whatever response we like
+        return Response.json({ fname: 'Danny', lname: 'Blue' });
+      }
+    },
+  },
+]);
+
+// our test instance will be using our mock when making http requests
+const api = testApp.get(ApiService);
+```
+
+## Parent/Child relationship
+
+Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
+
+1. Do I have a cached instance locally?
+2. Do I have a local provider definition for the token?
+3. Do I have a parent? Check parent for 1 and 2
+4. All clear, go ahead and construct and cache the requested service
+
+```mermaid
+graph TD
+  RootInjector --> InjectorA;
+  InjectorA -->InjectorB;
+  InjectorA --> InjectorC;
+  InjectorA --> InjectorD;
+  InjectorD --> InjectorE;
+```
+
+In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
+If InjectorB then requests the same token, it will recieve the same cached instance from RootInjector.
+
+On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there.
+InjectorB would given a NEW instances created from RootInjector.
+This is because InjectorB does not fall under InjectorD.
+This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
+
+## Custom Elements:
 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
 
@@ -145,7 +222,7 @@ customElements.define('my-element', MyElement);
 </color-ctx>
 ```
 
-#### Environment
+## Environment
 
 When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
 If you need to define something in this environment you can do so with the `defineEnvironment` method.
