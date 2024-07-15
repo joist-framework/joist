@@ -9,6 +9,7 @@ Allows you to inject services into other class instances (including custom eleme
 - [Installation](#installation)
 - [Example Usage](#example)
 - [Factories](#factories)
+- [Static Tokens](#static-tokens)
 - [Testing](#testing)
 - [Parent/Child Relationship](#parentchild-relationship)
 - [Custom Elements](#custom-elements)
@@ -101,6 +102,42 @@ const app = new Injector([
     }
   }
 ]);
+```
+
+## Static Tokens
+
+In most cases a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
+
+```ts
+// token that resolves to a string
+const URL_TOKEN = new StaticToken<string>('app_url');
+
+const app = new Injector([
+  {
+    provide: URL_TOKEN,
+    factory: () => '/my-app-url/'
+  }
+]);
+```
+
+### Default values
+
+A static token can be provided a default factory function to use on creation.
+
+```ts
+const URL_TOKEN = new StaticToken<string>('app_url', () => '/default-url/');
+```
+
+### Async values
+
+Static tokens can also leverage promises for cases when you need to async create your service instances.
+
+```ts
+const URL_TOKEN = new StaticToken<string>('app_url', () => Promise.resolve('/default-url/'));
+
+const app = new Injector();
+
+const url = await app.get(URL_TOKEN);
 ```
 
 ## Testing
