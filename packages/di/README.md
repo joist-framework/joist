@@ -103,6 +103,33 @@ const app = new Injector([
   }
 ]);
 ```
+### Accessing the injector
+
+Factories provide more flexibility but often times cannot use the `inject()` function. To get around this all factories are passed an instance of the current injector.
+
+```ts
+class Logger {
+  log(args: any[]): void {
+    console.log(...args)
+  }
+}
+
+class Feature {
+  #logger;
+  constructor(logger: Logger) {
+    this.#logger = logger;
+  }
+}
+
+const app = new Injector([
+  {
+    provide: Feature,
+    factory(injector) {
+      return new Feature(injector.get(Logger));
+    }
+  }
+]);
+```
 
 ## Static Tokens
 
