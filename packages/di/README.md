@@ -155,6 +155,7 @@ class HttpService {
   }
 }
 
+@injectable
 class ApiService {
   #http = inject(HttpService);
 
