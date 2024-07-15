@@ -133,6 +133,7 @@ const URL_TOKEN = new StaticToken<string>('app_url', () => '/default-url/');
 Static tokens can also leverage promises for cases when you need to async create your service instances.
 
 ```ts
+// StaticToken<Promise<string>>
 const URL_TOKEN = new StaticToken<string>('app_url', () => Promise.resolve('/default-url/'));
 
 const app = new Injector();
