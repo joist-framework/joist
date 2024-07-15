@@ -156,6 +156,15 @@ describe('Injector', () => {
     expect(res).to.equal('Hello World');
   });
 
+  it('should create an instance from an async StaticToken factory', async () => {
+    const token = new StaticToken('test', () => Promise.resolve('Hello World'));
+    const injector = new Injector();
+
+    const res = await injector.get(token);
+
+    expect(res).to.equal('Hello World');
+  });
+
   it('should allow static token to be overridden', () => {
     const token = new StaticToken<string>('test');
 
