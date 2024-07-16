@@ -17,6 +17,6 @@ export function inject<This extends object, T extends object>(
       );
     }
 
-    return injector.get(token);
+    return injector.inject(token);
   };
 }
