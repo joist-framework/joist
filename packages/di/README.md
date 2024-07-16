@@ -116,6 +116,7 @@ class Logger {
 
 class Feature {
   #logger;
+
   constructor(logger: Logger) {
     this.#logger = logger;
   }
