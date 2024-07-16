@@ -28,7 +28,7 @@ Classes that are decoratored with `@injectable` can use the `inject()` function 
 Different implementations can be provided for services.
 
 ```TS
-import { Injector, injectable, inject } from '@joist/di';
+import { injector, injectable, inject } from '@joist/di';
 
 class Engine {
   type: 'gas' | 'electric' = 'gas';
@@ -54,13 +54,13 @@ class Car {
   }
 }
 
-const factory1 = new Injector();
+const factory1 = injector();
 const car1 = factory1.get(Car);
 
 // vroom, 16
 console.log(car1.accelerate(), car1.tires().size);
 
-const factory2 = new Injector([
+const factory2 = injector([
   {
     provide: Engine,
     use: class extends Engine {
@@ -94,7 +94,7 @@ class Logger {
   log(..._: any[]): void {}
 }
 
-const app = new Injector([
+const app = injector([
   {
     provide: Logger,
     factory() {
@@ -103,6 +103,7 @@ const app = new Injector([
   }
 ]);
 ```
+
 ### Accessing the injector
 
 Factories provide more flexibility but often times cannot use the `inject()` function. To get around this all factories are passed an instance of the current injector.
@@ -110,7 +111,7 @@ Factories provide more flexibility but often times cannot use the `inject()` fun
 ```ts
 class Logger {
   log(args: any[]): void {
-    console.log(...args)
+    console.log(...args);
   }
 }
 
@@ -122,7 +123,7 @@ class Feature {
   }
 }
 
-const app = new Injector([
+const app = injector([
   {
     provide: Feature,
     factory(i) {
@@ -138,9 +139,9 @@ In most cases a token is any constructable class. There are cases where you migh
 
 ```ts
 // token that resolves to a string
-const URL_TOKEN = new StaticToken<string>('app_url');
+const URL_TOKEN = token<string>('app_url');
 
-const app = new Injector([
+const app = injector([
   {
     provide: URL_TOKEN,
     factory: () => '/my-app-url/'
@@ -164,7 +165,7 @@ Static tokens can also leverage promises for cases when you need to async create
 // StaticToken<Promise<string>>
 const URL_TOKEN = new StaticToken('app_url', () => Promise.resolve('/default-url/'));
 
-const app = new Injector();
+const app = injector();
 
 const url = await app.get(URL_TOKEN);
 ```
@@ -174,8 +175,6 @@ const url = await app.get(URL_TOKEN);
 Dependency injection can make testing easy without requiring test framework level mock.
 
 ```TS
-import { Injector, injectable, inject } from '@joist/di';
-
 @injectable
 class HttpService {
   fetch(url: string, init?: RequestInit) {
@@ -195,7 +194,7 @@ class ApiService {
 }
 
 // unit test
-const testApp = new Injector([
+const testApp = injector([
   {
     provide: HttpService,
     use: class extends HttpService {

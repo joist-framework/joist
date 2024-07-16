@@ -1,9 +1,9 @@
 import { expect } from '@open-wc/testing';
 
-import { Injector } from './injector.js';
+import { injector, Injector } from './injector.js';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
-import { Provider, StaticToken } from './provider.js';
+import { Provider, StaticToken, token } from './provider.js';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
@@ -157,10 +157,10 @@ describe('Injector', () => {
   });
 
   it('should create an instance from an async StaticToken factory', async () => {
-    const token = new StaticToken('test', () => Promise.resolve('Hello World'));
-    const injector = new Injector();
+    const TOKEN = token('test', () => Promise.resolve('Hello World'));
+    const app = injector();
 
-    const res = await injector.inject(token);
+    const res = await app.get(TOKEN);
 
     expect(res).to.equal('Hello World');
   });
