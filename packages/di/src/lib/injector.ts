@@ -1,4 +1,4 @@
-import { INJECTABLES } from './injectable.js';
+import { INJECTABLE_MAP } from './injectable.js';
 import { InjectionToken, Provider, StaticToken } from './provider.js';
 
 /**
@@ -89,7 +89,7 @@ export class Injector {
      * Only values that are objects are able to have associated injectors
      */
     if (typeof instance === 'object' && instance !== null) {
-      const injector = INJECTABLES.get(instance);
+      const injector = INJECTABLE_MAP.get(instance);
 
       if (injector) {
         /**

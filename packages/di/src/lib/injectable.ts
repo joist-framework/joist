@@ -1,8 +1,9 @@
 import { ConstructableToken } from './provider.js';
 import { Injector } from './injector.js';
 import { environment } from './environment.js';
+import { InjectableMap } from './injector-map.js';
 
-export const INJECTABLES = new WeakMap<object, Injector>();
+export const INJECTABLE_MAP = new InjectableMap();
 
 export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
@@ -11,7 +12,7 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
 
       const injector = new Injector(Base.providers);
 
-      INJECTABLES.set(this, injector);
+      INJECTABLE_MAP.set(this, injector);
 
       try {
         if (this instanceof HTMLElement) {
@@ -28,12 +29,6 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
       } catch {}
     }
 
-    onInject() {
-      if (super.onInject) {
-        super.onInject();
-      }
-    }
-
     connectedCallback() {
       try {
         if (this instanceof HTMLElement) {
@@ -47,7 +42,7 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
     }
 
     disconnectedCallback() {
-      const injector = INJECTABLES.get(this);
+      const injector = INJECTABLE_MAP.get(this);
 
       if (injector) {
         injector.setParent(undefined);
@@ -68,7 +63,7 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    const injector = INJECTABLES.get(part);
+    const injector = INJECTABLE_MAP.get(part);
 
     if (injector) {
       return injector;
