@@ -124,8 +124,8 @@ class Feature {
 const app = new Injector([
   {
     provide: Feature,
-    factory(injector) {
-      return new Feature(injector.get(Logger));
+    factory(i) {
+      return new Feature(i.get(Logger));
     }
   }
 ]);
@@ -152,7 +152,7 @@ const app = new Injector([
 A static token can be provided a default factory function to use on creation.
 
 ```ts
-const URL_TOKEN = new StaticToken<string>('app_url', () => '/default-url/');
+const URL_TOKEN = new StaticToken('app_url', () => '/default-url/');
 ```
 
 ### Async values
@@ -161,7 +161,7 @@ Static tokens can also leverage promises for cases when you need to async create
 
 ```ts
 // StaticToken<Promise<string>>
-const URL_TOKEN = new StaticToken<string>('app_url', () => Promise.resolve('/default-url/'));
+const URL_TOKEN = new StaticToken('app_url', () => Promise.resolve('/default-url/'));
 
 const app = new Injector();
 
