@@ -1,7 +1,7 @@
 import { ConstructableToken } from './provider.js';
 import { Injector } from './injector.js';
 import { environment } from './environment.js';
-import { InjectableMap } from './injector-map.js';
+import { InjectableMap } from './injectable-map.js';
 
 export const INJECTABLE_MAP = new InjectableMap();
 

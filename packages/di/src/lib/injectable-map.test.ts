@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { InjectableMap } from './injector-map.js';
+import { InjectableMap } from './injectable-map.js';
 import { Injector } from './injector.js';
 
 describe('InjectableMap', () => {
