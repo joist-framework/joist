@@ -207,69 +207,6 @@ InjectorB would given a NEW instances created from RootInjector.
 This is because InjectorB does not fall under InjectorD.
 This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
 
-## Custom Elements:
-
-Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
-
-```TS
-import { injectable, inject } from '@joist/di';
-
-class Colors {
-  primary = 'red';
-  secodnary = 'green';
-}
-
-@injectable
-class ColorCtx extends HTMLElement {
-  // services can be scoped to a particular injectable
-  static providers = [
-    {
-      provide: Colors,
-      use: class implements Colors {
-        primary = 'orange';
-        secondary = 'purple';
-      },
-    },
-  ]
-}
-
-@injectable
-class MyElement extends HTMLElement {
-  #colors = inject(Colors);
-
-  connectedCallback() {
-    const { primary } = this.#colors();
-
-    this.style.background = primary;
-  }
-}
-
-// Note: To use parent providers, the parent elements need to be defined first in correct order!
-customElements.define('color-ctx', ColorCtx);
-customElements.define('my-element', MyElement);
-```
-
-```HTML
-<!-- Default Colors -->
-<my-element></my-element>
-
-<!-- Special color ctx -->
-<color-ctx>
-  <my-element></my-element>
-</color-ctx>
-```
-
-## Environment
-
-When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
-If you need to define something in this environment you can do so with the `defineEnvironment` method.
-
-```ts
-import { defineEnvironment } from '@joist/di';
-
-defineEnvironment([{ provide: MyService, use: SomeOtherService }]);
-```
-
 #### No decorators no problem:
 
 While this library is built with decorators in mind it is designed so that it can be used without them.

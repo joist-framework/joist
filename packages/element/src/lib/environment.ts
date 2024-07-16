@@ -1,5 +1,4 @@
-import { Injector } from './injector.js';
-import { Provider } from './provider.js';
+import { Injector, Provider } from '@joist/di';
 
 let rootInjector: Injector;
 

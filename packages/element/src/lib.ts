@@ -5,3 +5,4 @@ export { attr } from './lib/attr.js';
 export { listen } from './lib/listen.js';
 export { tagName } from './lib/tag-name.js';
 export { element } from './lib/element.js';
+export { environment, defineEnvironment } from './lib/environment.js';

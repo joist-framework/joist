@@ -52,6 +52,9 @@
       "output": [
         "target/**",
         "tsconfig.tsbuildinfo"
+      ],
+      "dependencies": [
+        "../di:build"
       ]
     },
     "test": {

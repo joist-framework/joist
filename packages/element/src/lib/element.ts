@@ -1,6 +1,9 @@
-import { metadataStore } from './metadata.js';
+import { INJECTABLE_MAP, Injector, Provider } from '@joist/di';
 
-export function element<Target extends CustomElementConstructor>(
+import { metadataStore } from './metadata.js';
+import { environment } from './environment.js';
+
+export function element<Target extends CustomElementConstructor & { providers?: Provider<any>[] }>(
   Base: Target,
   ctx: ClassDecoratorContext<Target>
 ) {
@@ -19,6 +22,7 @@ export function element<Target extends CustomElementConstructor>(
   return class JoistElement extends Base {
     // make all attrs observable
     static observedAttributes = [...meta.attrs];
+
     constructor(...args: any[]) {
       super(...args);
 
@@ -27,9 +31,25 @@ export function element<Target extends CustomElementConstructor>(
       for (let [event, listener] of meta.listeners) {
         root.addEventListener(event, listener.bind(this));
       }
+
+      const injector = new Injector(Base.providers);
+
+      INJECTABLE_MAP.set(this, injector);
+
+      this.addEventListener('finddiroot', (e) => {
+        const parentInjector = findInjectorRoot(e);
+
+        if (parentInjector !== null) {
+          injector.setParent(parentInjector);
+        } else {
+          injector.setParent(environment());
+        }
+      });
     }
 
     connectedCallback() {
+      this.dispatchEvent(new Event('finddiroot'));
+
       for (let attr of meta.attrs) {
         const value = Reflect.get(this, attr);
 
@@ -52,4 +72,22 @@ export function element<Target extends CustomElementConstructor>(
       }
     }
   };
+}
+
+function findInjectorRoot(e: Event): Injector | null {
+  const path = e.composedPath();
+
+  // find firt parent
+  // skips the first item which is the target
+  for (let i = 1; i < path.length; i++) {
+    const part = path[i];
+
+    const injector = INJECTABLE_MAP.get(part);
+
+    if (injector) {
+      return injector;
+    }
+  }
+
+  return null;
 }

@@ -1,5 +1,5 @@
 import { ConstructableToken } from './provider.js';
-import { INJECTABLES } from './injectable.js';
+import { INJECTABLE_MAP } from './injectable.js';
 
 export type Injected<T> = () => T;
 
@@ -7,7 +7,7 @@ export function inject<This extends object, T extends object>(
   token: ConstructableToken<T>
 ): Injected<T> {
   return function (this: This) {
-    const injector = INJECTABLES.get(this);
+    const injector = INJECTABLE_MAP.get(this);
 
     if (injector === undefined) {
       const name = Object.getPrototypeOf(this.constructor).name;

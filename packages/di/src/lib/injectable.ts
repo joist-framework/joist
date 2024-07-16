@@ -1,79 +1,26 @@
 import { ConstructableToken } from './provider.js';
 import { Injector } from './injector.js';
-import { environment } from './environment.js';
 
-export const INJECTABLES = new WeakMap<object, Injector>();
+export class InjectableMap {
+  #injectables = new WeakMap<object, Injector>();
+
+  set(key: object, injector: Injector) {
+    return this.#injectables.set(key, injector);
+  }
+
+  get(key: object) {
+    return this.#injectables.get(key);
+  }
+}
+
+export const INJECTABLE_MAP = new InjectableMap();
 
 export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
     constructor(..._: any[]) {
       super();
 
-      const injector = new Injector(Base.providers);
-
-      INJECTABLES.set(this, injector);
-
-      try {
-        if (this instanceof HTMLElement) {
-          this.addEventListener('finddiroot', (e) => {
-            const parentInjector = findInjectorRoot(e);
-
-            if (parentInjector !== null) {
-              injector.setParent(parentInjector);
-            } else {
-              injector.setParent(environment());
-            }
-          });
-        }
-      } catch {}
-    }
-
-    onInject() {
-      if (super.onInject) {
-        super.onInject();
-      }
-    }
-
-    connectedCallback() {
-      try {
-        if (this instanceof HTMLElement) {
-          this.dispatchEvent(new Event('finddiroot'));
-
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
-        }
-      } catch {}
-    }
-
-    disconnectedCallback() {
-      const injector = INJECTABLES.get(this);
-
-      if (injector) {
-        injector.setParent(undefined);
-      }
-
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
+      INJECTABLE_MAP.set(this, new Injector(Base.providers));
     }
   };
-}
-
-function findInjectorRoot(e: Event): Injector | null {
-  const path = e.composedPath();
-
-  // find firt parent
-  // skips the first item which is the target
-  for (let i = 1; i < path.length; i++) {
-    const part = path[i];
-
-    const injector = INJECTABLES.get(part);
-
-    if (injector) {
-      return injector;
-    }
-  }
-
-  return null;
 }

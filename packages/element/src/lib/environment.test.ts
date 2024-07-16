@@ -1,9 +1,8 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { Injector, injectable, inject } from '@joist/di';
 
-import { Injector } from './injector.js';
 import { environment, clearEnvironment } from './environment.js';
-import { injectable } from './injectable.js';
-import { inject } from './inject.js';
+import { element } from './element.js';
 
 describe('environment', () => {
   afterEach(clearEnvironment);
@@ -16,7 +15,7 @@ describe('environment', () => {
     @injectable
     class MyService {}
 
-    @injectable
+    @element
     class MyElement extends HTMLElement {
       my = inject(MyService);
     }
