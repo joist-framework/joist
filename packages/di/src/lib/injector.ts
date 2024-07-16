@@ -30,6 +30,10 @@ export class Injector {
     this.providers = providers;
   }
 
+  inject<T>(token: InjectionToken<T>): T {
+    return this.get(token);
+  }
+
   // resolves and retuns and instance of the requested service
   get<T>(token: InjectionToken<T>): T {
     // check for a local instance
@@ -126,4 +130,8 @@ export class Injector {
 
     return undefined;
   }
+}
+
+export function injector(providers: Provider<unknown>[] = [], parent?: Injector) {
+  return new Injector(providers, parent);
 }
