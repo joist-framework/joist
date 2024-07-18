@@ -28,7 +28,7 @@ Classes that are decoratored with `@injectable` can use the `inject()` function 
 Different implementations can be provided for services.
 
 ```TS
-import { injector, injectable, inject } from '@joist/di';
+import { Injector, injectable, inject } from '@joist/di';
 
 class Engine {
   type: 'gas' | 'electric' = 'gas';
@@ -54,13 +54,13 @@ class Car {
   }
 }
 
-const factory1 = injector();
+const factory1 = new Injector();
 const car1 = factory1.get(Car);
 
 // vroom, 16
 console.log(car1.accelerate(), car1.tires().size);
 
-const factory2 = injector([
+const factory2 = new Injector([
   {
     provide: Engine,
     use: class extends Engine {
@@ -94,7 +94,7 @@ class Logger {
   log(..._: any[]): void {}
 }
 
-const app = injector([
+const app = new Injector([
   {
     provide: Logger,
     factory() {
@@ -123,7 +123,7 @@ class Feature {
   }
 }
 
-const app = injector([
+const app = new Injector([
   {
     provide: Feature,
     factory(i) {
@@ -139,9 +139,9 @@ In most cases a token is any constructable class. There are cases where you migh
 
 ```ts
 // token that resolves to a string
-const URL_TOKEN = token<string>('app_url');
+const URL_TOKEN = new StaticToken<string>('app_url');
 
-const app = injector([
+const app = new Injector([
   {
     provide: URL_TOKEN,
     factory: () => '/my-app-url/'
@@ -165,7 +165,7 @@ Static tokens can also leverage promises for cases when you need to async create
 // StaticToken<Promise<string>>
 const URL_TOKEN = new StaticToken('app_url', () => Promise.resolve('/default-url/'));
 
-const app = injector();
+const app = new Injector();
 
 const url = await app.get(URL_TOKEN);
 ```
@@ -194,7 +194,7 @@ class ApiService {
 }
 
 // unit test
-const testApp = injector([
+const testApp = new Injector([
   {
     provide: HttpService,
     use: class extends HttpService {
