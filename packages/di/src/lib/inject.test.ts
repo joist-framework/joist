@@ -35,7 +35,7 @@ describe('inject', () => {
     const parent = new Injector();
 
     try {
-      parent.get(BarService);
+      parent.inject(BarService);
 
       throw new Error('Should not succeed');
     } catch (err) {
@@ -66,6 +66,6 @@ describe('inject', () => {
       }
     ]);
 
-    expect(parent.get(BarService).foo().value).to.equal('100');
+    expect(parent.inject(BarService).foo().value).to.equal('100');
   });
 });

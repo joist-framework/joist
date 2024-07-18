@@ -25,6 +25,6 @@ describe('environment', () => {
 
     const el = await fixture<MyElement>(html`<env-1></env-1>`);
 
-    expect(el.my()).to.equal(environment().get(MyService));
+    expect(el.my()).to.equal(environment().inject(MyService));
   });
 });

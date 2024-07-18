@@ -62,7 +62,7 @@ export class Injector {
 
     // check for a parent and attempt to get there
     if (this.parent) {
-      return this.parent.get(token);
+      return this.parent.inject(token);
     }
 
     if (token instanceof StaticToken) {

@@ -11,8 +11,8 @@ describe('Injector', () => {
 
     const app = new Injector();
 
-    expect(app.get(A)).to.be.instanceOf(A);
-    expect(app.get(A)).to.equal(app.get(A));
+    expect(app.inject(A)).to.be.instanceOf(A);
+    expect(app.inject(A)).to.equal(app.inject(A));
   });
 
   it('should inject providers in the correct order', () => {
@@ -26,7 +26,7 @@ describe('Injector', () => {
     }
 
     const app = new Injector();
-    const instance = app.get(MyService);
+    const instance = app.inject(MyService);
 
     expect(instance.a()).to.be.instanceOf(A);
     expect(instance.b()).to.be.instanceOf(B);
@@ -56,7 +56,7 @@ describe('Injector', () => {
     }
 
     const app = new Injector();
-    const instance = app.get(E);
+    const instance = app.inject(E);
 
     expect(instance.d().c().b().a()).to.be.instanceOf(A);
   });
@@ -72,7 +72,7 @@ describe('Injector', () => {
     class AltA extends A {}
     const app = new Injector([{ provide: A, use: AltA }]);
 
-    expect(app.get(B).a()).to.be.instanceOf(AltA);
+    expect(app.inject(B).a()).to.be.instanceOf(AltA);
   });
 
   it('should return an existing instance from a parent injector', () => {
@@ -82,7 +82,7 @@ describe('Injector', () => {
 
     const app = new Injector([], parent);
 
-    expect(parent.get(A)).to.equal(app.get(A));
+    expect(parent.inject(A)).to.equal(app.inject(A));
   });
 
   it('should use a factory if provided', () => {
@@ -105,7 +105,7 @@ describe('Injector', () => {
       }
     ]);
 
-    expect(injector.get(Service).hello()).to.equal('you');
+    expect(injector.inject(Service).hello()).to.equal('you');
   });
 
   it('should throw an error if provider is missing both factory and use', () => {
@@ -121,7 +121,7 @@ describe('Injector', () => {
       }
     ]);
 
-    expect(() => injector.get(Service)).to.throw(
+    expect(() => injector.inject(Service)).to.throw(
       "Provider for Service found but is missing either 'use' or 'factory'"
     );
   });
@@ -144,14 +144,14 @@ describe('Injector', () => {
       }
     ]);
 
-    injector.get(Service);
+    injector.inject(Service);
   });
 
   it('should create an instance from a StaticToken factory', () => {
     const token = new StaticToken('test', () => 'Hello World');
     const injector = new Injector();
 
-    const res = injector.get(token);
+    const res = injector.inject(token);
 
     expect(res).to.equal('Hello World');
   });
@@ -160,7 +160,7 @@ describe('Injector', () => {
     const token = new StaticToken('test', () => Promise.resolve('Hello World'));
     const injector = new Injector();
 
-    const res = await injector.get(token);
+    const res = await injector.inject(token);
 
     expect(res).to.equal('Hello World');
   });
@@ -177,7 +177,7 @@ describe('Injector', () => {
 
     const injector = new Injector([provider]);
 
-    const res = injector.get(token);
+    const res = injector.inject(token);
 
     expect(res).to.equal('Hello World');
   });

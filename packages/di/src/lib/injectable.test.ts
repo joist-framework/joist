@@ -52,7 +52,7 @@ describe('@injectable()', () => {
       }
     }
 
-    new Injector().get(B);
+    new Injector().inject(B);
   });
 
   it('should handle parent HTML Injectors', async () => {
