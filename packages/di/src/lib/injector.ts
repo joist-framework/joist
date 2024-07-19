@@ -1,4 +1,5 @@
 import { INJECTABLE_MAP } from './injectable.js';
+import { LifeCycle } from './lifecycle.js';
 import { InjectionToken, Provider, StaticToken } from './provider.js';
 
 /**
@@ -38,7 +39,11 @@ export class Injector {
   get<T>(token: InjectionToken<T>): T {
     // check for a local instance
     if (this.#instances.has(token)) {
-      return this.#instances.get(token)!;
+      const instance = this.#instances.get(token)!;
+
+      callLifecycle(instance, LifeCycle.onInject);
+
+      return instance;
     }
 
     const provider = this.#findProvider(token);
@@ -102,16 +107,15 @@ export class Injector {
          * this allows the created service to navigate up it's chain to find a root
          */
         injector.setParent(this);
-
-        /**
-         * the on inject lifecycle hook should be called after the parent is defined.
-         * this ensures that services are initialized when the chain is settled
-         * this is required since the parent is set after the instance is constructed
-         */
-        if ('onInject' in instance && typeof instance.onInject === 'function') {
-          instance.onInject();
-        }
       }
+
+      /**
+       * the onInject and onInit lifecycle hook should be called after the parent is defined.
+       * this ensures that services are initialized when the chain is settled
+       * this is required since the parent is set after the instance is constructed
+       */
+      callLifecycle(instance, LifeCycle.onInit);
+      callLifecycle(instance, LifeCycle.onInject);
     }
 
     return instance;
@@ -134,4 +138,13 @@ export class Injector {
 
 export function injector(providers: Provider<unknown>[] = [], parent?: Injector) {
   return new Injector(providers, parent);
+}
+function callLifecycle(instance: unknown, method: symbol) {
+  if (typeof instance === 'object' && instance !== null) {
+    const lifecycle = Reflect.get(instance, method);
+
+    if (typeof lifecycle === 'function') {
+      lifecycle.call(instance);
+    }
+  }
 }
