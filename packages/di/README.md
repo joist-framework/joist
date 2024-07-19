@@ -11,6 +11,7 @@ Allows you to inject services into other class instances (including custom eleme
 - [Factories](#factories)
 - [Static Tokens](#static-tokens)
 - [Testing](#testing)
+- [LifeCycle](#life-cycle)
 - [Parent/Child Relationship](#parentchild-relationship)
 - [Custom Elements](#custom-elements)
 - [Environment](#environment)
@@ -210,6 +211,22 @@ const testApp = new Injector([
 
 // our test instance will be using our mock when making http requests
 const api = testApp.get(ApiService);
+```
+
+## Life Cycle
+
+To helo provide more information to services that are being created, joist will call several life cycle hooks as services are created. These hooks are defined using the provided symbols so there is no risk of naming colisions.
+
+```ts
+class MyService {
+  [LifeCycle.onInit]() {
+    // called the first time a service is created. (not pulled from cache)
+  }
+
+  [LifeCycle.onInject]() {
+    // called every time a service is returned, whether it is from cache or not
+  }
+}
 ```
 
 ## Parent/Child relationship
