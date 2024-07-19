@@ -3,3 +3,4 @@ export { Provider, ConstructableToken, StaticToken, token } from './lib/provider
 export { injectable, INJECTABLE_MAP } from './lib/injectable.js';
 export { inject, Injected } from './lib/inject.js';
 export { defineEnvironment, clearEnvironment } from './lib/environment.js';
+export { LifeCycle } from './lib/lifecycle.js';
