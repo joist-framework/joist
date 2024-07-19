@@ -10,6 +10,10 @@ export class StaticToken<T> {
   }
 }
 
+export function token<T>(name: string, factory?: () => T) {
+  return new StaticToken(name, factory);
+}
+
 export interface ConstructableToken<T> {
   providers?: Provider<any>[];
 

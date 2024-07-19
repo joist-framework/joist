@@ -3,7 +3,7 @@ import { expect } from '@open-wc/testing';
 import { Injector } from './injector.js';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
-import { Provider, StaticToken } from './provider.js';
+import { Provider, token } from './provider.js';
 
 describe('Injector', () => {
   it('should create a new instance of a single provider', () => {
@@ -148,28 +148,28 @@ describe('Injector', () => {
   });
 
   it('should create an instance from a StaticToken factory', () => {
-    const token = new StaticToken('test', () => 'Hello World');
+    const TOKEN = token('test', () => 'Hello World');
     const injector = new Injector();
 
-    const res = injector.inject(token);
+    const res = injector.inject(TOKEN);
 
     expect(res).to.equal('Hello World');
   });
 
   it('should create an instance from an async StaticToken factory', async () => {
-    const token = new StaticToken('test', () => Promise.resolve('Hello World'));
+    const TOKEN = token('test', () => Promise.resolve('Hello World'));
     const injector = new Injector();
 
-    const res = await injector.inject(token);
+    const res = await injector.inject(TOKEN);
 
     expect(res).to.equal('Hello World');
   });
 
   it('should allow static token to be overridden', () => {
-    const token = new StaticToken<string>('test');
+    const TOKEN = token<string>('test');
 
     const provider: Provider<string> = {
-      provide: token,
+      provide: TOKEN,
       factory() {
         return 'Hello World';
       }
@@ -177,7 +177,7 @@ describe('Injector', () => {
 
     const injector = new Injector([provider]);
 
-    const res = injector.inject(token);
+    const res = injector.inject(TOKEN);
 
     expect(res).to.equal('Hello World');
   });
