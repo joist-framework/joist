@@ -103,6 +103,7 @@ const app = new Injector([
   }
 ]);
 ```
+
 ### Accessing the injector
 
 Factories provide more flexibility but often times cannot use the `inject()` function. To get around this all factories are passed an instance of the current injector.
@@ -110,7 +111,7 @@ Factories provide more flexibility but often times cannot use the `inject()` fun
 ```ts
 class Logger {
   log(args: any[]): void {
-    console.log(...args)
+    console.log(...args);
   }
 }
 
@@ -138,7 +139,7 @@ In most cases a token is any constructable class. There are cases where you migh
 
 ```ts
 // token that resolves to a string
-const URL_TOKEN = new StaticToken<string>('app_url');
+const URL_TOKEN = token<string>('app_url');
 
 const app = new Injector([
   {
@@ -153,7 +154,7 @@ const app = new Injector([
 A static token can be provided a default factory function to use on creation.
 
 ```ts
-const URL_TOKEN = new StaticToken('app_url', () => '/default-url/');
+const URL_TOKEN = token('app_url', () => '/default-url/');
 ```
 
 ### Async values
@@ -162,7 +163,7 @@ Static tokens can also leverage promises for cases when you need to async create
 
 ```ts
 // StaticToken<Promise<string>>
-const URL_TOKEN = new StaticToken('app_url', () => Promise.resolve('/default-url/'));
+const URL_TOKEN = token('app_url', () => Promise.resolve('/default-url/'));
 
 const app = new Injector();
 
