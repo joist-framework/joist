@@ -9,7 +9,7 @@ Allows you to inject services into other class instances (including custom eleme
 - [Installation](#installation)
 - [Example Usage](#example)
 - [Factories](#factories)
-- [Static Tokens](#static-tokens)
+- [StaticToken](#statictoken)
 - [Testing](#testing)
 - [LifeCycle](#life-cycle)
 - [Parent/Child Relationship](#parentchild-relationship)
@@ -134,7 +134,7 @@ const app = new Injector([
 ]);
 ```
 
-## Static Tokens
+## StaticToken
 
 In most cases a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
 
