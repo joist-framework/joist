@@ -78,8 +78,8 @@ describe('inject', () => {
       hello = inject(TOKEN);
     }
 
-    customElements.define('inject-1', HelloWorld);
+    customElements.define('inject-2', HelloWorld);
 
-    expect(new HelloWorld().hello()).to.be('Hello World');
+    expect(new HelloWorld().hello()).to.equal('Hello World');
   });
 });
