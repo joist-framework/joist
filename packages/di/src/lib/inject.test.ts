@@ -3,6 +3,7 @@ import { expect } from '@open-wc/testing';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 import { Injector } from './injector.js';
+import { StaticToken, token } from './provider.js';
 
 describe('inject', () => {
   it('should work', () => {
@@ -68,4 +69,18 @@ describe('inject', () => {
 
     expect(parent.inject(BarService).foo().value).to.equal('100');
   });
+
+  it('should inject a static toke', () => {
+    const TOKEN = new StaticToken('test', () => 'Hello World')
+
+    @injectable
+    class HelloWorld extends HTMLElement {
+      hello = inject(TOKEN);
+    }
+
+    customElements.define('inject-1', HelloWorld);
+
+    expect(new HelloWorld().hello()).to.be('Hello World');
+  });
+
 });
