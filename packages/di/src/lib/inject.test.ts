@@ -78,8 +78,6 @@ describe('inject', () => {
       hello = inject(TOKEN);
     }
 
-    const app = new Injector();
-
-    expect(app.get(HelloWorld).hello()).to.equal('Hello World');
+    expect(new HelloWorld().hello()).to.equal('Hello World');
   });
 });
