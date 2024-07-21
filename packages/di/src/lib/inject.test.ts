@@ -70,16 +70,16 @@ describe('inject', () => {
     expect(parent.inject(BarService).foo().value).to.equal('100');
   });
 
-  it('should inject a static toke', () => {
+  it('should inject a static token', () => {
     const TOKEN = new StaticToken('test', () => 'Hello World');
 
     @injectable
-    class HelloWorld extends HTMLElement {
+    class HelloWorld {
       hello = inject(TOKEN);
     }
 
-    customElements.define('inject-2', HelloWorld);
+    const app = new Injector();
 
-    expect(new HelloWorld().hello()).to.equal('Hello World');
+    expect(app.get(HelloWorld).hello()).to.equal('Hello World');
   });
 });
