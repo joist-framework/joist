@@ -7,14 +7,14 @@ Allows you to inject services into other class instances (including custom eleme
 ## Table of Contents
 
 - [Installation](#installation)
-- [Example Usage](#example)
+- [Services](#services)
+- [Injectable Services](#injectable-services)
+- [Defining Providers](#defining-providers)
 - [Factories](#factories)
-- [StaticToken](#statictoken)
-- [Testing](#testing)
-- [LifeCycle](#life-cycle)
-- [Parent/Child Relationship](#parentchild-relationship)
+- [StaticTokens](#statictokens)
+- [LifeCycle](#lifecycle)
+- [Hierarchical Injectors](#hierarchical-injectors)
 - [Custom Elements](#custom-elements)
-- [Environment](#environment)
 
 ## Installation:
 
@@ -22,73 +22,99 @@ Allows you to inject services into other class instances (including custom eleme
 npm i @joist/di
 ```
 
-## Example:
+## Services
 
-Classes that are decoratored with `@injectable` can use the `inject()` function to inject a class instance.
+At their simplest services are classses. Services can be constructed via an `Injector` and treated as singletons.
 
-Different implementations can be provided for services.
+```ts
+const app = new Injector();
 
-```TS
-import { Injector, injectable, inject } from '@joist/di';
+class Counter {
+  value = 0;
 
-class Engine {
-  type: 'gas' | 'electric' = 'gas';
-
-  accelerate() {
-    return 'vroom';
+  inc(val: number) {
+    this.value += val;
   }
 }
 
-class Tires {
-  size = 16;
+// these two calls will return the same instance
+const foo = app.inject(Counter);
+const bar = app.inject(Counter);
+```
+
+## Injectable Services
+
+Singleton services are great but the real benefit can be seen when passing instances of one service to another. Services are injected into other services using the `inject()` fuction. In order to use `inject()` classes must be decorated with `@injectable`.
+
+`inject()` returns a function that will then return an instance of the requested service. This means that services are only created when they are needed and not when the class is constructed.
+
+```ts
+@injectable
+class App {
+  #counter = inject(Counter);
+
+  update(val: number) {
+    const instance = this.#counter();
+
+    instance.inc(val);
+  }
+}
+```
+
+## Defining Providers
+
+A big reason to use dependency injection is the ability to provide multiple implementations for a particular service. For example we probably want a different http client when running unit tests vs in our main application.
+
+In the below example we have a defined HttpService that wraps fetch. but for our unit test we will use a custom implementation that returns just the data we want. This also has the benefit of avoiding test framework specific mocks.
+
+```ts
+// services.ts
+
+@injectable
+class HttpService {
+  fetch(url: string, init?: RequestInit) {
+    return fetch(url, init);
+  }
 }
 
 @injectable
-class Car {
-  engine = inject(Engine);
-  tires = inject(Tires);
+class ApiService {
+  #http = inject(HttpService);
 
-  accelerate() {
-    // the inject function returns a function
-    // this means that services are not initalized until they are called
-    return this.engine().accelerate();
+  getData() {
+    return this.#http()
+      .fetch('/api/v1/users')
+      .then((res) => res.json());
   }
 }
+```
 
-const factory1 = new Injector();
-const car1 = factory1.get(Car);
+```ts
+// services.test.ts
 
-// vroom, 16
-console.log(car1.accelerate(), car1.tires().size);
-
-const factory2 = new Injector([
-  {
-    provide: Engine,
-    use: class extends Engine {
-      type = 'electric';
-
-      accelerate() {
-        return 'hmmmmmmmm';
+describe('services', () => {
+  test('should return json', async () => {
+    class MockHttpService extends HttpService {
+      async fetch() {
+        return Response.json({ fname: 'Danny', lname: 'Blue' });
       }
     }
-  },
-  {
-    provide: Tires,
-    use: class extends Tires {
-      size = 20;
-    }
-  }
-]);
 
-const car2 = factory2.get(Car);
+    const app = new Injector([{ provide: HttpService, use: MockHttpService }]);
 
-//hmmmmmmmm, 20
-console.log(car2.accelerate(), car2.tires().size);
+    const api = app.inject(ApiService);
+
+    const res = await api.getData();
+
+    assert(res.fname, 'Danny');
+    assert(res.lname, 'Blue');
+  });
+});
 ```
 
 ## Factories
 
-In addition to defining providers with classes you can also use factory functions.
+In addition to defining providers with classes you can also use factory functions. Factories allow for more flexibility for deciding exactly how a service is created. This is helpful when which instance that is provided depends on some runtime value.
 
 ```ts
 class Logger {
@@ -99,13 +125,19 @@ const app = new Injector([
   {
     provide: Logger,
     factory() {
-      return console;
+      const paras = new URLSearchParams(window.location.search);
+
+      if (params.has('debug')) {
+        return console;
+      }
+
+      return new Logger(); // noop logger
     }
   }
 ]);
 ```
 
-### Accessing the injector
+### Accessing the injector in factories
 
 Factories provide more flexibility but often times cannot use the `inject()` function. To get around this all factories are passed an instance of the current injector.
 
@@ -128,13 +160,13 @@ const app = new Injector([
   {
     provide: Feature,
     factory(i) {
-      return new Feature(i.get(Logger));
+      return new Feature(i.inject(Logger));
     }
   }
 ]);
 ```
 
-## StaticToken
+## StaticTokens
 
 In most cases a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
 
@@ -171,51 +203,9 @@ const app = new Injector();
 const url = await app.get(URL_TOKEN);
 ```
 
-## Testing
+## LifeCycle
 
-Dependency injection can make testing easy without requiring test framework level mock.
-
-```TS
-import { Injector, injectable, inject } from '@joist/di';
-
-@injectable
-class HttpService {
-  fetch(url: string, init?: RequestInit) {
-    return fetch(url, init);
-  }
-}
-
-@injectable
-class ApiService {
-  #http = inject(HttpService);
-
-  getData() {
-    return this.#http()
-      .fetch('/api/v1/users')
-      .then((res) => res.json());
-  }
-}
-
-// unit test
-const testApp = new Injector([
-  {
-    provide: HttpService,
-    use: class extends HttpService {
-      async fetch() {
-        // return whatever response we like
-        return Response.json({ fname: 'Danny', lname: 'Blue' });
-      }
-    },
-  },
-]);
-
-// our test instance will be using our mock when making http requests
-const api = testApp.get(ApiService);
-```
-
-## Life Cycle
-
-To helo provide more information to services that are being created, joist will call several life cycle hooks as services are created. These hooks are defined using the provided symbols so there is no risk of naming colisions.
+To help provide more information to services that are being created, joist will call several life cycle hooks as services are created. These hooks are defined using the provided symbols so there is no risk of naming colisions.
 
 ```ts
 class MyService {
@@ -229,7 +219,7 @@ class MyService {
 }
 ```
 
-## Parent/Child relationship
+## Hierarchical Injectors
 
 Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
 
@@ -307,7 +297,7 @@ customElements.define('my-element', MyElement);
 </color-ctx>
 ```
 
-## Environment
+### Environment
 
 When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
 If you need to define something in this environment you can do so with the `defineEnvironment` method.
@@ -316,33 +306,4 @@ If you need to define something in this environment you can do so with the `defi
 import { defineEnvironment } from '@joist/di';
 
 defineEnvironment([{ provide: MyService, use: SomeOtherService }]);
-```
-
-#### No decorators no problem:
-
-While this library is built with decorators in mind it is designed so that it can be used without them.
-
-```TS
-import { Injector, injectable, inject } from '@joist/di';
-
-class Engine {
-  type: 'gas' | 'electric' = 'gas';
-}
-
-class Tires {
-  size = 16;
-}
-
-const Car = injectable(
-  class {
-    engine = inject(Engine);
-    tires = inject(Tires);
-  }
-);
-
-const app = new Injector();
-const car = app.get(Car);
-
-// gas, 16
-console.log(car.engine(), car.tires());
 ```
