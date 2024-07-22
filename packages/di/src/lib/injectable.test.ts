@@ -2,7 +2,6 @@ import { expect, fixture, html } from '@open-wc/testing';
 
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
-import { Injector } from './injector.js';
 
 describe('@injectable()', () => {
   it('should allow a custom element to be injected with deps', () => {
