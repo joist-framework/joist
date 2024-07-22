@@ -70,7 +70,6 @@ In the below example we have a defined HttpService that wraps fetch. but for our
 ```ts
 // services.ts
 
-@injectable
 class HttpService {
   fetch(url: string, init?: RequestInit) {
     return fetch(url, init);
