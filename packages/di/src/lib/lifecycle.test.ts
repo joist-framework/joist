@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+
 import { Injector } from './injector.js';
 import { LifeCycle } from './lifecycle.js';
 import { injectable } from './injectable';

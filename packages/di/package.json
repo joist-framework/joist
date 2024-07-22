@@ -61,6 +61,17 @@
       ],
       "output": [],
       "dependencies": [
+        "build",
+        "test:node"
+      ]
+    },
+    "test:node": {
+      "command": "node --test target/**/*.test-node.js",
+      "files": [
+        "target/**"
+      ],
+      "output": [],
+      "dependencies": [
         "build"
       ]
     }
