@@ -92,23 +92,20 @@ class ApiService {
 ```ts
 // services.test.ts
 
-describe('services', () => {
-  test('should return json', async () => {
-    class MockHttpService extends HttpService {
-      async fetch() {
-        return Response.json({ fname: 'Danny', lname: 'Blue' });
-      }
+test('should return json', async () => {
+  class MockHttpService extends HttpService {
+    async fetch() {
+      return Response.json({ fname: 'Danny', lname: 'Blue' });
     }
+  }
 
-    const app = new Injector([{ provide: HttpService, use: MockHttpService }]);
+  const app = new Injector([{ provide: HttpService, use: MockHttpService }]);
+  const api = app.inject(ApiService);
 
-    const api = app.inject(ApiService);
+  const res = await api.getData();
 
-    const res = await api.getData();
-
-    assert(res.fname, 'Danny');
-    assert(res.lname, 'Blue');
-  });
+  assert(res.fname, 'Danny');
+  assert(res.lname, 'Blue');
 });
 ```
 
