@@ -249,8 +249,6 @@ This behavior allows for services to be "scoped" within a certain branch of the 
 Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
 
 ```TS
-import { injectable, inject } from '@joist/di';
-
 class Colors {
   primary = 'red';
   secodnary = 'green';
