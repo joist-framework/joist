@@ -136,9 +136,6 @@ export class Injector {
   }
 }
 
-export function injector(providers: Provider<unknown>[] = [], parent?: Injector) {
-  return new Injector(providers, parent);
-}
 function callLifecycle(instance: unknown, method: symbol) {
   if (typeof instance === 'object' && instance !== null) {
     const lifecycle = Reflect.get(instance, method);
