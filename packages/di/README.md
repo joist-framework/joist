@@ -246,7 +246,7 @@ This behavior allows for services to be "scoped" within a certain branch of the 
 
 ## Custom Elements:
 
-Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
+Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers. This is where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements.
 
 ```TS
 class Colors {
