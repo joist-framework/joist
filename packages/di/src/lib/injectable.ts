@@ -10,35 +10,33 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
     constructor(..._: any[]) {
       super();
 
+      // Define a new Injector and assiciate it with this instance of the service
       const injector = new Injector(Base.providers);
-
       INJECTABLE_MAP.set(this, injector);
 
-      try {
-        if (this instanceof HTMLElement) {
-          this.addEventListener('finddiroot', (e) => {
-            const parentInjector = findInjectorRoot(e);
+      // If the current injectable instance is a HTMLElement preform additional startup logic
+      // this will find and attach parent injectors
+      if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
+        this.addEventListener('finddiroot', (e) => {
+          const parentInjector = findInjectorRoot(e);
 
-            if (parentInjector !== null) {
-              injector.setParent(parentInjector);
-            } else {
-              injector.setParent(environment());
-            }
-          });
-        }
-      } catch {}
+          if (parentInjector !== null) {
+            injector.setParent(parentInjector);
+          } else {
+            injector.setParent(environment());
+          }
+        });
+      }
     }
 
     connectedCallback() {
-      try {
-        if (this instanceof HTMLElement) {
-          this.dispatchEvent(new Event('finddiroot'));
+      if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
+        this.dispatchEvent(new Event('finddiroot'));
 
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
+        if (super.connectedCallback) {
+          super.connectedCallback();
         }
-      } catch {}
+      }
     }
 
     disconnectedCallback() {
