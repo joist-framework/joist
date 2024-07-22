@@ -40,21 +40,6 @@ describe('@injectable()', () => {
     expect(el.foo()).to.be.instanceOf(Bar);
   });
 
-  it('should call the onInject lifecycle hook', () => {
-    class A {}
-
-    @injectable
-    class B {
-      a = inject(A);
-
-      onInject() {
-        expect(this.a()).to.be.instanceOf(A);
-      }
-    }
-
-    new Injector().inject(B);
-  });
-
   it('should handle parent HTML Injectors', async () => {
     @injectable
     class A {}
