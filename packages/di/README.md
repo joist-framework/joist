@@ -108,6 +108,32 @@ test('should return json', async () => {
 });
 ```
 
+### Service level providers
+
+Under the hood, each service decorated with `@injectable` creates its own injector. This means that it is possible to defined providers from that level down.
+
+The below example will use this particular instance of Logger as wall as any other services injected into this service.
+
+```ts
+class Logger {
+  log(..._: any[]): void {}
+}
+
+@injectable
+class MyService {
+  static providers = [
+    {
+      provide: Logger,
+      use: class {
+        log(...args: any[]) {
+          console.log(...args)
+        }
+      }
+    }
+  ]
+}
+```
+
 ## Factories
 
 In addition to defining providers with classes you can also use factory functions. Factories allow for more flexibility for deciding exactly how a service is created. This is helpful when which instance that is provided depends on some runtime value.
