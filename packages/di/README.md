@@ -10,7 +10,6 @@ Allows you to inject services into other class instances (including custom eleme
 - [Services](#services)
 - [Injectable Services](#injectable-services)
 - [Defining Providers](#defining-providers)
-- [Factories](#factories)
 - [StaticTokens](#statictokens)
 - [LifeCycle](#lifecycle)
 - [Hierarchical Injectors](#hierarchical-injectors)
@@ -134,7 +133,7 @@ class MyService {
 }
 ```
 
-## Factories
+### Factories
 
 In addition to defining providers with classes you can also use factory functions. Factories allow for more flexibility for deciding exactly how a service is created. This is helpful when which instance that is provided depends on some runtime value.
 
