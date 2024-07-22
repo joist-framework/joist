@@ -11,6 +11,6 @@ This toolkit is here to help provide just the functionality you need and nothing
 
 | Package                                  | Description                                                     |
 | ---------------------------------------- | --------------------------------------------------------------- |
-| [@joist/di](packages/di)                 | IOC container. Share state between elements                     |
+| [@joist/di](packages/di)                 | Small and Efficient dependency Injection                        |
 | [@joist/element](packages/element)       | utilities for custom elements                                   |
 | [@joist/observable](packages/observable) | Observe changes to class properties                             |
