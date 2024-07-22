@@ -24,7 +24,7 @@ npm i @joist/di
 
 ## Services
 
-At their simplest services are classses. Services can be constructed via an `Injector` and treated as singletons.
+At their simplest, services are classses. Services can be constructed via an `Injector` and treated are singletons (The same instance is returned for each call to Injector.inject()).
 
 ```ts
 const app = new Injector();
@@ -139,7 +139,7 @@ const app = new Injector([
 
 ### Accessing the injector in factories
 
-Factories provide more flexibility but often times cannot use the `inject()` function. To get around this all factories are passed an instance of the current injector.
+Factories provide more flexibility but sometimes will require access to the injector itself. For this reason the factory method is passed the injector that is being used to construct the requested service.
 
 ```ts
 class Logger {
@@ -160,7 +160,9 @@ const app = new Injector([
   {
     provide: Feature,
     factory(i) {
-      return new Feature(i.inject(Logger));
+      const logger = i.inject(Logger);
+
+      return new Feature(logger);
     }
   }
 ]);
