@@ -199,7 +199,7 @@ const URL_TOKEN = new StaticToken('app_url', () => Promise.resolve('/default-url
 
 const app = new Injector();
 
-const url = await app.get(URL_TOKEN);
+const url = await app.inject(URL_TOKEN);
 ```
 
 ## LifeCycle
