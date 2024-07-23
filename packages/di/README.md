@@ -118,18 +118,15 @@ class Logger {
   log(..._: any[]): void {}
 }
 
+class ConsoleLogger implements Logger {
+  log(...args: any[]) {
+    console.log(...args);
+  }
+}
+
 @injectable
 class MyService {
-  static providers = [
-    {
-      provide: Logger,
-      use: class {
-        log(...args: any[]) {
-          console.log(...args)
-        }
-      }
-    }
-  ]
+  static providers = [{ provide: Logger, use: ConsoleLogger }];
 }
 ```
 
@@ -223,7 +220,7 @@ const URL_TOKEN = new StaticToken('app_url', async () => '/default-url/');
 
 const app = new Injector();
 
-const url = await app.inject(URL_TOKEN);
+const url: string = await app.inject(URL_TOKEN);
 ```
 
 ## LifeCycle
