@@ -102,8 +102,8 @@ test('should return json', async () => {
 
   const res = await api.getData();
 
-  assert(res.fname, 'Danny');
-  assert(res.lname, 'Blue');
+  assert.equals(res.fname, 'Danny');
+  assert.equals(res.lname, 'Blue');
 });
 ```
 
@@ -146,7 +146,7 @@ const app = new Injector([
   {
     provide: Logger,
     factory() {
-      const paras = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
 
       if (params.has('debug')) {
         return console;
