@@ -1,6 +1,6 @@
 # Di
 
-Dependency Injection in ~800 bytes.
+Small and efficient dependency injection.
 
 Allows you to inject services into other class instances (including custom elements and node).
 
