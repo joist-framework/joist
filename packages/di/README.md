@@ -7,6 +7,7 @@ Allows you to inject services into other class instances (including custom eleme
 ## Table of Contents
 
 - [Installation](#installation)
+- [Injectors](#injectors)
 - [Services](#services)
 - [Injectable Services](#injectable-services)
 - [Defining Providers](#defining-providers)
@@ -20,6 +21,10 @@ Allows you to inject services into other class instances (including custom eleme
 ```BASH
 npm i @joist/di
 ```
+
+## Injectors
+
+Injectors are what are used to construct new [services](#services). Injectors can manually [provide implementations](#defining-providers) of services. Injectors can also have [parents](#hierarchical-injectors), parent injectors can define services for all of it's children.
 
 ## Services
 
