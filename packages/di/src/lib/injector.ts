@@ -35,12 +35,8 @@ export class Injector {
     this.providers = providers;
   }
 
-  inject<T>(token: InjectionToken<T>): T {
-    return this.get(token);
-  }
-
   // resolves and retuns and instance of the requested service
-  get<T>(token: InjectionToken<T>): T {
+  inject<T>(token: InjectionToken<T>): T {
     // check for a local instance
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token)!;
