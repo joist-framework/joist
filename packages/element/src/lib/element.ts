@@ -19,6 +19,7 @@ export function element<Target extends CustomElementConstructor>(
   return class JoistElement extends Base {
     // make all attrs observable
     static observedAttributes = [...meta.attrs];
+
     constructor(...args: any[]) {
       super(...args);
 
@@ -30,19 +31,19 @@ export function element<Target extends CustomElementConstructor>(
     }
 
     connectedCallback() {
-      for (let attr of meta.attrs) {
-        const value = Reflect.get(this, attr);
+      for (let { propName, attrName } of meta.attrs) {
+        const value = Reflect.get(this, propName);
 
         // reflect values back to attributes
         if (value !== null && value !== undefined && value !== '') {
           if (typeof value === 'boolean') {
             if (value === true) {
               // set boolean attribute
-              this.setAttribute(attr, '');
+              this.setAttribute(attrName, '');
             }
           } else {
             // set key/value attribute
-            this.setAttribute(attr, String(value));
+            this.setAttribute(attrName, String(value));
           }
         }
       }

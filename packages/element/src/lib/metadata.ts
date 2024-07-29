@@ -1,7 +1,12 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
+export interface AttrDef {
+  propName: string | symbol;
+  attrName: string;
+}
+
 export class ElementMetadata {
-  attrs: string[] = [];
+  attrs: AttrDef[] = [];
   tagName?: (val: any) => string;
   listeners = new Map<string, (e: Event) => void>();
 }

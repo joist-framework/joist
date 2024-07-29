@@ -1,6 +1,7 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attr.js';
+import { element } from './element.js';
 
 describe('@attr()', () => {
   it('should read and parse the correct values', async () => {
@@ -60,5 +61,26 @@ describe('@attr()', () => {
     expect(el.getAttribute('value2')).to.equal('100');
     expect(el.hasAttribute('value3')).to.be.false;
     expect(el.hasAttribute('value4')).to.be.true;
+  });
+
+  it('should normalize attribute names', async () => {
+    const value3 = Symbol('Value from SYMBOL');
+
+    @element
+    class MyElement extends HTMLElement {
+      @attr accessor Value1 = 'hello';
+      @attr accessor ['Value 2'] = 0;
+      @attr accessor [value3] = true;
+    }
+
+    customElements.define('attr-test-5', MyElement);
+
+    const el = await fixture<MyElement>(html`<attr-test-5></attr-test-5>`);
+
+    expect([...el.attributes].map((attr) => attr.name)).to.deep.equal([
+      'value1',
+      'value-2',
+      'value-from-symbol'
+    ]);
   });
 });

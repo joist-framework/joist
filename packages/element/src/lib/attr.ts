@@ -4,25 +4,26 @@ export function attr<This extends HTMLElement>(
   { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
   ctx: ClassAccessorDecoratorContext<This>
 ): ClassAccessorDecoratorResult<This, any> {
-  const name = String(ctx.name);
+  const attrName = parseAttrName(ctx.name);
   const meta = metadataStore.read(ctx.metadata);
-  meta.attrs.push(name);
+
+  meta.attrs.push({ propName: ctx.name, attrName });
 
   return {
     set(value: unknown) {
       if (value === true) {
-        this.setAttribute(name, '');
+        this.setAttribute(attrName, '');
       } else if (value === false) {
-        this.removeAttribute(name);
+        this.removeAttribute(attrName);
       } else {
-        this.setAttribute(name, String(value));
+        this.setAttribute(attrName, String(value));
       }
 
       set.call(this, value);
     },
     get() {
       const ogValue = get.call(this);
-      const attr = this.getAttribute(name);
+      const attr = this.getAttribute(attrName);
 
       if (attr !== null) {
         // treat as boolean
@@ -43,4 +44,20 @@ export function attr<This extends HTMLElement>(
       return ogValue;
     }
   };
+}
+
+function parseAttrName(val: string | symbol): string {
+  let value: string;
+
+  if (typeof val === 'symbol') {
+    if (val.description) {
+      value = val.description;
+    } else {
+      throw new Error('Cannot handle Symbol property without description');
+    }
+  } else {
+    value = val;
+  }
+
+  return value.toLowerCase().replaceAll(' ', '-');
 }
