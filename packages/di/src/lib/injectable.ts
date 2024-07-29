@@ -1,8 +1,5 @@
 import { ConstructableToken } from './provider.js';
-import { Injector } from './injector.js';
-import { InjectableMap } from './injectable-map.js';
-
-export const INJECTABLE_MAP = new InjectableMap();
+import { Injectables, Injector } from './injector.js';
 
 export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
@@ -11,7 +8,8 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
 
       // Define a new Injector and assiciate it with this instance of the service
       const injector = new Injector(Base.providers);
-      INJECTABLE_MAP.set(this, injector);
+
+      Injectables.set(this, injector);
 
       // If the current injectable instance is a HTMLElement preform additional startup logic
       // this will find and attach parent injectors
@@ -37,7 +35,7 @@ export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unkno
     }
 
     disconnectedCallback() {
-      const injector = INJECTABLE_MAP.get(this);
+      const injector = Injectables.get(this);
 
       if (injector) {
         injector.setParent(undefined);
@@ -58,7 +56,7 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    const injector = INJECTABLE_MAP.get(part);
+    const injector = Injectables.get(part);
 
     if (injector) {
       return injector;
