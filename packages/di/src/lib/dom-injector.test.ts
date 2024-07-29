@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
 
 import { DOMInjector } from './dom-injector.js';
-import { INJECTABLE_MAP } from './injectable.js';
+import { Injectables } from './injector.js';
 
 describe('DOMInjector', () => {
   it('should attach an injector to a dom element', () => {
@@ -10,7 +10,7 @@ describe('DOMInjector', () => {
 
     app.attach(root);
 
-    const injector = INJECTABLE_MAP.get(root);
+    const injector = Injectables.get(root);
 
     expect(injector).to.equal(app);
   });
@@ -21,10 +21,10 @@ describe('DOMInjector', () => {
 
     app.attach(root);
 
-    expect(INJECTABLE_MAP.get(root)).to.equal(app);
+    expect(Injectables.get(root)).to.equal(app);
 
     app.detach(root);
 
-    expect(INJECTABLE_MAP.get(root)).to.equal(undefined);
+    expect(Injectables.get(root)).to.equal(undefined);
   });
 });
