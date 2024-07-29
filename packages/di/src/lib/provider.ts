@@ -1,12 +1,20 @@
 import { Injector } from './injector.js';
 
 export class StaticToken<T> {
-  name;
-  factory;
+  #name;
+  #factory;
+
+  get name() {
+    return this.#name;
+  }
+
+  get factory() {
+    return this.#factory;
+  }
 
   constructor(name: string, factory?: () => T) {
-    this.name = name;
-    this.factory = factory;
+    this.#name = name;
+    this.#factory = factory;
   }
 }
 
