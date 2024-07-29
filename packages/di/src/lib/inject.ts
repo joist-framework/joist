@@ -1,11 +1,9 @@
+import { INJECTABLE_MAP } from './injector.js';
 import { InjectionToken } from './provider.js';
-import { INJECTABLE_MAP } from './injectable.js';
 
 export type Injected<T> = () => T;
 
-export function inject<This extends object, T>(
-  token: InjectionToken<T>
-): Injected<T> {
+export function inject<This extends object, T>(token: InjectionToken<T>): Injected<T> {
   return function (this: This) {
     const injector = INJECTABLE_MAP.get(this);
 

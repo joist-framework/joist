@@ -1,6 +1,8 @@
-import { INJECTABLE_MAP } from './injectable.js';
+import { InjectableMap } from './injectable-map.js';
 import { LifeCycle } from './lifecycle.js';
 import { InjectionToken, Provider, StaticToken } from './provider.js';
+
+export const INJECTABLE_MAP = new InjectableMap();
 
 /**
  * Injectors create and store instances of services.

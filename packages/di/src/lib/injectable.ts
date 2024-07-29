@@ -1,9 +1,6 @@
 import { ConstructableToken } from './provider.js';
-import { Injector } from './injector.js';
+import { INJECTABLE_MAP, Injector } from './injector.js';
 import { environment } from './environment.js';
-import { InjectableMap } from './injectable-map.js';
-
-export const INJECTABLE_MAP = new InjectableMap();
 
 export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
