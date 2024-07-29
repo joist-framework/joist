@@ -43,11 +43,10 @@ describe('@injectable()', () => {
     @injectable
     class A {}
 
-    const B = injectable(
-      class {
-        a = inject(A);
-      }
-    );
+    @injectable
+    class B {
+      a = inject(A);
+    }
 
     class AltA implements A {}
 
