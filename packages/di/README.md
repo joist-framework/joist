@@ -353,14 +353,3 @@ customElements.define('my-element', MyElement);
   <my-element></my-element>
 </color-ctx>
 ```
-
-### Environment
-
-When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
-If you need to define something in this environment you can do so with the `defineEnvironment` method.
-
-```ts
-import { defineEnvironment } from '@joist/di';
-
-defineEnvironment([{ provide: MyService, use: SomeOtherService }]);
-```
