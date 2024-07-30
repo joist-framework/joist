@@ -3,7 +3,7 @@ import { inject, injectable } from '@joist/di';
 
 import { TodoService } from '../services/todo.service.js';
 
-@injectable
+@injectable()
 export class TodoLoggerElement extends HTMLElement {
   @tagName static tagName = 'todo-logger';
 

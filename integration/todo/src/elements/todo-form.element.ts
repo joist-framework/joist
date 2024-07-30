@@ -3,8 +3,8 @@ import { css, html, shadow, listen, tagName, element } from '@joist/element';
 
 import { TodoService, Todo } from '../services/todo.service.js';
 
-@injectable
-@element
+@injectable()
+@element()
 export class TodoFormElement extends HTMLElement {
   @tagName static tagName = 'todo-form';
 

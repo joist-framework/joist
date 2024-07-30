@@ -41,7 +41,7 @@ export class TodoSyncEvent extends Event {
   }
 }
 
-@injectable
+@injectable()
 export class TodoService extends EventTarget {
   @observe accessor #todos: Todo[] = [];
   @observe accessor #initialized = false;

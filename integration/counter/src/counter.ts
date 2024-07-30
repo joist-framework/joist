@@ -1,6 +1,6 @@
 import { css, html, shadow, listen, tagName, attr, element } from '@joist/element';
 
-@element
+@element()
 export class CounterElement extends HTMLElement {
   @tagName static tagName = 'joist-counter';
 
@@ -38,7 +38,7 @@ export class CounterElement extends HTMLElement {
     <button id="inc">+</button>
   `;
 
-  @attr accessor value = 0;
+  @attr() accessor value = 0;
 
   attributeChangedCallback() {
     this.innerHTML = String(this.value);

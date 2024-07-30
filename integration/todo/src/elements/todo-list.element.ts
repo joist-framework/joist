@@ -9,8 +9,8 @@ import {
 } from '../services/todo.service.js';
 import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
-@injectable
-@element
+@injectable()
+@element()
 export class TodoListElement extends HTMLElement {
   @tagName static tagName = 'todo-list';
 

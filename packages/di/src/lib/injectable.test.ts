@@ -8,7 +8,7 @@ describe('@injectable()', () => {
     class Foo {}
     class Bar {}
 
-    @injectable
+    @injectable()
     class MyElement extends HTMLElement {
       foo = inject(Foo);
       bar = inject(Bar);
@@ -26,13 +26,12 @@ describe('@injectable()', () => {
 
     class Bar extends Foo {}
 
-    const MyElement = injectable(
-      class {
-        static providers = [{ provide: Foo, use: Bar }];
-
-        foo = inject(Foo);
-      }
-    );
+    @injectable({
+      providers: [{ provide: Foo, use: Bar }]
+    })
+    class MyElement {
+      foo = inject(Foo);
+    }
 
     const el = new MyElement();
 
@@ -40,25 +39,25 @@ describe('@injectable()', () => {
   });
 
   it('should handle parent HTML Injectors', async () => {
-    @injectable
+    @injectable()
     class A {}
 
-    @injectable
+    @injectable()
     class B {
       a = inject(A);
     }
 
     class AltA implements A {}
 
-    @injectable
-    class Parent extends HTMLElement {
-      static providers = [
+    @injectable({
+      providers: [
         { provide: B, use: B },
         { provide: A, use: AltA }
-      ];
-    }
+      ]
+    })
+    class Parent extends HTMLElement {}
 
-    @injectable
+    @injectable()
     class Child extends HTMLElement {
       b = inject(B);
     }
@@ -81,17 +80,17 @@ describe('@injectable()', () => {
     class A {}
     class AltA implements A {}
 
-    @injectable
-    class Ctx1 extends HTMLElement {
-      static providers = [{ provide: A, use: A }];
-    }
+    @injectable({
+      providers: [{ provide: A, use: A }]
+    })
+    class Ctx1 extends HTMLElement {}
 
-    @injectable
-    class Ctx2 extends HTMLElement {
-      static providers = [{ provide: A, use: AltA }];
-    }
+    @injectable({
+      providers: [{ provide: A, use: AltA }]
+    })
+    class Ctx2 extends HTMLElement {}
 
-    @injectable
+    @injectable()
     class Child extends HTMLElement {
       a = inject(A);
     }

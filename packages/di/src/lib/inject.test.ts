@@ -9,7 +9,7 @@ describe('inject', () => {
   it('should work', () => {
     class HelloService {}
 
-    @injectable
+    @injectable()
     class HelloWorld extends HTMLElement {
       hello = inject(HelloService);
     }
@@ -24,7 +24,7 @@ describe('inject', () => {
       value = '1';
     }
 
-    @injectable
+    @injectable()
     class BarService {
       foo = inject(FooService);
 
@@ -53,7 +53,7 @@ describe('inject', () => {
       value = '1';
     }
 
-    @injectable
+    @injectable()
     class BarService {
       foo = inject(FooService);
     }
@@ -73,7 +73,7 @@ describe('inject', () => {
   it('should inject a static token', () => {
     const TOKEN = new StaticToken('test', () => 'Hello World');
 
-    @injectable
+    @injectable()
     class HelloWorld {
       hello = inject(TOKEN);
     }

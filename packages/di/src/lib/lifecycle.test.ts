@@ -14,7 +14,7 @@ describe('LifeCycle', () => {
       onInject: 0
     };
 
-    @injectable
+    @injectable()
     class MyService {
       [LifeCycle.onInit]() {
         res.onInit++;
@@ -41,7 +41,7 @@ describe('LifeCycle', () => {
       onInject: 0
     };
 
-    @injectable
+    @injectable()
     class MyService {
       [LifeCycle.onInit]() {
         res.onInit++;
@@ -69,7 +69,7 @@ describe('LifeCycle', () => {
       onInject: 0
     };
 
-    @injectable
+    @injectable()
     class MyService {
       [LifeCycle.onInit]() {
         res.onInit++;
@@ -80,7 +80,7 @@ describe('LifeCycle', () => {
       }
     }
 
-    @injectable
+    @injectable()
     class MyApp {
       service = inject(MyService);
     }

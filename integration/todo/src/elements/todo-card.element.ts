@@ -2,7 +2,7 @@ import { css, html, shadow, listen, attr, tagName, element } from '@joist/elemen
 
 import { Todo, TodoStatus } from '../services/todo.service.js';
 
-@element
+@element()
 export class TodoCardElement extends HTMLElement {
   @tagName static tagName = 'todo-card';
 
@@ -46,7 +46,7 @@ export class TodoCardElement extends HTMLElement {
     <button id="complete">complete</button>
   `;
 
-  @attr accessor status: TodoStatus = 'active';
+  @attr() accessor status: TodoStatus = 'active';
 
   #complete = this.dom.query('#complete')!;
 

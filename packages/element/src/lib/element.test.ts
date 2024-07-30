@@ -2,17 +2,21 @@ import { expect, fixture, html } from '@open-wc/testing';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
-import { tagName } from './tag-name.js';
 
 describe('@element()', () => {
   it('should write default value to attribute', async () => {
-    @element
+    @element({
+      tagName: 'element-1'
+    })
     class MyElement extends HTMLElement {
-      @tagName static tag = 'element-1';
+      @attr()
+      accessor value1 = 'hello'; // no attribute
 
-      @attr accessor value1 = 'hello'; // no attribute
-      @attr accessor value2 = 0; // number
-      @attr accessor value3 = true; // boolean
+      @attr()
+      accessor value2 = 0; // number
+
+      @attr()
+      accessor value3 = true; // boolean
     }
 
     const el = await fixture<MyElement>(html`<element-1></element-1>`);
@@ -23,13 +27,18 @@ describe('@element()', () => {
   });
 
   it('should register attributes', async () => {
-    @element
+    @element({
+      tagName: 'element-2'
+    })
     class MyElement extends HTMLElement {
-      @tagName static tag = 'element-2';
+      @attr()
+      accessor value1 = 'hello'; // no attribute
 
-      @attr accessor value1 = 'hello'; // no attribute
-      @attr accessor value2 = 0; // number
-      @attr accessor value3 = true; // boolean
+      @attr()
+      accessor value2 = 0; // number
+
+      @attr()
+      accessor value3 = true; // boolean
     }
 
     expect(Reflect.get(MyElement, 'observedAttributes')).to.deep.equal([

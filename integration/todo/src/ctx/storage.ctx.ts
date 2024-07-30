@@ -28,14 +28,14 @@ class AppLocalStorage implements Storage {
   }
 }
 
-@element
-@injectable
-export class LocalStorageCtx extends HTMLElement {
-  static providers = [
+@element()
+@injectable({
+  providers: [
     { provide: TodoService, use: TodoService },
     { provide: AppStorage, use: AppLocalStorage }
-  ];
-
+  ]
+})
+export class LocalStorageCtx extends HTMLElement {
   @tagName static tagName = 'local-storage-ctx';
 
   @shadow styles = css`

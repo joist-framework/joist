@@ -12,8 +12,8 @@ class PluralRules extends Intl.PluralRules {
   static service = true;
 }
 
-@injectable
-@element
+@injectable()
+@element()
 export class TodoListFooterElement extends HTMLElement {
   @tagName static tagName = 'todo-list-footer';
 
