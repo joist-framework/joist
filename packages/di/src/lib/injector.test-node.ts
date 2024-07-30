@@ -20,7 +20,7 @@ test('should inject providers in the correct order', () => {
   class A {}
   class B {}
 
-  @injectable
+  @injectable()
   class MyService {
     a = inject(A);
     b = inject(B);
@@ -36,22 +36,22 @@ test('should inject providers in the correct order', () => {
 test('should create a new instance of a provider that has a full dep tree', () => {
   class A {}
 
-  @injectable
+  @injectable()
   class B {
     a = inject(A);
   }
 
-  @injectable
+  @injectable()
   class C {
     b = inject(B);
   }
 
-  @injectable
+  @injectable()
   class D {
     c = inject(C);
   }
 
-  @injectable
+  @injectable()
   class E {
     d = inject(D);
   }
@@ -65,7 +65,7 @@ test('should create a new instance of a provider that has a full dep tree', () =
 test('should override a provider if explicitly instructed', () => {
   class A {}
 
-  @injectable
+  @injectable()
   class B {
     a = inject(A);
   }

@@ -1,5 +1,5 @@
 import { injectable } from '@joist/di';
-import { css, html, shadow, tagName, element } from '@joist/element';
+import { css, html, shadow, element } from '@joist/element';
 
 import { AppStorage, Storage } from '../services/storage.service.js';
 import { TodoService } from '../services/todo.service.js';
@@ -28,16 +28,16 @@ class AppLocalStorage implements Storage {
   }
 }
 
-@element
-@injectable
-export class LocalStorageCtx extends HTMLElement {
-  static providers = [
+@element({
+  tagName: 'local-storage-ctx'
+})
+@injectable({
+  providers: [
     { provide: TodoService, use: TodoService },
     { provide: AppStorage, use: AppLocalStorage }
-  ];
-
-  @tagName static tagName = 'local-storage-ctx';
-
+  ]
+})
+export class LocalStorageCtx extends HTMLElement {
   @shadow styles = css`
     :host {
       display: contents;

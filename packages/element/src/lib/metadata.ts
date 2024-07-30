@@ -7,7 +7,6 @@ export interface AttrDef {
 
 export class ElementMetadata {
   attrs: AttrDef[] = [];
-  tagName?: (val: any) => string;
   listeners = new Map<string, (e: Event) => void>();
 }
 

@@ -13,11 +13,10 @@ npm i @joist/element
 ```TS
 import { tagName, shadow, css, html, attr, listen, element } from '@joist/element';
 
-@element
+@element({
+  tagName: 'my-element'
+})
 export class MyElement extends HTMLElement {
-  // define a custom element
-  @tagName static tagName = 'my-element';
-
   // apply styles to shadow dom
   @shadow styles = css`
     :host {
@@ -32,7 +31,7 @@ export class MyElement extends HTMLElement {
   `;
 
   // define attributes
-  @attr accessor value = 0;
+  @attr() accessor value = 0;
 
   // listen for events
   @listen('click') onClick() {

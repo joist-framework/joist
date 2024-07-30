@@ -9,7 +9,7 @@ describe('inject', () => {
   it('should work', () => {
     class HelloService {}
 
-    @injectable
+    @injectable()
     class HelloWorld extends HTMLElement {
       hello = inject(HelloService);
     }
@@ -24,7 +24,7 @@ describe('inject', () => {
       value = '1';
     }
 
-    @injectable
+    @injectable()
     class BarService {
       foo = inject(FooService);
 
@@ -43,7 +43,7 @@ describe('inject', () => {
       const error = err as Error;
 
       expect(error.message).to.equal(
-        `BarService is either not injectable or a service is being called in the constructor. \n Either add the @injectable to your class or use the [LifeCycle.onInject] callback method.`
+        `BarService is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the [LifeCycle.onInject] callback method.`
       );
     }
   });
@@ -53,7 +53,7 @@ describe('inject', () => {
       value = '1';
     }
 
-    @injectable
+    @injectable()
     class BarService {
       foo = inject(FooService);
     }
@@ -73,7 +73,7 @@ describe('inject', () => {
   it('should inject a static token', () => {
     const TOKEN = new StaticToken('test', () => 'Hello World');
 
-    @injectable
+    @injectable()
     class HelloWorld {
       hello = inject(TOKEN);
     }
