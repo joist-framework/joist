@@ -18,7 +18,7 @@ export function element<Target extends CustomElementConstructor>(
 
   return class JoistElement extends Base {
     // make all attrs observable
-    static observedAttributes = [...meta.attrs];
+    static observedAttributes = meta.attrs.map(({ attrName }) => attrName);
 
     constructor(...args: any[]) {
       super(...args);

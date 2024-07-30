@@ -21,4 +21,21 @@ describe('@element()', () => {
     expect(el.getAttribute('value2')).to.equal('0');
     expect(el.getAttribute('value3')).to.equal('');
   });
+
+  it('should register attributes', async () => {
+    @element
+    class MyElement extends HTMLElement {
+      @tagName static tag = 'element-2';
+
+      @attr accessor value1 = 'hello'; // no attribute
+      @attr accessor value2 = 0; // number
+      @attr accessor value3 = true; // boolean
+    }
+
+    expect(Reflect.get(MyElement, 'observedAttributes')).to.deep.equal([
+      'value1',
+      'value2',
+      'value3'
+    ]);
+  });
 });
