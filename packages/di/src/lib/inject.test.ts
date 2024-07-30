@@ -43,7 +43,7 @@ describe('inject', () => {
       const error = err as Error;
 
       expect(error.message).to.equal(
-        `BarService is either not injectable or a service is being called in the constructor. \n Either add the @injectable to your class or use the [LifeCycle.onInject] callback method.`
+        `BarService is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the [LifeCycle.onInject] callback method.`
       );
     }
   });

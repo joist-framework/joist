@@ -80,7 +80,7 @@ class HttpService {
   }
 }
 
-@injectable
+@injectable()
 class ApiService {
   #http = inject(HttpService);
 
@@ -114,7 +114,7 @@ test('should return json', async () => {
 
 ### Service level providers
 
-Under the hood, each service decorated with `@injectable` creates its own injector. This means that it is possible to defined providers from that level down.
+Under the hood, each service decorated with `@injectable()` creates its own injector. This means that it is possible to defined providers from that level down.
 
 The below example will use this particular instance of Logger as wall as any other services injected into this service.
 
@@ -327,7 +327,7 @@ class Colors {
 })
 class ColorCtx extends HTMLElement {}
 
-@injectable
+@injectable()
 class MyElement extends HTMLElement {
   #colors = inject(Colors);
 
