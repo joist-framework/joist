@@ -110,4 +110,20 @@ describe('@attr()', () => {
       'value-from-symbol'
     ]);
   });
+
+  it('should throw an error for symbols with no description', async () => {
+    expect(() => {
+      const value = Symbol();
+
+      @element({
+        tagName: 'attr-test-4'
+      })
+      class MyElement extends HTMLElement {
+        @attr()
+        accessor [value] = true;
+      }
+
+      new MyElement();
+    }).to.throw('Cannot handle Symbol property without description');
+  });
 });
