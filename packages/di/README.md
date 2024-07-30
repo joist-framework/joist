@@ -53,7 +53,7 @@ Singleton services are great but the real benefit can be seen when passing insta
 `inject()` returns a function that will then return an instance of the requested service. This means that services are only created when they are needed and not when the class is constructed.
 
 ```ts
-@injectable
+@injectable()
 class App {
   #counter = inject(Counter);
 
@@ -129,10 +129,10 @@ class ConsoleLogger implements Logger {
   }
 }
 
-@injectable
-class MyService {
-  static providers = [{ provide: Logger, use: ConsoleLogger }];
-}
+@injectable({
+  providers: [{ provide: Logger, use: ConsoleLogger }]
+})
+class MyService {}
 ```
 
 ### Factories
@@ -286,7 +286,7 @@ class Colors {
   secodnary = 'green';
 }
 
-@injectable
+@injectable()
 class MyElement extends HTMLElement {
   #colors = inject(Colors);
 
@@ -314,19 +314,18 @@ class Colors {
   secodnary = 'green';
 }
 
-@injectable
-class ColorCtx extends HTMLElement {
-  // services can be scoped to a particular injectable
-  static providers = [
+@injectable({
+  providers: [
     {
       provide: Colors,
       use: class implements Colors {
         primary = 'orange';
         secondary = 'purple';
-      },
-    },
+      }
+    }
   ]
-}
+})
+class ColorCtx extends HTMLElement {}
 
 @injectable
 class MyElement extends HTMLElement {

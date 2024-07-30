@@ -1,12 +1,13 @@
-import { tagName } from '@joist/element';
+import { element } from '@joist/element';
 import { inject, injectable } from '@joist/di';
 
 import { TodoService } from '../services/todo.service.js';
 
 @injectable()
+@element({
+  tagName: 'todo-logger'
+})
 export class TodoLoggerElement extends HTMLElement {
-  @tagName static tagName = 'todo-logger';
-
   #todo = inject(TodoService);
 
   async connectedCallback() {

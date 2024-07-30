@@ -1,11 +1,11 @@
-import { css, html, shadow, listen, attr, tagName, element } from '@joist/element';
+import { css, html, shadow, listen, attr, element } from '@joist/element';
 
 import { Todo, TodoStatus } from '../services/todo.service.js';
 
-@element()
+@element({
+  tagName: 'todo-card'
+})
 export class TodoCardElement extends HTMLElement {
-  @tagName static tagName = 'todo-card';
-
   @shadow styles = css`
     :host {
       align-items: center;
