@@ -6,9 +6,11 @@ export interface AttrDef {
   observe: boolean;
 }
 
+export type ListenerRootSelector = (el: HTMLElement) => HTMLElement | ShadowRoot;
+
 export class ElementMetadata {
   attrs: AttrDef[] = [];
-  listeners = new Map<string, (e: Event) => void>();
+  listeners = new Map<string, { cb: (e: Event) => void; root: ListenerRootSelector }>();
 }
 
 export class MetadataStore extends WeakMap<object, ElementMetadata> {

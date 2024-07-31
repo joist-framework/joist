@@ -41,10 +41,8 @@ export function element<
           }
         }
 
-        const root = this.shadowRoot || this;
-
-        for (let [event, listener] of meta.listeners) {
-          root.addEventListener(event, listener.bind(this));
+        for (let [event, { cb, root }] of meta.listeners) {
+          root(this).addEventListener(event, cb.bind(this));
         }
       }
 
