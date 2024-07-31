@@ -1,4 +1,4 @@
-import { metadataStore } from './metadata.js';
+import { AttrDef, metadataStore } from './metadata.js';
 import { ShadowResult } from './result.js';
 
 export interface ElementOpts<T> {
@@ -22,7 +22,6 @@ export function element<
     });
 
     return class JoistElement extends Base {
-      // make all attrs observable
       static observedAttributes = meta.attrs
         .filter(({ observe }) => observe) // filter out attributes that are not to be observed
         .map(({ attrName }) => attrName);
@@ -50,22 +49,7 @@ export function element<
       }
 
       connectedCallback() {
-        for (let { propName, attrName } of meta.attrs) {
-          const value = Reflect.get(this, propName);
-
-          // reflect values back to attributes
-          if (value !== null && value !== undefined && value !== '') {
-            if (typeof value === 'boolean') {
-              if (value === true) {
-                // set boolean attribute
-                this.setAttribute(attrName, '');
-              }
-            } else {
-              // set key/value attribute
-              this.setAttribute(attrName, String(value));
-            }
-          }
-        }
+        reflectAttributeValues(this, meta.attrs);
 
         if (super.connectedCallback) {
           super.connectedCallback();
@@ -73,4 +57,23 @@ export function element<
       }
     };
   };
+}
+
+function reflectAttributeValues(el: HTMLElement, attrs: AttrDef[]) {
+  for (let { propName, attrName } of attrs) {
+    const value = Reflect.get(el, propName);
+
+    // reflect values back to attributes
+    if (value !== null && value !== undefined && value !== '') {
+      if (typeof value === 'boolean') {
+        if (value === true) {
+          // set boolean attribute
+          el.setAttribute(attrName, '');
+        }
+      } else {
+        // set key/value attribute
+        el.setAttribute(attrName, String(value));
+      }
+    }
+  }
 }

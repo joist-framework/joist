@@ -3,7 +3,6 @@ import { expect, fixture, html as litHtml } from '@open-wc/testing';
 import { attr } from './attr.js';
 import { element } from './element.js';
 import { css, html } from './tags.js';
-// import { css, html } from './tags.js';
 
 describe('@element()', () => {
   it('should write default value to attribute', async () => {
