@@ -1,6 +1,10 @@
 import { metadataStore } from './metadata.js';
 
-export function attr() {
+export interface AttrOpts {
+  observe?: boolean;
+}
+
+export function attr(opts?: AttrOpts) {
   return function attrDecorator<This extends HTMLElement>(
     { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>
@@ -8,7 +12,11 @@ export function attr() {
     const attrName = parseAttrName(ctx.name);
     const meta = metadataStore.read(ctx.metadata);
 
-    meta.attrs.push({ propName: ctx.name, attrName });
+    meta.attrs.push({
+      propName: ctx.name,
+      attrName,
+      observe: opts?.observe ?? true
+    });
 
     return {
       set(value: unknown) {

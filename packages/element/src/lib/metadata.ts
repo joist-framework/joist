@@ -3,6 +3,7 @@
 export interface AttrDef {
   propName: string | symbol;
   attrName: string;
+  observe: boolean;
 }
 
 export class ElementMetadata {

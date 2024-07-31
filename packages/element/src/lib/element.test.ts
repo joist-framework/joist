@@ -41,6 +41,9 @@ describe('@element()', () => {
 
       @attr()
       accessor value3 = true; // boolean
+
+      @attr({ observe: false }) // should be filtered out
+      accessor value4 = 'hello world';
     }
 
     expect(Reflect.get(MyElement, 'observedAttributes')).to.deep.equal([

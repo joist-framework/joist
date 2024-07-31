@@ -23,7 +23,9 @@ export function element<
 
     return class JoistElement extends Base {
       // make all attrs observable
-      static observedAttributes = meta.attrs.map(({ attrName }) => attrName);
+      static observedAttributes = meta.attrs
+        .filter(({ observe }) => observe) // filter out attributes that are not to be observed
+        .map(({ attrName }) => attrName);
 
       constructor(...args: any[]) {
         super(...args);
