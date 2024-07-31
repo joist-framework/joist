@@ -1,5 +1,4 @@
 import { expect, fixture, html } from '@open-wc/testing';
-import { render } from 'lit-html';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
@@ -38,7 +37,11 @@ describe('@element()', () => {
           }
         `,
         joistHtml/*html*/ `
-          <slot></slot>
+          <label for="test">
+            <slot></slot>
+          </label>
+
+          <input name="test" id="test">
         `
       ]
     })
