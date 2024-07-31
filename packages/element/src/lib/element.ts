@@ -3,8 +3,7 @@ import { ShadowResult } from './result.js';
 
 export interface ElementOpts<T> {
   tagName?: string;
-  shadow?: boolean;
-  template?: Array<ShadowResult | ((el: T) => void)>;
+  shadow?: Array<ShadowResult | ((el: T) => void)>;
 }
 
 export function element<
@@ -32,13 +31,11 @@ export function element<
         if (opts?.shadow) {
           this.attachShadow({ mode: 'open' });
 
-          if (opts.template) {
-            for (let res of opts.template) {
-              if (typeof res === 'function') {
-                res(this as unknown as Instance);
-              } else {
-                res.run(this.shadowRoot!);
-              }
+          for (let res of opts.shadow) {
+            if (typeof res === 'function') {
+              res(this as unknown as Instance);
+            } else {
+              res.run(this.shadowRoot!);
             }
           }
         }

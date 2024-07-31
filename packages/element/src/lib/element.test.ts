@@ -31,8 +31,7 @@ describe('@element()', () => {
   it('should register attributes', async () => {
     @element({
       tagName: 'element-2',
-      shadow: true,
-      template: [
+      shadow: [
         css`
           :host {
             display: contents;
