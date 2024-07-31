@@ -1,5 +1,5 @@
 export interface ShadowResult {
-  run(root: ShadowRoot): void;
+  run(el: HTMLElement): void;
 }
 
 export abstract class JoistShadowResult implements ShadowResult {
@@ -21,10 +21,14 @@ export abstract class JoistShadowResult implements ShadowResult {
     this.values = values;
   }
 
-  run(root: ShadowRoot) {
-    this.#shadow = root;
+  run(el: HTMLElement) {
+    if (!el.shadowRoot) {
+      throw new Error('ShadowResult has not been applied');
+    }
 
-    this.setup(root);
+    this.#shadow = el.shadowRoot;
+
+    this.setup(this.#shadow);
   }
 
   abstract setup(root: ShadowRoot): void;

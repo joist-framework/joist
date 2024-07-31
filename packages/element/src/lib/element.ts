@@ -35,7 +35,7 @@ export function element<
             if (typeof res === 'function') {
               res(this as unknown as Instance);
             } else {
-              res.run(this.shadowRoot!);
+              res.run(this);
             }
           }
         }

@@ -1,8 +1,9 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html as litHtml } from '@open-wc/testing';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
-import { css, html as joistHtml } from './tags.js';
+import { css, html } from './tags.js';
+// import { css, html } from './tags.js';
 
 describe('@element()', () => {
   it('should write default value to attribute', async () => {
@@ -20,7 +21,7 @@ describe('@element()', () => {
       accessor value3 = true; // boolean
     }
 
-    const el = await fixture<MyElement>(html`<element-1></element-1>`);
+    const el = await fixture<MyElement>(litHtml`<element-1></element-1>`);
 
     expect(el.getAttribute('value1')).to.equal('hello');
     expect(el.getAttribute('value2')).to.equal('0');
@@ -29,21 +30,7 @@ describe('@element()', () => {
 
   it('should register attributes', async () => {
     @element({
-      tagName: 'element-2',
-      shadow: [
-        css`
-          :host {
-            display: contents;
-          }
-        `,
-        joistHtml/*html*/ `
-          <label for="test">
-            <slot></slot>
-          </label>
-
-          <input name="test" id="test">
-        `
-      ]
+      tagName: 'element-2'
     })
     class MyElement extends HTMLElement {
       @attr()
@@ -61,5 +48,37 @@ describe('@element()', () => {
       'value2',
       'value3'
     ]);
+  });
+
+  it('should attach shadow root when the shadow property exists', async () => {
+    @element({
+      tagName: 'element-3',
+      shadow: []
+    })
+    class MyElement extends HTMLElement {}
+
+    const el = new MyElement();
+
+    expect(el.shadowRoot).to.be.instanceOf(ShadowRoot);
+  });
+
+  it('should apply html and css', async () => {
+    @element({
+      tagName: 'element-4',
+      shadow: [
+        css`
+          :host {
+            display: contents;
+          }
+        `,
+        html`<slot></slot>`
+      ]
+    })
+    class MyElement extends HTMLElement {}
+
+    const el = new MyElement();
+
+    expect(el.shadowRoot!.adoptedStyleSheets.length).to.equal(1);
+    expect(el.shadowRoot!.innerHTML).to.equal(`<slot></slot>`);
   });
 });
