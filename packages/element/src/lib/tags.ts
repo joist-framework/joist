@@ -13,35 +13,12 @@
  * new Foo().hello === new Foo().hello
  */
 
-import { ShadowResult } from './result.js';
-
-type Tags = keyof HTMLElementTagNameMap;
-type SVGTags = keyof SVGElementTagNameMap;
-type MathTags = keyof MathMLElementTagNameMap;
+import { JoistShadowResult } from './result.js';
 
 export const htmlTemplateCache = new WeakMap<TemplateStringsArray, HTMLTemplateElement>();
 
-export class HTMLResult extends ShadowResult {
-  query<K extends Tags>(selectors: K): HTMLElementTagNameMap[K] | null;
-  query<K extends SVGTags>(selectors: K): SVGElementTagNameMap[K] | null;
-  query<K extends MathTags>(selectors: K): MathMLElementTagNameMap[K] | null;
-  query<E extends Element = Element>(selectors: string): E | null;
-  query<K extends Tags>(query: K) {
-    return this.shadow.querySelector<K>(query);
-  }
-
-  queryAll<K extends Tags>(selectors: K): NodeListOf<HTMLElementTagNameMap[K]>;
-  queryAll<K extends SVGTags>(selectors: K): NodeListOf<SVGElementTagNameMap[K]>;
-  queryAll<K extends MathTags>(selectors: K): NodeListOf<MathMLElementTagNameMap[K]>;
-  queryAll<E extends Element = Element>(selectors: string): NodeListOf<E>;
-  queryAll<K extends Tags>(query: K) {
-    return this.shadow.querySelectorAll<K>(query);
-  }
-
-  /**
-   * THe HTMLTemplateElement itself will be cached but a new instance of the result returned
-   */
-  apply(root: ShadowRoot): void {
+export class HTMLResult extends JoistShadowResult {
+  setup(root: ShadowRoot): void {
     let template: HTMLTemplateElement;
 
     if (htmlTemplateCache.has(this.strings)) {
@@ -63,8 +40,8 @@ export function html(strings: TemplateStringsArray, ...values: any[]): HTMLResul
 
 export const styleSheetCache = new WeakMap<TemplateStringsArray, CSSStyleSheet>();
 
-export class CSSResult extends ShadowResult {
-  apply(root: ShadowRoot): void {
+export class CSSResult extends JoistShadowResult {
+  setup(root: ShadowRoot): void {
     let sheet: CSSStyleSheet;
 
     if (styleSheetCache.has(this.strings)) {

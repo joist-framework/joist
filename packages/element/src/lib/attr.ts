@@ -1,10 +1,10 @@
 import { metadataStore } from './metadata.js';
 
 export function attr() {
-  return <This extends HTMLElement>(
+  return function attrDecorator<This extends HTMLElement>(
     { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>
-  ): ClassAccessorDecoratorResult<This, any> => {
+  ): ClassAccessorDecoratorResult<This, any> {
     const attrName = parseAttrName(ctx.name);
     const meta = metadataStore.read(ctx.metadata);
 

@@ -1,16 +1,14 @@
-import { ShadowResult } from './result.js';
+import { JoistShadowResult } from './result.js';
 
-export function shadow<This extends HTMLElement, T extends ShadowResult>(
-  _: undefined,
-  _ctx: ClassFieldDecoratorContext<This, T>
-) {
-  return function (this: This, result: T) {
-    if (!this.shadowRoot) {
-      this.attachShadow({ mode: 'open' });
-    }
+export function shadow() {
+  return function shadowDecorator<This extends HTMLElement, T extends JoistShadowResult>(
+    _: undefined,
+    _ctx: ClassFieldDecoratorContext<This, T>
+  ) {
+    return function (this: This, result: T) {
+      result.run(this.shadowRoot!);
 
-    result.execute(this.shadowRoot!);
-
-    return result;
+      return result;
+    };
   };
 }

@@ -1,6 +1,10 @@
-export abstract class ShadowResult {
-  strings: TemplateStringsArray;
-  values: any[];
+export interface ShadowResult {
+  run(root: ShadowRoot): void;
+}
+
+export abstract class JoistShadowResult implements ShadowResult {
+  strings;
+  values;
 
   #shadow: ShadowRoot | undefined = undefined;
 
@@ -17,11 +21,11 @@ export abstract class ShadowResult {
     this.values = values;
   }
 
-  execute(root: ShadowRoot) {
+  run(root: ShadowRoot) {
     this.#shadow = root;
 
-    this.apply(root);
+    this.setup(root);
   }
 
-  abstract apply(root: ShadowRoot): void;
+  abstract setup(root: ShadowRoot): void;
 }

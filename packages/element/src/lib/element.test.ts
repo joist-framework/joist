@@ -1,7 +1,9 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { render } from 'lit-html';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
+import { css, html as joistHtml } from './tags.js';
 
 describe('@element()', () => {
   it('should write default value to attribute', async () => {
@@ -28,7 +30,18 @@ describe('@element()', () => {
 
   it('should register attributes', async () => {
     @element({
-      tagName: 'element-2'
+      tagName: 'element-2',
+      shadow: true,
+      template: [
+        css`
+          :host {
+            display: contents;
+          }
+        `,
+        joistHtml/*html*/ `
+          <slot></slot>
+        `
+      ]
     })
     class MyElement extends HTMLElement {
       @attr()

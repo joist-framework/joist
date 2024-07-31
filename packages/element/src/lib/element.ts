@@ -1,14 +1,17 @@
 import { metadataStore } from './metadata.js';
+import { ShadowResult } from './result.js';
 
-export interface ElementOpts {
+export interface ElementOpts<T> {
   tagName?: string;
+  shadow?: boolean;
+  template?: Array<ShadowResult | ((el: T) => void)>;
 }
 
-export function element(opts?: ElementOpts) {
-  return <Target extends CustomElementConstructor>(
-    Base: Target,
-    ctx: ClassDecoratorContext<Target>
-  ) => {
+export function element<
+  Target extends CustomElementConstructor,
+  Instance extends InstanceType<Target>
+>(opts?: ElementOpts<Instance>) {
+  return function elementDecorator(Base: Target, ctx: ClassDecoratorContext<Target>) {
     const meta = metadataStore.read(ctx.metadata);
 
     ctx.addInitializer(function (this: Target) {
@@ -25,6 +28,20 @@ export function element(opts?: ElementOpts) {
 
       constructor(...args: any[]) {
         super(...args);
+
+        if (opts?.shadow) {
+          this.attachShadow({ mode: 'open' });
+
+          if (opts.template) {
+            for (let res of opts.template) {
+              if (typeof res === 'function') {
+                res(this as unknown as Instance);
+              } else {
+                res.run(this.shadowRoot!);
+              }
+            }
+          }
+        }
 
         const root = this.shadowRoot || this;
 

@@ -6,7 +6,7 @@ export interface InjectableOpts {
 }
 
 export function injectable(opts?: InjectableOpts) {
-  return <T extends ConstructableToken<any>>(Base: T, _?: unknown) => {
+  return function injectableDecorator<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
     return class InjectableNode extends Base {
       constructor(..._: any[]) {
         super();

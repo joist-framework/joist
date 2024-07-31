@@ -6,7 +6,7 @@ import { shadow } from './shadow.js';
 describe('template', () => {
   it('should apply a stylesheet', () => {
     class MyElement extends HTMLElement {
-      @shadow styles = css`
+      @shadow() styles = css`
         :host {
           display: flex;
         }
@@ -22,13 +22,13 @@ describe('template', () => {
 
   it('should apply html', () => {
     class MyElement extends HTMLElement {
-      @shadow styles = css`
+      @shadow() styles = css`
         :host {
           display: flex;
         }
       `;
 
-      @shadow template = html`<slot></slot>`;
+      @shadow() template = html`<slot></slot>`;
     }
 
     customElements.define('template-2', MyElement);
