@@ -73,7 +73,13 @@ describe('@element()', () => {
             display: contents;
           }
         `,
-        html`<slot></slot>`
+        html`<slot></slot>`,
+        (el) => {
+          const div = document.createElement('div');
+          div.innerHTML = 'hello world';
+
+          el.append(div);
+        }
       ]
     })
     class MyElement extends HTMLElement {}
@@ -82,5 +88,6 @@ describe('@element()', () => {
 
     expect(el.shadowRoot!.adoptedStyleSheets.length).to.equal(1);
     expect(el.shadowRoot!.innerHTML).to.equal(`<slot></slot>`);
+    expect(el.innerHTML).to.equal(`<div>hello world</div>`);
   });
 });
