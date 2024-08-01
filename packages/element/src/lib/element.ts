@@ -6,6 +6,10 @@ export interface ElementOpts<T> {
   shadow?: Array<ShadowResult | ((el: T) => void)>;
 }
 
+export const LifeCycle = {
+  onInit: Symbol('onInit')
+};
+
 export function element<
   Target extends CustomElementConstructor,
   Instance extends InstanceType<Target>
@@ -30,7 +34,9 @@ export function element<
         super(...args);
 
         if (opts?.shadow) {
-          this.attachShadow({ mode: 'open' });
+          if (!this.shadowRoot) {
+            this.attachShadow({ mode: 'open' });
+          }
 
           for (let res of opts.shadow) {
             if (typeof res === 'function') {
@@ -44,13 +50,23 @@ export function element<
         for (let [event, { cb, root }] of meta.listeners) {
           root(this).addEventListener(event, cb.bind(this));
         }
+
+        if (LifeCycle.onInit in this) {
+          const onInit = Reflect.get(this, LifeCycle.onInit);
+
+          if (typeof onInit === 'function') {
+            onInit();
+          }
+        }
       }
 
       connectedCallback() {
-        reflectAttributeValues(this, meta.attrs);
+        if (this.isConnected) {
+          reflectAttributeValues(this, meta.attrs);
 
-        if (super.connectedCallback) {
-          super.connectedCallback();
+          if (super.connectedCallback) {
+            super.connectedCallback();
+          }
         }
       }
     };

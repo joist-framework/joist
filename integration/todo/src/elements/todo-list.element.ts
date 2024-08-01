@@ -1,5 +1,5 @@
 import { inject, injectable } from '@joist/di';
-import { css, html, shadow, listen, element } from '@joist/element';
+import { css, html, listen, element } from '@joist/element';
 
 import {
   TodoAddedEvent,
@@ -11,27 +11,27 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 
 @injectable()
 @element({
-  tagName: 'todo-list'
+  tagName: 'todo-list',
+  shadow: [
+    css`
+      :host {
+        display: block;
+        background: #fff;
+        position: relative;
+      }
+
+      ::slotted(todo-card) {
+        border-bottom: solid 1px #f3f3f3;
+      }
+
+      ::slotted(todo-card:last-child) {
+        border-bottom: none;
+      }
+    `,
+    html`<slot></slot>`
+  ]
 })
 export class TodoListElement extends HTMLElement {
-  @shadow styles = css`
-    :host {
-      display: block;
-      background: #fff;
-      position: relative;
-    }
-
-    ::slotted(todo-card) {
-      border-bottom: solid 1px #f3f3f3;
-    }
-
-    ::slotted(todo-card:last-child) {
-      border-bottom: none;
-    }
-  `;
-
-  @shadow template = html`<slot></slot>`;
-
   #listeners: Function[] = [];
   #todo = inject(TodoService);
 
@@ -56,13 +56,15 @@ export class TodoListElement extends HTMLElement {
     this.#listeners.forEach((remove) => remove());
   }
 
-  @listen('remove') onRemove(e: Event) {
+  @listen('remove')
+  onRemove(e: Event) {
     if (e.target instanceof TodoCardElement) {
       this.#todo().removeTodo(e.target.id);
     }
   }
 
-  @listen('complete') onComplete(e: Event) {
+  @listen('complete')
+  onComplete(e: Event) {
     if (e.target instanceof TodoCardElement) {
       const status = e.target.getAttribute('status');
 
