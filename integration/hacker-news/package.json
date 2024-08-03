@@ -1,0 +1,31 @@
+{
+  "name": "@integration/hacker-news",
+  "version": "3.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "author": "deebloo",
+  "license": "MIT",
+  "scripts": {
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ],
+      "dependencies": [
+        "../../packages/element:build",
+        "../../packages/di:build"
+      ]
+    }
+  }
+}

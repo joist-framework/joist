@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Counter</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@joist/di": "/node_modules/@joist/di/target/lib.js",
+          "@joist/element": "/node_modules/@joist/element/target/lib.js",
+          "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
+          "tslib": "/node_modules/tslib/tslib.es6.js"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <style>
+      body {
+        background-color: rgb(246, 246, 239);
+        padding: 0;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.4em;
+      }
+    </style>
+
+    <hn-header>
+      <hn-header-link href="/new">new</hn-header-link>
+      <hn-header-link href="/new">past</hn-header-link>
+      <hn-header-link href="/new">comments</hn-header-link>
+      <hn-header-link href="/new">ask</hn-header-link>
+      <hn-header-link href="/new">show</hn-header-link>
+      <hn-header-link href="/new">jobs</hn-header-link>
+      <hn-header-link href="/new">submit</hn-header-link>
+    </hn-header>
+
+    <hn-news-card number="1" id="card" href="https://wiley.com" author="Danny Blue">
+      Marshmallow Test Fails to Replicate
+    </hn-news-card>
+
+    <hn-news-card number="2" id="card" href="https://github.com/zitaotech" author="Danny Blue">
+      Hackberry-Pi_Zero - A handheld Linux terminal using Raspberry Pi Zero 2W
+    </hn-news-card>
+
+    <hn-news-card number="3" id="card" href="https://ostartpress.com" author="Danny Blue">
+      Early Bookcases, Cupboards and Carousels
+    </hn-news-card>
+
+    <hn-news-card
+      number="4"
+      id="card"
+      href="https://github.com/asg017/sqlite-vec"
+      author="Danny Blue"
+    >
+      SQLite vector search extension that runs anywhere
+    </hn-news-card>
+
+    <script type="module" src="./target/header/header.js"></script>
+    <script type="module" src="./target/header/header-link.js"></script>
+    <script type="module" src="./target/news-card/news-card.js"></script>
+  </body>
+</html>
