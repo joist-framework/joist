@@ -1,4 +1,4 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html } from '@open-wc/testing';
 
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
@@ -122,5 +122,44 @@ describe('@injectable()', () => {
     child = el.querySelector<Child>('ctx-child')!;
 
     expect(child.a()).to.be.instanceOf(AltA);
+  });
+
+  it('should call the original connectedCallacbk', (done) => {
+    @injectable()
+    class MyElement extends HTMLElement {
+      connectedCallback(): void {
+        expect(true).to.be.true;
+
+        done();
+      }
+    }
+
+    customElements.define('injectable-connected', MyElement);
+
+    fixtureSync<MyElement>(html`<injectable-connected></injectable-connected>`);
+  });
+
+  it('should call the original disconnectedCallback', (done) => {
+    @injectable()
+    class MyElement extends HTMLElement {
+      disconnectedCallback(): void {
+        expect(true).to.be.true;
+
+        done();
+      }
+    }
+
+    customElements.define('injectable-disconnected', MyElement);
+
+    const el = fixtureSync<MyElement>(html`<injectable-disconnected></injectable-disconnected>`);
+
+    el.remove();
+  });
+
+  it('should keep the original base class name', () => {
+    @injectable()
+    class MyService {}
+
+    expect(MyService.name).to.equal('MyService');
   });
 });

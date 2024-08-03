@@ -19,8 +19,6 @@ export class StaticToken<T> {
 }
 
 export interface ConstructableToken<T> {
-  providers?: Provider<any>[];
-
   new (...args: any[]): T;
 }
 

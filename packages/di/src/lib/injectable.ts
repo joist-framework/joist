@@ -1,5 +1,5 @@
 import { ConstructableToken, Provider } from './provider.js';
-import { Injectables, Injector } from './injector.js';
+import { injectables, Injector } from './injector.js';
 
 export interface InjectableOpts {
   providers: Provider<unknown>[];
@@ -7,19 +7,39 @@ export interface InjectableOpts {
 
 export function injectable(opts?: InjectableOpts) {
   return function injectableDecorator<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
-    return class InjectableNode extends Base {
-      constructor(..._: any[]) {
-        super();
+    const connectedCallback = Base.prototype.connectedCallback;
+    const disconnectedCallback = Base.prototype.disconnectedCallback;
 
-        // Define a new Injector and assiciate it with this instance of the service
+    Base.prototype.connectedCallback = function (this: HTMLElement) {
+      this.dispatchEvent(new Event('finddiroot'));
+
+      if (connectedCallback) {
+        connectedCallback.call(this);
+      }
+    };
+
+    Base.prototype.disconnectedCallback = function (this: HTMLElement) {
+      const injector = injectables.get(this);
+
+      if (injector) {
+        injector.setParent(undefined);
+      }
+
+      if (disconnectedCallback) {
+        disconnectedCallback.call(this);
+      }
+    };
+
+    return new Proxy(Base, {
+      construct(target, args, newTarget) {
         const injector = new Injector(opts?.providers);
 
-        Injectables.set(this, injector);
+        const instance = Reflect.construct(target, args, newTarget);
 
-        // If the current injectable instance is a HTMLElement preform additional startup logic
-        // this will find and attach parent injectors
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-          this.addEventListener('finddiroot', (e) => {
+        injectables.set(instance, injector);
+
+        if (instance instanceof EventTarget) {
+          instance.addEventListener('finddiroot', (e) => {
             const parentInjector = findInjectorRoot(e);
 
             if (parentInjector !== null) {
@@ -27,30 +47,10 @@ export function injectable(opts?: InjectableOpts) {
             }
           });
         }
+
+        return instance;
       }
-
-      connectedCallback() {
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-          this.dispatchEvent(new Event('finddiroot'));
-
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
-        }
-      }
-
-      disconnectedCallback() {
-        const injector = Injectables.get(this);
-
-        if (injector) {
-          injector.setParent(undefined);
-        }
-
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback();
-        }
-      }
-    };
+    });
   };
 }
 
@@ -62,7 +62,7 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    const injector = Injectables.get(part);
+    const injector = injectables.get(part);
 
     if (injector) {
       return injector;
