@@ -6,7 +6,10 @@ export interface InjectableOpts {
 }
 
 export function injectable(opts?: InjectableOpts) {
-  return function injectableDecorator<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
+  return function injectableDecorator<T extends ConstructableToken<any>>(
+    Base: T,
+    _ctx: ClassDecoratorContext
+  ) {
     return class InjectableNode extends Base {
       constructor(..._: any[]) {
         super();
@@ -18,7 +21,7 @@ export function injectable(opts?: InjectableOpts) {
 
         // If the current injectable instance is a HTMLElement preform additional startup logic
         // this will find and attach parent injectors
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
+        if (this instanceof EventTarget) {
           this.addEventListener('finddiroot', (e) => {
             const parentInjector = findInjectorRoot(e);
 
@@ -30,12 +33,12 @@ export function injectable(opts?: InjectableOpts) {
       }
 
       connectedCallback() {
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
+        if (this instanceof EventTarget) {
           this.dispatchEvent(new Event('finddiroot'));
+        }
 
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
+        if (super.connectedCallback) {
+          super.connectedCallback();
         }
       }
 

@@ -1,4 +1,4 @@
-import { LifeCycle } from './lifecycle.js';
+import { onInitMethods, onInjectMethods } from './lifecycle.js';
 import { InjectionToken, Provider, StaticToken } from './provider.js';
 
 /**
@@ -41,7 +41,11 @@ export class Injector {
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token)!;
 
-      callLifecycle(instance, LifeCycle.onInject);
+      const onInject = onInjectMethods.get(instance);
+
+      if (onInject) {
+        onInject.call(instance);
+      }
 
       return instance;
     }
@@ -114,8 +118,17 @@ export class Injector {
        * this ensures that services are initialized when the chain is settled
        * this is required since the parent is set after the instance is constructed
        */
-      callLifecycle(instance, LifeCycle.onInit);
-      callLifecycle(instance, LifeCycle.onInject);
+      const onInit = onInitMethods.get(instance);
+
+      if (onInit) {
+        onInit.call(instance);
+      }
+
+      const onInject = onInjectMethods.get(instance);
+
+      if (onInject) {
+        onInject.call(instance);
+      }
     }
 
     return instance;
@@ -133,15 +146,5 @@ export class Injector {
     }
 
     return undefined;
-  }
-}
-
-function callLifecycle(instance: unknown, method: symbol) {
-  if (typeof instance === 'object' && instance !== null) {
-    const lifecycle = Reflect.get(instance, method);
-
-    if (typeof lifecycle === 'function') {
-      lifecycle.call(instance);
-    }
   }
 }
