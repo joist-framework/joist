@@ -57,6 +57,7 @@
     "test": {
       "command": "wtr --config wtr.config.mjs",
       "files": [
+        "wtr.config.mjs",
         "target/**"
       ],
       "output": [],

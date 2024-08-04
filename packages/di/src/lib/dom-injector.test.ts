@@ -1,30 +1,28 @@
-import { expect } from '@open-wc/testing';
+import { assert } from 'chai';
 
 import { DOMInjector } from './dom-injector.js';
 import { Injectables } from './injector.js';
 
-describe('DOMInjector', () => {
-  it('should attach an injector to a dom element', () => {
-    const root = document.createElement('div');
-    const app = new DOMInjector();
+it('should attach an injector to a dom element', () => {
+  const root = document.createElement('div');
+  const app = new DOMInjector();
 
-    app.attach(root);
+  app.attach(root);
 
-    const injector = Injectables.get(root);
+  const injector = Injectables.get(root);
 
-    expect(injector).to.equal(app);
-  });
+  assert.strictEqual(injector, app);
+});
 
-  it('should remove an injector associated with a dom element', () => {
-    const root = document.createElement('div');
-    const app = new DOMInjector();
+it('should remove an injector associated with a dom element', () => {
+  const root = document.createElement('div');
+  const app = new DOMInjector();
 
-    app.attach(root);
+  app.attach(root);
 
-    expect(Injectables.get(root)).to.equal(app);
+  assert.strictEqual(Injectables.get(root), app);
 
-    app.detach(root);
+  app.detach(root);
 
-    expect(Injectables.get(root)).to.equal(undefined);
-  });
+  assert.strictEqual(Injectables.get(root), undefined);
 });

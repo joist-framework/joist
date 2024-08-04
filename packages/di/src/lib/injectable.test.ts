@@ -1,41 +1,40 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { assert } from 'chai';
+import { fixture, html } from '@open-wc/testing';
 
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 
-describe('@injectable()', () => {
-  it('should allow a custom element to be injected with deps', () => {
+it('should locally override a provider', () => {
+  class Foo {}
+
+  class Bar extends Foo {}
+
+  @injectable({
+    providers: [{ provide: Foo, use: Bar }]
+  })
+  class MyService {
+    foo = inject(Foo);
+  }
+
+  const el = new MyService();
+
+  assert.instanceOf(el.foo(), Bar);
+});
+
+describe('Custom Elements', () => {
+  it('should allow services to be injected into deps', () => {
     class Foo {}
-    class Bar {}
 
     @injectable()
     class MyElement extends HTMLElement {
       foo = inject(Foo);
-      bar = inject(Bar);
     }
 
     customElements.define('injectable-1', MyElement);
 
-    const el = document.createElement('injectable-1') as MyElement;
-
-    expect(el.foo()).to.be.instanceOf(Foo);
-  });
-
-  it('should locally override a provider', () => {
-    class Foo {}
-
-    class Bar extends Foo {}
-
-    @injectable({
-      providers: [{ provide: Foo, use: Bar }]
-    })
-    class MyElement {
-      foo = inject(Foo);
-    }
-
     const el = new MyElement();
 
-    expect(el.foo()).to.be.instanceOf(Bar);
+    assert.instanceOf(el.foo(), Foo);
   });
 
   it('should handle parent HTML Injectors', async () => {
@@ -73,7 +72,7 @@ describe('@injectable()', () => {
 
     const child = el.querySelector<Child>('injectable-child-1')!;
 
-    expect(child.b().a()).to.be.instanceOf(AltA);
+    assert.instanceOf(child.b().a(), AltA);
   });
 
   it('should handle changing contexts', async () => {
@@ -113,7 +112,7 @@ describe('@injectable()', () => {
 
     let child = el.querySelector<Child>('ctx-child')!;
 
-    expect(child.a()).to.be.instanceOf(A);
+    assert.instanceOf(child.a(), A);
 
     child.remove();
 
@@ -121,6 +120,6 @@ describe('@injectable()', () => {
 
     child = el.querySelector<Child>('ctx-child')!;
 
-    expect(child.a()).to.be.instanceOf(AltA);
+    assert.instanceOf(child.a(), AltA);
   });
 });
