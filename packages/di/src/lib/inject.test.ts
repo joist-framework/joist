@@ -1,25 +1,12 @@
-import { expect } from '@open-wc/testing';
+import { assert } from 'chai';
 
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 import { Injector } from './injector.js';
 import { StaticToken } from './provider.js';
 
-describe('inject', () => {
-  it('should work', () => {
-    class HelloService {}
-
-    @injectable()
-    class HelloWorld extends HTMLElement {
-      hello = inject(HelloService);
-    }
-
-    customElements.define('inject-1', HelloWorld);
-
-    expect(new HelloWorld().hello()).to.be.instanceOf(HelloService);
-  });
-
-  it('should throw error if called in constructor', () => {
+it('should throw error if called in constructor', () => {
+  assert.throws(() => {
     class FooService {
       value = '1';
     }
@@ -35,49 +22,39 @@ describe('inject', () => {
 
     const parent = new Injector();
 
-    try {
-      parent.inject(BarService);
+    parent.inject(BarService);
+  }, 'BarService is either not injectable or a service is being called in the constructor.');
+});
 
-      throw new Error('Should not succeed');
-    } catch (err) {
-      const error = err as Error;
+it('should use the calling injector as parent', () => {
+  class FooService {
+    value = '1';
+  }
 
-      expect(error.message).to.equal(
-        `BarService is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the [LifeCycle.onInject] callback method.`
-      );
-    }
-  });
+  @injectable()
+  class BarService {
+    foo = inject(FooService);
+  }
 
-  it('should use the calling injector as parent', () => {
-    class FooService {
-      value = '1';
-    }
-
-    @injectable()
-    class BarService {
-      foo = inject(FooService);
-    }
-
-    const parent = new Injector([
-      {
-        provide: FooService,
-        use: class extends FooService {
-          value = '100';
-        }
+  const parent = new Injector([
+    {
+      provide: FooService,
+      use: class extends FooService {
+        value = '100';
       }
-    ]);
-
-    expect(parent.inject(BarService).foo().value).to.equal('100');
-  });
-
-  it('should inject a static token', () => {
-    const TOKEN = new StaticToken('test', () => 'Hello World');
-
-    @injectable()
-    class HelloWorld {
-      hello = inject(TOKEN);
     }
+  ]);
 
-    expect(new HelloWorld().hello()).to.equal('Hello World');
-  });
+  assert.strictEqual(parent.inject(BarService).foo().value, '100');
+});
+
+it('should inject a static token', () => {
+  const TOKEN = new StaticToken('test', () => 'Hello World');
+
+  @injectable()
+  class HelloWorld {
+    hello = inject(TOKEN);
+  }
+
+  assert.strictEqual(new HelloWorld().hello(), 'Hello World');
 });

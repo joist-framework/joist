@@ -1,56 +1,72 @@
 import { ConstructableToken, Provider } from './provider.js';
-import { Injectables, Injector } from './injector.js';
+import { injectables, Injector } from './injector.js';
 
 export interface InjectableOpts {
-  providers: Provider<unknown>[];
+  providers?: Provider<unknown>[];
 }
 
 export function injectable(opts?: InjectableOpts) {
-  return function injectableDecorator<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
-    return class InjectableNode extends Base {
+  return function injectableDecorator<T extends ConstructableToken<any>>(
+    Base: T,
+    ctx: ClassDecoratorContext
+  ) {
+    class InjectableNode extends Base {
       constructor(..._: any[]) {
         super();
-
-        // Define a new Injector and assiciate it with this instance of the service
         const injector = new Injector(opts?.providers);
-
-        Injectables.set(this, injector);
-
-        // If the current injectable instance is a HTMLElement preform additional startup logic
-        // this will find and attach parent injectors
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-          this.addEventListener('finddiroot', (e) => {
-            const parentInjector = findInjectorRoot(e);
-
-            if (parentInjector !== null) {
-              injector.setParent(parentInjector);
-            }
-          });
-        }
+        injectables.set(this, injector);
       }
+    }
 
-      connectedCallback() {
-        if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-          this.dispatchEvent(new Event('finddiroot'));
-
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
-        }
+    // Only apply custom element bootstrap logic if the injected class is an HTMLElement
+    if ('HTMLElement' in globalThis) {
+      if (HTMLElement.prototype.isPrototypeOf(Base.prototype)) {
+        return injectableEl(InjectableNode, ctx);
       }
+    }
 
-      disconnectedCallback() {
-        const injector = Injectables.get(this);
+    return InjectableNode;
+  };
+}
 
-        if (injector) {
-          injector.setParent(undefined);
+function injectableEl<T extends ConstructableToken<HTMLElement>>(
+  Base: T,
+  _ctx: ClassDecoratorContext
+) {
+  return class InjectablElementeNode extends Base {
+    constructor(..._: any[]) {
+      super();
+
+      /**
+       * Listen for the finddiroot event.
+       * This is event is triggered when the element is connected to the dom
+       * This event will bubble up until it finds a parent injector which is then attached
+       * This will also work through shadow roots (that are not "closed")
+       */
+      this.addEventListener('finddiroot', (e) => {
+        const parentInjector = findInjectorRoot(e);
+
+        if (parentInjector) {
+          injectables.get(this)?.setParent(parentInjector);
         }
+      });
+    }
 
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback();
-        }
+    connectedCallback() {
+      this.dispatchEvent(new Event('finddiroot', { bubbles: true }));
+
+      if (super.connectedCallback) {
+        super.connectedCallback();
       }
-    };
+    }
+
+    disconnectedCallback() {
+      injectables.get(this)?.setParent(undefined);
+
+      if (super.disconnectedCallback) {
+        super.disconnectedCallback();
+      }
+    }
   };
 }
 
@@ -62,7 +78,7 @@ function findInjectorRoot(e: Event): Injector | null {
   for (let i = 1; i < path.length; i++) {
     const part = path[i];
 
-    const injector = Injectables.get(part);
+    const injector = injectables.get(part);
 
     if (injector) {
       return injector;
