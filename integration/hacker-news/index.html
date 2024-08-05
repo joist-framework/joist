@@ -47,21 +47,21 @@
       <hn-header-link href="/new">submit</hn-header-link>
     </hn-header>
 
-    <hn-news-card number="1" id="card" href="https://wiley.com" author="Danny Blue">
+    <hn-news-card number="1" id="card1" href="https://wiley.com" author="Danny Blue">
       Marshmallow Test Fails to Replicate
     </hn-news-card>
 
-    <hn-news-card number="2" id="card" href="https://github.com/zitaotech" author="Danny Blue">
+    <hn-news-card number="2" id="card2" href="https://github.com/zitaotech" author="Danny Blue">
       Hackberry-Pi_Zero - A handheld Linux terminal using Raspberry Pi Zero 2W
     </hn-news-card>
 
-    <hn-news-card number="3" id="card" href="https://ostartpress.com" author="Danny Blue">
+    <hn-news-card number="3" id="card3" href="https://ostartpress.com" author="Danny Blue">
       Early Bookcases, Cupboards and Carousels
     </hn-news-card>
 
     <hn-news-card
       number="4"
-      id="card"
+      id="card4"
       href="https://github.com/asg017/sqlite-vec"
       author="Danny Blue"
     >
@@ -71,5 +71,14 @@
     <script type="module" src="./target/header/header.js"></script>
     <script type="module" src="./target/header/header-link.js"></script>
     <script type="module" src="./target/news-card/news-card.js"></script>
+
+    <script type="module">
+      const card1 = document.getElementById('card1');
+
+      setTimeout(() => {
+        card1.author = 'Hello World';
+        card1.href = 'http://www.google.com';
+      }, 1000);
+    </script>
   </body>
 </html>

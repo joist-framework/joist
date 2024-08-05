@@ -1,49 +1,83 @@
-export function template() {
-  const values = new Map<string, Node>();
+export interface TempalteOpts {
+  refresh?: boolean;
+}
+
+export function template(opts?: TempalteOpts) {
+  let initialized = false;
+
+  // Track all nodes that can be updated
+  const nodes = new Map<Node, () => string>();
 
   return function (this: HTMLElement) {
-    const iterator = document.createNodeIterator(
-      this.shadowRoot!,
-      NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
-    );
+    if (opts?.refresh) {
+      initialized = false;
 
-    let node: Node | null;
+      nodes.clear();
+    }
 
-    while ((node = iterator.nextNode())) {
-      if (node instanceof Comment) {
-        if (node.nodeValue) {
-          const nodeValue = node.nodeValue.trim();
+    if (initialized) {
+      // If intialized, check each node to see if it needs to be updated
 
-          if (nodeValue.startsWith('#:')) {
-            const parsedNodeValue = nodeValue.replace('#:', '');
+      update(nodes);
+    } else {
+      // If not initialized iterate through template and
 
-            const templateNode = values.get(parsedNodeValue);
-            const templateValue = Reflect.get(this, parsedNodeValue);
+      findTemplateNodes(this, nodes);
 
-            if (templateNode) {
-              if (templateNode.nodeValue !== templateValue) {
-                templateNode.nodeValue = templateValue;
-              }
-            } else {
-              const textValue = document.createTextNode(templateValue);
+      initialized = true;
+    }
+  };
+}
 
-              node.after(textValue);
-              values.set(parsedNodeValue, textValue);
-            }
-          }
+function update(nodes: Map<Node, () => string>) {
+  for (let [node, templateValue] of nodes) {
+    const value = templateValue();
+
+    if (value !== node.nodeValue) {
+      node.nodeValue = templateValue();
+    }
+  }
+}
+
+function findTemplateNodes(el: HTMLElement, nodes: Map<Node, () => string>) {
+  const iterator = document.createNodeIterator(
+    el.shadowRoot!,
+    NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
+  );
+
+  let node = iterator.nextNode();
+
+  while (node) {
+    if (node instanceof Comment) {
+      if (node.nodeValue) {
+        const nodeValue = node.nodeValue.trim();
+
+        if (nodeValue.startsWith('#:')) {
+          const propertyKey = nodeValue.replace('#:', '');
+          const templateValue = () => Reflect.get(el, propertyKey);
+
+          const textNode = document.createTextNode(templateValue());
+          node.after(textNode);
+
+          nodes.set(textNode, templateValue);
         }
-      } else if (node instanceof Element) {
-        for (let attr of node.attributes) {
-          if (attr.name.startsWith('#:')) {
-            const templateValue = Reflect.get(this, attr.value);
-            const realAttributeName = attr.name.replace('#:', '');
+      }
+    } else if (node instanceof Element) {
+      for (let attr of node.attributes) {
+        if (attr.name.startsWith('#:')) {
+          const realAttributeName = attr.name.replace('#:', '');
+          const templateValue = () => Reflect.get(el, attr.value);
 
-            if (templateValue !== node.getAttribute(realAttributeName)) {
-              node.setAttribute(realAttributeName, templateValue);
-            }
-          }
+          const newAttribute = document.createAttribute(realAttributeName);
+          newAttribute.nodeValue = templateValue();
+
+          node.attributes.setNamedItem(newAttribute);
+
+          nodes.set(newAttribute, templateValue);
         }
       }
     }
-  };
+
+    node = iterator.nextNode();
+  }
 }

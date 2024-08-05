@@ -72,7 +72,7 @@ export class HnNewsCard extends HTMLElement {
 
   #update = template();
 
-  connectedCallback() {
+  attributeChangedCallback() {
     this.#update();
   }
 }
