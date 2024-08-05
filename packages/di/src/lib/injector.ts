@@ -1,4 +1,4 @@
-import { LifeCycle } from './lifecycle.js';
+import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
 import { InjectionToken, Provider, StaticToken } from './provider.js';
 
 /**
@@ -136,12 +136,13 @@ export class Injector {
   }
 }
 
-function callLifecycle(instance: unknown, method: symbol) {
-  if (typeof instance === 'object' && instance !== null) {
-    const lifecycle = Reflect.get(instance, method);
+function callLifecycle(
+  instance: object & Partial<OnInit & OnInject>,
+  method: (typeof LifeCycle)[keyof typeof LifeCycle]
+) {
+  const lifecycle = instance[method];
 
-    if (typeof lifecycle === 'function') {
-      lifecycle.call(instance);
-    }
+  if (lifecycle) {
+    lifecycle.call(instance);
   }
 }

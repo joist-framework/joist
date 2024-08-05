@@ -20,7 +20,7 @@
   "description": "Dependency Injection for Vanilla JS classes",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/joist.git"
+    "url": "git+https://github.com/joist-framework/joist.git"
   },
   "keywords": [
     "TypeScript",
@@ -31,7 +31,7 @@
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/joist/issues"
+    "url": "https://github.com/joist-framework/joist/issues"
   },
   "publishConfig": {
     "access": "public"
