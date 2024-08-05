@@ -22,7 +22,7 @@ it('should locally override a provider', () => {
 });
 
 describe('Custom Elements', () => {
-  it('should allow services to be injected into deps', () => {
+  it('should allow services to be injected into custom element', () => {
     class Foo {}
 
     @injectable()
@@ -31,6 +31,23 @@ describe('Custom Elements', () => {
     }
 
     customElements.define('injectable-1', MyElement);
+
+    const el = new MyElement();
+
+    assert.instanceOf(el.foo(), Foo);
+  });
+
+  it.only('should allow services to be injected into custom elements that has been extended', () => {
+    class Foo {}
+
+    class MyBaseElement extends HTMLElement {}
+
+    @injectable()
+    class MyElement extends MyBaseElement {
+      foo = inject(Foo);
+    }
+
+    customElements.define('injectable-2', MyElement);
 
     const el = new MyElement();
 
