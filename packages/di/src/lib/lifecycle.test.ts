@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
 import { Injector } from './injector.js';
-import { LifeCycle } from './lifecycle.js';
+import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
 import { injectable } from './injectable';
 import { inject } from './inject.js';
 
@@ -10,7 +10,7 @@ describe('LifeCycle', () => {
     const i = new Injector();
 
     @injectable()
-    class MyService {
+    class MyService implements OnInit, OnInject {
       res = {
         onInit: 0,
         onInject: 0
@@ -37,7 +37,7 @@ describe('LifeCycle', () => {
     const i = new Injector();
 
     @injectable()
-    class MyService {
+    class MyService implements OnInit, OnInit {
       res = {
         onInit: 0,
         onInject: 0
@@ -65,7 +65,7 @@ describe('LifeCycle', () => {
     const i = new Injector();
 
     @injectable()
-    class MyService {
+    class MyService implements OnInit, OnInject {
       res = {
         onInit: 0,
         onInject: 0
