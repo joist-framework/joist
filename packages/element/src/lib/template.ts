@@ -1,12 +1,13 @@
 export interface TempalteOpts {
   refresh?: boolean;
+  fields: string[];
 }
 
 export function template(opts?: TempalteOpts) {
   let initialized = false;
 
   // Track all nodes that can be updated
-  const nodes = new Map<Node, () => string>();
+  const nodes = new Map<Node, string>();
 
   return function (this: HTMLElement) {
     if (opts?.refresh) {
@@ -17,11 +18,9 @@ export function template(opts?: TempalteOpts) {
 
     if (initialized) {
       // If intialized, check each node to see if it needs to be updated
-
-      update(nodes);
+      update(this, nodes);
     } else {
-      // If not initialized iterate through template and
-
+      // If not initialized iterate through template and find nodes
       findTemplateNodes(this, nodes);
 
       initialized = true;
@@ -29,17 +28,17 @@ export function template(opts?: TempalteOpts) {
   };
 }
 
-function update(nodes: Map<Node, () => string>) {
-  for (let [node, templateValue] of nodes) {
-    const value = templateValue();
+function update(el: HTMLElement, nodes: Map<Node, string>) {
+  for (let [node, prop] of nodes) {
+    const value = Reflect.get(el, prop);
 
     if (value !== node.nodeValue) {
-      node.nodeValue = templateValue();
+      node.nodeValue = value;
     }
   }
 }
 
-function findTemplateNodes(el: HTMLElement, nodes: Map<Node, () => string>) {
+function findTemplateNodes(el: HTMLElement, nodes: Map<Node, string>) {
   const iterator = document.createNodeIterator(
     el.shadowRoot!,
     NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
@@ -54,26 +53,26 @@ function findTemplateNodes(el: HTMLElement, nodes: Map<Node, () => string>) {
 
         if (nodeValue.startsWith('#:')) {
           const propertyKey = nodeValue.replace('#:', '');
-          const templateValue = () => Reflect.get(el, propertyKey);
+          const templateValue = Reflect.get(el, propertyKey);
 
-          const textNode = document.createTextNode(templateValue());
+          const textNode = document.createTextNode(templateValue);
           node.after(textNode);
 
-          nodes.set(textNode, templateValue);
+          nodes.set(textNode, propertyKey);
         }
       }
     } else if (node instanceof Element) {
       for (let attr of node.attributes) {
         if (attr.name.startsWith('#:')) {
           const realAttributeName = attr.name.replace('#:', '');
-          const templateValue = () => Reflect.get(el, attr.value);
+          const templateValue = Reflect.get(el, attr.value);
 
           const newAttribute = document.createAttribute(realAttributeName);
-          newAttribute.nodeValue = templateValue();
+          newAttribute.nodeValue = templateValue;
 
           node.attributes.setNamedItem(newAttribute);
 
-          nodes.set(newAttribute, templateValue);
+          nodes.set(newAttribute, attr.value);
         }
       }
     }
