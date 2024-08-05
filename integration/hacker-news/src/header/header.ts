@@ -8,23 +8,25 @@ import { attr, css, element, html } from '@joist/element';
         background: rgb(255, 102, 0);
         display: flex;
         align-items: center;
-        padding: 0.5rem;
+        flex-wrap: wrap;
       }
 
       h1 {
         font-size: 1rem;
-        margin: 0 1rem 0 0;
+        margin: 0;
+        padding: 0.5rem;
       }
 
       nav {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        padding: 0.5rem;
       }
 
       img {
         border: solid 1px #ffffff;
-        margin-right: 0.5rem;
+        margin: 0.5rem;
       }
     `,
     html`

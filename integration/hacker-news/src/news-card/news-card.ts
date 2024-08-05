@@ -40,7 +40,7 @@ import { attr, css, element, html, template } from '@joist/element';
             <slot></slot>
           </a>
 
-          <a id="link" #:href="href" target="_blank"> (<!--#:href-->) </a>
+          <a id="link" #:href="href" target="_blank"> (<!--#:shortHref-->) </a>
         </div>
 
         <div class="details">
@@ -70,9 +70,16 @@ export class HnNewsCard extends HTMLElement {
   @attr() accessor href = '';
   @attr() accessor author = '';
 
+  shortHref = '';
+
   #update = template();
 
   attributeChangedCallback() {
+    const url = new URL(this.href);
+    const pathname = url.pathname !== '/' ? url.pathname : '';
+
+    this.shortHref = `${url.hostname}${pathname}`;
+
     this.#update();
   }
 }
