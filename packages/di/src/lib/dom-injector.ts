@@ -1,11 +1,11 @@
-import { Injectables, Injector } from './injector.js';
+import { injectables, Injector } from './injector.js';
 
 export class DOMInjector extends Injector {
   attach(root: HTMLElement) {
-    Injectables.set(root, this);
+    injectables.set(root, this);
   }
 
   detach(root: HTMLElement) {
-    Injectables.delete(root);
+    injectables.delete(root);
   }
 }

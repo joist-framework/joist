@@ -57,17 +57,7 @@
     "test": {
       "command": "wtr --config wtr.config.mjs",
       "files": [
-        "target/**"
-      ],
-      "output": [],
-      "dependencies": [
-        "build",
-        "test:node"
-      ]
-    },
-    "test:node": {
-      "command": "node --test target/**/*.test-node.js",
-      "files": [
+        "wtr.config.mjs",
         "target/**"
       ],
       "output": [],

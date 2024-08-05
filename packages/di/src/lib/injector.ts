@@ -4,7 +4,7 @@ import { InjectionToken, Provider, StaticToken } from './provider.js';
 /**
  * Keeps track of all Injectable services and their Injector
  */
-export const Injectables = new WeakMap<object, Injector>();
+export const injectables = new WeakMap<object, Injector>();
 
 /**
  * Injectors create and store instances of services.
@@ -98,7 +98,7 @@ export class Injector {
      * Only values that are objects are able to have associated injectors
      */
     if (typeof instance === 'object' && instance !== null) {
-      const injector = Injectables.get(instance);
+      const injector = injectables.get(instance);
 
       if (injector) {
         /**
