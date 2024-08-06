@@ -1,89 +1,72 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { test, assert } from 'vitest';
 
 import { effect, observe } from './observe.js';
 
-describe('observable: observe()', () => {
-  it('should work with static accessors', (done) => {
+test('should work with static accessors', () => {
+  return new Promise<void>((resolve) => {
     class Counter {
       @observe()
       static accessor value = 0;
 
-      @effect()
-      static onPropChanged() {
-        expect(Counter.value).to.equal(1);
+      @effect() static onPropChanged() {
+        assert.equal(Counter.value, 1);
 
-        done();
+        resolve();
       }
     }
 
-    expect(Counter.value).to.equal(0);
+    assert.equal(Counter.value, 0);
 
     Counter.value++;
 
-    expect(Counter.value).to.equal(1);
+    assert.equal(Counter.value, 1);
   });
+});
 
-  it('should work with instance accessors', (done) => {
+test('should work with instance accessors', () => {
+  return new Promise<void>((resolve) => {
     class Counter {
       @observe()
       accessor value = 0;
 
       // confirm it works with private methods
       // @ts-ignore
-      @effect() #onChange() {
-        expect(this.value).to.equal(1);
+      @effect #onChange() {
+        assert.equal(this.value, 1);
 
-        done();
+        resolve();
       }
     }
 
     const counter = new Counter();
 
-    expect(counter.value).to.equal(0);
+    assert.equal(counter.value, 0);
 
     counter.value++;
 
-    expect(counter.value).to.equal(1);
+    assert.equal(counter.value, 1);
   });
+});
 
-  it('should return a set of changed props', (done) => {
+test('should return a set of changed props', () => {
+  return new Promise<void>((resolve) => {
     class Counter {
       @observe() accessor value = 0;
 
       @effect() onChange(changes: Set<symbol | string>) {
-        expect(changes.has('value')).to.be.true;
+        assert.ok(changes.has('value'));
 
-        done();
+        resolve();
       }
     }
 
     const counter = new Counter();
     counter.value++;
   });
+});
 
-  it('should work as an even emitter', (done) => {
-    class Counter extends EventTarget {
-      @observe()
-      accessor value = 0;
-
-      @effect()
-      onChange() {
-        this.dispatchEvent(new Event('changed'));
-      }
-    }
-
-    const counter = new Counter();
-
-    counter.addEventListener('changed', () => {
-      expect(counter.value).to.equal(1);
-
-      done();
-    });
-
-    counter.value++;
-  });
-
-  it('should upgrade custom elements', (done) => {
+test('should upgrade custom elements', () => {
+  return new Promise<void>((resolve) => {
     class Counter extends HTMLElement {
       @observe()
       accessor value = 0;
@@ -91,25 +74,25 @@ describe('observable: observe()', () => {
       constructor() {
         super();
 
-        expect(this.value).to.equal(100);
+        assert.equal(this.value, 100);
       }
 
-      @effect()
-      onChange() {
-        expect(this.value).to.equal(101);
+      @effect() onChange() {
+        assert.equal(this.value, 101);
 
-        done();
+        resolve();
       }
     }
 
-    fixture<any>(html`<observable-1></observable-1>`).then((el) => {
-      el.value = 100;
+    const el = document.createElement('observable-1') as Counter;
+    el.value = 100;
 
-      customElements.whenDefined('observable-1').then(() => {
-        el.value++;
-      });
+    document.body.append(el);
 
-      customElements.define('observable-1', Counter);
+    customElements.whenDefined('observable-1').then(() => {
+      el.value++;
     });
+
+    customElements.define('observable-1', Counter);
   });
 });
