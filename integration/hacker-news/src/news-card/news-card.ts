@@ -24,9 +24,13 @@ import { attr, css, element, html, template } from '@joist/element';
       }
 
       .details {
-        color: #828282;
+        color: #716f6f;
         display: flex;
         gap: 1rem;
+      }
+
+      [data-hide='true'] {
+        display: none;
       }
     `,
     html`
@@ -40,7 +44,7 @@ import { attr, css, element, html, template } from '@joist/element';
             <slot></slot>
           </a>
 
-          <a id="link" #:href="href" target="_blank"> (<!--#:shortHref-->) </a>
+          <a #:data-hide="hideLink" #:href="href" target="_blank"> (<!--#:shortHref-->) </a>
         </div>
 
         <div class="details">
@@ -71,15 +75,19 @@ export class HnNewsCard extends HTMLElement {
   @attr() accessor author = '';
 
   shortHref = '';
+  hideLink = !this.href;
 
-  #update = template();
+  #render = template();
 
-  attributeChangedCallback() {
-    const url = new URL(this.href);
-    const pathname = url.pathname !== '/' ? url.pathname : '';
+  attributeChangedCallback(attr: string) {
+    if (attr === 'href') {
+      if (this.href) {
+        this.shortHref = new URL(this.href).hostname;
+      }
 
-    this.shortHref = `${url.hostname}${pathname}`;
+      this.hideLink = !this.href;
+    }
 
-    this.#update();
+    this.#render();
   }
 }

@@ -8,17 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Counter</title>
-
-    <script type="importmap">
-      {
-        "imports": {
-          "@joist/di": "/node_modules/@joist/di/target/lib.js",
-          "@joist/element": "/node_modules/@joist/element/target/lib.js",
-          "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
-          "tslib": "/node_modules/tslib/tslib.es6.js"
-        }
-      }
-    </script>
   </head>
 
   <body>
@@ -35,6 +24,10 @@
           Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         line-height: 1.4em;
       }
+
+      :not(:defined) {
+        visibility: hidden;
+      }
     </style>
 
     <hn-header>
@@ -47,29 +40,53 @@
       <hn-header-link href="/new">submit</hn-header-link>
     </hn-header>
 
-    <hn-news-card number="1" id="card1" href="https://wiley.com" author="Danny Blue">
-      Marshmallow Test Fails to Replicate
-    </hn-news-card>
-
-    <hn-news-card number="2" id="card2" href="https://github.com/zitaotech" author="Danny Blue">
-      Hackberry-Pi_Zero - A handheld Linux terminal using Raspberry Pi Zero 2W
-    </hn-news-card>
-
-    <hn-news-card number="3" id="card3" href="https://ostartpress.com" author="Danny Blue">
-      Early Bookcases, Cupboards and Carousels
-    </hn-news-card>
-
-    <hn-news-card
-      number="4"
-      id="card4"
-      href="https://github.com/asg017/sqlite-vec"
-      author="Danny Blue"
-    >
-      SQLite vector search extension that runs anywhere
-    </hn-news-card>
+    <section id="news-feed"></section>
 
     <script type="module" src="./target/header/header.js"></script>
     <script type="module" src="./target/header/header-link.js"></script>
     <script type="module" src="./target/news-card/news-card.js"></script>
+
+    <script type="module">
+      const feed = document.getElementById('news-feed');
+
+      getTopStories(50).then((res) => {
+        let number = 1;
+
+        for (let { value } of res) {
+          const card = document.createElement('hn-news-card');
+          card.number = number;
+          card.innerHTML = value.title;
+          card.author = value.by;
+          card.comments = value.kids.length;
+          card.points = value.score;
+
+          if (value.url) {
+            card.href = value.url;
+          }
+
+          feed.append(card);
+
+          number++;
+        }
+      });
+
+      function getTopStories(count) {
+        return getTopStoryIds(count).then((res) => {
+          return Promise.allSettled(
+            res.map((id) =>
+              fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then((res) =>
+                res.json()
+              )
+            )
+          );
+        });
+      }
+
+      function getTopStoryIds(count = 10) {
+        return fetch(
+          `https://hacker-news.firebaseio.com/v0/beststories.json?limitToFirst=${count}&orderBy="$key"`
+        ).then((res) => res.json());
+      }
+    </script>
   </body>
 </html>

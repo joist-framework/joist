@@ -1,34 +1,47 @@
-export interface TempalteOpts {
-  refresh?: boolean;
-  fields: string[];
+export interface TemplateOpts {
+  tokenPrefix?: string;
+  fields?: string[];
 }
 
-export function template(opts?: TempalteOpts) {
+class NodeMap extends Map<Node, string> {}
+
+export function template() {
   let initialized = false;
 
   // Track all nodes that can be updated
-  const nodes = new Map<Node, string>();
+  const nodes = new NodeMap();
+
+  // watch for nodes being added and removed
+  let observer: MutationObserver | null;
 
   return function (this: HTMLElement) {
-    if (opts?.refresh) {
-      initialized = false;
-
-      nodes.clear();
-    }
-
     if (initialized) {
-      // If intialized, check each node to see if it needs to be updated
-      update(this, nodes);
-    } else {
-      // If not initialized iterate through template and find nodes
-      findTemplateNodes(this, nodes);
-
-      initialized = true;
+      return updateNodes(this, nodes);
     }
+
+    observer = new MutationObserver((records) => {
+      for (let { removedNodes, addedNodes } of records) {
+        for (let addedNode of addedNodes) {
+          trackNode(this, addedNode, nodes);
+        }
+
+        for (let removedNode of removedNodes) {
+          nodes.delete(removedNode);
+        }
+      }
+    });
+
+    // watch for nodes being added or removed
+    observer.observe(this.shadowRoot!, { childList: true });
+
+    // find and track nodes
+    initializeNodes(this, nodes);
+
+    initialized = true;
   };
 }
 
-function update(el: HTMLElement, nodes: Map<Node, string>) {
+function updateNodes(el: HTMLElement, nodes: NodeMap) {
   for (let [node, prop] of nodes) {
     const value = Reflect.get(el, prop);
 
@@ -38,45 +51,47 @@ function update(el: HTMLElement, nodes: Map<Node, string>) {
   }
 }
 
-function findTemplateNodes(el: HTMLElement, nodes: Map<Node, string>) {
+function initializeNodes(el: HTMLElement, nodes: NodeMap) {
   const iterator = document.createNodeIterator(
     el.shadowRoot!,
     NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
   );
 
-  let node = iterator.nextNode();
+  let node: Node | null = null;
 
-  while (node) {
-    if (node instanceof Comment) {
-      if (node.nodeValue) {
-        const nodeValue = node.nodeValue.trim();
+  while ((node = iterator.nextNode())) {
+    trackNode(el, node, nodes);
+  }
+}
 
-        if (nodeValue.startsWith('#:')) {
-          const propertyKey = nodeValue.replace('#:', '');
-          const templateValue = Reflect.get(el, propertyKey);
+function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
+  const tokenPrefix = '#:';
 
-          const textNode = document.createTextNode(templateValue);
-          node.after(textNode);
+  if (node instanceof Comment) {
+    if (node.nodeValue) {
+      const nodeValue = node.nodeValue.trim();
 
-          nodes.set(textNode, propertyKey);
-        }
-      }
-    } else if (node instanceof Element) {
-      for (let attr of node.attributes) {
-        if (attr.name.startsWith('#:')) {
-          const realAttributeName = attr.name.replace('#:', '');
-          const templateValue = Reflect.get(el, attr.value);
+      if (nodeValue.startsWith(tokenPrefix)) {
+        const propertyKey = nodeValue.replace(tokenPrefix, '');
+        const textNode = document.createTextNode('');
+        textNode.nodeValue = Reflect.get(el, propertyKey);
 
-          const newAttribute = document.createAttribute(realAttributeName);
-          newAttribute.nodeValue = templateValue;
+        node.after(textNode);
 
-          node.attributes.setNamedItem(newAttribute);
-
-          nodes.set(newAttribute, attr.value);
-        }
+        nodes.set(textNode, propertyKey);
       }
     }
+  } else if (node instanceof Element) {
+    for (let attr of node.attributes) {
+      if (attr.name.startsWith(tokenPrefix)) {
+        const realAttributeName = attr.name.replace(tokenPrefix, '');
+        const newAttribute = document.createAttribute(realAttributeName);
+        newAttribute.nodeValue = Reflect.get(el, attr.name);
 
-    node = iterator.nextNode();
+        node.attributes.setNamedItem(newAttribute);
+
+        nodes.set(newAttribute, attr.value);
+      }
+    }
   }
 }

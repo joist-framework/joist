@@ -20,8 +20,6 @@ import { attr, css, element, html } from '@joist/element';
       nav {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem;
       }
 
       img {
@@ -30,7 +28,7 @@ import { attr, css, element, html } from '@joist/element';
       }
     `,
     html`
-      <img src="./assets/y18.svg" />
+      <img src="/images/y18.svg" aria-hidden="true" />
 
       <h1>Hacker News</h1>
 
@@ -42,5 +40,5 @@ import { attr, css, element, html } from '@joist/element';
 })
 export class HnHeader extends HTMLElement {
   @attr()
-  accessor role = 'header';
+  accessor role = 'banner';
 }

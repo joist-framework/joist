@@ -1,4 +1,4 @@
-import { attr, css, element, html, query } from '@joist/element';
+import { attr, css, element, html, template } from '@joist/element';
 
 @element({
   tagName: 'hn-header-link',
@@ -7,6 +7,7 @@ import { attr, css, element, html, query } from '@joist/element';
       :host {
         display: inline-flex;
         align-items: center;
+        padding: 0.5rem;
       }
 
       a {
@@ -24,7 +25,7 @@ import { attr, css, element, html, query } from '@joist/element';
       }
     `,
     html`
-      <a>
+      <a #:href="href">
         <slot></slot>
       </a>
     `
@@ -34,9 +35,9 @@ export class HnHeader extends HTMLElement {
   @attr()
   accessor href = 'header';
 
-  #a = query('a');
+  #update = template();
 
   attributeChangedCallback() {
-    this.#a({ href: this.href });
+    this.#update();
   }
 }
