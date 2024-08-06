@@ -5,9 +5,11 @@ import { effect, observe } from './observe.js';
 describe('observable: observe()', () => {
   it('should work with static accessors', (done) => {
     class Counter {
-      @observe static accessor value = 0;
+      @observe()
+      static accessor value = 0;
 
-      @effect static onPropChanged() {
+      @effect()
+      static onPropChanged() {
         expect(Counter.value).to.equal(1);
 
         done();
@@ -23,11 +25,12 @@ describe('observable: observe()', () => {
 
   it('should work with instance accessors', (done) => {
     class Counter {
-      @observe accessor value = 0;
+      @observe()
+      accessor value = 0;
 
       // confirm it works with private methods
       // @ts-ignore
-      @effect #onChange() {
+      @effect() #onChange() {
         expect(this.value).to.equal(1);
 
         done();
@@ -45,9 +48,9 @@ describe('observable: observe()', () => {
 
   it('should return a set of changed props', (done) => {
     class Counter {
-      @observe accessor value = 0;
+      @observe() accessor value = 0;
 
-      @effect onChange(changes: Set<symbol | string>) {
+      @effect() onChange(changes: Set<symbol | string>) {
         expect(changes.has('value')).to.be.true;
 
         done();
@@ -60,9 +63,11 @@ describe('observable: observe()', () => {
 
   it('should work as an even emitter', (done) => {
     class Counter extends EventTarget {
-      @observe accessor value = 0;
+      @observe()
+      accessor value = 0;
 
-      @effect onChange() {
+      @effect()
+      onChange() {
         this.dispatchEvent(new Event('changed'));
       }
     }
@@ -80,7 +85,8 @@ describe('observable: observe()', () => {
 
   it('should upgrade custom elements', (done) => {
     class Counter extends HTMLElement {
-      @observe accessor value = 0;
+      @observe()
+      accessor value = 0;
 
       constructor() {
         super();
@@ -88,7 +94,8 @@ describe('observable: observe()', () => {
         expect(this.value).to.equal(100);
       }
 
-      @effect onChange() {
+      @effect()
+      onChange() {
         expect(this.value).to.equal(101);
 
         done();

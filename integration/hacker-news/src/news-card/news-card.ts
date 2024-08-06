@@ -1,4 +1,5 @@
 import { attr, css, element, html, template } from '@joist/element';
+import { observe, effect } from '@joist/observable';
 
 @element({
   tagName: 'hn-news-card',
@@ -68,25 +69,24 @@ import { attr, css, element, html, template } from '@joist/element';
   ]
 })
 export class HnNewsCard extends HTMLElement {
-  @attr() accessor number = 1;
-  @attr() accessor comments = 0;
-  @attr() accessor points = 0;
-  @attr() accessor href = '';
-  @attr() accessor author = '';
+  @attr() @observe() accessor number = 1;
+  @attr() @observe() accessor comments = 0;
+  @attr() @observe() accessor points = 0;
+  @attr() @observe() accessor href = '';
+  @attr() @observe() accessor author = '';
 
   shortHref = '';
   hideLink = !this.href;
 
   #render = template();
 
-  attributeChangedCallback(attr: string) {
-    if (attr === 'href') {
-      if (this.href) {
-        this.shortHref = new URL(this.href).hostname;
-      }
-
-      this.hideLink = !this.href;
+  @effect()
+  onPropChange() {
+    if (this.href) {
+      this.shortHref = new URL(this.href).hostname;
     }
+
+    this.hideLink = !this.href;
 
     this.#render();
   }
