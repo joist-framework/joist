@@ -28,6 +28,10 @@
       :not(:defined) {
         visibility: hidden;
       }
+
+      hn-loading {
+        margin: 1rem auto 1rem auto;
+      }
     </style>
 
     <hn-header>
@@ -40,16 +44,20 @@
       <hn-header-link href="/new">submit</hn-header-link>
     </hn-header>
 
-    <section id="news-feed"></section>
+    <section id="news-feed">
+      <hn-loading></hn-loading>
+    </section>
 
     <script type="module" src="./target/header/header.js"></script>
     <script type="module" src="./target/header/header-link.js"></script>
     <script type="module" src="./target/news-card/news-card.js"></script>
+    <script type="module" src="./target/loading/loading.js"></script>
 
     <script type="module">
       const feed = document.getElementById('news-feed');
+      const loading = document.querySelector('hn-loading');
 
-      getTopStories(50).then((res) => {
+      getTopStories(25).then((res) => {
         let number = 1;
 
         for (let { value } of res) {
@@ -68,6 +76,8 @@
 
           number++;
         }
+
+        loading.remove();
       });
 
       function getTopStories(count) {
