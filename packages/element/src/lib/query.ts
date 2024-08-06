@@ -7,7 +7,7 @@ type QueryResult<T> = (updates?: Partial<T>) => T;
 export function query<K extends Tags>(selectors: K): QueryResult<HTMLElementTagNameMap[K]>;
 export function query<K extends SVGTags>(selectors: K): QueryResult<SVGElementTagNameMap[K]>;
 export function query<K extends MathTags>(selectors: K): QueryResult<MathMLElementTagNameMap[K]>;
-export function query<E extends Element = Element>(selectors: string): QueryResult<E>;
+export function query<E extends HTMLElement = HTMLElement>(selectors: string): QueryResult<E>;
 export function query<K extends Tags>(query: K): QueryResult<HTMLElementTagNameMap[K]> {
   let res: HTMLElementTagNameMap[K] | null = null;
 

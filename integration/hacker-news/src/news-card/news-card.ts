@@ -103,6 +103,10 @@ export class HnNewsCard extends HTMLElement {
 
   #render = template();
 
+  connectedCallback() {
+    this.#render();
+  }
+
   @effect()
   onPropChange() {
     this.#render();

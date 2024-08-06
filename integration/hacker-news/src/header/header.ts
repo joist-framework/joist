@@ -28,7 +28,7 @@ import { attr, css, element, html } from '@joist/element';
       }
     `,
     html`
-      <img src="/images/y18.svg" aria-hidden="true" />
+      <img src="/images/y18.svg" aria-hidden="true" height="20" width="20" />
 
       <h1>Hacker News</h1>
 
