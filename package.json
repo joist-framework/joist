@@ -10,27 +10,7 @@
     "integration/**"
   ],
   "scripts": {
-    "start": "wireit",
     "prepare": "husky"
-  },
-  "wireit": {
-    "start": {
-      "command": "browser-sync start --server --files \"**/target/**\" \"**/*.html\"",
-      "service": true,
-      "dependencies": [
-        {
-          "script": "integration",
-          "cascade": false
-        }
-      ]
-    },
-    "integration": {
-      "dependencies": [
-        "./integration/counter:build",
-        "./integration/hacker-news:build",
-        "./integration/todo:build"
-      ]
-    }
   },
   "devDependencies": {
     "@open-wc/testing": "^4.0.0",
