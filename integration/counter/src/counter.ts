@@ -1,4 +1,4 @@
-import { css, html, listen, attr, element } from '@joist/element';
+import { css, html, listen, attr, element, template } from '@joist/element';
 
 @element({
   tagName: 'joist-counter',
@@ -12,7 +12,7 @@ import { css, html, listen, attr, element } from '@joist/element';
         display: block;
       }
 
-      slot {
+      #value {
         width: 4rem;
         display: inline-block;
         text-align: center;
@@ -30,9 +30,9 @@ import { css, html, listen, attr, element } from '@joist/element';
     `,
     html`
       <button id="dec">-</button>
-
-      <slot></slot>
-
+      <div id="value">
+        <!--#:value-->
+      </div>
       <button id="inc">+</button>
     `
   ]
@@ -41,8 +41,10 @@ export class CounterElement extends HTMLElement {
   @attr()
   accessor value = 0;
 
+  #update = template();
+
   attributeChangedCallback() {
-    this.innerHTML = String(this.value);
+    this.#update();
   }
 
   @listen('click')

@@ -5,9 +5,10 @@ import { effect, observe } from './observe.js';
 test('should work with static accessors', () => {
   return new Promise<void>((resolve) => {
     class Counter {
-      @observe static accessor value = 0;
+      @observe()
+      static accessor value = 0;
 
-      @effect static onPropChanged() {
+      @effect() static onPropChanged() {
         assert.equal(Counter.value, 1);
 
         resolve();
@@ -25,7 +26,8 @@ test('should work with static accessors', () => {
 test('should work with instance accessors', () => {
   return new Promise<void>((resolve) => {
     class Counter {
-      @observe accessor value = 0;
+      @observe()
+      accessor value = 0;
 
       // confirm it works with private methods
       // @ts-ignore
@@ -49,9 +51,9 @@ test('should work with instance accessors', () => {
 test('should return a set of changed props', () => {
   return new Promise<void>((resolve) => {
     class Counter {
-      @observe accessor value = 0;
+      @observe() accessor value = 0;
 
-      @effect onChange(changes: Set<symbol | string>) {
+      @effect() onChange(changes: Set<symbol | string>) {
         assert.ok(changes.has('value'));
 
         resolve();
@@ -66,7 +68,8 @@ test('should return a set of changed props', () => {
 test('should upgrade custom elements', () => {
   return new Promise<void>((resolve) => {
     class Counter extends HTMLElement {
-      @observe accessor value = 0;
+      @observe()
+      accessor value = 0;
 
       constructor() {
         super();
@@ -74,7 +77,7 @@ test('should upgrade custom elements', () => {
         assert.equal(this.value, 100);
       }
 
-      @effect onChange() {
+      @effect() onChange() {
         assert.equal(this.value, 101);
 
         resolve();

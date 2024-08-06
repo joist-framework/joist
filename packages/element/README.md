@@ -23,7 +23,7 @@ import { tagName, css, html, attr, listen, element } from '@joist/element';
       }
     `,
     html`
-      <slot></slot>
+      <!--#:value-->
     `
   ]
 })

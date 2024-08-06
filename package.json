@@ -6,30 +6,11 @@
   "author": "",
   "license": "MIT",
   "workspaces": [
-    "packages/**"
+    "packages/**",
+    "integration/**"
   ],
   "scripts": {
-    "start": "wireit",
-    "prepare": "husky",
-    "test:browser": "vitest"
-  },
-  "wireit": {
-    "start": {
-      "command": "browser-sync start --server --files \"**/target/**\" \"**/*.html\"",
-      "service": true,
-      "dependencies": [
-        {
-          "script": "integration",
-          "cascade": false
-        }
-      ]
-    },
-    "integration": {
-      "dependencies": [
-        "./integration/todo:build",
-        "./integration/counter:build"
-      ]
-    }
+    "prepare": "husky"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -38,7 +19,6 @@
     "@web/test-runner": "^0.18.0",
     "@web/test-runner-playwright": "^0.11.0",
     "ava": "^6.0.0",
-    "browser-sync": "^3.0.0",
     "chai": "^5.1.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
