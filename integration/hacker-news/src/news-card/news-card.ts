@@ -45,7 +45,7 @@ import { observe, effect } from '@joist/observable';
             <slot></slot>
           </a>
 
-          <a #:data-hide="hideLink" #:href="href" target="_blank"> (<!--#:shortHref-->) </a>
+          <a #:data-hide="hideHost" #:href="href" target="_blank"> (<!--#:host-->) </a>
         </div>
 
         <div class="details">
@@ -69,25 +69,42 @@ import { observe, effect } from '@joist/observable';
   ]
 })
 export class HnNewsCard extends HTMLElement {
-  @attr() @observe() accessor number = 1;
-  @attr() @observe() accessor comments = 0;
-  @attr() @observe() accessor points = 0;
-  @attr() @observe() accessor href = '';
-  @attr() @observe() accessor author = '';
+  @attr()
+  @observe()
+  accessor number = 1;
 
-  shortHref = '';
-  hideLink = !this.href;
+  @attr()
+  @observe()
+  accessor comments = 0;
+
+  @attr()
+  @observe()
+  accessor points = 0;
+
+  @attr()
+  @observe()
+  accessor href = '';
+
+  @attr()
+  @observe()
+  accessor author = '';
+
+  get host() {
+    if (this.href) {
+      return new URL(this.href).hostname;
+    }
+
+    return '';
+  }
+
+  get hideHost() {
+    return !this.href;
+  }
 
   #render = template();
 
   @effect()
   onPropChange() {
-    if (this.href) {
-      this.shortHref = new URL(this.href).hostname;
-    }
-
-    this.hideLink = !this.href;
-
     this.#render();
   }
 }

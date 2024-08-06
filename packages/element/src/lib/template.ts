@@ -73,6 +73,7 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
 
       if (nodeValue.startsWith(tokenPrefix)) {
         const propertyKey = nodeValue.replace(tokenPrefix, '');
+
         const textNode = document.createTextNode('');
         textNode.nodeValue = Reflect.get(el, propertyKey);
 
@@ -85,8 +86,9 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
     for (let attr of node.attributes) {
       if (attr.name.startsWith(tokenPrefix)) {
         const realAttributeName = attr.name.replace(tokenPrefix, '');
+
         const newAttribute = document.createAttribute(realAttributeName);
-        newAttribute.nodeValue = Reflect.get(el, attr.name);
+        newAttribute.nodeValue = Reflect.get(el, attr.value);
 
         node.attributes.setNamedItem(newAttribute);
 
