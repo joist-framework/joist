@@ -18,7 +18,7 @@ import { HnLoadingElement } from '../loading/loading.js';
       }
 
       hn-loading {
-        margin: 1rem auto 1rem auto;
+        margin: 2rem auto auto auto;
       }
     `,
     html`
@@ -32,31 +32,28 @@ export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
   #loading = query<HnLoadingElement>('hn-loading');
 
-  connectedCallback() {
+  async connectedCallback() {
     const hn = this.#hn();
 
-    hn.getTopStories().then((res) => {
-      let number = 1;
+    const stories = await hn.getTopStories();
 
-      for (let item of res) {
-        const card = document.createElement('hn-news-card') as HnNewsCard;
+    let number = 1;
 
-        card.number = number;
-        card.innerHTML = item.title;
-        card.author = item.by;
-        card.comments = item.kids.length;
-        card.points = item.score;
+    for (let { value } of stories) {
+      const card = document.createElement('hn-news-card') as HnNewsCard;
 
-        if (item.url) {
-          card.href = item.url;
-        }
+      card.number = number;
+      card.innerHTML = value.title;
+      card.author = value.by;
+      card.comments = value.kids.length;
+      card.points = value.score;
+      card.href = value.url ?? '';
 
-        this.append(card);
+      this.append(card);
 
-        number++;
-      }
+      number++;
+    }
 
-      this.#loading().remove();
-    });
+    this.#loading().remove();
   }
 }

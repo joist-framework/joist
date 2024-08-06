@@ -18,19 +18,22 @@ export interface HnItem {
 export class HnService {
   #http = inject(HttpService);
 
-  getTopStories(count = 50) {
+  getTopStories(count = 25) {
     const http = this.#http();
 
     return this.getTopStoryIds(count).then((res) => {
-      return Promise.all(
-        res.map((id) => {
-          return http
-            .fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-            .then<HnItem>((res) => res.json());
-        })
+      const storyRequests = res.map((id) => {
+        return http
+          .fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+          .then<HnItem>((res) => res.json());
+      });
+
+      return Promise.allSettled(storyRequests).then((res) =>
+        res.filter((item) => item.status === 'fulfilled')
       );
     });
   }
+
   getTopStoryIds(count: number) {
     const http = this.#http();
 
