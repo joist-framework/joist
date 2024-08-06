@@ -1,11 +1,11 @@
-import { assert } from 'chai';
+import { test, assert } from 'vitest';
 
 import { Injector } from './injector.js';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 import { Provider, StaticToken } from './provider.js';
 
-it('should create a new instance of a single provider', () => {
+test('should create a new instance of a single provider', () => {
   class A {}
 
   const app = new Injector();
@@ -15,7 +15,7 @@ it('should create a new instance of a single provider', () => {
   assert.equal(app.inject(A), app.inject(A));
 });
 
-it('should inject providers in the correct order', () => {
+test('should inject providers in the correct order', () => {
   class A {}
   class B {}
 
@@ -32,7 +32,7 @@ it('should inject providers in the correct order', () => {
   assert(instance.b() instanceof B);
 });
 
-it('should create a new instance of a provider that has a full dep tree', () => {
+test('should create a new instance of a provider that has a full dep tree', () => {
   class A {}
 
   @injectable()
@@ -61,7 +61,7 @@ it('should create a new instance of a provider that has a full dep tree', () => 
   assert(instance.d().c().b().a() instanceof A);
 });
 
-it('should override a provider if explicitly instructed', () => {
+test('should override a provider if explicitly instructed', () => {
   class A {}
 
   @injectable()
@@ -75,7 +75,7 @@ it('should override a provider if explicitly instructed', () => {
   assert(app.inject(B).a() instanceof AltA);
 });
 
-it('should return an existing instance from a parent injector', () => {
+test('should return an existing instance from a parent injector', () => {
   class A {}
 
   const parent = new Injector();
@@ -85,7 +85,7 @@ it('should return an existing instance from a parent injector', () => {
   assert.equal(parent.inject(A), app.inject(A));
 });
 
-it('should use a factory if provided', () => {
+test('should use a factory if provided', () => {
   class Service {
     hello() {
       return 'world';
@@ -108,7 +108,7 @@ it('should use a factory if provided', () => {
   assert.equal(injector.inject(Service).hello(), 'world');
 });
 
-it('should throw an error if provider is missing both factory and use', () => {
+test('should throw an error if provider is missing both factory and use', () => {
   class Service {
     hello() {
       return 'world';
@@ -127,7 +127,7 @@ it('should throw an error if provider is missing both factory and use', () => {
   );
 });
 
-it('should pass factories and instance of the injector', async () => {
+test('should pass factories and instance of the injector', async () => {
   class Service {
     hello() {
       return 'world';
@@ -150,7 +150,7 @@ it('should pass factories and instance of the injector', async () => {
   assert.equal(factoryInjector, injector);
 });
 
-it('should create an instance from a StaticToken factory', () => {
+test('should create an instance from a StaticToken factory', () => {
   const TOKEN = new StaticToken('test', () => 'Hello World');
   const injector = new Injector();
 
@@ -159,7 +159,7 @@ it('should create an instance from a StaticToken factory', () => {
   assert.equal(res, 'Hello World');
 });
 
-it('should create an instance from an async StaticToken factory', async () => {
+test('should create an instance from an async StaticToken factory', async () => {
   const TOKEN = new StaticToken('test', () => Promise.resolve('Hello World'));
   const injector = new Injector();
 
@@ -168,7 +168,7 @@ it('should create an instance from an async StaticToken factory', async () => {
   assert.equal(res, 'Hello World');
 });
 
-it('should allow static token to be overridden', () => {
+test('should allow static token to be overridden', () => {
   const TOKEN = new StaticToken<string>('test');
 
   const provider: Provider<string> = {
