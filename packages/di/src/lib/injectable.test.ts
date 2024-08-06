@@ -1,10 +1,10 @@
-import { assert } from 'chai';
+import { test, assert } from 'vitest';
 
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 import { injectables } from './injector.js';
 
-it('should locally override a provider', () => {
+test('should locally override a provider', () => {
   class Foo {}
 
   class Bar extends Foo {}
@@ -21,7 +21,7 @@ it('should locally override a provider', () => {
   assert.instanceOf(el.foo(), Bar);
 });
 
-it('should define an injector for a service instance', () => {
+test('should define an injector for a service instance', () => {
   @injectable()
   class MyService {}
 

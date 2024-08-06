@@ -1,10 +1,9 @@
-import { fixture, html } from '@open-wc/testing';
-import { assert } from 'chai';
+import { test, assert } from 'vitest';
 
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 
-it('should allow services to be injected into custom element', () => {
+test('should allow services to be injected into custom element', () => {
   class Foo {}
 
   @injectable()
@@ -19,7 +18,7 @@ it('should allow services to be injected into custom element', () => {
   assert.instanceOf(el.foo(), Foo);
 });
 
-it('should allow services to be injected into custom elements that has been extended', () => {
+test('should allow services to be injected into custom elements that has been extended', () => {
   class Foo {}
 
   class MyBaseElement extends HTMLElement {}
@@ -36,7 +35,7 @@ it('should allow services to be injected into custom elements that has been exte
   assert.instanceOf(el.foo(), Foo);
 });
 
-it('should handle parent HTML Injectors', async () => {
+test('should handle parent HTML Injectors', async () => {
   @injectable()
   class A {}
 
@@ -63,18 +62,23 @@ it('should handle parent HTML Injectors', async () => {
   customElements.define('injectable-parent-1', Parent);
   customElements.define('injectable-child-1', Child);
 
-  const el = await fixture(html`
+  const el = document.createElement('div');
+  el.innerHTML = /*html*/ `
     <injectable-parent-1>
       <injectable-child-1></injectable-child-1>
     </injectable-parent-1>
-  `);
+  `;
+
+  document.body.append(el);
 
   const child = el.querySelector<Child>('injectable-child-1')!;
 
   assert.instanceOf(child.b().a(), AltA);
+
+  el.remove();
 });
 
-it('should handle changing contexts', async () => {
+test('should handle changing contexts', async () => {
   class A {}
   class AltA implements A {}
 
@@ -97,7 +101,8 @@ it('should handle changing contexts', async () => {
   customElements.define('ctx-2', Ctx2);
   customElements.define('ctx-child', Child);
 
-  const el = await fixture(html`
+  const el = document.createElement('div');
+  el.innerHTML = /*html*/ `
     <div>
       <ctx-1>
         <ctx-child></ctx-child>
@@ -105,7 +110,9 @@ it('should handle changing contexts', async () => {
 
       <ctx-2></ctx-2>
     </div>
-  `);
+  `;
+
+  document.body.append(el);
 
   const ctx2 = el.querySelector('ctx-2')!;
 
