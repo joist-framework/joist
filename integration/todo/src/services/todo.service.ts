@@ -43,14 +43,18 @@ export class TodoSyncEvent extends Event {
 
 @injectable()
 export class TodoService extends EventTarget {
-  @observe accessor #todos: Todo[] = [];
-  @observe accessor #initialized = false;
+  @observe()
+  accessor #todos: Todo[] = [];
+
+  @observe()
+  accessor #initialized = false;
 
   totalActive = 0;
 
   #store = inject(AppStorage);
 
-  @effect syncTodosToStorage() {
+  @effect()
+  syncTodosToStorage() {
     this.#store().saveJSON('joist_todo', this.#todos);
 
     this.totalActive = this.#todos.reduce(
