@@ -31,7 +31,7 @@ test('should work with instance accessors', () => {
 
       // confirm it works with private methods
       // @ts-ignore
-      @effect #onChange() {
+      @effect() #onChange() {
         assert.equal(this.value, 1);
 
         resolve();
