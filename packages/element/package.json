@@ -55,8 +55,9 @@
       ]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs",
+      "command": "vitest run",
       "files": [
+        "vitest.config.js",
         "target/**"
       ],
       "output": [],

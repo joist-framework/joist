@@ -1,129 +1,138 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import { test, expect } from 'vitest';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
 
-describe('@attr()', () => {
-  it('should read and parse the correct values', async () => {
-    @element({
-      tagName: 'attr-test-1'
-    })
-    class MyElement extends HTMLElement {
-      @attr()
-      accessor value1 = 100; // no attribute
+test('should read and parse the correct values', () => {
+  @element({
+    tagName: 'attr-test-1'
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor value1 = 100; // no attribute
 
-      @attr()
-      accessor value2 = 0; // number
+    @attr()
+    accessor value2 = 0; // number
 
-      @attr()
-      accessor value3 = false; // boolean
+    @attr()
+    accessor value3 = false; // boolean
 
-      @attr()
-      accessor value4 = 'hello'; // string
-    }
+    @attr()
+    accessor value4 = 'hello'; // string
+  }
 
-    const el = await fixture<MyElement>(
-      html`<attr-test-1 value2="2" value3 value4="world"></attr-test-1>`
-    );
+  const container = document.createElement('div');
+  container.innerHTML = /*html*/ `
+    <attr-test-1 value2="2" value3 value4="world"></attr-test-1>
+  `;
 
-    expect(el.value1).to.equal(100);
-    expect(el.value2).to.equal(2);
-    expect(el.value3).to.equal(true);
-    expect(el.value4).to.equal('world');
-  });
+  document.body.append(container);
 
-  it('should not write falsy props to attributes', async () => {
-    @element({
-      tagName: 'attr-test-2'
-    })
-    class MyElement extends HTMLElement {
-      @attr()
-      accessor value1 = undefined;
+  const el = document.querySelector('attr-test-1') as MyElement;
 
-      @attr()
-      accessor value2 = null;
+  expect(el.value1).to.equal(100);
+  expect(el.value2).to.equal(2);
+  expect(el.value3).to.equal(true);
+  expect(el.value4).to.equal('world');
 
-      @attr()
-      accessor value3 = '';
-    }
+  container.remove();
+});
 
-    const el = await fixture<MyElement>(html`<attr-test-2></attr-test-2>`);
+test('should not write falsy props to attributes', async () => {
+  @element({
+    tagName: 'attr-test-2'
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor value1 = undefined;
 
-    expect(el.hasAttribute('value1')).to.be.false;
-    expect(el.hasAttribute('value2')).to.be.false;
-    expect(el.hasAttribute('value3')).to.be.false;
-  });
+    @attr()
+    accessor value2 = null;
 
-  it('should update attributes when props are changed', async () => {
-    @element({
-      tagName: 'attr-test-3'
-    })
-    class MyElement extends HTMLElement {
-      @attr()
-      accessor value1 = 'hello'; // no attribute
+    @attr()
+    accessor value3 = '';
+  }
 
-      @attr()
-      accessor value2 = 0; // number
+  const el = new MyElement();
 
-      @attr()
-      accessor value3 = true; // boolean
+  expect(el.hasAttribute('value1')).to.be.false;
+  expect(el.hasAttribute('value2')).to.be.false;
+  expect(el.hasAttribute('value3')).to.be.false;
+});
 
-      @attr()
-      accessor value4 = false; // boolean
-    }
+test('should update attributes when props are changed', async () => {
+  @element({
+    tagName: 'attr-test-3'
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor value1 = 'hello'; // no attribute
 
-    const el = await fixture<MyElement>(html`<attr-test-3></attr-test-3>`);
+    @attr()
+    accessor value2 = 0; // number
 
-    el.value1 = 'world';
-    el.value2 = 100;
-    el.value3 = false;
-    el.value4 = true;
+    @attr()
+    accessor value3 = true; // boolean
 
-    expect(el.getAttribute('value1')).to.equal('world');
-    expect(el.getAttribute('value2')).to.equal('100');
-    expect(el.hasAttribute('value3')).to.be.false;
-    expect(el.hasAttribute('value4')).to.be.true;
-  });
+    @attr()
+    accessor value4 = false; // boolean
+  }
 
-  it('should normalize attribute names', async () => {
-    const value3 = Symbol('Value from SYMBOL');
+  const el = new MyElement();
+
+  el.value1 = 'world';
+  el.value2 = 100;
+  el.value3 = false;
+  el.value4 = true;
+
+  expect(el.getAttribute('value1')).to.equal('world');
+  expect(el.getAttribute('value2')).to.equal('100');
+  expect(el.hasAttribute('value3')).to.be.false;
+  expect(el.hasAttribute('value4')).to.be.true;
+});
+
+test('should normalize attribute names', async () => {
+  const value3 = Symbol('Value from SYMBOL');
+
+  @element({
+    tagName: 'attr-test-4'
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor Value1 = 'hello';
+
+    @attr()
+    accessor ['Value 2'] = 0;
+
+    @attr()
+    accessor [value3] = true;
+  }
+
+  const el = new MyElement();
+
+  document.body.append(el);
+
+  expect([...el.attributes].map((attr) => attr.name)).to.deep.equal([
+    'value1',
+    'value-2',
+    'value-from-symbol'
+  ]);
+
+  el.remove();
+});
+
+test('should throw an error for symbols with no description', async () => {
+  expect(() => {
+    const value = Symbol();
 
     @element({
       tagName: 'attr-test-4'
     })
     class MyElement extends HTMLElement {
       @attr()
-      accessor Value1 = 'hello';
-
-      @attr()
-      accessor ['Value 2'] = 0;
-
-      @attr()
-      accessor [value3] = true;
+      accessor [value] = true;
     }
 
-    const el = await fixture<MyElement>(html`<attr-test-4></attr-test-4>`);
-
-    expect([...el.attributes].map((attr) => attr.name)).to.deep.equal([
-      'value1',
-      'value-2',
-      'value-from-symbol'
-    ]);
-  });
-
-  it('should throw an error for symbols with no description', async () => {
-    expect(() => {
-      const value = Symbol();
-
-      @element({
-        tagName: 'attr-test-4'
-      })
-      class MyElement extends HTMLElement {
-        @attr()
-        accessor [value] = true;
-      }
-
-      new MyElement();
-    }).to.throw('Cannot handle Symbol property without description');
-  });
+    new MyElement();
+  }).to.throw('Cannot handle Symbol property without description');
 });
