@@ -6,9 +6,10 @@ export interface TemplateOpts {
 class NodeMap extends Map<Node, string> {}
 
 export function template() {
+  // make sure we only initialize once
   let initialized = false;
 
-  // Track all nodes that can be updated
+  // Track all nodes that can be updated and their associated property
   const nodes = new NodeMap();
 
   // watch for nodes being added and removed
@@ -21,10 +22,12 @@ export function template() {
 
     observer = new MutationObserver((records) => {
       for (let { removedNodes, addedNodes } of records) {
+        // track all newly added nodes in case the have template values
         for (let addedNode of addedNodes) {
           trackNode(this, addedNode, nodes);
         }
 
+        // do not track nodes that are removed from the shadow root
         for (let removedNode of removedNodes) {
           nodes.delete(removedNode);
         }
@@ -77,7 +80,7 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
         const textNode = document.createTextNode('');
         textNode.nodeValue = Reflect.get(el, propertyKey);
 
-        node.after(textNode);
+        node.replaceWith(textNode);
 
         nodes.set(textNode, propertyKey);
       }
