@@ -6,6 +6,7 @@ import { inject, injectable } from '@joist/di';
 
 import { HnService } from '../services/hn.service.js';
 import { HnNewsCard } from '../news-card/news-card.js';
+import { HnLoadingElement } from '../loading/loading.js';
 
 @injectable()
 @element({
@@ -29,7 +30,7 @@ import { HnNewsCard } from '../news-card/news-card.js';
 })
 export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
-  #loading = query('hn-loading');
+  #loading = query<HnLoadingElement>('hn-loading');
 
   connectedCallback() {
     const hn = this.#hn();
