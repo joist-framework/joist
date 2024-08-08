@@ -11,7 +11,7 @@ npm i @joist/element
 #### Example:
 
 ```TS
-import { tagName, css, html, attr, listen, element } from '@joist/element';
+import { css, html, attr, listen, element } from '@joist/element';
 
 @element({
   tagName: 'my-element',
