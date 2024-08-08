@@ -1,27 +1,23 @@
-export abstract class ShadowResult {
-  strings: TemplateStringsArray;
-  values: any[];
+export interface ShadowResult {
+  run(el: HTMLElement): void;
+}
 
-  #shadow: ShadowRoot | undefined = undefined;
-
-  get shadow() {
-    if (!this.#shadow) {
-      throw new Error('ShadowResult has not been applied');
-    }
-
-    return this.#shadow;
-  }
+export abstract class JoistShadowResult implements ShadowResult {
+  strings;
+  values;
 
   constructor(raw: TemplateStringsArray, ...values: any[]) {
     this.strings = raw;
     this.values = values;
   }
 
-  execute(root: ShadowRoot) {
-    this.#shadow = root;
+  run(el: HTMLElement) {
+    if (!el.shadowRoot) {
+      throw new Error('ShadowResult has not been applied');
+    }
 
-    this.apply(root);
+    this.setup(el.shadowRoot);
   }
 
-  abstract apply(root: ShadowRoot): void;
+  abstract setup(root: ShadowRoot): void;
 }

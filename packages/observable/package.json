@@ -1,6 +1,6 @@
 {
   "name": "@joist/observable",
-  "version": "3.9.1",
+  "version": "4.0.0-next.4",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -55,8 +55,9 @@
       ]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs",
+      "command": "vitest run",
       "files": [
+        "vitest.config.js",
         "target/**"
       ],
       "output": [],

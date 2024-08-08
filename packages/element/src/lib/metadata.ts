@@ -1,9 +1,16 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
+export interface AttrDef {
+  propName: string | symbol;
+  attrName: string;
+  observe: boolean;
+}
+
+export type ListenerRootSelector = (el: HTMLElement) => HTMLElement | ShadowRoot;
+
 export class ElementMetadata {
-  attrs: string[] = [];
-  tagName?: (val: any) => string;
-  listeners = new Map<string, (e: Event) => void>();
+  attrs: AttrDef[] = [];
+  listeners = new Map<string, { cb: (e: Event) => void; root: ListenerRootSelector }>();
 }
 
 export class MetadataStore extends WeakMap<object, ElementMetadata> {

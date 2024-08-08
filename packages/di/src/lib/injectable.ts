@@ -1,69 +1,31 @@
-import { ConstructableToken } from './provider.js';
-import { INJECTABLE_MAP, Injector } from './injector.js';
-import { environment } from './environment.js';
+import { ConstructableToken, Provider } from './provider.js';
+import { injectables, Injector } from './injector.js';
+import { injectableEl } from './injectable-el.js';
 
-export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
-  return class InjectableNode extends Base {
-    constructor(..._: any[]) {
-      super();
-
-      // Define a new Injector and assiciate it with this instance of the service
-      const injector = new Injector(Base.providers);
-      INJECTABLE_MAP.set(this, injector);
-
-      // If the current injectable instance is a HTMLElement preform additional startup logic
-      // this will find and attach parent injectors
-      if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-        this.addEventListener('finddiroot', (e) => {
-          const parentInjector = findInjectorRoot(e);
-
-          if (parentInjector !== null) {
-            injector.setParent(parentInjector);
-          } else {
-            injector.setParent(environment());
-          }
-        });
-      }
-    }
-
-    connectedCallback() {
-      if ('HTMLElement' in globalThis && this instanceof HTMLElement) {
-        this.dispatchEvent(new Event('finddiroot'));
-
-        if (super.connectedCallback) {
-          super.connectedCallback();
-        }
-      }
-    }
-
-    disconnectedCallback() {
-      const injector = INJECTABLE_MAP.get(this);
-
-      if (injector) {
-        injector.setParent(undefined);
-      }
-
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
-    }
-  };
+export interface InjectableOpts {
+  providers?: Provider<unknown>[];
 }
 
-function findInjectorRoot(e: Event): Injector | null {
-  const path = e.composedPath();
+export function injectable(opts?: InjectableOpts) {
+  return function injectableDecorator<T extends ConstructableToken<any>>(
+    Base: T,
+    ctx: ClassDecoratorContext
+  ) {
+    class InjectableNode extends Base {
+      constructor(..._: any[]) {
+        super();
 
-  // find firt parent
-  // skips the first item which is the target
-  for (let i = 1; i < path.length; i++) {
-    const part = path[i];
-
-    const injector = INJECTABLE_MAP.get(part);
-
-    if (injector) {
-      return injector;
+        injectables.set(this, new Injector(opts?.providers));
+      }
     }
-  }
 
-  return null;
+    // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
+    if ('HTMLElement' in globalThis) {
+      if (HTMLElement.prototype.isPrototypeOf(Base.prototype)) {
+        return injectableEl(InjectableNode, ctx);
+      }
+    }
+
+    return InjectableNode;
+  };
 }

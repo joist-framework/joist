@@ -1,96 +1,94 @@
-import { expect } from '@open-wc/testing';
+import { test, assert } from 'vitest';
 
 import { Injector } from './injector.js';
-import { LifeCycle } from './lifecycle.js';
-import { injectable } from './injectable';
+import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
+import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 
-describe('LifeCycle', () => {
-  it('should call onInit and onInject when a service is first created', () => {
-    const i = new Injector();
+test('should call onInit and onInject when a service is first created', () => {
+  const i = new Injector();
 
-    const res = {
+  @injectable()
+  class MyService implements OnInit, OnInject {
+    res = {
       onInit: 0,
       onInject: 0
     };
 
-    @injectable
-    class MyService {
-      [LifeCycle.onInit]() {
-        res.onInit++;
-      }
-
-      [LifeCycle.onInject]() {
-        res.onInject++;
-      }
+    [LifeCycle.onInit]() {
+      this.res.onInit++;
     }
 
-    i.inject(MyService);
+    [LifeCycle.onInject]() {
+      this.res.onInject++;
+    }
+  }
 
-    expect(res).to.deep.equal({
-      onInit: 1,
-      onInject: 1
-    });
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onInit: 1,
+    onInject: 1
   });
+});
 
-  it('should call onInject any time a service is returned', () => {
-    const i = new Injector();
+test('should call onInject any time a service is returned', () => {
+  const i = new Injector();
 
-    const res = {
+  @injectable()
+  class MyService implements OnInit, OnInit {
+    res = {
       onInit: 0,
       onInject: 0
     };
 
-    @injectable
-    class MyService {
-      [LifeCycle.onInit]() {
-        res.onInit++;
-      }
-
-      [LifeCycle.onInject]() {
-        res.onInject++;
-      }
+    [LifeCycle.onInit]() {
+      this.res.onInit++;
     }
 
-    i.inject(MyService);
-    i.inject(MyService);
+    [LifeCycle.onInject]() {
+      this.res.onInject++;
+    }
+  }
 
-    expect(res).to.deep.equal({
-      onInit: 1,
-      onInject: 2
-    });
+  i.inject(MyService);
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onInit: 1,
+    onInject: 2
   });
+});
 
-  it('should call onInject and on init when injected from another service', () => {
-    const i = new Injector();
+test('should call onInject and on init when injected from another service', () => {
+  const i = new Injector();
 
-    const res = {
+  @injectable()
+  class MyService implements OnInit, OnInject {
+    res = {
       onInit: 0,
       onInject: 0
     };
 
-    @injectable
-    class MyService {
-      [LifeCycle.onInit]() {
-        res.onInit++;
-      }
-
-      [LifeCycle.onInject]() {
-        res.onInject++;
-      }
+    [LifeCycle.onInit]() {
+      this.res.onInit++;
     }
 
-    @injectable
-    class MyApp {
-      service = inject(MyService);
+    [LifeCycle.onInject]() {
+      this.res.onInject++;
     }
+  }
 
-    i.inject(MyApp).service();
-    i.inject(MyService);
+  @injectable()
+  class MyApp {
+    service = inject(MyService);
+  }
 
-    expect(res).to.deep.equal({
-      onInit: 1,
-      onInject: 2
-    });
+  i.inject(MyApp).service();
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onInit: 1,
+    onInject: 2
   });
 });

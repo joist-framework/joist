@@ -8,17 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Todo App</title>
-
-    <script type="importmap">
-      {
-        "imports": {
-          "@joist/di": "/node_modules/@joist/di/target/lib.js",
-          "@joist/element": "/node_modules/@joist/element/target/lib.js",
-          "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
-          "tslib": "/node_modules/tslib/tslib.es6.js"
-        }
-      }
-    </script>
   </head>
 
   <body>
@@ -96,6 +85,10 @@
         height: 50px;
       }
 
+      :not(:defined) {
+        visibility: hidden;
+      }
+
       @keyframes spinner {
         to {
           transform: rotate(360deg);
@@ -120,13 +113,18 @@
     </local-storage-ctx>
 
     <script type="module">
-      import './target/ctx/storage.ctx.js';
-      import './target/elements/todo-card.element.js';
-      import './target/elements/todo-form.element.js';
-      import './target/elements/todo-list-footer.element.js';
-      import './target/elements/todo-list.element.js';
-      import './target/elements/todo-list.element.js';
-      import './target/elements/todo-logger.element.js';
+      import { DOMInjector } from '@joist/di';
+
+      const app = new DOMInjector();
+
+      app.attach(document.body);
     </script>
+
+    <script type="module" src="./target/ctx/storage.ctx.js"></script>
+    <script type="module" src="./target/elements/todo-card.element.js"></script>
+    <script type="module" src="./target/elements/todo-form.element.js"></script>
+    <script type="module" src="./target/elements/todo-list-footer.element.js"></script>
+    <script type="module" src="./target/elements/todo-list.element.js"></script>
+    <script type="module" src="./target/elements/todo-logger.element.js"></script>
   </body>
 </html>

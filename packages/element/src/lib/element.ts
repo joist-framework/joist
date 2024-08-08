@@ -1,55 +1,93 @@
-import { metadataStore } from './metadata.js';
+import { AttrDef, metadataStore } from './metadata.js';
+import { ShadowResult } from './result.js';
 
-export function element<Target extends CustomElementConstructor>(
-  Base: Target,
-  ctx: ClassDecoratorContext<Target>
-) {
-  const meta = metadataStore.read(ctx.metadata);
+export interface ElementOpts<T> {
+  tagName?: string;
+  shadow?: Array<ShadowResult | ((el: T) => void)>;
+}
 
-  ctx.addInitializer(function (this: Target) {
-    if (meta.tagName) {
-      const val = meta.tagName(this);
+export const LifeCycle = {
+  onInit: Symbol('onInit')
+};
 
-      if (!customElements.get(val)) {
-        customElements.define(val, this);
+export function element<
+  Target extends CustomElementConstructor,
+  Instance extends InstanceType<Target>
+>(opts?: ElementOpts<Instance>) {
+  return function elementDecorator(Base: Target, ctx: ClassDecoratorContext<Target>) {
+    const meta = metadataStore.read(ctx.metadata);
+
+    ctx.addInitializer(function (this: Target) {
+      if (opts?.tagName) {
+        if (!customElements.get(opts.tagName)) {
+          customElements.define(opts.tagName, this);
+        }
       }
-    }
-  });
+    });
 
-  return class JoistElement extends Base {
-    // make all attrs observable
-    static observedAttributes = [...meta.attrs];
-    constructor(...args: any[]) {
-      super(...args);
+    return class JoistElement extends Base {
+      static observedAttributes = meta.attrs
+        .filter(({ observe }) => observe) // filter out attributes that are not to be observed
+        .map(({ attrName }) => attrName);
 
-      const root = this.shadowRoot || this;
+      constructor(...args: any[]) {
+        super(...args);
 
-      for (let [event, listener] of meta.listeners) {
-        root.addEventListener(event, listener.bind(this));
-      }
-    }
+        if (opts?.shadow) {
+          if (!this.shadowRoot) {
+            this.attachShadow({ mode: 'open' });
+          }
 
-    connectedCallback() {
-      for (let attr of meta.attrs) {
-        const value = Reflect.get(this, attr);
-
-        // reflect values back to attributes
-        if (value !== null && value !== undefined && value !== '') {
-          if (typeof value === 'boolean') {
-            if (value === true) {
-              // set boolean attribute
-              this.setAttribute(attr, '');
+          for (let res of opts.shadow) {
+            if (typeof res === 'function') {
+              res(this as unknown as Instance);
+            } else {
+              res.run(this);
             }
-          } else {
-            // set key/value attribute
-            this.setAttribute(attr, String(value));
+          }
+        }
+
+        for (let [event, { cb, root }] of meta.listeners) {
+          root(this).addEventListener(event, cb.bind(this));
+        }
+
+        if (LifeCycle.onInit in this) {
+          const onInit = Reflect.get(this, LifeCycle.onInit);
+
+          if (typeof onInit === 'function') {
+            onInit();
           }
         }
       }
 
-      if (super.connectedCallback) {
-        super.connectedCallback();
+      connectedCallback() {
+        if (this.isConnected) {
+          reflectAttributeValues(this, meta.attrs);
+
+          if (super.connectedCallback) {
+            super.connectedCallback();
+          }
+        }
+      }
+    };
+  };
+}
+
+function reflectAttributeValues(el: HTMLElement, attrs: AttrDef[]) {
+  for (let { propName, attrName } of attrs) {
+    const value = Reflect.get(el, propName);
+
+    // reflect values back to attributes
+    if (value !== null && value !== undefined && value !== '') {
+      if (typeof value === 'boolean') {
+        if (value === true) {
+          // set boolean attribute
+          el.setAttribute(attrName, '');
+        }
+      } else {
+        // set key/value attribute
+        el.setAttribute(attrName, String(value));
       }
     }
-  };
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@joist/element",
-  "version": "3.9.1",
+  "version": "4.0.0-next.4",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -20,7 +20,7 @@
   "description": "Intelligently apply styles to WebComponents",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deebloo/joist.git"
+    "url": "git+https://github.com/joist-framework/joist.git"
   },
   "keywords": [
     "TypeScript",
@@ -31,7 +31,7 @@
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deebloo/joist/issues"
+    "url": "https://github.com/joist-framework/joist/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -55,8 +55,9 @@
       ]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs",
+      "command": "vitest run",
       "files": [
+        "vitest.config.js",
         "target/**"
       ],
       "output": [],

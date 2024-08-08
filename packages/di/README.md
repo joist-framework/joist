@@ -53,7 +53,7 @@ Singleton services are great but the real benefit can be seen when passing insta
 `inject()` returns a function that will then return an instance of the requested service. This means that services are only created when they are needed and not when the class is constructed.
 
 ```ts
-@injectable
+@injectable()
 class App {
   #counter = inject(Counter);
 
@@ -80,7 +80,7 @@ class HttpService {
   }
 }
 
-@injectable
+@injectable()
 class ApiService {
   #http = inject(HttpService);
 
@@ -114,7 +114,7 @@ test('should return json', async () => {
 
 ### Service level providers
 
-Under the hood, each service decorated with `@injectable` creates its own injector. This means that it is possible to defined providers from that level down.
+Under the hood, each service decorated with `@injectable()` creates its own injector. This means that it is possible to defined providers from that level down.
 
 The below example will use this particular instance of Logger as wall as any other services injected into this service.
 
@@ -129,10 +129,10 @@ class ConsoleLogger implements Logger {
   }
 }
 
-@injectable
-class MyService {
-  static providers = [{ provide: Logger, use: ConsoleLogger }];
-}
+@injectable({
+  providers: [{ provide: Logger, use: ConsoleLogger }]
+})
+class MyService {}
 ```
 
 ### Factories
@@ -272,29 +272,62 @@ This behavior allows for services to be "scoped" within a certain branch of the 
 
 ## Custom Elements:
 
-Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers. This is where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements.
+Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
+
+Setting your web page to work is very similar to any other JavaScript environment. There is a special `DOMInjector` class that will allow you to attach an injector to any location in the dom, in most cases this will be document.body.
 
 ```TS
+const app = new DOMInjector();
+
+app.attach(document.body); // anything rendered in the body will have access to this injector.
+
 class Colors {
   primary = 'red';
   secodnary = 'green';
 }
 
-@injectable
-class ColorCtx extends HTMLElement {
-  // services can be scoped to a particular injectable
-  static providers = [
+@injectable()
+class MyElement extends HTMLElement {
+  #colors = inject(Colors);
+
+  connectedCallback() {
+    const { primary } = this.#colors();
+
+    this.style.background = primary;
+  }
+}
+
+customElements.define('my-element', MyElement);
+```
+
+### Context Elements:
+
+Context elements are where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements. Since custom elements are treated the same as any other class they can define providers for their local scope.
+
+```TS
+const app = new DOMInjector();
+
+app.attach(document.body);
+
+class Colors {
+  primary = 'red';
+  secodnary = 'green';
+}
+
+@injectable({
+  providers: [
     {
       provide: Colors,
       use: class implements Colors {
         primary = 'orange';
         secondary = 'purple';
-      },
-    },
+      }
+    }
   ]
-}
+})
+class ColorCtx extends HTMLElement {}
 
-@injectable
+@injectable()
 class MyElement extends HTMLElement {
   #colors = inject(Colors);
 
@@ -318,15 +351,4 @@ customElements.define('my-element', MyElement);
 <color-ctx>
   <my-element></my-element>
 </color-ctx>
-```
-
-### Environment
-
-When using @joist/di with custom elements a default root injector is created dubbed 'environment'. This is the injector that all other injectors will eventually stop at.
-If you need to define something in this environment you can do so with the `defineEnvironment` method.
-
-```ts
-import { defineEnvironment } from '@joist/di';
-
-defineEnvironment([{ provide: MyService, use: SomeOtherService }]);
 ```

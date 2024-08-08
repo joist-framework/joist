@@ -1,50 +1,54 @@
-import { css, html, shadow, listen, tagName, attr, element } from '@joist/element';
+import { css, html, listen, attr, element, template } from '@joist/element';
 
-@element
+@element({
+  tagName: 'joist-counter',
+  shadow: [
+    css`
+      * {
+        font-size: 200%;
+      }
+
+      :host {
+        display: block;
+      }
+
+      #value {
+        width: 4rem;
+        display: inline-block;
+        text-align: center;
+      }
+
+      button {
+        width: 4rem;
+        height: 4rem;
+        border: none;
+        border-radius: 10px;
+        background-color: seagreen;
+        color: white;
+        cursor: pointer;
+      }
+    `,
+    html`
+      <button id="dec">-</button>
+      <div id="value">
+        <!--#:value-->
+      </div>
+      <button id="inc">+</button>
+    `
+  ]
+})
 export class CounterElement extends HTMLElement {
-  @tagName static tagName = 'joist-counter';
+  @attr()
+  accessor value = 0;
 
-  @shadow styles = css`
-    * {
-      font-size: 200%;
-    }
-
-    :host {
-      display: block;
-    }
-
-    slot {
-      width: 4rem;
-      display: inline-block;
-      text-align: center;
-    }
-
-    button {
-      width: 4rem;
-      height: 4rem;
-      border: none;
-      border-radius: 10px;
-      background-color: seagreen;
-      color: white;
-      cursor: pointer;
-    }
-  `;
-
-  @shadow dom = html`
-    <button id="dec">-</button>
-
-    <slot></slot>
-
-    <button id="inc">+</button>
-  `;
-
-  @attr accessor value = 0;
+  #update = template();
 
   attributeChangedCallback() {
-    this.innerHTML = String(this.value);
+    this.#update();
   }
 
-  @listen('click') onClick(e: Event) {
+  @listen('click')
+  onClick(e: Event) {
     const { id } = e.target as HTMLElement;
 
     switch (id) {
