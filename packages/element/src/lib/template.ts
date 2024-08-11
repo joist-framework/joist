@@ -45,10 +45,8 @@ function initializeNodes(el: HTMLElement, nodes: NodeMap) {
     NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
   );
 
-  let node: Node | null = null;
-
-  while ((node = iterator.nextNode())) {
-    trackNode(el, node, nodes);
+  while (iterator.nextNode()) {
+    trackNode(el, iterator.referenceNode, nodes);
   }
 }
 
@@ -61,9 +59,7 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
 
       if (nodeValue.startsWith(tokenPrefix)) {
         const propertyKey = nodeValue.replace(tokenPrefix, '');
-
-        const textNode = document.createTextNode('');
-        textNode.nodeValue = Reflect.get(el, propertyKey);
+        const textNode = document.createTextNode(Reflect.get(el, propertyKey));
 
         node.replaceWith(textNode);
 
@@ -77,7 +73,7 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
 
         attr.value = Reflect.get(el, propertyKey);
 
-        nodes.set(attr, attr.value);
+        nodes.set(attr, propertyKey);
       }
     }
   }

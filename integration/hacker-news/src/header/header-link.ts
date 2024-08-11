@@ -25,7 +25,7 @@ import { attr, css, element, html, template } from '@joist/element';
       }
     `,
     html`
-      <a #:href="href">
+      <a href="#:href">
         <slot></slot>
       </a>
     `
