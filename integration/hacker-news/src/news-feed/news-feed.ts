@@ -39,7 +39,7 @@ export class HnNewsFeed extends HTMLElement {
 
     let number = 1;
 
-    for (let { value } of stories) {
+    for (let value of stories) {
       const card = document.createElement('hn-news-card') as HnNewsCard;
 
       card.number = number;

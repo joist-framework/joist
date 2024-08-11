@@ -22,14 +22,12 @@ export class HnService {
     const http = this.#http();
 
     return this.getTopStoryIds(count).then((res) => {
-      const storyRequests = res.map((id) => {
-        return http
-          .fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-          .then<HnItem>((res) => res.json());
-      });
+      const storyRequests = res.map((id) =>
+        http.fetchJson<HnItem>(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+      );
 
       return Promise.allSettled(storyRequests).then((res) =>
-        res.filter((item) => item.status === 'fulfilled')
+        res.filter((item) => item.status === 'fulfilled').map((item) => item.value)
       );
     });
   }

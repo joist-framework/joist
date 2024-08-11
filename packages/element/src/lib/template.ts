@@ -1,41 +1,26 @@
-export interface TemplateOpts {
-  tokenPrefix?: string;
-  fields?: string[];
+export interface TemplateOpts {}
+
+export interface RenderOpts {
+  refresh?: boolean;
 }
 
 class NodeMap extends Map<Node, string> {}
 
-export function template() {
+export function template(_templateOpts?: RenderOpts) {
   // make sure we only initialize once
   let initialized = false;
 
   // Track all nodes that can be updated and their associated property
   const nodes = new NodeMap();
 
-  // watch for nodes being added and removed
-  let observer: MutationObserver | null;
+  return function (this: HTMLElement, renderOpts?: RenderOpts) {
+    if (renderOpts?.refresh) {
+      initialized = false;
+    }
 
-  return function (this: HTMLElement) {
     if (initialized) {
       return updateNodes(this, nodes);
     }
-
-    observer = new MutationObserver((records) => {
-      for (let { removedNodes, addedNodes } of records) {
-        // track all newly added nodes in case the have template values
-        for (let addedNode of addedNodes) {
-          trackNode(this, addedNode, nodes);
-        }
-
-        // do not track nodes that are removed from the shadow root
-        for (let removedNode of removedNodes) {
-          nodes.delete(removedNode);
-        }
-      }
-    });
-
-    // watch for nodes being added or removed
-    observer.observe(this.shadowRoot!, { childList: true });
 
     // find and track nodes
     initializeNodes(this, nodes);
@@ -87,15 +72,12 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
     }
   } else if (node instanceof Element) {
     for (let attr of node.attributes) {
-      if (attr.name.startsWith(tokenPrefix)) {
-        const realAttributeName = attr.name.replace(tokenPrefix, '');
+      if (attr.value.startsWith(tokenPrefix)) {
+        const propertyKey = attr.value.replace(tokenPrefix, '');
 
-        const newAttribute = document.createAttribute(realAttributeName);
-        newAttribute.nodeValue = Reflect.get(el, attr.value);
+        attr.value = Reflect.get(el, propertyKey);
 
-        node.attributes.setNamedItem(newAttribute);
-
-        nodes.set(newAttribute, attr.value);
+        nodes.set(attr, attr.value);
       }
     }
   }
