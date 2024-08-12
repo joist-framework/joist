@@ -44,7 +44,7 @@ it('should register attributes', async () => {
     @attr()
     accessor value3 = true; // boolean
 
-    @attr({ observe: false }) // should be filtered out
+    @attr({ observed: false }) // should be filtered out
     accessor value4 = 'hello world';
   }
 

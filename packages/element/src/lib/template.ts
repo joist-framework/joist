@@ -1,4 +1,6 @@
-export interface TemplateOpts {}
+export interface TemplateOpts {
+  tokenPrefix?: string;
+}
 
 export interface RenderOpts {
   refresh?: boolean;
@@ -6,7 +8,7 @@ export interface RenderOpts {
 
 class NodeMap extends Map<Node, string> {}
 
-export function template(_templateOpts?: RenderOpts) {
+export function template(templateOpts?: TemplateOpts) {
   // make sure we only initialize once
   let initialized = false;
 
@@ -16,7 +18,6 @@ export function template(_templateOpts?: RenderOpts) {
   return function (this: HTMLElement, renderOpts?: RenderOpts) {
     if (renderOpts?.refresh) {
       initialized = false;
-
       nodes.clear();
     }
 
@@ -25,7 +26,7 @@ export function template(_templateOpts?: RenderOpts) {
     }
 
     // find and track nodes
-    initializeNodes(this, nodes);
+    initializeNodes(this, nodes, templateOpts);
 
     initialized = true;
   };
@@ -41,19 +42,22 @@ function updateNodes(el: HTMLElement, nodes: NodeMap) {
   }
 }
 
-function initializeNodes(el: HTMLElement, nodes: NodeMap) {
+function initializeNodes(el: HTMLElement, nodes: NodeMap, options?: TemplateOpts) {
   const iterator = document.createNodeIterator(
     el.shadowRoot!,
     NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
   );
 
   while (iterator.nextNode()) {
-    trackNode(el, iterator.referenceNode, nodes);
+    trackNode(el, iterator.referenceNode, nodes, options);
   }
 }
 
-function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
-  const tokenPrefix = '#:';
+/**
+ * configures and tracks a given Node so that it can be updated in place later
+ */
+function trackNode(el: HTMLElement, node: Node, nodes: NodeMap, options?: TemplateOpts) {
+  const tokenPrefix = options?.tokenPrefix ?? '#:';
 
   switch (node.nodeType) {
     case Node.COMMENT_NODE: {
@@ -79,11 +83,11 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
       const elementNode = node as Element;
 
       for (let attr of elementNode.attributes) {
-        if (attr.value.startsWith(tokenPrefix)) {
-          const propertyKey = attr.value.replace(tokenPrefix, '');
+        const nodeValue = attr.value.trim();
 
+        if (nodeValue.startsWith(tokenPrefix)) {
+          const propertyKey = nodeValue.replace(tokenPrefix, '');
           attr.value = Reflect.get(el, propertyKey);
-
           nodes.set(attr, propertyKey);
         }
       }

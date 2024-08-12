@@ -1,4 +1,4 @@
-import { attr, css, element, html, template, templatReady } from '@joist/element';
+import { attr, css, element, template, ready, html } from '@joist/element';
 import { observe, effect } from '@joist/observable';
 
 @element({
@@ -59,7 +59,7 @@ import { observe, effect } from '@joist/observable';
             <!--#:author-->
           </span>
 
-          <span>
+          <span #:bind="comments">
             <!--#:comments-->
             comments
           </span>
@@ -103,8 +103,8 @@ export class HnNewsCard extends HTMLElement {
 
   #render = template();
 
-  @templatReady()
-  onTemplateReady() {
+  @ready()
+  onElementReady() {
     this.#render();
   }
 

@@ -4,4 +4,4 @@ export { listen } from './lib/listen.js';
 export { element } from './lib/element.js';
 export { query } from './lib/query.js';
 export { template } from './lib/template.js';
-export { templatReady } from './lib/lifecycle.js';
+export { ready } from './lib/lifecycle.js';

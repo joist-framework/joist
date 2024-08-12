@@ -1,7 +1,7 @@
 import { metadataStore } from './metadata.js';
 
 export interface AttrOpts {
-  observe?: boolean;
+  observed?: boolean;
 }
 
 export function attr(opts?: AttrOpts) {
@@ -15,7 +15,7 @@ export function attr(opts?: AttrOpts) {
     meta.attrs.push({
       propName: ctx.name,
       attrName,
-      observe: opts?.observe ?? true
+      observe: opts?.observed ?? true
     });
 
     return {

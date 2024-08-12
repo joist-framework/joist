@@ -47,7 +47,7 @@ export function element<
           root(this).addEventListener(event, cb.bind(this));
         }
 
-        for (let cb of meta.onTemplateReady) {
+        for (let cb of meta.onReady) {
           cb.call(this);
         }
       }
