@@ -1,9 +1,9 @@
-import { test, expect } from 'vitest';
+import { expect } from 'chai';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
 
-test('should read and parse the correct values', () => {
+it('should read and parse the correct values', () => {
   @element({
     tagName: 'attr-test-1'
   })
@@ -38,7 +38,7 @@ test('should read and parse the correct values', () => {
   container.remove();
 });
 
-test('should not write falsy props to attributes', async () => {
+it('should not write falsy props to attributes', async () => {
   @element({
     tagName: 'attr-test-2'
   })
@@ -60,7 +60,7 @@ test('should not write falsy props to attributes', async () => {
   expect(el.hasAttribute('value3')).to.be.false;
 });
 
-test('should update attributes when props are changed', async () => {
+it('should update attributes when props are changed', async () => {
   @element({
     tagName: 'attr-test-3'
   })
@@ -91,7 +91,7 @@ test('should update attributes when props are changed', async () => {
   expect(el.hasAttribute('value4')).to.be.true;
 });
 
-test('should normalize attribute names', async () => {
+it('should normalize attribute names', async () => {
   const value3 = Symbol('Value from SYMBOL');
 
   @element({
@@ -121,7 +121,7 @@ test('should normalize attribute names', async () => {
   el.remove();
 });
 
-test('should throw an error for symbols with no description', async () => {
+it('should throw an error for symbols with no description', async () => {
   expect(() => {
     const value = Symbol();
 

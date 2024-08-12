@@ -1,8 +1,8 @@
-import { test, assert } from 'vitest';
+import { assert } from 'chai';
 
 import { effect, observe } from './observe.js';
 
-test('should work with static accessors', () => {
+it('should work with static accessors', () => {
   return new Promise<void>((resolve) => {
     class Counter {
       @observe()
@@ -23,7 +23,7 @@ test('should work with static accessors', () => {
   });
 });
 
-test('should work with instance accessors', () => {
+it('should work with instance accessors', () => {
   return new Promise<void>((resolve) => {
     class Counter {
       @observe()
@@ -48,7 +48,7 @@ test('should work with instance accessors', () => {
   });
 });
 
-test('should return a set of changed props', () => {
+it('should return a set of changed props', () => {
   return new Promise<void>((resolve) => {
     class Counter {
       @observe() accessor value = 0;
@@ -65,7 +65,7 @@ test('should return a set of changed props', () => {
   });
 });
 
-test('should upgrade custom elements', () => {
+it('should upgrade custom elements', () => {
   return new Promise<void>((resolve) => {
     class Counter extends HTMLElement {
       @observe()

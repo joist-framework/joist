@@ -1,10 +1,10 @@
-import { test, expect } from 'vitest';
+import { expect } from 'chai';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
 import { css, html } from './tags.js';
 
-test('should write default value to attribute', async () => {
+it('should write default value to attribute', async () => {
   @element({
     tagName: 'element-1'
   })
@@ -30,7 +30,7 @@ test('should write default value to attribute', async () => {
   el.remove();
 });
 
-test('should register attributes', async () => {
+it('should register attributes', async () => {
   @element({
     tagName: 'element-2'
   })
@@ -55,7 +55,7 @@ test('should register attributes', async () => {
   ]);
 });
 
-test('should attach shadow root when the shadow property exists', async () => {
+it('should attach shadow root when the shadow property exists', async () => {
   @element({
     tagName: 'element-3',
     shadow: []
@@ -67,7 +67,7 @@ test('should attach shadow root when the shadow property exists', async () => {
   expect(el.shadowRoot).to.be.instanceOf(ShadowRoot);
 });
 
-test('should apply html and css', async () => {
+it('should apply html and css', async () => {
   @element({
     tagName: 'element-4',
     shadow: [
@@ -77,11 +77,13 @@ test('should apply html and css', async () => {
         }
       `,
       html`<slot></slot>`,
-      (el) => {
-        const div = document.createElement('div');
-        div.innerHTML = 'hello world';
+      {
+        apply(el) {
+          const div = document.createElement('div');
+          div.innerHTML = 'hello world';
 
-        el.append(div);
+          el.append(div);
+        }
       }
     ]
   })

@@ -1,4 +1,4 @@
-import { attr, css, element, html, template } from '@joist/element';
+import { attr, css, element, html, template, templatReady } from '@joist/element';
 import { observe, effect } from '@joist/observable';
 
 @element({
@@ -103,7 +103,8 @@ export class HnNewsCard extends HTMLElement {
 
   #render = template();
 
-  connectedCallback() {
+  @templatReady()
+  onTemplateReady() {
     this.#render();
   }
 

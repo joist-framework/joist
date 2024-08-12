@@ -1,9 +1,9 @@
-import { test, assert } from 'vitest';
+import { assert } from 'chai';
 
 import { DOMInjector } from './dom-injector.js';
 import { injectables } from './injector.js';
 
-test('should attach an injector to a dom element', () => {
+it('should attach an injector to a dom element', () => {
   const root = document.createElement('div');
   const app = new DOMInjector();
 
@@ -14,7 +14,7 @@ test('should attach an injector to a dom element', () => {
   assert.strictEqual(injector, app);
 });
 
-test('should remove an injector associated with a dom element', () => {
+it('should remove an injector associated with a dom element', () => {
   const root = document.createElement('div');
   const app = new DOMInjector();
 

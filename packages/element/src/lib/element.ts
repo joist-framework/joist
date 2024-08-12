@@ -1,14 +1,10 @@
 import { AttrDef, metadataStore } from './metadata.js';
 import { ShadowResult } from './result.js';
 
-export interface ElementOpts<T> {
+export interface ElementOpts<T extends HTMLElement> {
   tagName?: string;
-  shadow?: Array<ShadowResult | ((el: T) => void)>;
+  shadow?: Array<ShadowResult<T> | ((el: T) => void)>;
 }
-
-export const LifeCycle = {
-  onInit: Symbol('onInit')
-};
 
 export function element<
   Target extends CustomElementConstructor,
@@ -42,7 +38,7 @@ export function element<
             if (typeof res === 'function') {
               res(this as unknown as Instance);
             } else {
-              res.run(this);
+              res.apply(this as unknown as Instance);
             }
           }
         }
@@ -51,12 +47,8 @@ export function element<
           root(this).addEventListener(event, cb.bind(this));
         }
 
-        if (LifeCycle.onInit in this) {
-          const onInit = Reflect.get(this, LifeCycle.onInit);
-
-          if (typeof onInit === 'function') {
-            onInit();
-          }
+        for (let cb of meta.onTemplateReady) {
+          cb.call(this);
         }
       }
 

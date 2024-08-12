@@ -16,6 +16,8 @@ export function template(_templateOpts?: RenderOpts) {
   return function (this: HTMLElement, renderOpts?: RenderOpts) {
     if (renderOpts?.refresh) {
       initialized = false;
+
+      nodes.clear();
     }
 
     if (initialized) {
@@ -53,28 +55,40 @@ function initializeNodes(el: HTMLElement, nodes: NodeMap) {
 function trackNode(el: HTMLElement, node: Node, nodes: NodeMap) {
   const tokenPrefix = '#:';
 
-  if (node instanceof Comment) {
-    if (node.nodeValue) {
-      const nodeValue = node.nodeValue.trim();
+  switch (node.nodeType) {
+    case Node.COMMENT_NODE: {
+      const commentNode = node as Comment;
 
-      if (nodeValue.startsWith(tokenPrefix)) {
-        const propertyKey = nodeValue.replace(tokenPrefix, '');
-        const textNode = document.createTextNode(Reflect.get(el, propertyKey));
+      if (commentNode.nodeValue) {
+        const nodeValue = commentNode.nodeValue.trim();
 
-        node.replaceWith(textNode);
+        if (nodeValue.startsWith(tokenPrefix)) {
+          const propertyKey = nodeValue.replace(tokenPrefix, '');
+          const textNode = document.createTextNode(Reflect.get(el, propertyKey));
 
-        nodes.set(textNode, propertyKey);
+          commentNode.replaceWith(textNode);
+
+          nodes.set(textNode, propertyKey);
+        }
       }
+
+      break;
     }
-  } else if (node instanceof Element) {
-    for (let attr of node.attributes) {
-      if (attr.value.startsWith(tokenPrefix)) {
-        const propertyKey = attr.value.replace(tokenPrefix, '');
 
-        attr.value = Reflect.get(el, propertyKey);
+    case Node.ELEMENT_NODE: {
+      const elementNode = node as Element;
 
-        nodes.set(attr, propertyKey);
+      for (let attr of elementNode.attributes) {
+        if (attr.value.startsWith(tokenPrefix)) {
+          const propertyKey = attr.value.replace(tokenPrefix, '');
+
+          attr.value = Reflect.get(el, propertyKey);
+
+          nodes.set(attr, propertyKey);
+        }
       }
+
+      break;
     }
   }
 }

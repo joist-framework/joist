@@ -1,9 +1,9 @@
-import { test, assert } from 'vitest';
+import { assert } from 'chai';
 
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 
-test('should allow services to be injected into custom element', () => {
+it('should allow services to be injected into custom element', () => {
   class Foo {}
 
   @injectable()
@@ -18,7 +18,7 @@ test('should allow services to be injected into custom element', () => {
   assert.instanceOf(el.foo(), Foo);
 });
 
-test('should allow services to be injected into custom elements that has been extended', () => {
+it('should allow services to be injected into custom elements that has been extended', () => {
   class Foo {}
 
   class MyBaseElement extends HTMLElement {}
@@ -35,7 +35,7 @@ test('should allow services to be injected into custom elements that has been ex
   assert.instanceOf(el.foo(), Foo);
 });
 
-test('should handle parent HTML Injectors', async () => {
+it('should handle parent HTML Injectors', async () => {
   @injectable()
   class A {}
 
@@ -78,7 +78,7 @@ test('should handle parent HTML Injectors', async () => {
   el.remove();
 });
 
-test('should handle changing contexts', async () => {
+it('should handle changing contexts', async () => {
   class A {}
   class AltA implements A {}
 

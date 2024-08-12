@@ -1,10 +1,10 @@
-import { test, expect } from 'vitest';
+import { expect } from 'chai';
 
 import { element } from './element.js';
 import { query } from './query.js';
 import { html } from './tags.js';
 
-test('should work', () => {
+it('should work', () => {
   @element({
     tagName: 'query-test-1',
     shadow: [
@@ -27,7 +27,7 @@ test('should work', () => {
   expect(el.lname()).to.equal(el.shadowRoot?.querySelector('#lname'));
 });
 
-test('should patch the selected item', () => {
+it('should patch the selected item', () => {
   @element({
     tagName: 'query-test-2',
     shadow: [

@@ -1,11 +1,11 @@
-import { test, assert } from 'vitest';
+import { assert } from 'chai';
 
 import { Injector } from './injector.js';
 import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 
-test('should call onInit and onInject when a service is first created', () => {
+it('should call onInit and onInject when a service is first created', () => {
   const i = new Injector();
 
   @injectable()
@@ -32,7 +32,7 @@ test('should call onInit and onInject when a service is first created', () => {
   });
 });
 
-test('should call onInject any time a service is returned', () => {
+it('should call onInject any time a service is returned', () => {
   const i = new Injector();
 
   @injectable()
@@ -60,7 +60,7 @@ test('should call onInject any time a service is returned', () => {
   });
 });
 
-test('should call onInject and on init when injected from another service', () => {
+it('should call onInject and on init when injected from another service', () => {
   const i = new Injector();
 
   @injectable()

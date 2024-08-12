@@ -1,11 +1,11 @@
-import { test, assert } from 'vitest';
+import { assert } from 'chai';
 
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
 import { Injector } from './injector.js';
 import { StaticToken } from './provider.js';
 
-test('should throw error if called in constructor', () => {
+it('should throw error if called in constructor', () => {
   assert.throws(() => {
     class FooService {
       value = '1';
@@ -26,7 +26,7 @@ test('should throw error if called in constructor', () => {
   }, 'BarService is either not injectable or a service is being called in the constructor.');
 });
 
-test('should use the calling injector as parent', () => {
+it('should use the calling injector as parent', () => {
   class FooService {
     value = '1';
   }
@@ -48,7 +48,7 @@ test('should use the calling injector as parent', () => {
   assert.strictEqual(parent.inject(BarService).foo().value, '100');
 });
 
-test('should inject a static token', () => {
+it('should inject a static token', () => {
   const TOKEN = new StaticToken('test', () => 'Hello World');
 
   @injectable()

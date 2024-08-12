@@ -1,28 +1,43 @@
-import { JoistShadowResult } from './result.js';
+import { ShadowResult } from './result.js';
 
-export class HTMLResult extends JoistShadowResult {
-  setup(root: ShadowRoot): void {
-    let template = document.createElement('template');
-    template.innerHTML = concat(this.strings);
+export class HTMLResult<T extends HTMLElement> implements ShadowResult<T> {
+  #template;
 
-    root.append(template.content.cloneNode(true));
+  constructor(raw: TemplateStringsArray, ..._values: any[]) {
+    this.#template = document.createElement('template');
+    this.#template.innerHTML = concat(raw);
+  }
+
+  apply(el: T): void {
+    if (el.shadowRoot) {
+      el.shadowRoot.append(this.#template.content.cloneNode(true));
+    }
   }
 }
 
-export function html(strings: TemplateStringsArray, ...values: any[]): HTMLResult {
+export function html<T extends HTMLElement>(
+  strings: TemplateStringsArray,
+  ...values: any[]
+): HTMLResult<T> {
   return new HTMLResult(strings, ...values);
 }
 
-export class CSSResult extends JoistShadowResult {
-  setup(root: ShadowRoot): void {
-    let sheet = new CSSStyleSheet();
-    sheet.replaceSync(concat(this.strings));
+export class CSSResult<T extends HTMLElement> implements ShadowResult<T> {
+  #sheet;
 
-    root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+  constructor(raw: TemplateStringsArray, ..._values: any[]) {
+    this.#sheet = new CSSStyleSheet();
+    this.#sheet.replaceSync(concat(raw));
+  }
+
+  apply(el: HTMLElement): void {
+    if (el.shadowRoot) {
+      el.shadowRoot.adoptedStyleSheets = [...el.shadowRoot.adoptedStyleSheets, this.#sheet];
+    }
   }
 }
 
-export function css(strings: TemplateStringsArray): CSSResult {
+export function css<T extends HTMLElement>(strings: TemplateStringsArray): CSSResult<T> {
   return new CSSResult(strings);
 }
 
