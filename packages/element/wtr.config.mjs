@@ -1,4 +1,5 @@
 export default {
+  rootDir: '../../',
   nodeResolve: {
     exportConditions: ['production']
   },
