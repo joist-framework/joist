@@ -1,10 +1,10 @@
-import test from 'ava';
+import { assert } from 'chai';
 
 import { Applicator } from './applicator.js';
 import { NoopTemplateCache } from './template-cache.js';
 import { TemplateLoader } from './template-loader.js';
 
-test('should apply declarative shadow dom to specified elements', async (t) => {
+it('should apply declarative shadow dom to specified elements', async () => {
   class MockTemplateLoader implements TemplateLoader {
     loadCSS(tag: string): Promise<string | null> {
       return Promise.resolve(`:host { content: 'css for ${tag}' }`);
@@ -30,7 +30,7 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
 
   const res = await applicator.apply(document, ['mock-header', 'mock-content', 'mock-footer']);
 
-  t.is(
+  assert.equal(
     trim(res),
     trim(`
     <html>
@@ -63,7 +63,7 @@ test('should apply declarative shadow dom to specified elements', async (t) => {
   );
 });
 
-test('should apply declarative shadow dom recursively', async (t) => {
+it('should apply declarative shadow dom recursively', async () => {
   class MockTemplateLoader implements TemplateLoader {
     async loadCSS(tag: string): Promise<string | null> {
       return `:host { content: 'css for ${tag}' }`;
@@ -88,7 +88,7 @@ test('should apply declarative shadow dom recursively', async (t) => {
 
   const res = await applicator.apply(document, ['mock-foo', 'mock-bar', 'mock-baz']);
 
-  t.is(
+  assert.equal(
     trim(res),
     trim(`
     <html>

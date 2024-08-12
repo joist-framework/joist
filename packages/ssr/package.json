@@ -49,7 +49,7 @@
       ]
     },
     "test": {
-      "command": "ava target/**/*.test.js",
+      "command": "mocha target/**/*.test.js",
       "files": [
         "target/**"
       ],
