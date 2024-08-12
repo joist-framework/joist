@@ -43,13 +43,13 @@ function updateNodes(el: HTMLElement, nodes: NodeMap) {
 }
 
 function initializeNodes(el: HTMLElement, nodes: NodeMap, options?: TemplateOpts) {
-  const iterator = document.createNodeIterator(
+  const iterator = document.createTreeWalker(
     el.shadowRoot!,
-    NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
+    NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT
   );
 
   while (iterator.nextNode()) {
-    trackNode(el, iterator.referenceNode, nodes, options);
+    trackNode(el, iterator.currentNode, nodes, options);
   }
 }
 
@@ -61,16 +61,14 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap, options?: Templa
 
   switch (node.nodeType) {
     case Node.COMMENT_NODE: {
-      const commentNode = node as Comment;
-
-      if (commentNode.nodeValue) {
-        const nodeValue = commentNode.nodeValue.trim();
+      if (node.nodeValue) {
+        const nodeValue = node.nodeValue.trim();
 
         if (nodeValue.startsWith(tokenPrefix)) {
           const propertyKey = nodeValue.replace(tokenPrefix, '');
           const textNode = document.createTextNode(Reflect.get(el, propertyKey));
 
-          commentNode.replaceWith(textNode);
+          (node as Element).after(textNode);
 
           nodes.set(textNode, propertyKey);
         }
@@ -80,14 +78,14 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap, options?: Templa
     }
 
     case Node.ELEMENT_NODE: {
-      const elementNode = node as Element;
-
-      for (let attr of elementNode.attributes) {
+      for (let attr of (node as Element).attributes) {
         const nodeValue = attr.value.trim();
 
         if (nodeValue.startsWith(tokenPrefix)) {
           const propertyKey = nodeValue.replace(tokenPrefix, '');
+
           attr.value = Reflect.get(el, propertyKey);
+
           nodes.set(attr, propertyKey);
         }
       }

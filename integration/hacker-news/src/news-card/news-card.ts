@@ -59,7 +59,7 @@ import { observe, effect } from '@joist/observable';
             <!--#:author-->
           </span>
 
-          <span #:bind="comments">
+          <span>
             <!--#:comments-->
             comments
           </span>
