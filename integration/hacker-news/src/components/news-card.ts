@@ -90,7 +90,7 @@ export class HnNewsCard extends HTMLElement {
   accessor author = '';
 
   get host() {
-    if (this.href) {
+    if (this.href.length) {
       return new URL(this.href).hostname;
     }
 

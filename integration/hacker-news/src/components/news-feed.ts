@@ -1,12 +1,12 @@
-import '../loading/loading.js';
-import '../news-card/news-card.js';
+import './loading.js';
+import './news-card.js';
 
 import { css, element, html, query } from '@joist/element';
 import { inject, injectable } from '@joist/di';
 
 import { HnService } from '../services/hn.service.js';
-import { HnNewsCard } from '../news-card/news-card.js';
-import { HnLoadingElement } from '../loading/loading.js';
+import { HnNewsCard } from './news-card.js';
+import { HnLoadingElement } from './loading.js';
 
 @injectable()
 @element({

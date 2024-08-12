@@ -39,6 +39,6 @@ export class HnService {
     url.searchParams.set('limitToFirst', count.toString());
     url.searchParams.set('orderBy', '"$key"');
 
-    return http.fetch(url).then<string[]>((res) => res.json());
+    return http.fetchJson<string[]>(url);
   }
 }
