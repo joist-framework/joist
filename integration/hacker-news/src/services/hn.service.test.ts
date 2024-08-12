@@ -9,16 +9,20 @@ it('should run', async () => {
     {
       provide: HttpService,
       use: class extends HttpService {
+        id = 0;
+
         async fetch(input: URL, _init?: RequestInit): Promise<Response> {
-          if (
-            input.toString().startsWith('https://hacker-news.firebaseio.com/v0/beststories.json')
-          ) {
+          const url = new URL(input);
+
+          if (url.pathname === '/v0/beststories.json') {
             return Response.json([0, 1, 2, 3, 4]);
-          } else if (input.toString().startsWith('https://hacker-news.firebaseio.com/v0/item/')) {
+          } else if (url.pathname.startsWith('/v0/item/')) {
+            this.id++;
+
             return Response.json({
               by: 'A_D_E_P_T',
               descendants: 191,
-              id: 41201555,
+              id: this.id,
               kids: [],
               score: 942,
               time: 1723209543,
@@ -38,5 +42,8 @@ it('should run', async () => {
 
   const res = await hn.getTopStories();
 
-  assert.equal(res.length, 5);
+  assert.deepStrictEqual(
+    res.map((item) => item.id),
+    [1, 2, 3, 4, 5]
+  );
 });
