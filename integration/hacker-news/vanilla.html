@@ -1,0 +1,447 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="dns-prefetch" href="https://hacker-news.firebaseio.com" />
+
+    <title>Counter</title>
+  </head>
+
+  <body>
+    <style>
+      body {
+        background-color: rgb(246, 246, 239);
+        padding: 0;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.4em;
+      }
+
+      header {
+        background: rgb(255, 102, 0);
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        font-size: 1rem;
+        margin: 0;
+        padding: 0.5rem;
+      }
+
+      header nav {
+        display: flex;
+        align-items: center;
+      }
+
+      header img {
+        border: solid 1px #ffffff;
+        margin: 0.5rem;
+      }
+
+      header a {
+        color: #000;
+        font-size: 10pt;
+        text-decoration: none;
+        padding: 0.5rem;
+      }
+
+      header a:visited {
+        color: #000;
+      }
+
+      header a:hover {
+        text-decoration: underline;
+      }
+
+      hn-news-card {
+        padding: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      hn-news-card a {
+        color: #000;
+        text-decoration: none;
+      }
+
+      hn-news-card a:visited {
+        text-decoration: none;
+      }
+
+      hn-news-card #title {
+        font-size: 1.1em;
+      }
+
+      hn-news-card .details {
+        color: #716f6f;
+        display: flex;
+        gap: 1rem;
+      }
+    </style>
+
+    <header>
+      <img src="/images/y18.svg" aria-hidden="true" height="20" width="20" />
+
+      <h1>Hacker News</h1>
+
+      <nav>
+        <a href="#:href"> new </a>
+
+        <a href="#:href"> past </a>
+
+        <a href="#:href"> comments </a>
+
+        <a href="#:href"> ask </a>
+
+        <a href="#:href"> show </a>
+
+        <a href="#:href"> jobs </a>
+
+        <a href="#:href"> submit </a>
+      </nav>
+    </header>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+
+    <hn-news-card>
+      <div id="number">
+        <span>2</span>
+      </div>
+
+      <div>
+        <div class="title-box">
+          <a id="title" href="#" target="_blank">
+            <span>Apple's requirements are about to hit creators and fans on Patreon</span>
+          </a>
+
+          <a id="host" href="#" target="_blank"></a>
+        </div>
+
+        <div class="details">
+          <span>
+            <span slot="points">1148</span>
+            points
+          </span>
+
+          <span>
+            by
+            <span slot="author">miiiiiike</span>
+          </span>
+
+          <span>
+            <span slot="comments">117</span>
+            comments
+          </span>
+        </div>
+      </div>
+    </hn-news-card>
+  </body>
+</html>
