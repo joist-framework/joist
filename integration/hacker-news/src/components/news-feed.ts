@@ -40,7 +40,7 @@ export class HnNewsFeed extends HTMLElement {
     let number = 1;
 
     for (let value of stories) {
-      const card = document.createElement('hn-news-card') as HnNewsCard;
+      const card = new HnNewsCard();
 
       card.number = number;
       card.innerHTML = value.title;

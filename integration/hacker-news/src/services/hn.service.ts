@@ -18,7 +18,7 @@ export interface HnItem {
 export class HnService {
   #http = inject(HttpService);
 
-  getTopStories(count = 1) {
+  getTopStories(count = 15) {
     const http = this.#http();
 
     return this.getTopStoryIds(count).then((res) => {

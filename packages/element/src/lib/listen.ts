@@ -2,7 +2,7 @@ import { ListenerRootSelector, metadataStore } from './metadata.js';
 
 export function listen<This extends HTMLElement>(event: string, root?: ListenerRootSelector) {
   return function listenDecorator(
-    value: (e: Event) => void,
+    value: <T extends Event>(e: T) => void,
     ctx: ClassMethodDecoratorContext<This>
   ) {
     const metadata = metadataStore.read(ctx.metadata);

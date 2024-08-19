@@ -29,10 +29,6 @@ import { observe, effect } from '@joist/observable';
         display: flex;
         gap: 1rem;
       }
-
-      [data-hide='true'] {
-        display: none;
-      }
     `,
     html`
       <div id="number">
@@ -45,24 +41,24 @@ import { observe, effect } from '@joist/observable';
             <slot></slot>
           </a>
 
-          <a #:hidden="!href" href="#:href" target="_blank"> (<!--#:host-->) </a>
+          <a #:hidden="!href" href="#:href" target="_blank">(<!--#:host-->)</a>
         </div>
 
         <div class="details">
-          <span>
+          <div class="detils-section">
             <!--#:points-->
             points
-          </span>
+          </div>
 
-          <span>
+          <div class="detils-section">
             by
             <!--#:author-->
-          </span>
+          </div>
 
-          <span>
+          <div class="detils-section">
             <!--#:comments-->
             comments
-          </span>
+          </div>
         </div>
       </div>
     `
@@ -90,11 +86,11 @@ export class HnNewsCard extends HTMLElement {
   accessor author = '';
 
   get host() {
-    if (this.href.length) {
+    try {
       return new URL(this.href).hostname;
+    } catch {
+      return '';
     }
-
-    return '';
   }
 
   #render = template();
@@ -108,4 +104,6 @@ export class HnNewsCard extends HTMLElement {
   onPropChange() {
     this.#render();
   }
+
+  assign() {}
 }

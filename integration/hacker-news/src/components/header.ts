@@ -1,4 +1,4 @@
-import { attr, css, element, html } from '@joist/element';
+import { attr, css, element, html, template } from '@joist/element';
 
 @element({
   tagName: 'hn-header',
@@ -28,7 +28,7 @@ import { attr, css, element, html } from '@joist/element';
       }
     `,
     html`
-      <img src="/images/y18.svg" aria-hidden="true" height="20" width="20" />
+      <img src="#:img" aria-hidden="true" height="20" width="20" />
 
       <h1>Hacker News</h1>
 
@@ -41,4 +41,13 @@ import { attr, css, element, html } from '@joist/element';
 export class HnHeader extends HTMLElement {
   @attr()
   accessor role = 'banner';
+
+  @attr()
+  accessor img = '/images/y18.svg';
+
+  #render = template();
+
+  attributeChangedCallback() {
+    this.#render();
+  }
 }
