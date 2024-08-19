@@ -45,7 +45,7 @@ import { observe, effect } from '@joist/observable';
             <slot></slot>
           </a>
 
-          <a #:hidden="hideHost" href="#:href" target="_blank"> (<!--#:host-->) </a>
+          <a #:hidden="!href" href="#:href" target="_blank"> (<!--#:host-->) </a>
         </div>
 
         <div class="details">
@@ -95,10 +95,6 @@ export class HnNewsCard extends HTMLElement {
     }
 
     return '';
-  }
-
-  get hideHost() {
-    return !!this.href;
   }
 
   #render = template();

@@ -1,12 +1,12 @@
 const TOKEN_PREFIX = '#:';
 
+class NodeMap extends Map<Node, string> {}
+
 export interface TemplateOpts {}
 
 export interface RenderOpts {
   refresh?: boolean;
 }
-
-class NodeMap extends Map<Node, string> {}
 
 export function template(_templateOpts?: TemplateOpts) {
   // make sure we only initialize once
@@ -15,7 +15,7 @@ export function template(_templateOpts?: TemplateOpts) {
   // Track all nodes that can be updated and their associated property
   const nodes = new NodeMap();
 
-  return function (this: HTMLElement, renderOpts?: RenderOpts) {
+  return function render<T extends HTMLElement>(this: T, renderOpts?: RenderOpts) {
     if (renderOpts?.refresh) {
       initialized = false;
       nodes.clear();
@@ -32,27 +32,9 @@ export function template(_templateOpts?: TemplateOpts) {
   };
 }
 
-function updateNodes(el: HTMLElement, nodes: NodeMap) {
-  for (let [node, prop] of nodes) {
-    const value = Reflect.get(el, prop);
-
-    if (node instanceof Attr && node.name.startsWith(TOKEN_PREFIX)) {
-      const realAttributeName = node.name.replace(TOKEN_PREFIX, '');
-
-      if (value) {
-        node.ownerElement?.setAttribute(realAttributeName, '');
-      } else {
-        node.ownerElement?.removeAttribute(realAttributeName);
-      }
-    } else if (value !== node.nodeValue) {
-      node.nodeValue = value;
-    }
-  }
-}
-
 function initializeNodes(el: HTMLElement, nodes: NodeMap) {
   const iterator = document.createTreeWalker(
-    el.shadowRoot!,
+    el.shadowRoot || el,
     NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT
   );
 
@@ -61,6 +43,20 @@ function initializeNodes(el: HTMLElement, nodes: NodeMap) {
 
     if (res !== null) {
       iterator.currentNode = res;
+    }
+  }
+}
+
+function updateNodes(el: HTMLElement, nodes: NodeMap) {
+  for (let [node, prop] of nodes) {
+    const value = Reflect.get(el, prop);
+
+    const isAttribute = node.nodeType === Node.ATTRIBUTE_NODE;
+
+    if (isAttribute && isBooleanAttributeNode(node as Attr)) {
+      manageBooleanAttribute(el, node as Attr);
+    } else if (value !== node.nodeValue) {
+      node.nodeValue = value;
     }
   }
 }
@@ -74,14 +70,16 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap): Node | null {
       const nodeValue = node.nodeValue?.trim();
 
       if (nodeValue?.startsWith(TOKEN_PREFIX)) {
-        const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
-        const textNode = document.createTextNode(Reflect.get(el, propertyKey));
+        if (node.parentNode) {
+          const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
+          const textNode = document.createTextNode(Reflect.get(el, propertyKey));
 
-        node.parentElement?.replaceChild(textNode, node);
+          node.parentNode.replaceChild(textNode, node);
 
-        nodes.set(textNode, propertyKey);
+          nodes.set(textNode, propertyKey);
 
-        return textNode;
+          return textNode;
+        }
       }
 
       break;
@@ -93,13 +91,8 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap): Node | null {
       for (let attr of element.attributes) {
         const nodeValue = attr.value.trim();
 
-        if (attr.name.startsWith(TOKEN_PREFIX)) {
-          const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
-          const realAttribute = document.createAttribute(realAttributeName);
-
-          if (Reflect.get(el, attr.value)) {
-            attr.ownerElement?.setAttributeNode(realAttribute);
-          }
+        if (isBooleanAttributeNode(attr)) {
+          manageBooleanAttribute(el, attr);
 
           nodes.set(attr, attr.value);
         } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
@@ -116,4 +109,24 @@ function trackNode(el: HTMLElement, node: Node, nodes: NodeMap): Node | null {
   }
 
   return null;
+}
+
+function isBooleanAttributeNode(attr: Attr) {
+  return attr.name.startsWith(TOKEN_PREFIX);
+}
+
+function manageBooleanAttribute(el: HTMLElement, attr: Attr) {
+  const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
+
+  if (attr.ownerElement) {
+    let value = attr.value.startsWith('!')
+      ? !Reflect.get(el, attr.value.replace('!', ''))
+      : Reflect.get(el, attr.value);
+
+    if (value) {
+      attr.ownerElement.setAttribute(realAttributeName, '');
+    } else {
+      attr.ownerElement.removeAttribute(realAttributeName);
+    }
+  }
 }
