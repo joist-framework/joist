@@ -5,7 +5,7 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
   _ctx: ClassDecoratorContext
 ) {
-  return class InjectablElementeNode extends Base {
+  return class InjectablElement extends Base {
     constructor(..._: any[]) {
       super();
 

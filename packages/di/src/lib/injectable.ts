@@ -11,7 +11,7 @@ export function injectable(opts?: InjectableOpts) {
     Base: T,
     ctx: ClassDecoratorContext
   ) {
-    class InjectableNode extends Base {
+    class Injectable extends Base {
       constructor(..._: any[]) {
         super();
 
@@ -22,10 +22,10 @@ export function injectable(opts?: InjectableOpts) {
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
     if ('HTMLElement' in globalThis) {
       if (HTMLElement.prototype.isPrototypeOf(Base.prototype)) {
-        return injectableEl(InjectableNode, ctx);
+        return injectableEl(Injectable, ctx);
       }
     }
 
-    return InjectableNode;
+    return Injectable;
   };
 }
