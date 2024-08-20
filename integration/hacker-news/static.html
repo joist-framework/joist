@@ -1,0 +1,194 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="dns-prefetch" href="https://hacker-news.firebaseio.com" />
+
+    <title>Counter</title>
+  </head>
+
+  <body>
+    <style>
+      body {
+        background-color: rgb(246, 246, 239);
+        padding: 0;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.4em;
+      }
+
+      :not(:defined) {
+        visibility: hidden;
+      }
+    </style>
+
+    <hn-header>
+      <hn-header-link href="/new">new</hn-header-link>
+      <hn-header-link href="/new">past</hn-header-link>
+      <hn-header-link href="/new">comments</hn-header-link>
+      <hn-header-link href="/new">ask</hn-header-link>
+      <hn-header-link href="/new">show</hn-header-link>
+      <hn-header-link href="/new">jobs</hn-header-link>
+      <hn-header-link href="/new">submit</hn-header-link>
+    </hn-header>
+
+    <hn-news-card number="1" author="Bluestein" comments="75" points="1074" href="https://mpv.io/">
+      Mpv – A free, open-source, and cross-platform media player
+    </hn-news-card>
+
+    <hn-news-card
+      number="2"
+      author="wut42"
+      comments="66"
+      points="850"
+      href="https://torrentfreak.com/kim-dotcoms-extradition-to-the-u-s-given-green-light-by-new-zealand-240815/"
+    >
+      Kim Dotcom's extradition to the U.S. given green light by New Zealand
+    </hn-news-card>
+
+    <hn-news-card
+      number="3"
+      author="throwup238"
+      comments="30"
+      points="814"
+      href="https://reason.com/2024/08/16/police-cannot-seize-property-indefinitely-after-an-arrest-federal-court-rules/"
+    >
+      Police cannot seize property indefinitely after an arrest, federal court rules
+    </hn-news-card>
+
+    <hn-news-card
+      number="4"
+      author="tosh"
+      comments="47"
+      points="802"
+      href="https://github.com/magic-wormhole/magic-wormhole"
+    >
+      Magic Wormhole: get things from one computer to another, safely
+    </hn-news-card>
+
+    <hn-news-card
+      number="5"
+      author="faebi"
+      comments="36"
+      points="590"
+      href="https://twitter.com/organicmapsapp/status/1824727403580596260"
+    >
+      Google removed Organic Maps from the Play Store
+    </hn-news-card>
+
+    <hn-news-card
+      number="6"
+      author="darknavi"
+      comments="27"
+      points="582"
+      href="https://github.com/wasi-master/13ft"
+    >
+      13ft – A site similar to 12ft.io but self-hosted
+    </hn-news-card>
+
+    <hn-news-card
+      number="7"
+      author="novocantico"
+      comments="39"
+      points="534"
+      href="https://vanillajsx.com/"
+    >
+      VanillaJSX.com
+    </hn-news-card>
+
+    <hn-news-card
+      number="8"
+      author="todsacerdoti"
+      comments="64"
+      points="511"
+      href="https://emnudge.dev/blog/markov-chains-are-funny/"
+    >
+      Markov chains are funnier than LLMs
+    </hn-news-card>
+
+    <hn-news-card
+      number="9"
+      author="miles"
+      comments="40"
+      points="487"
+      href="https://www.csoonline.com/article/3480918/design-flaw-has-microsoft-authenticator-overwriting-mfa-accounts-locking-users-out.html"
+    >
+      Flaw has Microsoft Authenticator overwriting MFA accounts, locking users out
+    </hn-news-card>
+
+    <hn-news-card
+      number="10"
+      author="pzmarzly"
+      comments="18"
+      points="477"
+      href="https://fortune.com/europe/2024/08/14/x-ordered-to-pay-550000-to-irish-employee-fired-for-not-replying-to-elon-musk-yes-or-resign-extremely-hardcore-ultimatum/"
+    >
+      X ordered to pay €550k to Irish employee fired after yes-or-resign ultimatum
+    </hn-news-card>
+
+    <hn-news-card
+      number="11"
+      author="edward"
+      comments="24"
+      points="476"
+      href="https://github.com/TomWright/dasel"
+    >
+      Dasel: Select, put and delete data from JSON, TOML, YAML, XML and CSV
+    </hn-news-card>
+
+    <hn-news-card
+      number="12"
+      author="mathgenius"
+      comments="34"
+      points="463"
+      href="https://golem.ph.utexas.edu/category/2024/08/galois_theory.html"
+    >
+      Galois Theory
+    </hn-news-card>
+
+    <hn-news-card
+      number="13"
+      author="yawboakye"
+      comments="12"
+      points="461"
+      href="https://discrete.openmathbooks.org/dmoi4.html"
+    >
+      Discrete Mathematics – An Open Introduction, 4th edition
+    </hn-news-card>
+
+    <hn-news-card
+      number="14"
+      author="mfiguiere"
+      comments="49"
+      points="442"
+      href="https://www.matthewball.co/all/roblox2024"
+    >
+      Roblox is the biggest game in the world, but is unprofitable
+    </hn-news-card>
+
+    <hn-news-card
+      number="15"
+      author="ahubert"
+      comments="37"
+      points="431"
+      href="https://berthub.eu/articles/posts/the-gigantic-unregulated-power-plants-in-the-cloud/"
+    >
+      The gigantic and unregulated power plants in the cloud
+    </hn-news-card>
+
+    <script type="module" src="./target/components/header.js"></script>
+    <script type="module" src="./target/components/header-link.js"></script>
+    <script type="module" src="./target/components/news-card.js"></script>
+  </body>
+</html>

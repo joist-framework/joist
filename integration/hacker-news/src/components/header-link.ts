@@ -33,7 +33,7 @@ import { attr, css, element, html, template } from '@joist/element';
 })
 export class HnHeader extends HTMLElement {
   @attr()
-  accessor href = 'header';
+  accessor href = '#';
 
   #update = template();
 
