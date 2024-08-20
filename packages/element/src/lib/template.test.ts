@@ -19,9 +19,9 @@ const TESTS = [
         </ul>
       `;
 
-      const render = template();
+      const render = template().bind(el);
 
-      render.call(el);
+      render();
 
       assert.equal(
         root.innerHTML
@@ -41,9 +41,9 @@ const TESTS = [
         <ul aria-label="#:ariaLabel" aria-description="#:ariaDescription"></ul>
       `;
 
-      const render = template();
+      const render = template().bind(el);
 
-      render.call(el);
+      render();
 
       assert.equal(
         root.innerHTML
@@ -51,6 +51,40 @@ const TESTS = [
           .map((res) => res.trim())
           .join(''),
         '<ul aria-label="This is the label" aria-description="This is the description"></ul>'
+      );
+    });
+  },
+  function customGetter(el: HTMLElement, root: HTMLElement | ShadowRoot) {
+    it(`should use custom getter for values ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
+      const data: Record<string, string> = {
+        title: 'Hello World',
+        ariaLabel: 'This is the label',
+        ariaDescription: 'This is the description'
+      };
+
+      root.innerHTML = /*html*/ `
+        <span #:bind="title"></span>
+        
+        <ul>
+          <li><span #:bind="ariaLabel"></span></li>
+          <li><span #:bind="ariaDescription"></span></li>
+        </ul>
+      `;
+
+      const render = template({
+        value(key) {
+          return data[key];
+        }
+      }).bind(el);
+
+      render();
+
+      assert.equal(
+        root.innerHTML
+          .split('\n')
+          .map((res) => res.trim())
+          .join(''),
+        '<span #:bind="title">Hello World</span><ul><li><span #:bind="ariaLabel">This is the label</span></li><li><span #:bind="ariaDescription">This is the description</span></li></ul>'
       );
     });
   }
