@@ -71,11 +71,7 @@ const TESTS = [
         </ul>
       `;
 
-      const render = template({
-        value(key) {
-          return data[key];
-        }
-      }).bind(el);
+      const render = template({ value: (key) => data[key] }).bind(el);
 
       render();
 

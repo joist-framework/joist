@@ -30,9 +30,7 @@ import { css, html, listen, attr, element, template } from '@joist/element';
     `,
     html`
       <button id="dec">-</button>
-      <div id="value">
-        <!--#:value-->
-      </div>
+      <div id="value" #:bind="value"></div>
       <button id="inc">+</button>
     `
   ]
@@ -41,10 +39,10 @@ export class CounterElement extends HTMLElement {
   @attr()
   accessor value = 0;
 
-  #update = template();
+  #render = template();
 
   attributeChangedCallback() {
-    this.#update();
+    this.#render();
   }
 
   @listen('click')
