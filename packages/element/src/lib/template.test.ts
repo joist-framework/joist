@@ -5,17 +5,17 @@ import { template } from './template.js';
 // Run all tests with both shadow and light dom
 const TESTS = [
   function comments(el: HTMLElement, root: HTMLElement | ShadowRoot) {
-    it(`should intialize template comments ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
+    it(`should intialize bindable nodes ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
       el.title = 'Hello World';
       el.ariaLabel = 'This is the label';
       el.ariaDescription = 'This is the description';
 
       root.innerHTML = /*html*/ `
-        <!--#:title-->
+        <span #:bind="title"></span>
         
         <ul>
-          <li><!--#:ariaLabel--></li>
-          <li><!--#:ariaDescription--></li>
+          <li><span #:bind="ariaLabel"></span></li>
+          <li><span #:bind="ariaDescription"></span></li>
         </ul>
       `;
 
@@ -28,7 +28,7 @@ const TESTS = [
           .split('\n')
           .map((res) => res.trim())
           .join(''),
-        'Hello World<ul><li>This is the label</li><li>This is the description</li></ul>'
+        '<span #:bind="title">Hello World</span><ul><li><span #:bind="ariaLabel">This is the label</span></li><li><span #:bind="ariaDescription">This is the description</span></li></ul>'
       );
     });
   },

@@ -2,44 +2,46 @@ const TOKEN_PREFIX = '#:';
 
 class NodeMap extends Map<Node, string> {}
 
-export interface TemplateOpts {}
+type TemplateValueGetter = (key: string) => string;
+
+export interface TemplateOpts {
+  value?: TemplateValueGetter;
+}
 
 export interface RenderOpts {
   refresh?: boolean;
 }
 
-export function template(_templateOpts?: TemplateOpts) {
-  // make sure we only initialize once
-  let initialized = false;
-
+export function template(templateOpts?: TemplateOpts) {
   // Track all nodes that can be updated and their associated property
   const nodes = new NodeMap();
 
+  let getter: ((key: string) => string) | null = null;
+
+  // the first time this function is all it initializes all nodes
+  // the second time it updates exisitng nodes
   return function render<T extends HTMLElement>(this: T, renderOpts?: RenderOpts) {
     if (renderOpts?.refresh) {
-      initialized = false;
+      getter = null;
       nodes.clear();
     }
 
-    if (initialized) {
-      return updateNodes(this, nodes);
+    if (getter) {
+      updateNodes(nodes, getter);
+    } else {
+      getter = templateOpts?.value ?? ((key: string) => String(Reflect.get(this, key)));
+
+      // find and track nodes
+      initializeNodes(this, nodes, getter);
     }
-
-    // find and track nodes
-    initializeNodes(this, nodes);
-
-    initialized = true;
   };
 }
 
-function initializeNodes(el: HTMLElement, nodes: NodeMap) {
-  const iterator = document.createTreeWalker(
-    el.shadowRoot || el,
-    NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT
-  );
+function initializeNodes(el: HTMLElement, nodes: NodeMap, getter: TemplateValueGetter) {
+  const iterator = document.createTreeWalker(el.shadowRoot || el, NodeFilter.SHOW_ELEMENT);
 
   while (iterator.nextNode()) {
-    const res = trackNode(el, iterator.currentNode, nodes);
+    const res = trackNode(iterator.currentNode, nodes, getter);
 
     if (res !== null) {
       iterator.currentNode = res;
@@ -47,16 +49,16 @@ function initializeNodes(el: HTMLElement, nodes: NodeMap) {
   }
 }
 
-function updateNodes(el: HTMLElement, nodes: NodeMap) {
+function updateNodes(nodes: NodeMap, getter: TemplateValueGetter) {
   for (let [node, prop] of nodes) {
-    const value = Reflect.get(el, prop);
+    const value = getter(prop);
 
     const isAttribute = node.nodeType === Node.ATTRIBUTE_NODE;
 
     if (isAttribute && isBooleanAttributeNode(node as Attr)) {
-      manageBooleanAttribute(el, node as Attr);
+      manageBooleanAttribute(node as Attr, getter);
     } else if (value !== node.nodeValue) {
-      node.nodeValue = value;
+      node.textContent = value;
     }
   }
 }
@@ -64,47 +66,28 @@ function updateNodes(el: HTMLElement, nodes: NodeMap) {
 /**
  * configures and tracks a given Node so that it can be updated in place later.
  */
-function trackNode(el: HTMLElement, node: Node, nodes: NodeMap): Node | null {
-  switch (node.nodeType) {
-    case Node.COMMENT_NODE: {
-      const nodeValue = node.nodeValue?.trim();
+function trackNode(node: Node, nodes: NodeMap, getter: TemplateValueGetter): Node | null {
+  const element = node as Element;
 
-      if (nodeValue?.startsWith(TOKEN_PREFIX)) {
-        if (node.parentNode) {
-          const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
-          const textNode = document.createTextNode(Reflect.get(el, propertyKey));
+  for (let attr of element.attributes) {
+    if (attr.name.startsWith(`${TOKEN_PREFIX}bind`)) {
+      element.textContent = getter(attr.value);
 
-          node.parentNode.replaceChild(textNode, node);
+      nodes.set(element, attr.value);
+    } else {
+      const nodeValue = attr.value.trim();
 
-          nodes.set(textNode, propertyKey);
+      if (isBooleanAttributeNode(attr)) {
+        manageBooleanAttribute(attr, getter);
 
-          return textNode;
-        }
+        nodes.set(attr, attr.value);
+      } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
+        const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
+
+        attr.value = getter(propertyKey);
+
+        nodes.set(attr, propertyKey);
       }
-
-      break;
-    }
-
-    case Node.ELEMENT_NODE: {
-      const element = node as Element;
-
-      for (let attr of element.attributes) {
-        const nodeValue = attr.value.trim();
-
-        if (isBooleanAttributeNode(attr)) {
-          manageBooleanAttribute(el, attr);
-
-          nodes.set(attr, attr.value);
-        } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
-          const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
-
-          attr.value = Reflect.get(el, propertyKey);
-
-          nodes.set(attr, propertyKey);
-        }
-      }
-
-      break;
     }
   }
 
@@ -115,13 +98,13 @@ function isBooleanAttributeNode(attr: Attr) {
   return attr.name.startsWith(TOKEN_PREFIX);
 }
 
-function manageBooleanAttribute(el: HTMLElement, attr: Attr) {
+function manageBooleanAttribute(attr: Attr, getter: TemplateValueGetter) {
   const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
 
   if (attr.ownerElement) {
     let value = attr.value.startsWith('!')
-      ? !Reflect.get(el, attr.value.replace('!', ''))
-      : Reflect.get(el, attr.value);
+      ? !getter(attr.value.replace('!', ''))
+      : getter(attr.value);
 
     if (value) {
       attr.ownerElement.setAttribute(realAttributeName, '');

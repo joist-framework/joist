@@ -31,9 +31,7 @@ import { observe, effect } from '@joist/observable';
       }
     `,
     html`
-      <div id="number">
-        <!--#:number-->
-      </div>
+      <div id="number" #:bind="number"></div>
 
       <div>
         <div class="title-box">
@@ -41,22 +39,22 @@ import { observe, effect } from '@joist/observable';
             <slot></slot>
           </a>
 
-          <a #:hidden="!href" href="#:href" target="_blank">(<!--#:host-->)</a>
+          <a #:hidden="!href" href="#:href" target="_blank"> (<span #:bind="host"></span>) </a>
         </div>
 
         <div class="details">
           <div class="detils-section">
-            <!--#:points-->
+            <span #:bind="points"></span>
             points
           </div>
 
           <div class="detils-section">
             by
-            <!--#:author-->
+            <span #:bind="author"></span>
           </div>
 
           <div class="detils-section">
-            <!--#:comments-->
+            <span #:bind="comments"></span>
             comments
           </div>
         </div>
@@ -104,6 +102,4 @@ export class HnNewsCard extends HTMLElement {
   onPropChange() {
     this.#render();
   }
-
-  assign() {}
 }
