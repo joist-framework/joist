@@ -6,11 +6,11 @@ export interface AttrDef {
   observe: boolean;
 }
 
-export type ListenerRootSelector = (el: HTMLElement) => HTMLElement | ShadowRoot;
+export type ListenerSelector = (el: HTMLElement) => HTMLElement | ShadowRoot;
 
 export class ElementMetadata {
   attrs: AttrDef[] = [];
-  listeners = new Map<string, { cb: (e: Event) => void; root: ListenerRootSelector }>();
+  listeners = new Map<string, { cb: (e: Event) => void; selector: ListenerSelector }>();
   onReady = new Set<Function>();
 }
 
