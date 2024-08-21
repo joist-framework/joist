@@ -43,7 +43,7 @@ export class HnHeader extends HTMLElement {
   accessor role = 'banner';
 
   @attr()
-  accessor img = '/images/y18.svg';
+  accessor img = '/public/images/y18.svg';
 
   #render = template();
 

@@ -8,31 +8,17 @@
   "license": "MIT",
   "scripts": {
     "start": "wireit",
-    "preview": "wireit",
     "build": "wireit"
   },
   "wireit": {
     "start": {
-      "command": "vite",
+      "command": "browser-sync start --config=browser-sync.js",
       "service": true,
       "dependencies": [
         {
           "script": "build",
           "cascade": false
         }
-      ]
-    },
-    "bundle": {
-      "command": "vite build",
-      "dependencies": [
-        "build"
-      ]
-    },
-    "preview": {
-      "command": "vite preview",
-      "service": true,
-      "dependencies": [
-        "bundle"
       ]
     },
     "build": {
