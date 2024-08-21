@@ -4,13 +4,18 @@
   <head>
     <meta charset="UTF-8" />
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="dns-prefetch" href="https://hacker-news.firebaseio.com" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@joist/element": "/node_modules/@joist/element/target/lib.js",
+          "@joist/element/": "/node_modules/@joist/element/target/lib/"
+        }
+      }
+    </script>
 
-    <title>Counter</title>
+    <title>Template Test</title>
   </head>
 
   <body>
@@ -48,12 +53,16 @@
       };
 
       const render = template({
-        value(key) {
-          return getTemplateValue(data, key);
-        }
+        value: (key) => getTemplateValue(data, key)
       }).bind(document.body);
 
       render();
+
+      setTimeout(() => {
+        data.hideList = true;
+
+        render();
+      }, 5000);
     </script>
   </body>
 </html>
