@@ -48,17 +48,6 @@
       ]
     },
     "build": {
-      "command": "tsc --build --pretty",
-      "clean": "if-file-deleted",
-      "files": [
-        "src/**",
-        "tsconfig.json",
-        "../../tsconfig.json"
-      ],
-      "output": [
-        "target/**",
-        "tsconfig.tsbuildinfo"
-      ],
       "dependencies": [
         "../../packages/element:build",
         "../../packages/di:build",
