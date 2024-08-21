@@ -29,7 +29,7 @@ export function template(templateOpts?: TemplateOpts) {
     if (getter) {
       updateNodes(nodes, getter);
     } else {
-      getter = templateOpts?.value ?? ((key: string) => String(Reflect.get(this, key)));
+      getter = templateOpts?.value ?? ((key: string) => getTemplateValue(this, key));
 
       // find and track nodes
       initializeNodes(this, nodes, getter);
@@ -112,4 +112,16 @@ function manageBooleanAttribute(attr: Attr, getter: TemplateValueGetter) {
       attr.ownerElement.removeAttribute(realAttributeName);
     }
   }
+}
+
+export function getTemplateValue(obj: object, key: string) {
+  const parsed = key.split('.');
+
+  let pointer: any = obj;
+
+  for (let part of parsed) {
+    pointer = pointer[part];
+  }
+
+  return pointer;
 }

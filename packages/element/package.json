@@ -9,7 +9,7 @@
       "import": "./target/lib.js"
     },
     "./*": {
-      "import": "./target/lib/*.js"
+      "import": "./target/lib"
     }
   },
   "files": [

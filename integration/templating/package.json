@@ -1,0 +1,69 @@
+{
+  "name": "@integration/templating",
+  "version": "3.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "author": "deebloo",
+  "license": "MIT",
+  "scripts": {
+    "start": "wireit",
+    "preview": "wireit",
+    "build": "wireit",
+    "test": "wireit"
+  },
+  "wireit": {
+    "start": {
+      "command": "vite",
+      "service": true,
+      "dependencies": [
+        {
+          "script": "build",
+          "cascade": false
+        }
+      ]
+    },
+    "bundle": {
+      "command": "vite build",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "preview": {
+      "command": "vite preview",
+      "service": true,
+      "dependencies": [
+        "bundle"
+      ]
+    },
+    "test": {
+      "command": "wtr --config wtr.config.mjs",
+      "files": [
+        "wtr.config.mjs",
+        "target/**"
+      ],
+      "output": [],
+      "dependencies": [
+        "build"
+      ]
+    },
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ],
+      "dependencies": [
+        "../../packages/element:build",
+        "../../packages/di:build",
+        "../../packages/observable:build"
+      ]
+    }
+  }
+}
