@@ -1,3 +1,5 @@
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+
 import { ConstructableToken, Provider } from './provider.js';
 import { injectables, Injector } from './injector.js';
 import { injectableEl } from './injectable-el.js';

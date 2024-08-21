@@ -1,5 +1,5 @@
-import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
-import { InjectionToken, Provider, StaticToken } from './provider.js';
+import { readMetadata } from './metadata.js';
+import { ConstructableToken, InjectionToken, Provider, StaticToken } from './provider.js';
 
 /**
  * Keeps track of all Injectable services and their Injector
@@ -41,7 +41,11 @@ export class Injector {
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token)!;
 
-      callLifecycle(instance, LifeCycle.onInject);
+      const metadata = readMetadata(token as ConstructableToken<T>);
+
+      if (metadata) {
+        callLifecycle(instance, metadata.onInjected);
+      }
 
       return instance;
     }
@@ -114,8 +118,12 @@ export class Injector {
        * this ensures that services are initialized when the chain is settled
        * this is required since the parent is set after the instance is constructed
        */
-      callLifecycle(instance, LifeCycle.onInit);
-      callLifecycle(instance, LifeCycle.onInject);
+      const metadata = readMetadata(token as ConstructableToken<T>);
+
+      if (metadata) {
+        callLifecycle(instance, metadata.onCreated);
+        callLifecycle(instance, metadata.onInjected);
+      }
     }
 
     return instance;
@@ -136,13 +144,12 @@ export class Injector {
   }
 }
 
-function callLifecycle(
-  instance: object & Partial<OnInit & OnInject>,
-  method: (typeof LifeCycle)[keyof typeof LifeCycle]
-) {
-  const lifecycle = instance[method];
-
-  if (lifecycle) {
-    lifecycle.call(instance);
+function callLifecycle(instance: object, methods?: unknown) {
+  if (Array.isArray(methods)) {
+    for (let cb of methods) {
+      if (typeof cb === 'function') {
+        cb.call(instance);
+      }
+    }
   }
 }

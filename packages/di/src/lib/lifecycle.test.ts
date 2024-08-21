@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
 import { Injector } from './injector.js';
-import { LifeCycle, OnInit, OnInject } from './lifecycle.js';
+import { injected, created } from './lifecycle.js';
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 
@@ -9,26 +9,28 @@ it('should call onInit and onInject when a service is first created', () => {
   const i = new Injector();
 
   @injectable()
-  class MyService implements OnInit, OnInject {
+  class MyService {
     res = {
-      onInit: 0,
-      onInject: 0
+      onCreated: 0,
+      onInjected: 0
     };
 
-    [LifeCycle.onInit]() {
-      this.res.onInit++;
+    @created()
+    onCreated() {
+      this.res.onCreated++;
     }
 
-    [LifeCycle.onInject]() {
-      this.res.onInject++;
+    @injected()
+    onInjected() {
+      this.res.onInjected++;
     }
   }
 
   const service = i.inject(MyService);
 
   assert.deepEqual(service.res, {
-    onInit: 1,
-    onInject: 1
+    onCreated: 1,
+    onInjected: 1
   });
 });
 
@@ -36,18 +38,20 @@ it('should call onInject any time a service is returned', () => {
   const i = new Injector();
 
   @injectable()
-  class MyService implements OnInit, OnInit {
+  class MyService {
     res = {
-      onInit: 0,
-      onInject: 0
+      onCreated: 0,
+      onInjected: 0
     };
 
-    [LifeCycle.onInit]() {
-      this.res.onInit++;
+    @created()
+    onCreated() {
+      this.res.onCreated++;
     }
 
-    [LifeCycle.onInject]() {
-      this.res.onInject++;
+    @injected()
+    onInjected() {
+      this.res.onInjected++;
     }
   }
 
@@ -55,8 +59,8 @@ it('should call onInject any time a service is returned', () => {
   const service = i.inject(MyService);
 
   assert.deepEqual(service.res, {
-    onInit: 1,
-    onInject: 2
+    onCreated: 1,
+    onInjected: 2
   });
 });
 
@@ -64,18 +68,20 @@ it('should call onInject and on init when injected from another service', () => 
   const i = new Injector();
 
   @injectable()
-  class MyService implements OnInit, OnInject {
+  class MyService {
     res = {
-      onInit: 0,
-      onInject: 0
+      onCreated: 0,
+      onInjected: 0
     };
 
-    [LifeCycle.onInit]() {
-      this.res.onInit++;
+    @created()
+    onCreated() {
+      this.res.onCreated++;
     }
 
-    [LifeCycle.onInject]() {
-      this.res.onInject++;
+    @injected()
+    onInjected() {
+      this.res.onInjected++;
     }
   }
 
@@ -88,7 +94,7 @@ it('should call onInject and on init when injected from another service', () => 
   const service = i.inject(MyService);
 
   assert.deepEqual(service.res, {
-    onInit: 1,
-    onInject: 2
+    onCreated: 1,
+    onInjected: 2
   });
 });

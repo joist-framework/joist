@@ -1,15 +1,19 @@
-const onInit = Symbol('OnInit');
-const onInject = Symbol('OnInject');
+import { InjectableMetadata } from './metadata';
 
-export const LifeCycle = {
-  onInit,
-  onInject
-} as const;
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-export interface OnInit {
-  [LifeCycle.onInit](): void;
+export function injected() {
+  return function onInjectDecorator(val: Function, ctx: ClassMethodDecoratorContext) {
+    const metadata: InjectableMetadata = ctx.metadata;
+    metadata.onInjected ??= [];
+    metadata.onInjected.push(val);
+  };
 }
 
-export interface OnInject {
-  [LifeCycle.onInject](): void;
+export function created() {
+  return function onInjectDecorator(val: Function, ctx: ClassMethodDecoratorContext) {
+    const metadata: InjectableMetadata = ctx.metadata;
+    metadata.onCreated ??= [];
+    metadata.onCreated.push(val);
+  };
 }

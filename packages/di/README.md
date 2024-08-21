@@ -234,11 +234,13 @@ To help provide more information to services that are being created, joist will 
 
 ```ts
 class MyService {
-  [LifeCycle.onInit]() {
+  @created()
+  onCreated() {
     // called the first time a service is created. (not pulled from cache)
   }
 
-  [LifeCycle.onInject]() {
+  @injected()
+  onInjected() {
     // called every time a service is returned, whether it is from cache or not
   }
 }
