@@ -14,8 +14,8 @@ const TESTS = [
         <span #:bind="title"></span>
         
         <ul>
-          <li><span #:bind="ariaLabel"></span></li>
-          <li><span #:bind="ariaDescription"></span></li>
+          <li #:bind="ariaLabel"></li>
+          <li #:bind="ariaDescription"></li>
         </ul>
       `;
 
@@ -28,7 +28,7 @@ const TESTS = [
           .split('\n')
           .map((res) => res.trim())
           .join(''),
-        '<span #:bind="title">Hello World</span><ul><li><span #:bind="ariaLabel">This is the label</span></li><li><span #:bind="ariaDescription">This is the description</span></li></ul>'
+        '<span #:bind="title">Hello World</span><ul><li #:bind="ariaLabel">This is the label</li><li #:bind="ariaDescription">This is the description</li></ul>'
       );
     });
   },
@@ -66,8 +66,8 @@ const TESTS = [
         <span #:bind="title"></span>
         
         <ul>
-          <li><span #:bind="ariaLabel"></span></li>
-          <li><span #:bind="ariaDescription"></span></li>
+          <li #:bind="ariaLabel"></li>
+          <li #:bind="ariaDescription"></li>
         </ul>
       `;
 
@@ -80,7 +80,7 @@ const TESTS = [
           .split('\n')
           .map((res) => res.trim())
           .join(''),
-        '<span #:bind="title">Hello World</span><ul><li><span #:bind="ariaLabel">This is the label</span></li><li><span #:bind="ariaDescription">This is the description</span></li></ul>'
+        '<span #:bind="title">Hello World</span><ul><li #:bind="ariaLabel">This is the label</li><li #:bind="ariaDescription">This is the description</li></ul>'
       );
     });
   }
