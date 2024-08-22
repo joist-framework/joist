@@ -1,117 +1,99 @@
 const TOKEN_PREFIX = '#:';
 
-class NodeMap extends Map<Node, string> {}
-
+type Updater = () => void;
+class Updates extends Set<Updater> {}
 type TemplateValueGetter = (key: string) => string;
 
 export interface TemplateOpts {
   value?: TemplateValueGetter;
 }
 
-export interface RenderOpts {
-  refresh?: boolean;
-}
+export interface RenderOpts {}
 
 export function template(templateOpts?: TemplateOpts) {
   // Track all nodes that can be updated and their associated property
-  const nodes = new NodeMap();
+  let updates: Updates | null = null;
 
-  let getter: ((key: string) => string) | null = null;
-
-  // the first time this function is all it initializes all nodes
-  // the second time it updates exisitng nodes
-  return function render<T extends HTMLElement>(this: T, renderOpts?: RenderOpts) {
-    if (renderOpts?.refresh) {
-      getter = null;
-      nodes.clear();
+  return function render<T extends HTMLElement>(this: T) {
+    if (!updates) {
+      updates = findUpdates(
+        this,
+        templateOpts?.value ?? ((key: string) => getTemplateValue(this, key))
+      );
     }
 
-    if (getter) {
-      updateNodes(nodes, getter);
-    } else {
-      getter = templateOpts?.value ?? ((key: string) => getTemplateValue(this, key));
-
-      // find and track nodes
-      initializeNodes(this, nodes, getter);
-    }
+    updateNodes(updates);
   };
 }
 
-function initializeNodes(el: HTMLElement, nodes: NodeMap, getter: TemplateValueGetter) {
-  const iterator = document.createTreeWalker(el.shadowRoot || el, NodeFilter.SHOW_ELEMENT);
+function findUpdates(el: HTMLElement, getter: TemplateValueGetter): Updates {
+  const iterator = document.createTreeWalker(el.shadowRoot ?? el, NodeFilter.SHOW_ELEMENT);
+  const updates = new Updates();
 
   while (iterator.nextNode()) {
-    const res = trackNode(iterator.currentNode, nodes, getter);
+    const res = trackElement(iterator.currentNode, updates, getter);
 
     if (res !== null) {
       iterator.currentNode = res;
     }
   }
+
+  return updates;
 }
 
-function updateNodes(nodes: NodeMap, getter: TemplateValueGetter) {
-  for (let [node, prop] of nodes) {
-    const value = getter(prop);
-
-    const isAttribute = node.nodeType === Node.ATTRIBUTE_NODE;
-
-    if (isAttribute && isBooleanAttributeNode(node as Attr)) {
-      manageBooleanAttribute(node as Attr, getter);
-    } else if (value !== node.nodeValue) {
-      node.textContent = value;
-    }
+function updateNodes(nodes: Updates) {
+  for (let update of nodes) {
+    update();
   }
 }
 
 /**
  * configures and tracks a given Node so that it can be updated in place later.
  */
-function trackNode(node: Node, nodes: NodeMap, getter: TemplateValueGetter): Node | null {
+function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter): Node | null {
   const element = node as Element;
 
   for (let attr of element.attributes) {
     if (attr.name.startsWith(`${TOKEN_PREFIX}bind`)) {
-      element.textContent = getter(attr.value);
+      updates.add(() => {
+        const value = getter(attr.value);
 
-      nodes.set(element, attr.value);
+        if (element.textContent !== value) {
+          element.textContent = getter(attr.value);
+        }
+      });
     } else {
+      const nodeName = attr.name.trim();
       const nodeValue = attr.value.trim();
 
-      if (isBooleanAttributeNode(attr)) {
-        manageBooleanAttribute(attr, getter);
+      if (nodeName.startsWith(TOKEN_PREFIX)) {
+        const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
+        const isNegative = attr.value.startsWith('!');
 
-        nodes.set(attr, attr.value);
+        updates.add(() => {
+          let value = isNegative ? !getter(attr.value.replace('!', '')) : getter(attr.value);
+
+          if (value) {
+            element.setAttribute(realAttributeName, '');
+          } else {
+            element.removeAttribute(realAttributeName);
+          }
+        });
       } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
         const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
 
-        attr.value = getter(propertyKey);
+        updates.add(() => {
+          const value = getter(propertyKey);
 
-        nodes.set(attr, propertyKey);
+          if (attr.value !== value) {
+            attr.value = value;
+          }
+        });
       }
     }
   }
 
   return null;
-}
-
-function isBooleanAttributeNode(attr: Attr) {
-  return attr.name.startsWith(TOKEN_PREFIX);
-}
-
-function manageBooleanAttribute(attr: Attr, getter: TemplateValueGetter) {
-  const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
-
-  if (attr.ownerElement) {
-    let value = attr.value.startsWith('!')
-      ? !getter(attr.value.replace('!', ''))
-      : getter(attr.value);
-
-    if (value) {
-      attr.ownerElement.setAttribute(realAttributeName, '');
-    } else {
-      attr.ownerElement.removeAttribute(realAttributeName);
-    }
-  }
 }
 
 export function getTemplateValue(obj: object, key: string) {

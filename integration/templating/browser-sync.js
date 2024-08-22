@@ -1,4 +1,5 @@
 module.exports = {
+  files: ['*.html'],
   server: {
     baseDir: './',
     routes: {
