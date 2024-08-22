@@ -20,9 +20,9 @@ export function template(templateOpts?: TemplateOpts) {
         this,
         templateOpts?.value ?? ((key: string) => getTemplateValue(this, key))
       );
+    } else {
+      updateNodes(updates);
     }
-
-    updateNodes(updates);
   };
 }
 
@@ -54,14 +54,16 @@ function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter)
   const element = node as Element;
 
   for (let attr of element.attributes) {
+    let update: Updater | null = null;
+
     if (attr.name.startsWith(`${TOKEN_PREFIX}bind`)) {
-      updates.add(() => {
+      update = () => {
         const value = getter(attr.value);
 
         if (element.textContent !== value) {
           element.textContent = getter(attr.value);
         }
-      });
+      };
     } else {
       const nodeName = attr.name.trim();
       const nodeValue = attr.value.trim();
@@ -69,27 +71,34 @@ function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter)
       if (nodeName.startsWith(TOKEN_PREFIX)) {
         const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
         const isNegative = attr.value.startsWith('!');
+        const attrValues = attr.value.replace('!', '');
 
-        updates.add(() => {
-          let value = isNegative ? !getter(attr.value.replace('!', '')) : getter(attr.value);
+        update = () => {
+          let value = isNegative ? !getter(attrValues) : getter(attrValues);
 
           if (value) {
             element.setAttribute(realAttributeName, '');
           } else {
             element.removeAttribute(realAttributeName);
           }
-        });
+        };
       } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
         const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
 
-        updates.add(() => {
+        update = () => {
           const value = getter(propertyKey);
 
           if (attr.value !== value) {
             attr.value = value;
           }
-        });
+        };
       }
+    }
+
+    if (update) {
+      updates.add(update);
+
+      update();
     }
   }
 
