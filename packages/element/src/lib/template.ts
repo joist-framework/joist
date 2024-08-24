@@ -21,7 +21,9 @@ export function template(templateOpts?: TemplateOpts) {
         templateOpts?.value ?? ((key: string) => getTemplateValue(this, key))
       );
     } else {
-      updateNodes(updates);
+      for (let update of updates) {
+        update();
+      }
     }
   };
 }
@@ -41,12 +43,6 @@ function findUpdates(el: HTMLElement, getter: TemplateValueGetter): Updates {
   return updates;
 }
 
-function updateNodes(nodes: Updates) {
-  for (let update of nodes) {
-    update();
-  }
-}
-
 /**
  * configures and tracks a given Node so that it can be updated in place later.
  */
@@ -54,6 +50,9 @@ function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter)
   const element = node as Element;
 
   for (let attr of element.attributes) {
+    const nodeValue = attr.value.trim();
+    const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
+
     let update: Updater | null = null;
 
     if (attr.name.startsWith(`${TOKEN_PREFIX}bind`)) {
@@ -64,17 +63,14 @@ function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter)
           element.textContent = getter(attr.value);
         }
       };
-    } else {
-      const nodeName = attr.name.trim();
-      const nodeValue = attr.value.trim();
+    } else if (attr.name.startsWith(TOKEN_PREFIX)) {
+      const isBooleanAttr = nodeValue.startsWith('!');
+      const isPositive = nodeValue.startsWith('!!');
+      const propertyKey = nodeValue.replaceAll('!', '');
 
-      if (nodeName.startsWith(TOKEN_PREFIX)) {
-        const realAttributeName = attr.name.replace(TOKEN_PREFIX, '');
-        const isNegative = attr.value.startsWith('!');
-        const attrValues = attr.value.replace('!', '');
-
+      if (isBooleanAttr) {
         update = () => {
-          let value = isNegative ? !getter(attrValues) : getter(attrValues);
+          let value = isPositive ? !!getter(propertyKey) : !getter(propertyKey);
 
           if (value) {
             element.setAttribute(realAttributeName, '');
@@ -82,14 +78,15 @@ function trackElement(node: Node, updates: Updates, getter: TemplateValueGetter)
             element.removeAttribute(realAttributeName);
           }
         };
-      } else if (nodeValue.startsWith(TOKEN_PREFIX)) {
-        const propertyKey = nodeValue.replace(TOKEN_PREFIX, '');
+      } else {
+        const realAttribute = document.createAttribute(realAttributeName);
+        element.setAttributeNode(realAttribute);
 
         update = () => {
-          const value = getter(propertyKey);
+          const value = getter(nodeValue);
 
-          if (attr.value !== value) {
-            attr.value = value;
+          if (realAttribute.value !== value) {
+            realAttribute.value = value;
           }
         };
       }

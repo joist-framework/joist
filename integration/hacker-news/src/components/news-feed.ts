@@ -1,5 +1,3 @@
-import './news-card.js';
-
 import { css, element, html } from '@joist/element';
 import { inject, injectable } from '@joist/di';
 
@@ -34,7 +32,7 @@ export class HnNewsFeed extends HTMLElement {
       const card = new HnNewsCard();
 
       card.number = number;
-      card.innerHTML = value.title;
+      card.textContent = value.title;
       card.author = value.by;
       card.comments = value.kids.length;
       card.points = value.score;

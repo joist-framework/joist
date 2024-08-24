@@ -35,11 +35,11 @@ import { observe, effect } from '@joist/observable';
 
       <div>
         <div class="title-box">
-          <a id="title" href="#:href" target="_blank">
+          <a id="title" #:href="href" target="_blank">
             <slot></slot>
           </a>
 
-          <a #:hidden="!href" href="#:href" target="_blank"> (<span #:bind="host"></span>) </a>
+          <a #:hidden="!href" #:href="href" target="_blank"> (<span #:bind="host"></span>) </a>
         </div>
 
         <div class="details">
