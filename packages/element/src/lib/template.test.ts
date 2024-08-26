@@ -38,7 +38,7 @@ const TESTS = [
       el.ariaDescription = 'This is the description';
 
       root.innerHTML = /*html*/ `
-        <ul aria-label="#:ariaLabel" aria-description="#:ariaDescription"></ul>
+        <ul #:aria-label="ariaLabel" #:aria-description="ariaDescription"></ul>
       `;
 
       const render = template().bind(el);
@@ -50,7 +50,7 @@ const TESTS = [
           .split('\n')
           .map((res) => res.trim())
           .join(''),
-        '<ul aria-label="This is the label" aria-description="This is the description"></ul>'
+        '<ul #:aria-label="ariaLabel" #:aria-description="ariaDescription" aria-label="This is the label" aria-description="This is the description"></ul>'
       );
     });
   },
