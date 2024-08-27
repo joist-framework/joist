@@ -52,7 +52,7 @@ import { TodoService, Todo } from '../services/todo.service.js';
       }
     `,
     html`
-      <form>
+      <form id="todo-form">
         <input
           id="input"
           name="todo"
@@ -69,7 +69,7 @@ export class TodoFormElement extends HTMLElement {
 
   #todos = inject(TodoService);
 
-  @listen('submit')
+  @listen('submit', 'todo-form')
   onSubmit(e: Event) {
     const service = this.#todos();
 
