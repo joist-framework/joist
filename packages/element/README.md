@@ -11,8 +11,6 @@ npm i @joist/element
 #### Example:
 
 ```TS
-import { css, html, attr, listen, element } from '@joist/element';
-
 @element({
   tagName: 'my-element',
   shadow: [
@@ -23,17 +21,29 @@ import { css, html, attr, listen, element } from '@joist/element';
       }
     `,
     html`
-      <!--#:value-->
+      <h1 #:bind="greeting" #:hidden="!greeting"></h1>
+
+      <ul>
+        <li #:bind="items.0"></li>
+        <li #:bind="items.1"></li>
+        <li #:bind="items.2"></li>
+        <li #:bind="items.3"></li>
+        <li #:bind="items.4"></li>
+      </ul>
     `
   ]
 })
 export class MyElement extends HTMLElement {
   @attr()
-  accessor value = 0;
+  accessor greeting = "Hello World";
 
-  @listen('click')
-  onClick() {
-    console.log('clicked!')
+  items = ["first", "second", "third", "fourth", "fifth"];
+
+  #render = template();
+
+  @ready()
+  onReady() {
+    this.#render();
   }
 }
 ```
