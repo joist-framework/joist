@@ -248,12 +248,16 @@ class MyService {
 
 ## Hierarchical Injectors
 
-Injectors can be defined with a parent element. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
+Injectors can be defined with a parent. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
 
 1. Do I have a cached instance locally?
 2. Do I have a local provider definition for the token?
-3. Do I have a parent? Check parent for 1 and 2
-4. All clear, go ahead and construct and cache the requested service
+3. Do I have a parent?
+4. Does parent have a local instance or provider definition?
+5. If parent exists but no instance found, create instance in parent.
+6. If not parent, All clear, go ahead and construct and cache the requested service.
+
+Having injectors resolve this way means that all children have access to services created by their parents.
 
 ```mermaid
 graph TD
