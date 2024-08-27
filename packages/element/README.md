@@ -1,6 +1,16 @@
 # Element
 
-Create a shadow root and apply styles and html as defined
+Utilities for building web compnennts. Especially targeted at
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Custom Element](#custom-element)
+- [Attributes](#attributes)
+- [Template](#template)
+- [Styles](#styles)
+- [Listeners](#listeners)
+- [Queries](#queries)
 
 #### Installation:
 
