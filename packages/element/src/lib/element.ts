@@ -43,8 +43,14 @@ export function element<
           }
         }
 
-        for (let [event, { cb, selector: root }] of meta.listeners) {
-          root(this).addEventListener(event, cb.bind(this));
+        for (let [event, { cb, selector }] of meta.listeners) {
+          const root = selector(this);
+
+          if (root) {
+            root.addEventListener(event, cb.bind(this));
+          } else {
+            throw new Error(`could not add listener to ${root}`);
+          }
         }
 
         for (let cb of meta.onReady) {

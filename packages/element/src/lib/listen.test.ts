@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+
 import { element } from './element.js';
 import { listen } from './listen.js';
 

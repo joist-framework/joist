@@ -6,7 +6,7 @@ export interface AttrDef {
   observe: boolean;
 }
 
-export type ListenerSelector = (el: HTMLElement) => HTMLElement | ShadowRoot;
+export type ListenerSelector = (el: Element) => Element | ShadowRoot | null;
 
 export class ElementMetadata {
   attrs: AttrDef[] = [];
