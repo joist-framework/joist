@@ -16,7 +16,7 @@ Allows you to inject services into other class instances (including custom eleme
 - [Hierarchical Injectors](#hierarchical-injectors)
 - [Custom Elements](#custom-elements)
 
-## Installation:
+## Installation
 
 ```BASH
 npm i @joist/di

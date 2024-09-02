@@ -12,28 +12,49 @@ Utilities for building web compnennts. Especially targeted at
 - [Listeners](#listeners)
 - [Queries](#queries)
 
-#### Installation:
+## Installation
 
 ```BASH
 npm i @joist/element
 ```
 
-#### Example:
+## Custom Element
 
-```TS
+To define a custom element decorate your custom element class and add a tagName
+
+```ts
+@element({
+  tagName: 'my-element'
+})
+export class MyElement extends HTMLElement {}
+```
+
+## Attributes
+
+Attributes can be managed using the `@attr` decorator. This decorator will read attribute values and and write properties back to attributes;
+
+```ts
+@element({
+  tagName: 'my-element'
+})
+export class MyElement extends HTMLElement {
+  @attr()
+  accessor greeting = 'Hello World';
+}
+```
+
+## Template
+
+Joist ships with a very simple template library. It is designed to be very small and is only responsible for updating text in different DOM nodes.
+
+```ts
 @element({
   tagName: 'my-element',
   shadow: [
-    css`
-      :host {
-        display: block;
-        color: red;
-      }
-    `,
     html`
       <h1 #:bind="greeting" #:hidden="!greeting"></h1>
 
-      <ul>
+      <ul">
         <li #:bind="items.0"></li>
         <li #:bind="items.1"></li>
         <li #:bind="items.2"></li>
@@ -45,15 +66,8 @@ npm i @joist/element
 })
 export class MyElement extends HTMLElement {
   @attr()
-  accessor greeting = "Hello World";
+  accessor greeting = 'Hello World';
 
-  items = ["first", "second", "third", "fourth", "fifth"];
-
-  #render = template();
-
-  @ready()
-  onReady() {
-    this.#render();
-  }
+  items = ['first', 'second', 'third', 'fourth', 'fifth'];
 }
 ```
