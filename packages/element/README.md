@@ -69,5 +69,12 @@ export class MyElement extends HTMLElement {
   accessor greeting = 'Hello World';
 
   items = ['first', 'second', 'third', 'fourth', 'fifth'];
+
+  #render = template();
+
+  @ready()
+  onReady() {
+    this.#render();
+  }
 }
 ```
