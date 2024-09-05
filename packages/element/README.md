@@ -54,7 +54,7 @@ Joist ships with a very simple template library. It is designed to be very small
     html`
       <h1 #:bind="greeting" #:hidden="!greeting"></h1>
 
-      <ul">
+      <ul>
         <li #:bind="items.0"></li>
         <li #:bind="items.1"></li>
         <li #:bind="items.2"></li>
