@@ -228,6 +228,30 @@ const app = new Injector();
 const url: string = await app.inject(URL_TOKEN);
 ```
 
+This allows you to dynamically import services
+
+```ts
+const HTTP_SERVICE = new StaticToken('HTTP_SERVICE', () => {
+  return import('./http.service.js').then((m) => new m.HttpService());
+});
+
+class HackerNewsService {
+  #http = inject(HTTP_SERVICE);
+
+  async getData() {
+    const http = await this.#http();
+
+    const url = new URL('https://hacker-news.firebaseio.com/v0/beststories.json');
+    url.searchParams.set('limitToFirst', count.toString());
+    url.searchParams.set('orderBy', '"$key"');
+
+    return http.fetchJson<string[]>(url);
+  }
+}
+
+const url: string = await app.inject(URL_TOKEN);
+```
+
 ## LifeCycle
 
 To help provide more information to services that are being created, joist will call several life cycle hooks as services are created. These hooks are defined using the provided symbols so there is no risk of naming colisions.

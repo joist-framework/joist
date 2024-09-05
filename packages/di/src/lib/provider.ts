@@ -1,5 +1,7 @@
 import { Injector } from './injector.js';
 
+export type ProviderFactory<T> = (injector: Injector) => T;
+
 export class StaticToken<T> {
   #name;
   #factory;
@@ -12,7 +14,7 @@ export class StaticToken<T> {
     return this.#factory;
   }
 
-  constructor(name: string, factory?: () => T) {
+  constructor(name: string, factory?: ProviderFactory<T>) {
     this.#name = name;
     this.#factory = factory;
   }
@@ -27,5 +29,5 @@ export type InjectionToken<T> = ConstructableToken<T> | StaticToken<T>;
 export interface Provider<T> {
   provide: InjectionToken<T>;
   use?: ConstructableToken<T>;
-  factory?(injector: Injector): T;
+  factory?: ProviderFactory<T>;
 }

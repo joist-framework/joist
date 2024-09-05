@@ -1,6 +1,4 @@
-import { inject, injectable } from '@joist/di';
-
-import { HttpService } from './http.service.js';
+import { inject, injectable, StaticToken } from '@joist/di';
 
 export interface HnItem {
   by: string;
@@ -14,16 +12,23 @@ export interface HnItem {
   url?: string;
 }
 
+export const HN_API = new StaticToken('HN_API', async () => 'https://hacker-news.firebaseio.com');
+const HTTP = new StaticToken('HTTP', async () =>
+  import('./http.service.js').then((m) => new m.HttpService())
+);
+
 @injectable()
 export class HnService {
-  #http = inject(HttpService);
+  #http = inject(HTTP);
+  #hnApi = inject(HN_API);
 
-  getTopStories(count = 15) {
-    const http = this.#http();
+  async getTopStories(count = 15) {
+    const http = await this.#http();
+    const hnApi = await this.#hnApi();
 
     return this.getTopStoryIds(count).then((res) => {
       const storyRequests = res.map((id) => {
-        return http.fetchJson<HnItem>(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+        return http.fetchJson<HnItem>(`${hnApi}/v0/item/${id}.json`);
       });
 
       return Promise.allSettled(storyRequests).then((res) =>
@@ -32,10 +37,11 @@ export class HnService {
     });
   }
 
-  getTopStoryIds(count: number) {
-    const http = this.#http();
+  async getTopStoryIds(count: number) {
+    const http = await this.#http();
+    const hnApi = await this.#hnApi();
 
-    const url = new URL('https://hacker-news.firebaseio.com/v0/beststories.json');
+    const url = new URL(`${hnApi}/v0/beststories.json`);
     url.searchParams.set('limitToFirst', count.toString());
     url.searchParams.set('orderBy', '"$key"');
 
