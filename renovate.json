@@ -1,5 +1,6 @@
 {
   "extends": ["config:base"],
+  "baseBranches": ["main", "4.0"],
   "packageRules": [
     {
       "groupName": "@web/test-runner packages",
