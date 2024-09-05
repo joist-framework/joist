@@ -1,13 +1,13 @@
 import { Injector } from '@joist/di';
 
-import { HnService } from './hn.service.js';
+import { HnService, HTTP } from './hn.service.js';
 import { HttpService } from './http.service.js';
 import { assert } from 'chai';
 
 it('should run', async () => {
   const testbed = new Injector([
     {
-      provide: HttpService,
+      provide: HTTP,
       use: class extends HttpService {
         id = 0;
 
