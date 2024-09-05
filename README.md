@@ -1,5 +1,7 @@
 # Joist
 
+These are docs for the current version of Joist. [4.0](https://github.com/joist-framework/joist/tree/4.0) is in the works and should be released soon.
+
 Web components are awesome! Joist is a set of small libraries designed to add the bare minimum to web components to make you as productive as possible. The entire project started years ago when I made my first attempt at bringing dependency injection (@joist/di) to Custom Elements as a way to share state between them. Along the way, several other packages were added to solve different challenges.
 
 When you have to integrate with many different applications, many different frameworks with many different technologies you need a toolkit to help.
