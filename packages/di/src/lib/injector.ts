@@ -1,5 +1,11 @@
 import { readMetadata } from './metadata.js';
-import { ConstructableToken, InjectionToken, Provider, StaticToken } from './provider.js';
+import {
+  ConstructableToken,
+  InjectionToken,
+  Provider,
+  ProviderFactory,
+  StaticToken
+} from './provider.js';
 
 /**
  * Keeps track of all Injectable services and their Injector
@@ -93,7 +99,7 @@ export class Injector {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T>(token: InjectionToken<T>, factory: (injector: Injector) => T): T {
+  #createAndCache<T>(token: InjectionToken<T>, factory: ProviderFactory<T>): T {
     const instance = factory(this);
 
     this.#instances.set(token, instance);
