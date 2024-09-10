@@ -19,7 +19,7 @@ Allows you to inject services into other class instances (including custom eleme
 ## Installation
 
 ```BASH
-npm i @joist/di
+npm i @joist/di@next
 ```
 
 ## Injectors
