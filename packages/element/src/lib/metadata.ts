@@ -8,9 +8,15 @@ export interface AttrDef {
 
 export type ListenerSelector = (el: Element) => Element | ShadowRoot | null;
 
+export interface Listener {
+  event: string;
+  cb: (e: Event) => void;
+  selector: ListenerSelector;
+}
+
 export class ElementMetadata {
   attrs: AttrDef[] = [];
-  listeners: Array<{ event: string; cb: (e: Event) => void; selector: ListenerSelector }> = [];
+  listeners: Listener[] = [];
   onReady = new Set<Function>();
 }
 
