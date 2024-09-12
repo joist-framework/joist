@@ -10,7 +10,7 @@ export type ListenerSelector = (el: Element) => Element | ShadowRoot | null;
 
 export class ElementMetadata {
   attrs: AttrDef[] = [];
-  listeners = new Map<string, { cb: (e: Event) => void; selector: ListenerSelector }>();
+  listeners: Array<{ event: string; cb: (e: Event) => void; selector: ListenerSelector }> = [];
   onReady = new Set<Function>();
 }
 

@@ -43,7 +43,7 @@ export function element<
           }
         }
 
-        for (let [event, { cb, selector }] of meta.listeners) {
+        for (let { event, cb, selector } of meta.listeners) {
           const root = selector(this);
 
           if (root) {

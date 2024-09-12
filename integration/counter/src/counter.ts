@@ -45,18 +45,13 @@ export class CounterElement extends HTMLElement {
     this.#render();
   }
 
-  @listen('click')
-  onClick(e: Event) {
-    const { id } = e.target as HTMLElement;
+  @listen('click', '#inc')
+  onIncrement() {
+    this.value++;
+  }
 
-    switch (id) {
-      case 'inc':
-        this.value++;
-        break;
-
-      case 'dec':
-        this.value--;
-        break;
-    }
+  @listen('click', '#dec')
+  onDecrement() {
+    this.value--;
   }
 }
