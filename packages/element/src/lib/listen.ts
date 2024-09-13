@@ -23,7 +23,8 @@ export function listen<This extends HTMLElement>(
       }
     }
 
-    metadata.listeners.set(event, {
+    metadata.listeners.push({
+      event,
       cb: value,
       selector: selectorInternal
     });
