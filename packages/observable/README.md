@@ -19,7 +19,7 @@ class AppState {
   accessor userName?: string;
 
   @effect()
-  onChange(changes: Set<string | symbol>) {
+  onChange(changes: Changes) {
     console.log(changes);
   }
 }
