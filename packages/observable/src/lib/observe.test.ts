@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 
 import { effect, observe } from './observe.js';
+import { Changes } from './metadata.js';
 
 it('should work with static accessors', () => {
   return new Promise<void>((resolve) => {
@@ -53,8 +54,13 @@ it('should return a set of changed props', () => {
     class Counter {
       @observe() accessor value = 0;
 
-      @effect() onChange(changes: Set<symbol | string>) {
+      @effect() onChange(changes: Changes) {
         assert.ok(changes.has('value'));
+
+        assert.deepEqual(changes.get('value'), {
+          oldValue: 0,
+          newValue: 1
+        });
 
         resolve();
       }

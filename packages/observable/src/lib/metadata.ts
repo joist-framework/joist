@@ -1,6 +1,8 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-export type EffectFn = (changes: Set<string | symbol>) => void;
+export type EffectFn = (changes: Changes) => void;
+
+export class Changes extends Map<string | symbol, { oldValue: unknown; newValue: unknown }> {}
 
 export abstract class MetadataStore<Metadata> extends WeakMap<object, Metadata> {
   read(key: object): Metadata {
@@ -20,7 +22,7 @@ export abstract class MetadataStore<Metadata> extends WeakMap<object, Metadata> 
 
 export class ObservableInstanceMetadata {
   scheduler: Promise<void> | null = null;
-  changes = new Set<string | symbol>();
+  changes = new Changes();
 }
 
 export class ObservableInstanceMetaDataStore extends MetadataStore<ObservableInstanceMetadata> {

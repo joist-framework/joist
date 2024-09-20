@@ -38,7 +38,10 @@ export function observe() {
           });
         }
 
-        instanceMeta.changes.add(ctx.name);
+        instanceMeta.changes.set(ctx.name, {
+          oldValue: base.get.call(this),
+          newValue: value
+        });
 
         base.set.call(this, value);
       }

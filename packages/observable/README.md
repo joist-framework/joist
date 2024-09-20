@@ -12,10 +12,14 @@ npm i @joist/observable@next
 import { observe, effect } from '@joist/observable';
 
 class AppState {
-  @observe accessor todos: string[] = [];
-  @observe accessor userName?: string;
+  @observe()
+  accessor todos: string[] = [];
 
-  @effect onChange(changes: Set<string | symbol>) {
+  @observe()
+  accessor userName?: string;
+
+  @effect()
+  onChange(changes: Set<string | symbol>) {
     console.log(changes);
   }
 }
