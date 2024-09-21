@@ -65,16 +65,69 @@ Joist ships with a very simple template library. It is designed to be very small
   ]
 })
 export class MyElement extends HTMLElement {
-  @attr()
-  accessor greeting = 'Hello World';
+  greeting = 'Hello World';
 
   items = ['first', 'second', 'third', 'fourth', 'fifth'];
 
+  // initialize renderer
   #render = template();
 
   @ready()
   onReady() {
+    // called once element is ready
+
     this.#render();
+  }
+}
+```
+
+## Styles
+
+To apply styles simply pass the result of the `css` tag to the `shadow` array.
+
+```ts
+@element({
+  tagName: 'my-element',
+  shadow: [
+    css`
+      h1 {
+        color: red;
+      }
+    `,
+    html`<h1>Hello World</h1>`
+  ]
+})
+export class MyElement extends HTMLElement {}
+```
+
+## Listeners
+
+The `@listen` decorator allows you to easy setup event listeners. By default the listener will be attached to the shadow root if it exists or the host element if it doesn't. This can be customized by pass a selector function to the decorator
+
+```ts
+@element({
+  tagName: 'my-element',
+  shadow: []
+})
+export class MyElement extends HTMLElement {
+  @listen('eventname')
+  onFoo() {
+    // all listener to the shadow root
+  }
+
+  @listen('eventname', (host) => host)
+  onBar() {
+    // all listener to the host element
+  }
+
+  @listen('eventname', (host) => host.querySelector('button'))
+  onBar() {
+    // add listener to a button found in the light dom
+  }
+
+  @listen('eventname', '#test')
+  onBar() {
+    // add listener to element with the id of "test" that is found in the shadow dom
   }
 }
 ```
