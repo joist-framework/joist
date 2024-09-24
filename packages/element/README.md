@@ -120,7 +120,10 @@ export class MyElement extends HTMLElement {
     // all listener to the host element
   }
 
-  @listen('eventname', (host) => host.querySelector('button'))
+  @listen(
+    'eventname',
+    (host) => host.querySelector('button')
+  )
   onBar() {
     // add listener to a button found in the light dom
   }
