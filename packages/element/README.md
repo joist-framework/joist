@@ -111,12 +111,12 @@ The `@listen` decorator allows you to easy setup event listeners. By default the
 })
 export class MyElement extends HTMLElement {
   @listen('eventname')
-  onFoo() {
+  onEventName() {
     // all listener to the shadow root
   }
 
   @listen('eventname', (host) => host)
-  onBar() {
+  onHostEventName() {
     // all listener to the host element
   }
 
@@ -124,12 +124,12 @@ export class MyElement extends HTMLElement {
     'eventname',
     (host) => host.querySelector('button')
   )
-  onBar() {
+  onSpecificNodeEventName() {
     // add listener to a button found in the light dom
   }
 
   @listen('eventname', '#test')
-  onBar() {
+  onEventNameBySting() {
     // add listener to element with the id of "test" that is found in the shadow dom
   }
 }
