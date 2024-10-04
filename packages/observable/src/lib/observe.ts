@@ -5,6 +5,8 @@ export function observe() {
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>
   ): ClassAccessorDecoratorResult<This, Value> {
+    const observableMeta = observableMetadataStore.read(ctx.metadata);
+
     return {
       init(value) {
         let val: Value | null = null;
@@ -25,7 +27,6 @@ export function observe() {
       },
       set(value) {
         const instanceMeta = instanceMetadataStore.read(this);
-        const observableMeta = observableMetadataStore.read(ctx.metadata);
 
         if (instanceMeta.scheduler === null) {
           instanceMeta.scheduler = Promise.resolve().then(() => {
