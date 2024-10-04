@@ -54,10 +54,8 @@ it('should return a set of changed props', () => {
     class Counter {
       @observe() accessor value = 0;
 
-      @effect() onChange(changes: Changes) {
-        assert.ok(changes.has('value'));
-
-        assert.deepEqual(changes.get('value'), {
+      @effect() onChange(changes: Changes<this>) {
+        assert.deepEqual(changes.value, {
           oldValue: 0,
           newValue: 1
         });

@@ -19,7 +19,7 @@ class AppState {
   accessor userName?: string;
 
   @effect()
-  onChange(changes: Changes) {
+  onChange(changes: Changes<this>) {
     console.log(changes);
   }
 }
