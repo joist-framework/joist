@@ -120,10 +120,7 @@ export class MyElement extends HTMLElement {
     // all listener to the host element
   }
 
-  @listen(
-    'eventname',
-    (host) => host.querySelector('button')
-  )
+  @listen('eventname', (host) => host.querySelector('button'))
   onEventName3() {
     // add listener to a button found in the light dom
   }
@@ -131,6 +128,36 @@ export class MyElement extends HTMLElement {
   @listen('eventname', '#test')
   onEventName4() {
     // add listener to element with the id of "test" that is found in the shadow dom
+  }
+}
+```
+
+## Queries
+
+The `query` function will query for a particular element and allow you to easily patch that element with new properties.
+
+```ts
+@element({
+  tagName: 'my-element',
+  shadow: [
+    html`
+      <label for="my-input">
+        <slot></slot>
+      </label>
+
+      <input id="my-input" />
+    `
+  ]
+})
+export class MyElement extends HTMLElement {
+  @observe()
+  value: string;
+
+  #input = query('input');
+
+  @effect()
+  onChange() {
+    this.#input({ value: this.value });
   }
 }
 ```
