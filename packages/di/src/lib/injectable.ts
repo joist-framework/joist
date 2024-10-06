@@ -4,8 +4,8 @@ import { environment } from './environment.js';
 
 export function injectable<T extends ConstructableToken<any>>(Base: T, _?: unknown) {
   return class InjectableNode extends Base {
-    constructor(..._: any[]) {
-      super();
+    constructor(...args: any[]) {
+      super(...args);
 
       // Define a new Injector and assiciate it with this instance of the service
       const injector = new Injector(Base.providers);
