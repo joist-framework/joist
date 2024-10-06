@@ -23,9 +23,12 @@ it('should locally override a provider', () => {
 
 it('should define an injector for a service instance', () => {
   @injectable()
-  class MyService {}
+  class MyService {
+    constructor(public arg = 'a') {}
+  }
 
-  const instance = new MyService();
+  const instance = new MyService('b');
 
   assert.ok(injectables.has(instance));
+  assert.ok(instance.arg === 'b');
 });
