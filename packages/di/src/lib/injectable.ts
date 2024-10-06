@@ -14,8 +14,8 @@ export function injectable(opts?: InjectableOpts) {
     ctx: ClassDecoratorContext
   ) {
     class Injectable extends Base {
-      constructor(..._: any[]) {
-        super();
+      constructor(...args: any[]) {
+        super(...args);
 
         injectables.set(this, new Injector(opts?.providers));
       }
