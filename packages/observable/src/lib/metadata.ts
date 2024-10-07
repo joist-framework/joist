@@ -1,24 +1,16 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-export type EffectFn<T> = (changes: Changes<T>) => void;
+export type EffectFn = (changes: Changes) => void;
 
-export type Changes<T> = {
-  [P in keyof T]?: {
-    oldValue: T[P];
-    newValue: T[P];
-  };
-};
+export class Changes extends Map<string | symbol, { oldValue: unknown; newValue: unknown }> {}
 
-export class ObservableInstanceMetadata<T> {
+export class ObservableInstanceMetadata {
   scheduler: Promise<void> | null = null;
-  changes: Changes<T> = {};
+  changes = new Changes();
 }
 
-export class ObservableInstanceMetaDataStore extends WeakMap<
-  object,
-  ObservableInstanceMetadata<unknown>
-> {
-  read<T extends object>(key: T): ObservableInstanceMetadata<T> {
+export class ObservableInstanceMetaDataStore extends WeakMap<object, ObservableInstanceMetadata> {
+  read<T extends object>(key: T): ObservableInstanceMetadata {
     let data = this.get(key);
 
     if (!data) {
@@ -31,12 +23,12 @@ export class ObservableInstanceMetaDataStore extends WeakMap<
   }
 }
 
-export class ObservableMetadata<T> {
-  effects: Set<EffectFn<T>> = new Set();
+export class ObservableMetadata {
+  effects: Set<EffectFn> = new Set();
 }
 
-export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<unknown>> {
-  read<T extends object>(key: T): ObservableMetadata<T> {
+export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata> {
+  read<T extends object>(key: T): ObservableMetadata {
     let data = this.get(key);
 
     if (!data) {

@@ -1,7 +1,7 @@
 import { EffectFn, instanceMetadataStore, observableMetadataStore } from './metadata.js';
 
 export function observe() {
-  return function observeDecorator<This extends object, Value extends This[keyof This]>(
+  return function observeDecorator<This extends object, Value>(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>
   ): ClassAccessorDecoratorResult<This, Value> {
@@ -35,16 +35,14 @@ export function observe() {
             }
 
             instanceMeta.scheduler = null;
-            instanceMeta.changes = {};
+            instanceMeta.changes.clear();
           });
         }
 
-        const name = ctx.name as keyof This;
-
-        instanceMeta.changes[name] = {
+        instanceMeta.changes.set(ctx.name, {
           oldValue: base.get.call(this),
           newValue: value
-        };
+        });
 
         base.set.call(this, value);
       }
@@ -54,7 +52,7 @@ export function observe() {
 
 export function effect() {
   return function effectDecorator<T extends object>(
-    value: EffectFn<unknown>,
+    value: EffectFn,
     ctx: ClassMethodDecoratorContext<T>
   ) {
     const data = observableMetadataStore.read(ctx.metadata);
