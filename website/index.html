@@ -31,9 +31,18 @@
 
     <joist-header></joist-header>
 
-    <joist-nav></joist-nav>
+    <joist-main>
+      <joist-nav slot="nav"></joist-nav>
 
-    <script type="module" src="./elements/joist-header/joist-header.ts"></script>
-    <script type="module" src="./elements/joist-nav/joist-nav.ts"></script>
+      <main>
+        <h1>Hello World</h1>
+
+        <p>Welcome to Joist</p>
+      </main>
+    </joist-main>
+
+    <script type="module" src="/src/elements/joist-header/joist-header.ts"></script>
+    <script type="module" src="/src/elements/joist-nav/joist-nav.ts"></script>
+    <script type="module" src="/src/elements/joist-main/joist-main.ts"></script>
   </body>
 </html>

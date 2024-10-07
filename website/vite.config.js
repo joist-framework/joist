@@ -4,19 +4,22 @@ import { defineConfig } from 'vite';
 const applicator = new Applicator(
   new NoopTemplateCache(),
   new FileSysTemplateLoader(
-    (tag) => `elements/${tag}/${tag}.html`,
-    (tag) => `elements/${tag}/${tag}.css`
+    (tag) => `./src/elements/${tag}/${tag}.html`,
+    (tag) => `./src/elements/${tag}/${tag}.css`
   )
 );
 
 export default defineConfig({
+  esbuild: {
+    target: 'es2020'
+  },
   plugins: [
     {
       name: 'Web Component SSR',
       transformIndexHtml: {
         order: 'pre',
         handler(html) {
-          return applicator.apply(html, ['joist-header', 'joist-nav']);
+          return applicator.apply(html, ['joist-header', 'joist-nav', 'joist-main']);
         }
       },
       handleHotUpdate({ file, server }) {
