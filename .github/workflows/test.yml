@@ -21,5 +21,8 @@ jobs:
       # - name: Install Playwright Browsers
       # run: npx playwright install --with-deps
 
-      - name: Lib Tests
-        run: npm test --ws --if-present
+      - name: Build All Packages
+        run: npm run build -ws
+
+      - name: Test Packages
+        run: npm test -ws --if-present
