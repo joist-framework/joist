@@ -29,7 +29,6 @@
     "access": "public"
   },
   "scripts": {
-    "test": "wireit",
     "build": "wireit"
   },
   "wireit": {
