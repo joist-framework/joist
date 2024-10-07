@@ -1,0 +1,9 @@
+:host {
+  display: contents;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}

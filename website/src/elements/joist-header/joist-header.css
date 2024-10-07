@@ -1,0 +1,8 @@
+:host {
+  display: contents;
+}
+
+header {
+  padding: 1rem;
+  background: blue;
+}
