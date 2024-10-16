@@ -83,6 +83,34 @@ const TESTS = [
         '<span #:bind="title">Hello World</span><ul><li #:bind="ariaLabel">This is the label</li><li #:bind="ariaDescription">This is the description</li></ul>'
       );
     });
+  },
+  function customPrefix(el: HTMLElement, root: HTMLElement | ShadowRoot) {
+    it(`should use custom getter for values ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
+      el.title = 'Hello World';
+      el.ariaLabel = 'This is the label';
+      el.ariaDescription = 'This is the description';
+
+      root.innerHTML = /*html*/ `
+        <span x-bind="title"></span>
+        
+        <ul x-aria-label="ariaLabel">
+          <li x-bind="ariaLabel"></li>
+          <li x-bind="ariaDescription"></li>
+        </ul>
+      `;
+
+      const render = template({ tokenPrefix: 'x-' }).bind(el);
+
+      render();
+
+      assert.equal(
+        root.innerHTML
+          .split('\n')
+          .map((res) => res.trim())
+          .join(''),
+        '<span x-bind="title">Hello World</span><ul x-aria-label="ariaLabel" aria-label="This is the label"><li x-bind="ariaLabel">This is the label</li><li x-bind="ariaDescription">This is the description</li></ul>'
+      );
+    });
   }
 ];
 
