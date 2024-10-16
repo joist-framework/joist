@@ -8,14 +8,16 @@ export interface TemplateOpts {
   value?: TemplateValueGetter;
 }
 
-export interface RenderOpts {}
+export interface RenderOpts {
+  refresh?: boolean;
+}
 
 export function template(templateOpts?: TemplateOpts) {
   // Track all nodes that can be updated and their associated property
   let updates: Updates | null = null;
 
-  return function render<T extends HTMLElement>(this: T) {
-    if (!updates) {
+  return function render<T extends HTMLElement>(this: T, opts?: RenderOpts) {
+    if (!updates || opts?.refresh) {
       updates = findUpdates(
         this,
         templateOpts?.value ?? ((key: string) => getTemplateValue(this, key))
