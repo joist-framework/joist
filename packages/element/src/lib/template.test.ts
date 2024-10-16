@@ -4,7 +4,7 @@ import { template } from './template.js';
 
 // Run all tests with both shadow and light dom
 const TESTS = [
-  function comments(el: HTMLElement, root: HTMLElement | ShadowRoot) {
+  function bindableNodes(el: HTMLElement, root: HTMLElement | ShadowRoot) {
     it(`should intialize bindable nodes ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
       el.title = 'Hello World';
       el.ariaLabel = 'This is the label';
@@ -32,7 +32,7 @@ const TESTS = [
       );
     });
   },
-  function attributes(el: HTMLElement, root: HTMLElement | ShadowRoot) {
+  function attributeNodes(el: HTMLElement, root: HTMLElement | ShadowRoot) {
     it(`should intialize template attributes ${root instanceof ShadowRoot ? '(ShadowDOM)' : '(LightDOM)'}`, () => {
       el.ariaLabel = 'This is the label';
       el.ariaDescription = 'This is the description';
