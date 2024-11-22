@@ -2,16 +2,16 @@ import { ListenerSelector, metadataStore } from './metadata.js';
 
 export function listen<This extends HTMLElement>(
   event: string,
-  selector?: ListenerSelector | string
+  selector?: ListenerSelector<This> | string
 ) {
   return function listenDecorator(value: (e: any) => void, ctx: ClassMethodDecoratorContext<This>) {
-    const metadata = metadataStore.read(ctx.metadata);
+    const metadata = metadataStore.read<This>(ctx.metadata);
 
-    let selectorInternal: ListenerSelector = (el: Element) => el.shadowRoot ?? el;
+    let selectorInternal: ListenerSelector<This> = (el) => el.shadowRoot ?? el;
 
     if (selector) {
       if (typeof selector === 'string') {
-        selectorInternal = (el: Element) => {
+        selectorInternal = (el: This) => {
           if (el.shadowRoot) {
             return el.shadowRoot.querySelector(selector);
           }

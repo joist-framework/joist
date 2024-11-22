@@ -6,22 +6,22 @@ export interface AttrDef {
   observe: boolean;
 }
 
-export type ListenerSelector = (el: Element) => Element | ShadowRoot | null;
+export type ListenerSelector<T> = (el: T) => Element | ShadowRoot | null;
 
-export interface Listener {
+export interface Listener<T> {
   event: string;
   cb: (e: Event) => void;
-  selector: ListenerSelector;
+  selector: ListenerSelector<T>;
 }
 
-export class ElementMetadata {
+export class ElementMetadata<T> {
   attrs: AttrDef[] = [];
-  listeners: Listener[] = [];
+  listeners: Listener<T>[] = [];
   onReady = new Set<Function>();
 }
 
-export class MetadataStore extends WeakMap<object, ElementMetadata> {
-  read(value: object) {
+export class MetadataStore extends WeakMap<object, ElementMetadata<unknown>> {
+  read<T>(value: object): ElementMetadata<T> {
     if (!this.has(value)) {
       this.set(value, new ElementMetadata());
     }
