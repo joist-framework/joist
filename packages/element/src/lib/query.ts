@@ -28,7 +28,7 @@ export function query<K extends Tags>(query: K): QueryResult<HTMLElementTagNameM
 
     if (updates) {
       for (let update in updates) {
-        Reflect.set(res, update, updates[update]);
+        (res as any)[update] = updates[update];
       }
     }
 
