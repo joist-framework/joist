@@ -2,6 +2,7 @@ import { metadataStore } from './metadata.js';
 
 export interface AttrOpts {
   observed?: boolean;
+  reflect?: boolean;
 }
 
 export function attr(opts?: AttrOpts) {
@@ -11,21 +12,25 @@ export function attr(opts?: AttrOpts) {
   ): ClassAccessorDecoratorResult<This, any> {
     const attrName = parseAttrName(ctx.name);
     const meta = metadataStore.read(ctx.metadata);
+    const reflect = opts?.reflect ?? true;
 
     meta.attrs.push({
       propName: ctx.name,
       attrName,
-      observe: opts?.observed ?? true
+      observe: opts?.observed ?? true,
+      reflect
     });
 
     return {
       set(value: unknown) {
-        if (value === true) {
-          this.setAttribute(attrName, '');
-        } else if (value === false) {
-          this.removeAttribute(attrName);
-        } else {
-          this.setAttribute(attrName, String(value));
+        if (reflect) {
+          if (value === true) {
+            this.setAttribute(attrName, '');
+          } else if (value === false) {
+            this.removeAttribute(attrName);
+          } else {
+            this.setAttribute(attrName, String(value));
+          }
         }
 
         set.call(this, value);

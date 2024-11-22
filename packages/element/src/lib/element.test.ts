@@ -17,6 +17,9 @@ it('should write default value to attribute', async () => {
 
     @attr()
     accessor value3 = true; // boolean
+
+    @attr({ reflect: false })
+    accessor value4 = 'foo';
   }
 
   const el = new MyElement();
@@ -26,6 +29,7 @@ it('should write default value to attribute', async () => {
   expect(el.getAttribute('value1')).to.equal('hello');
   expect(el.getAttribute('value2')).to.equal('0');
   expect(el.getAttribute('value3')).to.equal('');
+  expect(el.getAttribute('value4')).to.equal(null);
 
   el.remove();
 });

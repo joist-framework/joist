@@ -72,19 +72,21 @@ export function element<
 }
 
 function reflectAttributeValues(el: HTMLElement, attrs: AttrDef[]) {
-  for (let { propName, attrName } of attrs) {
-    const value = Reflect.get(el, propName);
+  for (let { propName, attrName, reflect } of attrs) {
+    if (reflect) {
+      const value = Reflect.get(el, propName);
 
-    // reflect values back to attributes
-    if (value !== null && value !== undefined && value !== '') {
-      if (typeof value === 'boolean') {
-        if (value === true) {
-          // set boolean attribute
-          el.setAttribute(attrName, '');
+      // reflect values back to attributes
+      if (value !== null && value !== undefined && value !== '') {
+        if (typeof value === 'boolean') {
+          if (value === true) {
+            // set boolean attribute
+            el.setAttribute(attrName, '');
+          }
+        } else {
+          // set key/value attribute
+          el.setAttribute(attrName, String(value));
         }
-      } else {
-        // set key/value attribute
-        el.setAttribute(attrName, String(value));
       }
     }
   }

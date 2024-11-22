@@ -136,3 +136,20 @@ it('should throw an error for symbols with no description', async () => {
     new MyElement();
   }).to.throw('Cannot handle Symbol property without description');
 });
+
+it('should not reflect property to attribute', async () => {
+  @element({
+    tagName: 'attr-test-5'
+  })
+  class MyElement extends HTMLElement {
+    @attr({ reflect: false })
+    accessor value = 'foo';
+  }
+
+  const el = new MyElement();
+  el.value = 'bar';
+
+  expect(el.value).to.equal('bar');
+
+  expect(el.hasAttribute('value')).to.be.false;
+});

@@ -4,6 +4,7 @@ export interface AttrDef {
   propName: string | symbol;
   attrName: string;
   observe: boolean;
+  reflect: boolean;
 }
 
 export type ListenerSelector<T> = (el: T) => Element | ShadowRoot | null;
