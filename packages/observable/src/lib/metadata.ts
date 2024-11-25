@@ -35,7 +35,7 @@ export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<
     let data = this.get(key);
 
     if (!data) {
-      data = new ObservableMetadata<T>();
+      data = new ObservableMetadata();
 
       this.set(key, data);
     }

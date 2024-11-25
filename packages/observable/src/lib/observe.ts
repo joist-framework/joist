@@ -17,11 +17,10 @@ export function observe() {
         } catch {}
 
         if (val) {
-          delete (<any>this)[ctx.name];
+          Reflect.deleteProperty(this, ctx.name);
 
           return val;
         }
-
         // END
 
         return value;
@@ -41,8 +40,8 @@ export function observe() {
         }
 
         instanceMeta.changes.set(ctx.name as keyof This, {
-          oldValue: base.get.call(this),
-          newValue: value
+          oldValue: base.get.call(this) as This[keyof This],
+          newValue: value as This[keyof This]
         });
 
         base.set.call(this, value);
