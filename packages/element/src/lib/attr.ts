@@ -7,7 +7,7 @@ export interface AttrOpts {
 
 export function attr(opts?: AttrOpts) {
   return function attrDecorator<This extends HTMLElement>(
-    { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
+    { set }: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>
   ): ClassAccessorDecoratorResult<This, any> {
     const attrName = parseAttrName(ctx.name);
@@ -34,28 +34,6 @@ export function attr(opts?: AttrOpts) {
         }
 
         set.call(this, value);
-      },
-      get() {
-        const ogValue = get.call(this);
-        const attr = this.getAttribute(attrName);
-
-        if (attr !== null) {
-          // treat as boolean
-          if (attr === '') {
-            return true;
-          }
-
-          // treat as number
-          if (typeof ogValue === 'number') {
-            return Number(attr);
-          }
-
-          // treat as string
-          return attr;
-        }
-
-        // no readable value return original
-        return ogValue;
       }
     };
   };

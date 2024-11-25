@@ -67,6 +67,27 @@ export function element<
           }
         }
       }
+
+      attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        const ogValue = Reflect.get(this, name);
+
+        if (newValue !== null) {
+          if (newValue === '') {
+            // treat as boolean
+            Reflect.set(this, name, true);
+          } else if (typeof ogValue === 'number') {
+            // treat as number
+            Reflect.set(this, name, Number(newValue));
+          } else {
+            // treat as string
+            Reflect.set(this, name, newValue);
+          }
+        }
+
+        if (super.attributeChangedCallback) {
+          super.attributeChangedCallback(name, oldValue, newValue);
+        }
+      }
     };
   };
 }

@@ -55,7 +55,7 @@ export function effect() {
     value: EffectFn<T>,
     ctx: ClassMethodDecoratorContext<T>
   ) {
-    const data = observableMetadataStore.read(ctx.metadata);
+    const data = observableMetadataStore.read<T>(ctx.metadata);
 
     data.effects.add(value);
   };
