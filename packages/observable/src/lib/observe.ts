@@ -5,7 +5,7 @@ export function observe() {
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>
   ): ClassAccessorDecoratorResult<This, Value> {
-    const observableMeta = observableMetadataStore.read(ctx.metadata);
+    const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
 
     return {
       init(value) {
@@ -21,12 +21,13 @@ export function observe() {
 
           return val;
         }
+
         // END
 
         return value;
       },
       set(value) {
-        const instanceMeta = instanceMetadataStore.read(this);
+        const instanceMeta = instanceMetadataStore.read<This>(this);
 
         if (instanceMeta.scheduler === null) {
           instanceMeta.scheduler = Promise.resolve().then(() => {
@@ -39,7 +40,7 @@ export function observe() {
           });
         }
 
-        instanceMeta.changes.set(ctx.name, {
+        instanceMeta.changes.set(ctx.name as keyof This, {
           oldValue: base.get.call(this),
           newValue: value
         });
@@ -52,7 +53,7 @@ export function observe() {
 
 export function effect() {
   return function effectDecorator<T extends object>(
-    value: EffectFn,
+    value: EffectFn<T>,
     ctx: ClassMethodDecoratorContext<T>
   ) {
     const data = observableMetadataStore.read(ctx.metadata);
