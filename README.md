@@ -9,10 +9,14 @@ From SalesForce to ServiceNow to React you need to write JavaScript/TypeScript a
 
 This toolkit is here to help provide just the functionality you need and nothing more. Use with Lit, FAST, Vanilla WC, Node, wherever you find yourself.
 
-### Packages
+## Packages
 
 | Package                                  | Description                              |
 | ---------------------------------------- | ---------------------------------------- |
 | [@joist/di](packages/di)                 | Small and Efficient dependency Injection |
 | [@joist/element](packages/element)       | utilities for custom elements            |
 | [@joist/observable](packages/observable) | Observe changes to class properties      |
+
+## Sponsored by [Noctua Technology](https://github.com/Noctua-Technology)
+
+![Noctua Logo](assets/Noctua_Logo.webp)
