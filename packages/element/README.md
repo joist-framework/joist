@@ -119,7 +119,8 @@ export class MyElement extends HTMLElement {
 
   @effect()
   onChange() {
-    this.#input({ value: this.value });
+    const input = this.#input();
+    input.value = this.value;
   }
 }
 ```

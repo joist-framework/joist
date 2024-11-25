@@ -11,7 +11,7 @@ export function query<E extends HTMLElement = HTMLElement>(selectors: string): Q
 export function query<K extends Tags>(query: K): QueryResult<HTMLElementTagNameMap[K]> {
   let res: HTMLElementTagNameMap[K] | null = null;
 
-  return function (this: HTMLElement, updates?: Partial<HTMLElementTagNameMap[K]>) {
+  return function (this: HTMLElement) {
     if (res) {
       return res;
     }
@@ -24,12 +24,6 @@ export function query<K extends Tags>(query: K): QueryResult<HTMLElementTagNameM
 
     if (!res) {
       throw new Error('could not find element');
-    }
-
-    if (updates) {
-      for (let update in updates) {
-        (res as any)[update] = updates[update];
-      }
     }
 
     return res;
