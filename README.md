@@ -1,4 +1,7 @@
+
 # Joist
+
+![Noctua Logo](assets/Noctua_Logo.webp)
 
 NOTE: This branch is for the upcoming 4.0 release. View the 3.0 branch for current docss
 
@@ -18,5 +21,3 @@ This toolkit is here to help provide just the functionality you need and nothing
 | [@joist/observable](packages/observable) | Observe changes to class properties      |
 
 ## Sponsored by [Noctua Technology](https://github.com/Noctua-Technology)
-
-![Noctua Logo](assets/Noctua_Logo.webp)
