@@ -1,4 +1,4 @@
-import { AttrDef, metadataStore } from './metadata.js';
+import { AttrMetadata, metadataStore } from './metadata.js';
 import { ShadowResult } from './result.js';
 
 export interface ElementOpts<T extends HTMLElement> {
@@ -100,7 +100,7 @@ export function element<
   };
 }
 
-function reflectAttributeValues(el: HTMLElement, attrs: Map<string, AttrDef>) {
+function reflectAttributeValues(el: HTMLElement, attrs: AttrMetadata) {
   for (let [attrName, { getPropValue, reflect }] of attrs) {
     if (reflect) {
       const value = getPropValue.call(el);
