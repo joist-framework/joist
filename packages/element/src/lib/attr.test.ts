@@ -153,3 +153,18 @@ it('should not reflect property to attribute', async () => {
 
   expect(el.hasAttribute('value')).to.be.false;
 });
+
+it('non reflective attributes should still read new attribute values', async () => {
+  @element({
+    tagName: 'attr-test-6'
+  })
+  class MyElement extends HTMLElement {
+    @attr({ reflect: false })
+    accessor value = 'foo';
+  }
+
+  const el = new MyElement();
+  el.setAttribute('value', 'bar');
+
+  expect(el.value).to.equal('bar');
+});

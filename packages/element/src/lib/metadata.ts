@@ -2,9 +2,10 @@
 
 export interface AttrDef {
   propName: string | symbol;
-  attrName: string;
   observe: boolean;
   reflect: boolean;
+  get: Function;
+  set: Function;
 }
 
 export type ListenerSelector<T> = (el: T) => Element | ShadowRoot | null;
@@ -16,7 +17,7 @@ export interface Listener<T> {
 }
 
 export class ElementMetadata<T> {
-  attrs: AttrDef[] = [];
+  attrs = new Map<string, AttrDef>();
   listeners: Listener<T>[] = [];
   onReady = new Set<Function>();
 }

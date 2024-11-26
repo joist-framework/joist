@@ -22,9 +22,9 @@ export function element<
     });
 
     return class JoistElement extends Base {
-      static observedAttributes = meta.attrs
-        .filter(({ observe }) => observe) // filter out attributes that are not to be observed
-        .map(({ attrName }) => attrName);
+      static observedAttributes = Array.from(meta.attrs)
+        .filter(([_, { observe }]) => observe) // filter out attributes that are not to be observed
+        .map(([attrName]) => attrName);
 
       constructor(...args: any[]) {
         super(...args);
@@ -69,33 +69,31 @@ export function element<
       }
 
       attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        const ogValue = Reflect.get(this, name);
+        const attr = meta.attrs.get(name);
 
-        if (newValue !== null) {
+        if (attr && oldValue !== newValue) {
+          const ogValue = attr.get.call(this);
+
           if (newValue === '') {
             // treat as boolean
-            Reflect.set(this, name, true);
+            attr.set.call(this, true);
           } else if (typeof ogValue === 'number') {
             // treat as number
-            Reflect.set(this, name, Number(newValue));
+            attr.set.call(this, Number(newValue));
           } else {
             // treat as string
-            Reflect.set(this, name, newValue);
+            attr.set.call(this, newValue);
           }
-        }
-
-        if (super.attributeChangedCallback) {
-          super.attributeChangedCallback(name, oldValue, newValue);
         }
       }
     };
   };
 }
 
-function reflectAttributeValues(el: HTMLElement, attrs: AttrDef[]) {
-  for (let { propName, attrName, reflect } of attrs) {
+function reflectAttributeValues(el: HTMLElement, attrs: Map<string, AttrDef>) {
+  for (let [attrName, { get, reflect }] of attrs) {
     if (reflect) {
-      const value = Reflect.get(el, propName);
+      const value = get.call(el);
 
       // reflect values back to attributes
       if (value !== null && value !== undefined && value !== '') {

@@ -7,18 +7,19 @@ export interface AttrOpts {
 
 export function attr(opts?: AttrOpts) {
   return function attrDecorator<This extends HTMLElement>(
-    { set }: ClassAccessorDecoratorTarget<This, unknown>,
+    { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>
   ): ClassAccessorDecoratorResult<This, any> {
     const attrName = parseAttrName(ctx.name);
     const meta = metadataStore.read(ctx.metadata);
     const reflect = opts?.reflect ?? true;
 
-    meta.attrs.push({
+    meta.attrs.set(attrName, {
       propName: ctx.name,
-      attrName,
       observe: opts?.observed ?? true,
-      reflect
+      reflect,
+      get,
+      set
     });
 
     return {
