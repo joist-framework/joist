@@ -3,7 +3,7 @@
 
 **Sponsored by:**
 
-![Noctua Logo](assets/Noctua_Logo.webp)
+[![Noctua Logo](assets/Noctua_Logo.webp)](https://github.com/Noctua-Technology)
 
 Web components are awesome! Joist is a set of small libraries designed to add the bare minimum to web components to make you as productive as possible. The entire project started years ago when I made my first attempt at bringing dependency injection (@joist/di) to Custom Elements as a way to share state between them. Along the way, several other packages were added to solve different challenges.
 
