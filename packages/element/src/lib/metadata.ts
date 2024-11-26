@@ -4,8 +4,8 @@ export interface AttrDef {
   propName: string | symbol;
   observe: boolean;
   reflect: boolean;
-  get: Function;
-  set: Function;
+  getPropValue: Function;
+  setPropValue: Function;
 }
 
 export type ListenerSelector<T> = (el: T) => Element | ShadowRoot | null;

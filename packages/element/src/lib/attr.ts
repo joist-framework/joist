@@ -18,8 +18,8 @@ export function attr(opts?: AttrOpts) {
       propName: ctx.name,
       observe: opts?.observed ?? true,
       reflect,
-      get,
-      set
+      getPropValue: get,
+      setPropValue: set
     });
 
     return {
