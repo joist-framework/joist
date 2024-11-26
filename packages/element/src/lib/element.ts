@@ -91,6 +91,10 @@ export function element<
             attr.setPropValue.call(this, newValue);
           }
         }
+
+        if (super.attributeChangedCallback) {
+          super.attributeChangedCallback(name, oldValue, newValue);
+        }
       }
     };
   };
