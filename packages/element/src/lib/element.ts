@@ -22,9 +22,15 @@ export function element<
     });
 
     return class JoistElement extends Base {
-      static observedAttributes = meta.attrs
-        .filter(({ observe }) => observe) // filter out attributes that are not to be observed
-        .map(({ attrName }) => attrName);
+      static observedAttributes: string[] = [];
+
+      static {
+        for (let [attrName, { observe }] of meta.attrs) {
+          if (observe) {
+            this.observedAttributes.push(attrName);
+          }
+        }
+      }
 
       constructor(...args: any[]) {
         super(...args);
@@ -69,18 +75,20 @@ export function element<
       }
 
       attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        const ogValue = Reflect.get(this, name);
+        const attr = meta.attrs.get(name);
 
-        if (newValue !== null) {
+        if (attr && oldValue !== newValue) {
+          const ogValue = attr.getPropValue.call(this);
+
           if (newValue === '') {
             // treat as boolean
-            Reflect.set(this, name, true);
+            attr.setPropValue.call(this, true);
           } else if (typeof ogValue === 'number') {
             // treat as number
-            Reflect.set(this, name, Number(newValue));
+            attr.setPropValue.call(this, Number(newValue));
           } else {
             // treat as string
-            Reflect.set(this, name, newValue);
+            attr.setPropValue.call(this, newValue);
           }
         }
 
@@ -92,10 +100,10 @@ export function element<
   };
 }
 
-function reflectAttributeValues(el: HTMLElement, attrs: AttrDef[]) {
-  for (let { propName, attrName, reflect } of attrs) {
+function reflectAttributeValues(el: HTMLElement, attrs: Map<string, AttrDef>) {
+  for (let [attrName, { getPropValue, reflect }] of attrs) {
     if (reflect) {
-      const value = Reflect.get(el, propName);
+      const value = getPropValue.call(el);
 
       // reflect values back to attributes
       if (value !== null && value !== undefined && value !== '') {
