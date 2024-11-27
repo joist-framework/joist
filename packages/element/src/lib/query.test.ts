@@ -7,7 +7,7 @@ import { html } from './tags.js';
 it('should work', () => {
   @element({
     tagName: 'query-test-1',
-    shadow: [
+    shadowDom: [
       html`
         <form>
           <input id="fname" name="fname" />

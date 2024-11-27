@@ -25,7 +25,7 @@ describe('@listen()', () => {
   it('should add listener to the shadow root if available', (done) => {
     @element({
       tagName: 'listener-2',
-      shadow: []
+      shadowDom: []
     })
     class MyElement extends HTMLElement {
       @listen('click')
@@ -70,7 +70,7 @@ describe('@listen()', () => {
   it('should respect a provided selector function', (done) => {
     @element({
       tagName: 'listener-4',
-      shadow: []
+      shadowDom: []
     })
     class MyElement extends HTMLElement {
       @listen('click', (host) => host)

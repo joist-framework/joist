@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 
 import { attr } from './attr.js';
 import { element } from './element.js';
@@ -62,7 +62,7 @@ it('should register attributes', async () => {
 it('should attach shadow root when the shadow property exists', async () => {
   @element({
     tagName: 'element-3',
-    shadow: []
+    shadowDom: []
   })
   class MyElement extends HTMLElement {}
 
@@ -74,7 +74,7 @@ it('should attach shadow root when the shadow property exists', async () => {
 it('should apply html and css', async () => {
   @element({
     tagName: 'element-4',
-    shadow: [
+    shadowDom: [
       css`
         :host {
           display: contents;
@@ -98,4 +98,17 @@ it('should apply html and css', async () => {
   expect(el.shadowRoot!.adoptedStyleSheets.length).to.equal(1);
   expect(el.shadowRoot!.innerHTML).to.equal(`<slot></slot>`);
   expect(el.innerHTML).to.equal(`<div>hello world</div>`);
+});
+
+it('should the correct shadow dom mode', async () => {
+  @element({
+    tagName: 'element-5',
+    shadowDom: [],
+    shadowDomMode: 'closed'
+  })
+  class MyElement extends HTMLElement {}
+
+  const el = new MyElement();
+
+  assert.equal(el.shadowRoot, null);
 });

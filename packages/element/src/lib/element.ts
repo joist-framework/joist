@@ -3,7 +3,8 @@ import { ShadowResult } from './result.js';
 
 export interface ElementOpts<T extends HTMLElement> {
   tagName?: string;
-  shadow?: Array<ShadowResult<T> | ((el: T) => void)>;
+  shadowDom?: ShadowResult<T>[];
+  shadowDomMode?: 'open' | 'closed';
 }
 
 export function element<
@@ -35,17 +36,13 @@ export function element<
       constructor(...args: any[]) {
         super(...args);
 
-        if (opts?.shadow) {
+        if (opts?.shadowDom) {
           if (!this.shadowRoot) {
-            this.attachShadow({ mode: 'open' });
+            this.attachShadow({ mode: opts.shadowDomMode ?? 'open' });
           }
 
-          for (let res of opts.shadow) {
-            if (typeof res === 'function') {
-              res(this as unknown as Instance);
-            } else {
-              res.apply(this as unknown as Instance);
-            }
+          for (let res of opts.shadowDom) {
+            res.apply(this as unknown as Instance);
           }
         }
 
