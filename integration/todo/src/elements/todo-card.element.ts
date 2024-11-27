@@ -4,7 +4,7 @@ import { Todo, TodoStatus } from '../services/todo.service.js';
 
 @element({
   tagName: 'todo-card',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         align-items: center;

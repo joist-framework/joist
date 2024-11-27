@@ -6,13 +6,14 @@
   "keywords": [],
   "author": "deebloo",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "wireit",
     "build": "wireit"
   },
   "wireit": {
     "start": {
-      "command": "browser-sync start --config=browser-sync.js",
+      "command": "browser-sync start --config=browser-sync.cjs",
       "service": true,
       "dependencies": [
         {

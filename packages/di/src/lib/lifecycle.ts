@@ -1,4 +1,4 @@
-import { InjectableMetadata } from './metadata';
+import { InjectableMetadata } from './metadata.js';
 
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 

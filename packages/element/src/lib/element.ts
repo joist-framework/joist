@@ -1,20 +1,21 @@
 import { AttrMetadata, metadataStore } from './metadata.js';
 import { ShadowResult } from './result.js';
 
-export interface ElementOpts<T extends HTMLElement> {
+export interface ElementOpts {
   tagName?: string;
-  shadowDom?: ShadowResult<T>[];
+  shadowDom?: ShadowResult[];
   shadowDomMode?: 'open' | 'closed';
 }
 
-export function element<
-  Target extends CustomElementConstructor,
-  Instance extends InstanceType<Target>
->(opts?: ElementOpts<Instance>) {
-  return function elementDecorator(Base: Target, ctx: ClassDecoratorContext<Target>) {
+interface ElementConstructor {
+  new (...args: any[]): HTMLElement;
+}
+
+export function element<T extends ElementConstructor>(opts?: ElementOpts) {
+  return function elementDecorator(Base: T, ctx: ClassDecoratorContext<T>) {
     const meta = metadataStore.read(ctx.metadata);
 
-    ctx.addInitializer(function (this: Target) {
+    ctx.addInitializer(function () {
       if (opts?.tagName) {
         if (!customElements.get(opts.tagName)) {
           customElements.define(opts.tagName, this);
@@ -42,7 +43,7 @@ export function element<
           }
 
           for (let res of opts.shadowDom) {
-            res.apply(this as unknown as Instance);
+            res.apply(this);
           }
         }
 
@@ -97,7 +98,7 @@ export function element<
   };
 }
 
-function reflectAttributeValues(el: HTMLElement, attrs: AttrMetadata) {
+function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadata) {
   for (let [attrName, { getPropValue, reflect }] of attrs) {
     if (reflect) {
       const value = getPropValue.call(el);

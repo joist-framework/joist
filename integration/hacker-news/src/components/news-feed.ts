@@ -7,7 +7,7 @@ import { HnNewsCard } from './news-card.js';
 @injectable()
 @element({
   tagName: 'hn-news-feed',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         display: contents;

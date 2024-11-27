@@ -4,6 +4,7 @@
   "sideEffects": false,
   "private": true,
   "description": "",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
@@ -17,7 +18,7 @@
   },
   "wireit": {
     "start": {
-      "command": "browser-sync start --config=browser-sync.js",
+      "command": "browser-sync start --config=browser-sync.cjs",
       "service": true,
       "dependencies": [
         {

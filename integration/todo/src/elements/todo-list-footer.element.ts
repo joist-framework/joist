@@ -22,7 +22,7 @@ class PluralRules extends Intl.PluralRules {}
 })
 @element({
   tagName: 'todo-list-footer',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         --card-height: 50px;

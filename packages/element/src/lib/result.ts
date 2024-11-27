@@ -1,3 +1,3 @@
-export interface ShadowResult<T extends HTMLElement> {
-  apply(el: T): void;
+export interface ShadowResult {
+  apply(el: Element): void;
 }

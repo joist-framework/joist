@@ -30,7 +30,7 @@ class AppLocalStorage implements Storage {
 
 @element({
   tagName: 'local-storage-ctx',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         display: contents;

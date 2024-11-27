@@ -1,9 +1,10 @@
-import { attr, css, element, template, ready, html } from '@joist/element';
+import { attr, css, element, ready, html } from '@joist/element';
+import { template } from '@joist/element/template.js';
 import { observe, effect } from '@joist/observable';
 
 @element({
   tagName: 'hn-news-card',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         padding: 1rem;

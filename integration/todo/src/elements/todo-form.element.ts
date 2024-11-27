@@ -6,7 +6,7 @@ import { TodoService, Todo } from '../services/todo.service.js';
 @injectable()
 @element({
   tagName: 'todo-form',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         display: block;
@@ -69,7 +69,7 @@ export class TodoFormElement extends HTMLElement {
 
   #todos = inject(TodoService);
 
-  @listen('submit', 'todo-form')
+  @listen('submit', '#todo-form')
   onSubmit(e: Event) {
     const service = this.#todos();
 
