@@ -5,12 +5,9 @@
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
-    ".": {
-      "import": "./target/lib.js"
-    },
-    "./*": {
-      "import": "./target/lib/*.js"
-    }
+    ".": "./target/lib.js",
+    "./*": "./target/lib/*",
+    "./package.json": "./package.json"
   },
   "files": [
     "src",
