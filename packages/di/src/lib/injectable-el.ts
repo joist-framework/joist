@@ -26,7 +26,7 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
 
     connectedCallback() {
       if (this.isConnected) {
-        this.dispatchEvent(new Event('finddiroot', { bubbles: true }));
+        this.dispatchEvent(new Event('finddiroot', { bubbles: true, composed: true }));
 
         if (super.connectedCallback) {
           super.connectedCallback();
@@ -56,6 +56,11 @@ function findInjectorRoot(e: Event): Injector | null {
 
     if (injector) {
       return injector;
+    }
+
+    // stop checking at the document body
+    if (part === document.body) {
+      return null;
     }
   }
 
