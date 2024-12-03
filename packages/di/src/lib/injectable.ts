@@ -17,7 +17,14 @@ export function injectable(opts?: InjectableOpts) {
       constructor(...args: any[]) {
         super(...args);
 
-        injectables.set(this, new Injector(opts?.providers));
+        const injector = new Injector(opts?.providers);
+
+        injector.providers.push({
+          provide: Injector,
+          factory: () => injector
+        });
+
+        injectables.set(this, injector);
       }
     }
 
