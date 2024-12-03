@@ -16,6 +16,8 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
        * This will also work through shadow roots (that are not "closed")
        */
       this.addEventListener('finddiroot', (e) => {
+        e.stopPropagation();
+
         const parentInjector = findInjectorRoot(e);
 
         if (parentInjector) {
