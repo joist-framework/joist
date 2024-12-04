@@ -23,78 +23,82 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
     });
 
-    return class JoistElement extends Base {
-      static observedAttributes: string[] = [];
+    const def = {
+      [Base.name]: class extends Base {
+        static observedAttributes: string[] = [];
 
-      static {
-        for (let [attrName, { observe }] of meta.attrs) {
-          if (observe) {
-            this.observedAttributes.push(attrName);
-          }
-        }
-      }
-
-      constructor(...args: any[]) {
-        super(...args);
-
-        if (opts?.shadowDom) {
-          if (!this.shadowRoot) {
-            this.attachShadow({ mode: opts.shadowDomMode ?? 'open' });
-          }
-
-          for (let res of opts.shadowDom) {
-            res.apply(this);
+        static {
+          for (let [attrName, { observe }] of meta.attrs) {
+            if (observe) {
+              this.observedAttributes.push(attrName);
+            }
           }
         }
 
-        for (let { event, cb, selector } of meta.listeners) {
-          const root = selector(this);
+        constructor(...args: any[]) {
+          super(...args);
 
-          if (root) {
-            root.addEventListener(event, cb.bind(this));
-          } else {
-            throw new Error(`could not add listener to ${root}`);
+          if (opts?.shadowDom) {
+            if (!this.shadowRoot) {
+              this.attachShadow({ mode: opts.shadowDomMode ?? 'open' });
+            }
+
+            for (let res of opts.shadowDom) {
+              res.apply(this);
+            }
+          }
+
+          for (let { event, cb, selector } of meta.listeners) {
+            const root = selector(this);
+
+            if (root) {
+              root.addEventListener(event, cb.bind(this));
+            } else {
+              throw new Error(`could not add listener to ${root}`);
+            }
+          }
+
+          for (let cb of meta.onReady) {
+            cb.call(this);
           }
         }
 
-        for (let cb of meta.onReady) {
-          cb.call(this);
-        }
-      }
+        connectedCallback() {
+          if (this.isConnected) {
+            reflectAttributeValues(this, meta.attrs);
 
-      connectedCallback() {
-        if (this.isConnected) {
-          reflectAttributeValues(this, meta.attrs);
-
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
-        }
-      }
-
-      attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        const attr = meta.attrs.get(name);
-
-        if (attr && oldValue !== newValue) {
-          const ogValue = attr.getPropValue.call(this);
-
-          if (newValue === '') {
-            // treat as boolean
-            attr.setPropValue.call(this, true);
-          } else if (typeof ogValue === 'number') {
-            // treat as number
-            attr.setPropValue.call(this, Number(newValue));
-          } else {
-            // treat as string
-            attr.setPropValue.call(this, newValue);
+            if (super.connectedCallback) {
+              super.connectedCallback();
+            }
           }
         }
 
-        if (super.attributeChangedCallback) {
-          super.attributeChangedCallback(name, oldValue, newValue);
+        attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+          const attr = meta.attrs.get(name);
+
+          if (attr && oldValue !== newValue) {
+            const ogValue = attr.getPropValue.call(this);
+
+            if (newValue === '') {
+              // treat as boolean
+              attr.setPropValue.call(this, true);
+            } else if (typeof ogValue === 'number') {
+              // treat as number
+              attr.setPropValue.call(this, Number(newValue));
+            } else {
+              // treat as string
+              attr.setPropValue.call(this, newValue);
+            }
+          }
+
+          if (super.attributeChangedCallback) {
+            super.attributeChangedCallback(name, oldValue, newValue);
+          }
         }
       }
     };
+
+    return def[Base.name];
   };
 }
 
