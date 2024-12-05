@@ -44,3 +44,12 @@ it('should inject the current service injectable instance', () => {
 
   assert.equal(service.injector(), injectables.get(service));
 });
+
+it('should not override the name of the original class', () => {
+  @injectable()
+  class MyService {
+    injector = inject(Injector);
+  }
+
+  assert.equal(MyService.name, 'MyService');
+});

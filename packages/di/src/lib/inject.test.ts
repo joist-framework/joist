@@ -26,6 +26,16 @@ it('should throw error if called in constructor', () => {
   }, 'BarService is either not injectable or a service is being called in the constructor.');
 });
 
+it('should throw error if static token is unavailable', () => {
+  assert.throws(() => {
+    const TOKEN = new StaticToken('test');
+
+    const parent = new Injector();
+
+    parent.inject(TOKEN);
+  }, 'Provider not found for "test"');
+});
+
 it('should use the calling injector as parent', () => {
   class FooService {
     value = '1';

@@ -82,7 +82,7 @@ export class Injector {
 
     if (token instanceof StaticToken) {
       if (!token.factory) {
-        throw new Error(`Provider not found for ${token}`);
+        throw new Error(`Provider not found for "${token.name}"`);
       }
 
       return this.#createAndCache(token, token.factory);
