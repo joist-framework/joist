@@ -231,12 +231,12 @@ const url: string = await app.inject(URL_TOKEN);
 This allows you to dynamically import services
 
 ```ts
-const HTTP_SERVICE = new StaticToken('HTTP_SERVICE', () => {
+const HttpService = new StaticToken('HTTP_SERVICE', () => {
   return import('./http.service.js').then((m) => new m.HttpService());
 });
 
 class HackerNewsService {
-  #http = inject(HTTP_SERVICE);
+  #http = inject(HttpService);
 
   async getData() {
     const http = await this.#http();
