@@ -104,7 +104,9 @@ it('should the correct shadow dom mode', async () => {
   @element({
     tagName: 'element-5',
     shadowDom: [],
-    shadowDomMode: 'closed'
+    shadowDomOpts: {
+      mode: 'closed'
+    }
   })
   class MyElement extends HTMLElement {}
 

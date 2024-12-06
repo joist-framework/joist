@@ -4,7 +4,7 @@ import { ShadowResult } from './result.js';
 export interface ElementOpts {
   tagName?: string;
   shadowDom?: ShadowResult[];
-  shadowDomMode?: 'open' | 'closed';
+  shadowDomOpts?: ShadowRootInit;
 }
 
 interface ElementConstructor {
@@ -40,7 +40,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
           if (opts?.shadowDom) {
             if (!this.shadowRoot) {
-              this.attachShadow({ mode: opts.shadowDomMode ?? 'open' });
+              this.attachShadow(opts.shadowDomOpts ?? { mode: 'open' });
             }
 
             for (let res of opts.shadowDom) {
