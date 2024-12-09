@@ -67,6 +67,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
         attributeChangedCallback(name: string, oldValue: string, newValue: string) {
           const attr = meta.attrs.get(name);
+          const cbs = meta.attrChanges.get(name);
 
           if (attr) {
             if (oldValue !== newValue) {
@@ -84,10 +85,14 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
               }
             }
 
-            if (attr.observe) {
-              if (super.attributeChangedCallback) {
-                super.attributeChangedCallback(name, oldValue, newValue);
+            if (cbs) {
+              for (let cb of cbs) {
+                cb.call(this, oldValue, newValue);
               }
+            }
+
+            if (super.attributeChangedCallback) {
+              super.attributeChangedCallback(name, oldValue, newValue);
             }
           }
         }
