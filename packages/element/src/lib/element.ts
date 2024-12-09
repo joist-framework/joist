@@ -75,6 +75,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
         attributeChangedCallback(name: string, oldValue: string, newValue: string) {
           const attr = meta.attrs.get(name);
+          const cbs = meta.attrChanges.get(name);
 
           if (attr && oldValue !== newValue) {
             const ogValue = attr.getPropValue.call(this);
@@ -88,6 +89,12 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             } else {
               // treat as string
               attr.setPropValue.call(this, newValue);
+            }
+          }
+
+          if (cbs) {
+            for (let cb of cbs) {
+              cb.call(this, oldValue, newValue);
             }
           }
 
