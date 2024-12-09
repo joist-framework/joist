@@ -20,7 +20,11 @@ it('should call specific attrbute callback', () => {
     }
   }
 
-  new MyElement();
+  const el = new MyElement();
+
+  document.body.append(el);
 
   assert.deepEqual(args, [null, 'hello']);
+
+  el.remove();
 });
