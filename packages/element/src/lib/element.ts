@@ -90,11 +90,11 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
               // treat as string
               attr.setPropValue.call(this, newValue);
             }
-          }
 
-          if (cbs) {
-            for (let cb of cbs) {
-              cb.call(this, oldValue, newValue);
+            if (cbs) {
+              for (let cb of cbs) {
+                cb.call(this, oldValue, newValue);
+              }
             }
           }
 
