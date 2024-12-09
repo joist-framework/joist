@@ -50,7 +50,7 @@ CSS can be applied by passing the result of the `css` tag to the shadow list.
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: [
+  shadowDom: [
     css`
       h1 {
         color: red;
@@ -69,7 +69,7 @@ The `@listen` decorator allows you to easy setup event listeners. By default the
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: []
+  shadowDom: []
 })
 export class MyElement extends HTMLElement {
   @listen('eventname')
@@ -101,7 +101,7 @@ The `query` function will query for a particular element and allow you to easily
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: [
+  shadowDom: [
     html`
       <label for="my-input">
         <slot></slot>
