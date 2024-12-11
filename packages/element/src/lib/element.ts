@@ -25,13 +25,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
     const def = {
       [Base.name]: class extends Base {
-        static observedAttributes: string[] = [];
-
-        static {
-          for (let [attrName] of meta.attrs) {
-            this.observedAttributes.push(attrName);
-          }
-        }
+        static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
         constructor(...args: any[]) {
           super(...args);
@@ -114,11 +108,17 @@ function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadat
         if (typeof value === 'boolean') {
           if (value === true) {
             // set boolean attribute
-            el.setAttribute(attrName, '');
+            if (!el.hasAttribute(attrName)) {
+              el.setAttribute(attrName, '');
+            }
           }
         } else {
           // set key/value attribute
-          el.setAttribute(attrName, String(value));
+          const strValue = String(value);
+
+          if (el.getAttribute(attrName) !== strValue) {
+            el.setAttribute(attrName, strValue);
+          }
         }
       }
     }
