@@ -26,5 +26,9 @@ it('should call specific attrbute callback', () => {
 
   assert.deepEqual(args, [null, 'hello']);
 
+  el.setAttribute('test', 'world');
+
+  assert.deepEqual(args, ['hello', 'world']);
+
   el.remove();
 });
