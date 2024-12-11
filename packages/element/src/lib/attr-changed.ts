@@ -6,9 +6,9 @@ export function attrChanged(name: string) {
     ctx: ClassMethodDecoratorContext<This>
   ) {
     const meta = metadataStore.read(ctx.metadata);
-    const val = meta.attrChanges.get(name) ?? [];
+    const val = meta.attrChanges.get(name) ?? new Set();
 
-    val.push(cb);
+    val.add(cb);
 
     meta.attrChanges.set(name, val);
   };

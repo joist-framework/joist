@@ -17,7 +17,7 @@ export interface Listener<T> {
 }
 
 export class AttrMetadata extends Map<string, AttrDef> {}
-export class AttrChangeMetadata extends Map<string, Function[]> {}
+export class AttrChangeMetadata extends Map<string, Set<Function>> {}
 
 export class ElementMetadata<T> {
   attrs = new AttrMetadata();
