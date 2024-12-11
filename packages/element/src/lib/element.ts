@@ -28,10 +28,8 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         static observedAttributes: string[] = [];
 
         static {
-          for (let [attrName, { observe }] of meta.attrs) {
-            if (observe) {
-              this.observedAttributes.push(attrName);
-            }
+          for (let [attrName] of meta.attrs) {
+            this.observedAttributes.push(attrName);
           }
         }
 
@@ -76,23 +74,27 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         attributeChangedCallback(name: string, oldValue: string, newValue: string) {
           const attr = meta.attrs.get(name);
 
-          if (attr && oldValue !== newValue) {
-            const ogValue = attr.getPropValue.call(this);
+          if (attr) {
+            if (oldValue !== newValue) {
+              const ogValue = attr.getPropValue.call(this);
 
-            if (newValue === '') {
-              // treat as boolean
-              attr.setPropValue.call(this, true);
-            } else if (typeof ogValue === 'number') {
-              // treat as number
-              attr.setPropValue.call(this, Number(newValue));
-            } else {
-              // treat as string
-              attr.setPropValue.call(this, newValue);
+              if (newValue === '') {
+                // treat as boolean
+                attr.setPropValue.call(this, true);
+              } else if (typeof ogValue === 'number') {
+                // treat as number
+                attr.setPropValue.call(this, Number(newValue));
+              } else {
+                // treat as string
+                attr.setPropValue.call(this, newValue);
+              }
             }
-          }
 
-          if (super.attributeChangedCallback) {
-            super.attributeChangedCallback(name, oldValue, newValue);
+            if (attr.observe) {
+              if (super.attributeChangedCallback) {
+                super.attributeChangedCallback(name, oldValue, newValue);
+              }
+            }
           }
         }
       }
