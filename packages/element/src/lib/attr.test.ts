@@ -168,3 +168,24 @@ it('non reflective attributes should still read new attribute values', async () 
 
   expect(el.value).to.equal('bar');
 });
+
+it('should allow a manually defined attribute name', async () => {
+  @element({
+    tagName: 'attr-test-7'
+  })
+  class MyElement extends HTMLElement {
+    @attr({
+      name: 'aria-label'
+    })
+    accessor value = '';
+  }
+
+  const el = new MyElement();
+  el.setAttribute('aria-label', 'TEST');
+
+  document.body.append(el);
+
+  expect(el.value).to.equal('TEST');
+
+  el.remove();
+});

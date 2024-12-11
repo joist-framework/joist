@@ -1,6 +1,7 @@
 import { metadataStore } from './metadata.js';
 
 export interface AttrOpts {
+  name?: string;
   observed?: boolean;
   reflect?: boolean;
 }
@@ -10,7 +11,7 @@ export function attr(opts?: AttrOpts) {
     { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>
   ): ClassAccessorDecoratorResult<This, any> {
-    const attrName = parseAttrName(ctx.name);
+    const attrName = opts?.name ?? parseAttrName(ctx.name);
     const meta = metadataStore.read<This>(ctx.metadata);
     const reflect = opts?.reflect ?? true;
 
