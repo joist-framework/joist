@@ -12,7 +12,7 @@ export function injectable(opts?: InjectableOpts) {
   return function injectableDecorator<T extends ConstructableToken<any>>(
     Base: T,
     ctx: ClassDecoratorContext
-  ) {
+  ): T {
     const def = {
       [Base.name]: class extends Base {
         constructor(...args: any[]) {
