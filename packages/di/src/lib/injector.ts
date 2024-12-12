@@ -10,7 +10,7 @@ import {
 /**
  * Keeps track of all Injectable services and their Injector
  */
-export const injectables = new WeakMap<object, Injector>();
+export const injectables: WeakMap<object, Injector> = new WeakMap();
 
 /**
  * Injectors create and store instances of services.
@@ -33,8 +33,8 @@ export class Injector {
   // keep track of instances. One Token can have one instance
   #instances = new WeakMap<InjectionToken<any>, any>();
 
-  parent;
-  providers;
+  parent?: Injector;
+  providers: Provider<unknown>[];
 
   constructor(providers: Provider<unknown>[] = [], parent?: Injector) {
     this.parent = parent;
@@ -91,11 +91,11 @@ export class Injector {
     return this.#createAndCache(token, () => new token());
   }
 
-  setParent(parent: Injector | undefined) {
+  setParent(parent: Injector | undefined): void {
     this.parent = parent;
   }
 
-  clear() {
+  clear(): void {
     this.#instances = new WeakMap();
   }
 

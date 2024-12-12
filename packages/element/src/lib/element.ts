@@ -12,7 +12,7 @@ interface ElementConstructor {
 }
 
 export function element<T extends ElementConstructor>(opts?: ElementOpts) {
-  return function elementDecorator(Base: T, ctx: ClassDecoratorContext<T>) {
+  return function elementDecorator(Base: T, ctx: ClassDecoratorContext<T>): T {
     const meta = metadataStore.read(ctx.metadata);
 
     ctx.addInitializer(function () {

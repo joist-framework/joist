@@ -3,14 +3,14 @@ import { Injector } from './injector.js';
 export type ProviderFactory<T> = (injector: Injector) => T;
 
 export class StaticToken<T> {
-  #name;
-  #factory;
+  #name: string;
+  #factory?: ProviderFactory<T>;
 
-  get name() {
+  get name(): string {
     return this.#name;
   }
 
-  get factory() {
+  get factory(): ProviderFactory<T> | undefined {
     return this.#factory;
   }
 

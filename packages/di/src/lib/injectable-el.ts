@@ -4,7 +4,7 @@ import { ConstructableToken } from './provider.js';
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
   _ctx: ClassDecoratorContext
-) {
+): T {
   const def = {
     [Base.name]: class extends Base {
       constructor(..._: any[]) {

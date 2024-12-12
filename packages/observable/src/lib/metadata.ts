@@ -6,7 +6,7 @@ export class Changes<T> extends Map<keyof T, { oldValue: unknown; newValue: unkn
 
 export class ObservableInstanceMetadata<T> {
   scheduler: Promise<void> | null = null;
-  changes = new Changes<T>();
+  changes: Changes<T> = new Changes();
 }
 
 export class ObservableInstanceMetaDataStore extends WeakMap<
@@ -44,5 +44,7 @@ export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<
   }
 }
 
-export const instanceMetadataStore = new ObservableInstanceMetaDataStore();
-export const observableMetadataStore = new ObservableMetadataStore();
+export const instanceMetadataStore: ObservableInstanceMetaDataStore =
+  new ObservableInstanceMetaDataStore();
+
+export const observableMetadataStore: ObservableMetadataStore = new ObservableMetadataStore();

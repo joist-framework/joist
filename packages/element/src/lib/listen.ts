@@ -4,7 +4,10 @@ export function listen<This extends HTMLElement>(
   event: string,
   selector?: ListenerSelector<This> | string
 ) {
-  return function listenDecorator(value: (e: any) => void, ctx: ClassMethodDecoratorContext<This>) {
+  return function listenDecorator(
+    value: (e: any) => void,
+    ctx: ClassMethodDecoratorContext<This>
+  ): void {
     const metadata = metadataStore.read<This>(ctx.metadata);
 
     let selectorInternal: ListenerSelector<This> = (el) => el.shadowRoot ?? el;

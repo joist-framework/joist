@@ -20,10 +20,10 @@ export class AttrMetadata extends Map<string, AttrDef> {}
 export class AttrChangeMetadata extends Map<string, Set<Function>> {}
 
 export class ElementMetadata<T> {
-  attrs = new AttrMetadata();
-  attrChanges = new AttrChangeMetadata();
+  attrs: AttrMetadata = new AttrMetadata();
+  attrChanges: AttrChangeMetadata = new AttrChangeMetadata();
   listeners: Listener<T>[] = [];
-  onReady = new Set<Function>();
+  onReady: Set<Function> = new Set();
 }
 
 export class MetadataStore extends WeakMap<object, ElementMetadata<unknown>> {
@@ -36,4 +36,4 @@ export class MetadataStore extends WeakMap<object, ElementMetadata<unknown>> {
   }
 }
 
-export const metadataStore = new MetadataStore();
+export const metadataStore: MetadataStore = new MetadataStore();
