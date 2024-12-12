@@ -15,7 +15,7 @@ export function template({ tokenPrefix = '#:', value }: TemplateOpts = {}) {
   // Track all nodes that can be updated and their associated property
   let updates: Updates | null = null;
 
-  return function render<T extends HTMLElement>(this: T, opts?: RenderOpts) {
+  return function render<T extends HTMLElement>(this: T, opts?: RenderOpts): void {
     if (!updates || opts?.refresh) {
       updates = findUpdates(this, {
         tokenPrefix,
@@ -105,7 +105,7 @@ function trackElement(node: Node, updates: Updates, opts: Required<TemplateOpts>
   return null;
 }
 
-export function getTemplateValue(obj: object, key: string) {
+export function getTemplateValue(obj: object, key: string): any {
   const parsed = key.split('.');
 
   let pointer: any = obj;
