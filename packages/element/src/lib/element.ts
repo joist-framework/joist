@@ -47,9 +47,10 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
             if (root) {
               const thisCb = cb.bind(this);
+              root.addEventListener(event, thisCb);
 
               this.#removeListeners.add(() => {
-                root.addEventListener(event, thisCb);
+                root.removeEventListener(event, thisCb);
               });
             } else {
               throw new Error(`could not add listener to ${root}`);
