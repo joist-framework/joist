@@ -27,6 +27,8 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       [Base.name]: class extends Base {
         static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
+        #removeListeners: Set<Function> = new Set();
+
         constructor(...args: any[]) {
           super(...args);
 
@@ -44,7 +46,11 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             const root = selector(this);
 
             if (root) {
-              root.addEventListener(event, cb.bind(this));
+              const thisCb = cb.bind(this);
+
+              this.#removeListeners.add(() => {
+                root.addEventListener(event, thisCb);
+              });
             } else {
               throw new Error(`could not add listener to ${root}`);
             }
@@ -62,6 +68,16 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             if (super.connectedCallback) {
               super.connectedCallback();
             }
+          }
+        }
+
+        disconnectedCallback(): void {
+          for (let remove of this.#removeListeners) {
+            remove();
+          }
+
+          if (super.disconnectedCallback) {
+            super.disconnectedCallback();
           }
         }
 
