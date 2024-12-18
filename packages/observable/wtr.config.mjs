@@ -6,5 +6,9 @@ export default {
     exportConditions: ['production']
   },
   files: 'target/**/*.test.js',
-  browsers: [puppeteerLauncher()]
+  browsers: [
+    puppeteerLauncher({
+      args: ['--no-sandbox']
+    })
+  ]
 };
