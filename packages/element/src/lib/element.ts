@@ -42,43 +42,8 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             }
           }
 
-          for (let { event, cb, selector } of meta.listeners) {
-            const root = selector(this);
-
-            if (root) {
-              const thisCb = cb.bind(this);
-              root.addEventListener(event, thisCb);
-
-              this.#removeListeners.add(() => {
-                root.removeEventListener(event, thisCb);
-              });
-            } else {
-              throw new Error(`could not add listener to ${root}`);
-            }
-          }
-
           for (let cb of meta.onReady) {
             cb.call(this);
-          }
-        }
-
-        connectedCallback() {
-          if (this.isConnected) {
-            reflectAttributeValues(this, meta.attrs);
-
-            if (super.connectedCallback) {
-              super.connectedCallback();
-            }
-          }
-        }
-
-        disconnectedCallback(): void {
-          for (let remove of this.#removeListeners) {
-            remove();
-          }
-
-          if (super.disconnectedCallback) {
-            super.disconnectedCallback();
           }
         }
 
@@ -111,6 +76,42 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             if (super.attributeChangedCallback) {
               super.attributeChangedCallback(name, oldValue, newValue);
             }
+          }
+        }
+
+        connectedCallback() {
+          if (this.isConnected) {
+            for (let { event, cb, selector } of meta.listeners) {
+              const root = selector(this);
+
+              if (root) {
+                const thisCb = cb.bind(this);
+
+                root.addEventListener(event, thisCb);
+
+                this.#removeListeners.add(() => {
+                  root.removeEventListener(event, thisCb);
+                });
+              } else {
+                throw new Error(`could not add listener to ${root}`);
+              }
+            }
+
+            reflectAttributeValues(this, meta.attrs);
+
+            if (super.connectedCallback) {
+              super.connectedCallback();
+            }
+          }
+        }
+
+        disconnectedCallback(): void {
+          for (let remove of this.#removeListeners) {
+            remove();
+          }
+
+          if (super.disconnectedCallback) {
+            super.disconnectedCallback();
           }
         }
       }
