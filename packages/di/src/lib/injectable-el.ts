@@ -1,12 +1,13 @@
 import { injectables, Injector } from './injector.js';
-import { readMetadata } from './metadata.js';
+import { callLifecycle } from './lifecycle.js';
+import { InjectableMetadata } from './metadata.js';
 import { ConstructableToken } from './provider.js';
 
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
-  _ctx: ClassDecoratorContext
+  ctx: ClassDecoratorContext
 ): T {
-  const metadata = readMetadata(Base);
+  const metadata: InjectableMetadata = ctx.metadata;
 
   const def = {
     [Base.name]: class extends Base {
@@ -28,14 +29,10 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
             injectables.get(this)?.setParent(parentInjector);
           }
 
-          if (metadata) {
-            if (metadata.onCreated) {
-              for (let onCreated of metadata.onCreated) {
-                onCreated.call(this);
-              }
-            }
-          }
+          callLifecycle(this, metadata?.onInjected);
         });
+
+        callLifecycle(this, metadata?.onCreated);
       }
 
       connectedCallback() {
@@ -44,14 +41,6 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
 
           if (super.connectedCallback) {
             super.connectedCallback();
-          }
-
-          if (metadata) {
-            if (metadata.onInjected) {
-              for (let onInjected of metadata.onInjected) {
-                onInjected.call(this);
-              }
-            }
           }
         }
       }

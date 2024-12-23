@@ -17,3 +17,11 @@ export function created() {
     metadata.onCreated.push(val);
   };
 }
+
+export function callLifecycle(instance: object, methods?: Function[]): void {
+  if (methods) {
+    for (let cb of methods) {
+      cb.call(instance);
+    }
+  }
+}
