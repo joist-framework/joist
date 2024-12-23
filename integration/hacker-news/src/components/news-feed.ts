@@ -1,5 +1,5 @@
 import { css, element, html } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { inject, injectable, injected } from '@joist/di';
 
 import { HnService } from '../services/hn.service.js';
 import { HnNewsCard } from './news-card.js';
@@ -19,7 +19,8 @@ import { HnNewsCard } from './news-card.js';
 export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
 
-  async connectedCallback() {
+  @injected()
+  async onInjected() {
     const hn = this.#hn();
 
     const stories = await hn.getTopStories();

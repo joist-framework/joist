@@ -1,3 +1,4 @@
+import { callLifecycle } from './lifecycle.js';
 import { readMetadata } from './metadata.js';
 import {
   ConstructableToken,
@@ -147,15 +148,5 @@ export class Injector {
     }
 
     return undefined;
-  }
-}
-
-function callLifecycle(instance: object, methods?: unknown) {
-  if (Array.isArray(methods)) {
-    for (let cb of methods) {
-      if (typeof cb === 'function') {
-        cb.call(instance);
-      }
-    }
   }
 }
