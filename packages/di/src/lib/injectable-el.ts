@@ -1,10 +1,13 @@
 import { injectables, Injector } from './injector.js';
+import { readMetadata } from './metadata.js';
 import { ConstructableToken } from './provider.js';
 
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
   _ctx: ClassDecoratorContext
 ): T {
+  const metadata = readMetadata(Base);
+
   const def = {
     [Base.name]: class extends Base {
       constructor(..._: any[]) {
@@ -24,6 +27,14 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
           if (parentInjector) {
             injectables.get(this)?.setParent(parentInjector);
           }
+
+          if (metadata) {
+            if (metadata.onCreated) {
+              for (let onCreated of metadata.onCreated) {
+                onCreated.call(this);
+              }
+            }
+          }
         });
       }
 
@@ -33,6 +44,14 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
 
           if (super.connectedCallback) {
             super.connectedCallback();
+          }
+
+          if (metadata) {
+            if (metadata.onInjected) {
+              for (let onInjected of metadata.onInjected) {
+                onInjected.call(this);
+              }
+            }
           }
         }
       }

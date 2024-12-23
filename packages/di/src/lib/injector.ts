@@ -150,12 +150,10 @@ export class Injector {
   }
 }
 
-function callLifecycle(instance: object, methods?: unknown) {
-  if (Array.isArray(methods)) {
+function callLifecycle(instance: object, methods?: Function[]) {
+  if (methods) {
     for (let cb of methods) {
-      if (typeof cb === 'function') {
-        cb.call(instance);
-      }
+      cb.call(instance);
     }
   }
 }
