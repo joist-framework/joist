@@ -34,6 +34,30 @@ it('should call onInit and onInject when a service is first created', () => {
   });
 });
 
+it('should pass the injector to all lifecycle callbacks', () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res: Injector[] = [];
+
+    @created()
+    onCreated(i: Injector) {
+      this.res.push(i);
+    }
+
+    @injected()
+    onInjected(i: Injector) {
+      this.res.push(i);
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.equal(service.res[0], i);
+  assert.equal(service.res[1], i);
+});
+
 it('should call onInject any time a service is returned', () => {
   const i = new Injector();
 

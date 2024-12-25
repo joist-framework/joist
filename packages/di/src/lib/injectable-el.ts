@@ -14,6 +14,9 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
       constructor(..._: any[]) {
         super();
 
+        // assume injector exists
+        const injector = injectables.get(this)!;
+
         /**
          * Listen for the finddiroot event.
          * This is event is triggered when the element is connected to the dom
@@ -26,13 +29,13 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
           const parentInjector = findInjectorRoot(e);
 
           if (parentInjector) {
-            injectables.get(this)?.setParent(parentInjector);
+            injector.setParent(parentInjector);
           }
 
-          callLifecycle(this, metadata?.onInjected);
+          callLifecycle(this, injector, metadata?.onInjected);
         });
 
-        callLifecycle(this, metadata?.onCreated);
+        callLifecycle(this, injector, metadata?.onCreated);
       }
 
       connectedCallback() {
