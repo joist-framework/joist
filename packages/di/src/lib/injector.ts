@@ -136,8 +136,8 @@ export class Injector {
       const metadata = readMetadata(token as ConstructableToken<T>);
 
       if (metadata) {
-        callLifecycle(instance, this, metadata.onCreated);
-        callLifecycle(instance, this, metadata.onInjected);
+        callLifecycle(instance, injector ?? this, metadata.onCreated);
+        callLifecycle(instance, injector ?? this, metadata.onInjected);
       }
     }
 

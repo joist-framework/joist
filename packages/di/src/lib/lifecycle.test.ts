@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { Injector } from './injector.js';
+import { injectables, Injector } from './injector.js';
 import { injected, created } from './lifecycle.js';
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
@@ -37,7 +37,9 @@ it('should call onInit and onInject when a service is first created', () => {
 it('should pass the injector to all lifecycle callbacks', () => {
   const i = new Injector();
 
-  @injectable()
+  @injectable({
+    name: 'MyService'
+  })
   class MyService {
     res: Injector[] = [];
 
@@ -53,9 +55,12 @@ it('should pass the injector to all lifecycle callbacks', () => {
   }
 
   const service = i.inject(MyService);
+  const injector = injectables.get(service);
 
-  assert.equal(service.res[0], i);
-  assert.equal(service.res[1], i);
+  assert.equal(service.res[0], injector);
+  assert.equal(service.res[0].parent, i);
+  assert.equal(service.res[1], injector);
+  assert.equal(service.res[1].parent, i);
 });
 
 it('should call onInject any time a service is returned', () => {
