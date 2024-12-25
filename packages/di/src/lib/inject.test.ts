@@ -46,14 +46,16 @@ it('should use the calling injector as parent', () => {
     foo = inject(FooService);
   }
 
-  const parent = new Injector([
-    {
-      provide: FooService,
-      use: class extends FooService {
-        value = '100';
+  const parent = new Injector({
+    providers: [
+      {
+        provide: FooService,
+        use: class extends FooService {
+          value = '100';
+        }
       }
-    }
-  ]);
+    ]
+  });
 
   assert.strictEqual(parent.inject(BarService).foo().value, '100');
 });

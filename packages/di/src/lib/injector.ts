@@ -13,6 +13,12 @@ import {
  */
 export const injectables: WeakMap<object, Injector> = new WeakMap();
 
+export interface InjectorOpts {
+  name?: string;
+  providers?: Provider<unknown>[];
+  parent?: Injector;
+}
+
 /**
  * Injectors create and store instances of services.
  * A service is any constructable class.
@@ -34,12 +40,13 @@ export class Injector {
   // keep track of instances. One Token can have one instance
   #instances = new WeakMap<InjectionToken<any>, any>();
 
+  name?: string;
   parent?: Injector;
   providers: Provider<unknown>[];
 
-  constructor(providers: Provider<unknown>[] = [], parent?: Injector) {
-    this.parent = parent;
-    this.providers = providers;
+  constructor(opts?: InjectorOpts) {
+    this.parent = opts?.parent;
+    this.providers = opts?.providers ?? [];
   }
 
   // resolves and retuns and instance of the requested service
@@ -111,9 +118,10 @@ export class Injector {
     if (typeof instance === 'object' && instance !== null) {
       const injector = injectables.get(instance);
 
-      if (injector) {
+      if (injector && injector !== this) {
         /**
          * set the this injector instance as a parent.
+         * This should ONLY happen in the injector is not self. This would cause an infinite loop.
          * this means that each calling injector will be the parent of what it creates.
          * this allows the created service to navigate up it's chain to find a root
          */

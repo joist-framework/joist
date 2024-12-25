@@ -70,7 +70,9 @@ it('should override a provider if explicitly instructed', () => {
   }
 
   class AltA extends A {}
-  const app = new Injector([{ provide: A, use: AltA }]);
+  const app = new Injector({
+    providers: [{ provide: A, use: AltA }]
+  });
 
   assert(app.inject(B).a() instanceof AltA);
 });
@@ -80,7 +82,9 @@ it('should return an existing instance from a parent injector', () => {
 
   const parent = new Injector();
 
-  const app = new Injector([], parent);
+  const app = new Injector({
+    parent
+  });
 
   assert.equal(parent.inject(A), app.inject(A));
 });
@@ -92,18 +96,20 @@ it('should use a factory if provided', () => {
     }
   }
 
-  const injector = new Injector([
-    {
-      provide: Service,
-      factory() {
-        return {
-          hello() {
-            return 'world';
-          }
-        };
+  const injector = new Injector({
+    providers: [
+      {
+        provide: Service,
+        factory() {
+          return {
+            hello() {
+              return 'world';
+            }
+          };
+        }
       }
-    }
-  ]);
+    ]
+  });
 
   assert.equal(injector.inject(Service).hello(), 'world');
 });
@@ -115,11 +121,13 @@ it('should throw an error if provider is missing both factory and use', () => {
     }
   }
 
-  const injector = new Injector([
-    {
-      provide: Service
-    }
-  ]);
+  const injector = new Injector({
+    providers: [
+      {
+        provide: Service
+      }
+    ]
+  });
 
   assert.throws(
     () => injector.inject(Service),
@@ -136,14 +144,16 @@ it('should pass factories and instance of the injector', async () => {
 
   let factoryInjector: Injector | null = null;
 
-  const injector = new Injector([
-    {
-      provide: Service,
-      factory(i) {
-        factoryInjector = i;
+  const injector = new Injector({
+    providers: [
+      {
+        provide: Service,
+        factory(i) {
+          factoryInjector = i;
+        }
       }
-    }
-  ]);
+    ]
+  });
 
   injector.inject(Service);
 
@@ -178,7 +188,9 @@ it('should allow static token to be overridden', () => {
     }
   };
 
-  const injector = new Injector([provider]);
+  const injector = new Injector({
+    providers: [provider]
+  });
 
   const res = injector.inject(TOKEN);
 

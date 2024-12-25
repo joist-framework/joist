@@ -102,7 +102,9 @@ test('should return json', async () => {
     }
   }
 
-  const app = new Injector([{ provide: HttpService, use: MockHttpService }]);
+  const app = new Injector({
+    providers: [{ provide: HttpService, use: MockHttpService }]
+  });
   const api = app.inject(ApiService);
 
   const res = await api.getData();
