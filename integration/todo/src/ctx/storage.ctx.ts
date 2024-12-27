@@ -41,8 +41,8 @@ class AppLocalStorage implements Storage {
 })
 @injectable({
   providers: [
-    { provide: TodoService, use: TodoService },
-    { provide: AppStorage, use: AppLocalStorage }
+    [TodoService, { use: TodoService }],
+    [AppStorage, { use: AppLocalStorage }]
   ]
 })
 export class LocalStorageCtx extends HTMLElement {}

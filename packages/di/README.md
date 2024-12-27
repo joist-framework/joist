@@ -103,7 +103,7 @@ test('should return json', async () => {
   }
 
   const app = new Injector({
-    providers: [{ provide: HttpService, use: MockHttpService }]
+    providers: [[HttpService, { use: MockHttpService }]]
   });
   const api = app.inject(ApiService);
 
@@ -132,7 +132,7 @@ class ConsoleLogger implements Logger {
 }
 
 @injectable({
-  providers: [{ provide: Logger, use: ConsoleLogger }]
+  providers: [[Logger, { use: ConsoleLogger }]]
 })
 class MyService {}
 ```
@@ -182,14 +182,16 @@ class Feature {
 }
 
 const app = new Injector([
-  {
-    provide: Feature,
-    factory(i) {
-      const logger = i.inject(Logger);
+  [
+    Feature,
+    {
+      factory(i) {
+        const logger = i.inject(Logger);
 
-      return new Feature(logger);
+        return new Feature(logger);
+      }
     }
-  }
+  ]
 ]);
 ```
 
@@ -202,10 +204,12 @@ In most cases a token is any constructable class. There are cases where you migh
 const URL_TOKEN = new StaticToken<string>('app_url');
 
 const app = new Injector([
-  {
-    provide: URL_TOKEN,
-    factory: () => '/my-app-url/'
-  }
+  [
+    URL_TOKEN,
+    {
+      factory: () => '/my-app-url/'
+    }
+  ]
 ]);
 ```
 
