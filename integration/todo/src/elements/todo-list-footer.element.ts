@@ -12,12 +12,14 @@ class PluralRules extends Intl.PluralRules {}
 
 @injectable({
   providers: [
-    {
-      provide: PluralRules,
-      factory() {
-        return new Intl.PluralRules();
+    [
+      PluralRules,
+      {
+        factory() {
+          return new Intl.PluralRules();
+        }
       }
-    }
+    ]
   ]
 })
 @element({
