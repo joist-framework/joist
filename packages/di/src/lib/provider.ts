@@ -6,6 +6,8 @@ export class StaticToken<T> {
   #name: string;
   #factory?: ProviderFactory<T>;
 
+  [Symbol.metadata] = {};
+
   get name(): string {
     return this.#name;
   }

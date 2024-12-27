@@ -1,13 +1,6 @@
 import { callLifecycle } from './lifecycle.js';
 import { readMetadata } from './metadata.js';
-import {
-  ConstructableToken,
-  InjectionToken,
-  Provider,
-  ProviderDef,
-  ProviderFactory,
-  StaticToken
-} from './provider.js';
+import { InjectionToken, Provider, ProviderDef, ProviderFactory, StaticToken } from './provider.js';
 
 /**
  * Keeps track of all Injectable services and their Injector
@@ -56,7 +49,7 @@ export class Injector {
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token)!;
 
-      const metadata = readMetadata(token as ConstructableToken<T>);
+      const metadata = readMetadata<T>(token);
 
       if (metadata) {
         callLifecycle(instance, injectables.get(instance) ?? this, metadata.onInjected);
@@ -70,13 +63,9 @@ export class Injector {
     // check for a provider definition
     if (provider) {
       if ('use' in provider) {
-        const use = provider.use;
-
-        return this.#createAndCache<T>(token, () => new use());
-      } else if (provider.factory) {
-        const factory = provider.factory;
-
-        return this.#createAndCache<T>(token, factory);
+        return this.#createAndCache<T>(token, () => new provider.use());
+      } else if ('factory' in provider) {
+        return this.#createAndCache<T>(token, provider.factory);
       } else {
         throw new Error(
           `Provider for ${token.name} found but is missing either 'use' or 'factory'`
@@ -134,7 +123,7 @@ export class Injector {
        * this ensures that services are initialized when the chain is settled
        * this is required since the parent is set after the instance is constructed
        */
-      const metadata = readMetadata(token as ConstructableToken<T>);
+      const metadata = readMetadata<T>(token);
 
       if (metadata) {
         callLifecycle(instance, injector ?? this, metadata.onCreated);
