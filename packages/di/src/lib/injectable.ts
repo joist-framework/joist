@@ -6,7 +6,7 @@ import { injectableEl } from './injectable-el.js';
 
 export interface InjectableOpts {
   name?: string;
-  providers?: Provider<unknown>[];
+  providers?: Iterable<Provider<any>>;
 }
 
 export function injectable(opts?: InjectableOpts) {
@@ -21,8 +21,7 @@ export function injectable(opts?: InjectableOpts) {
 
           const injector = new Injector(opts);
 
-          injector.providers.push({
-            provide: Injector,
+          injector.providers.set(Injector, {
             factory: () => injector
           });
 

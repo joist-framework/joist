@@ -10,7 +10,7 @@ it('should locally override a provider', () => {
   class Bar extends Foo {}
 
   @injectable({
-    providers: [{ provide: Foo, use: Bar }]
+    providers: [[Foo, { use: Bar }]]
   })
   class MyService {
     foo = inject(Foo);
@@ -47,9 +47,7 @@ it('should inject the current service injectable instance', () => {
 
 it('should not override the name of the original class', () => {
   @injectable()
-  class MyService {
-    injector = inject(Injector);
-  }
+  class MyService {}
 
   assert.equal(MyService.name, 'MyService');
 });

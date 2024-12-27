@@ -4,6 +4,7 @@ import {
   ConstructableToken,
   InjectionToken,
   Provider,
+  ProviderDef,
   ProviderFactory,
   StaticToken
 } from './provider.js';
@@ -15,7 +16,7 @@ export const injectables: WeakMap<object, Injector> = new WeakMap();
 
 export interface InjectorOpts {
   name?: string;
-  providers?: Provider<unknown>[];
+  providers?: Iterable<Provider<any>>;
   parent?: Injector;
 }
 
@@ -42,11 +43,11 @@ export class Injector {
 
   name?: string;
   parent?: Injector;
-  providers: Provider<unknown>[];
+  providers: WeakMap<InjectionToken<any>, ProviderDef<any>>;
 
   constructor(opts?: InjectorOpts) {
     this.parent = opts?.parent;
-    this.providers = opts?.providers ?? [];
+    this.providers = new Map(opts?.providers);
   }
 
   // resolves and retuns and instance of the requested service
@@ -64,11 +65,11 @@ export class Injector {
       return instance;
     }
 
-    const provider = this.#findProvider(token);
+    const provider = this.providers.get(token);
 
     // check for a provider definition
     if (provider) {
-      if (provider.use) {
+      if ('use' in provider) {
         const use = provider.use;
 
         return this.#createAndCache<T>(token, () => new use());
@@ -142,19 +143,5 @@ export class Injector {
     }
 
     return instance;
-  }
-
-  #findProvider(token: InjectionToken<any>): Provider<any> | undefined {
-    if (!this.providers) {
-      return undefined;
-    }
-
-    for (let i = 0; i < this.providers.length; i++) {
-      if (this.providers[i].provide === token) {
-        return this.providers[i];
-      }
-    }
-
-    return undefined;
   }
 }

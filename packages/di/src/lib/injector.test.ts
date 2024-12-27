@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { Injector } from './injector.js';
 import { inject } from './inject.js';
 import { injectable } from './injectable.js';
-import { Provider, StaticToken } from './provider.js';
+import { StaticToken } from './provider.js';
 
 it('should create a new instance of a single provider', () => {
   class A {}
@@ -71,7 +71,7 @@ it('should override a provider if explicitly instructed', () => {
 
   class AltA extends A {}
   const app = new Injector({
-    providers: [{ provide: A, use: AltA }]
+    providers: [[A, { use: AltA }]]
   });
 
   assert(app.inject(B).a() instanceof AltA);
@@ -98,16 +98,18 @@ it('should use a factory if provided', () => {
 
   const injector = new Injector({
     providers: [
-      {
-        provide: Service,
-        factory() {
-          return {
-            hello() {
-              return 'world';
-            }
-          };
+      [
+        Service,
+        {
+          factory() {
+            return {
+              hello() {
+                return 'world';
+              }
+            };
+          }
         }
-      }
+      ]
     ]
   });
 
@@ -122,11 +124,7 @@ it('should throw an error if provider is missing both factory and use', () => {
   }
 
   const injector = new Injector({
-    providers: [
-      {
-        provide: Service
-      }
-    ]
+    providers: [[Service, {} as any]]
   });
 
   assert.throws(
@@ -146,12 +144,14 @@ it('should pass factories and instance of the injector', async () => {
 
   const injector = new Injector({
     providers: [
-      {
-        provide: Service,
-        factory(i) {
-          factoryInjector = i;
+      [
+        Service,
+        {
+          factory(i) {
+            factoryInjector = i;
+          }
         }
-      }
+      ]
     ]
   });
 
@@ -181,15 +181,17 @@ it('should create an instance from an async StaticToken factory', async () => {
 it('should allow static token to be overridden', () => {
   const TOKEN = new StaticToken<string>('test');
 
-  const provider: Provider<string> = {
-    provide: TOKEN,
-    factory() {
-      return 'Hello World';
-    }
-  };
-
   const injector = new Injector({
-    providers: [provider]
+    providers: [
+      [
+        TOKEN,
+        {
+          factory() {
+            return 'Hello World';
+          }
+        }
+      ]
+    ]
   });
 
   const res = injector.inject(TOKEN);

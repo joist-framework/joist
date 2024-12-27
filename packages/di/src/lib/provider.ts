@@ -26,8 +26,12 @@ export interface ConstructableToken<T> {
 
 export type InjectionToken<T> = ConstructableToken<T> | StaticToken<T>;
 
-export interface Provider<T> {
-  provide: InjectionToken<T>;
-  use?: ConstructableToken<T>;
-  factory?: ProviderFactory<T>;
-}
+export type ProviderDef<T> =
+  | {
+      use: ConstructableToken<T>;
+    }
+  | {
+      factory: ProviderFactory<T>;
+    };
+
+export type Provider<T> = [InjectionToken<T>, ProviderDef<T>];

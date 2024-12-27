@@ -48,12 +48,14 @@ it('should use the calling injector as parent', () => {
 
   const parent = new Injector({
     providers: [
-      {
-        provide: FooService,
-        use: class extends FooService {
-          value = '100';
+      [
+        FooService,
+        {
+          use: class extends FooService {
+            value = '100';
+          }
         }
-      }
+      ]
     ]
   });
 
