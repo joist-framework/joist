@@ -1,47 +1,64 @@
 import { injectables, Injector } from './injector.js';
+import { callLifecycle } from './lifecycle.js';
+import { InjectableMetadata } from './metadata.js';
 import { ConstructableToken } from './provider.js';
 
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
-  _ctx: ClassDecoratorContext
-) {
-  return class InjectablElement extends Base {
-    constructor(..._: any[]) {
-      super();
+  ctx: ClassDecoratorContext
+): T {
+  const metadata: InjectableMetadata = ctx.metadata;
 
-      /**
-       * Listen for the finddiroot event.
-       * This is event is triggered when the element is connected to the dom
-       * This event will bubble up until it finds a parent injector which is then attached
-       * This will also work through shadow roots (that are not "closed")
-       */
-      this.addEventListener('finddiroot', (e) => {
-        const parentInjector = findInjectorRoot(e);
+  const def = {
+    [Base.name]: class extends Base {
+      constructor(..._: any[]) {
+        super();
 
-        if (parentInjector) {
-          injectables.get(this)?.setParent(parentInjector);
-        }
-      });
-    }
+        // assume injector exists
+        const injector = injectables.get(this)!;
 
-    connectedCallback() {
-      if (this.isConnected) {
-        this.dispatchEvent(new Event('finddiroot', { bubbles: true }));
+        /**
+         * Listen for the finddiroot event.
+         * This is event is triggered when the element is connected to the dom
+         * This event will bubble up until it finds a parent injector which is then attached
+         * This will also work through shadow roots (that are not "closed")
+         */
+        this.addEventListener('finddiroot', (e) => {
+          e.stopPropagation();
 
-        if (super.connectedCallback) {
-          super.connectedCallback();
+          const parentInjector = findInjectorRoot(e);
+
+          if (parentInjector) {
+            injector.setParent(parentInjector);
+          }
+
+          callLifecycle(this, injector, metadata?.onInjected);
+        });
+
+        callLifecycle(this, injector, metadata?.onCreated);
+      }
+
+      connectedCallback() {
+        if (this.isConnected) {
+          this.dispatchEvent(new Event('finddiroot', { bubbles: true, composed: true }));
+
+          if (super.connectedCallback) {
+            super.connectedCallback();
+          }
         }
       }
-    }
 
-    disconnectedCallback() {
-      injectables.get(this)?.setParent(undefined);
+      disconnectedCallback() {
+        injectables.get(this)?.setParent(undefined);
 
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
       }
     }
   };
+
+  return def[Base.name];
 }
 
 function findInjectorRoot(e: Event): Injector | null {
@@ -56,6 +73,11 @@ function findInjectorRoot(e: Event): Injector | null {
 
     if (injector) {
       return injector;
+    }
+
+    // stop checking at the document body
+    if (part === document.body) {
+      return null;
     }
   }
 

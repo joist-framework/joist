@@ -48,8 +48,8 @@ it('should handle parent HTML Injectors', async () => {
 
   @injectable({
     providers: [
-      { provide: B, use: B },
-      { provide: A, use: AltA }
+      [B, { use: B }],
+      [A, { use: AltA }]
     ]
   })
   class Parent extends HTMLElement {}
@@ -83,12 +83,12 @@ it('should handle changing contexts', async () => {
   class AltA implements A {}
 
   @injectable({
-    providers: [{ provide: A, use: A }]
+    providers: [[A, { use: A }]]
   })
   class Ctx1 extends HTMLElement {}
 
   @injectable({
-    providers: [{ provide: A, use: AltA }]
+    providers: [[A, { use: AltA }]]
   })
   class Ctx2 extends HTMLElement {}
 

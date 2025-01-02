@@ -7,7 +7,6 @@ Utilities for building web compnennts. Especially targeted at
 - [Installation](#installation)
 - [Custom Element](#custom-element)
 - [Attributes](#attributes)
-- [Template](#template)
 - [Styles](#styles)
 - [Listeners](#listeners)
 - [Queries](#queries)
@@ -43,52 +42,15 @@ export class MyElement extends HTMLElement {
 }
 ```
 
-## Template
+## HTML and CSS
 
-Joist ships with a very simple template library. It is designed to be very small and is only responsible for updating text in different DOM nodes.
-
-```ts
-@element({
-  tagName: 'my-element',
-  shadow: [
-    html`
-      <h1 #:bind="greeting" #:hidden="!greeting"></h1>
-
-      <ul>
-        <li #:bind="items.0"></li>
-        <li #:bind="items.1"></li>
-        <li #:bind="items.2"></li>
-        <li #:bind="items.3"></li>
-        <li #:bind="items.4"></li>
-      </ul>
-    `
-  ]
-})
-export class MyElement extends HTMLElement {
-  greeting = 'Hello World';
-
-  items = ['first', 'second', 'third', 'fourth', 'fifth'];
-
-  // initialize renderer
-  #render = template();
-
-  @ready()
-  onReady() {
-    // called once element is ready
-
-    this.#render();
-  }
-}
-```
-
-## Styles
-
-To apply styles simply pass the result of the `css` tag to the `shadow` array.
+HTML templates can be applied by passing the result of the `html` tag to the shaodw list.
+CSS can be applied by passing the result of the `css` tag to the shadow list.
 
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: [
+  shadowDom: [
     css`
       h1 {
         color: red;
@@ -107,7 +69,7 @@ The `@listen` decorator allows you to easy setup event listeners. By default the
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: []
+  shadowDom: []
 })
 export class MyElement extends HTMLElement {
   @listen('eventname')
@@ -139,7 +101,7 @@ The `query` function will query for a particular element and allow you to easily
 ```ts
 @element({
   tagName: 'my-element',
-  shadow: [
+  shadowDom: [
     html`
       <label for="my-input">
         <slot></slot>
@@ -157,7 +119,8 @@ export class MyElement extends HTMLElement {
 
   @effect()
   onChange() {
-    this.#input({ value: this.value });
+    const input = this.#input();
+    input.value = this.value;
   }
 }
 ```

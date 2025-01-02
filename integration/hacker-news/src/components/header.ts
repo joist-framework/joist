@@ -1,8 +1,9 @@
-import { attr, css, element, html, template } from '@joist/element';
+import { attr, css, element, html } from '@joist/element';
+import { template } from '@joist/element/template.js';
 
 @element({
   tagName: 'hn-header',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         background: rgb(255, 102, 0);

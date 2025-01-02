@@ -1,13 +1,12 @@
 {
   "name": "@joist/plugin-vite",
-  "version": "4.0.0-next.12",
+  "version": "4.0.0-next.39",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
-    ".": {
-      "import": "./target/lib.js"
-    }
+    ".": "./target/lib.js",
+    "./package.json": "./package.json"
   },
   "files": [
     "src",
@@ -59,6 +58,6 @@
     }
   },
   "devDependencies": {
-    "vite": "^5.4.8"
+    "vite": "^6.0.0"
   }
 }

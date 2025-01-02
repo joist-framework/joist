@@ -8,10 +8,10 @@ export function inject<This extends object, T>(token: InjectionToken<T>): Inject
     const injector = injectables.get(this);
 
     if (injector === undefined) {
-      const name = Object.getPrototypeOf(this.constructor).name;
+      const name = this.constructor.name;
 
       throw new Error(
-        `${name} is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the [LifeCycle.onInject] callback method.`
+        `${name} is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the @injected callback method.`
       );
     }
 

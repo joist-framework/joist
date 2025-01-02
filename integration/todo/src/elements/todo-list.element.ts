@@ -12,7 +12,7 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
 @injectable()
 @element({
   tagName: 'todo-list',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         display: block;

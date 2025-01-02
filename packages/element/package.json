@@ -1,16 +1,13 @@
 {
   "name": "@joist/element",
-  "version": "4.0.0-next.12",
+  "version": "4.0.0-next.39",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
   "exports": {
-    ".": {
-      "import": "./target/lib.js"
-    },
-    "./*": {
-      "import": "./target/lib"
-    }
+    ".": "./target/lib.js",
+    "./*": "./target/lib/*",
+    "./package.json": "./package.json"
   },
   "files": [
     "src",

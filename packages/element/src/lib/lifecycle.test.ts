@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { element } from './element.js';
-import { ready } from './lifecycle';
+import { ready } from './lifecycle.js';
 
 it('should call all callbacks when template is ready', () => {
   @element({

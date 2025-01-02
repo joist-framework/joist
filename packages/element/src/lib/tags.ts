@@ -1,6 +1,6 @@
 import { ShadowResult } from './result.js';
 
-export class HTMLResult<T extends HTMLElement> implements ShadowResult<T> {
+export class HTMLResult<T extends HTMLElement> implements ShadowResult {
   #template;
 
   constructor(raw: TemplateStringsArray, ..._values: any[]) {
@@ -22,7 +22,7 @@ export function html<T extends HTMLElement>(
   return new HTMLResult(strings, ...values);
 }
 
-export class CSSResult<T extends HTMLElement> implements ShadowResult<T> {
+export class CSSResult implements ShadowResult {
   #sheet;
 
   constructor(raw: TemplateStringsArray, ..._values: any[]) {
@@ -37,7 +37,7 @@ export class CSSResult<T extends HTMLElement> implements ShadowResult<T> {
   }
 }
 
-export function css<T extends HTMLElement>(strings: TemplateStringsArray): CSSResult<T> {
+export function css(strings: TemplateStringsArray): CSSResult {
   return new CSSResult(strings);
 }
 

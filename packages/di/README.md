@@ -102,7 +102,9 @@ test('should return json', async () => {
     }
   }
 
-  const app = new Injector([{ provide: HttpService, use: MockHttpService }]);
+  const app = new Injector({
+    providers: [[HttpService, { use: MockHttpService }]]
+  });
   const api = app.inject(ApiService);
 
   const res = await api.getData();
@@ -130,7 +132,7 @@ class ConsoleLogger implements Logger {
 }
 
 @injectable({
-  providers: [{ provide: Logger, use: ConsoleLogger }]
+  providers: [[Logger, { use: ConsoleLogger }]]
 })
 class MyService {}
 ```
@@ -180,14 +182,16 @@ class Feature {
 }
 
 const app = new Injector([
-  {
-    provide: Feature,
-    factory(i) {
-      const logger = i.inject(Logger);
+  [
+    Feature,
+    {
+      factory(i) {
+        const logger = i.inject(Logger);
 
-      return new Feature(logger);
+        return new Feature(logger);
+      }
     }
-  }
+  ]
 ]);
 ```
 
@@ -200,10 +204,12 @@ In most cases a token is any constructable class. There are cases where you migh
 const URL_TOKEN = new StaticToken<string>('app_url');
 
 const app = new Injector([
-  {
-    provide: URL_TOKEN,
-    factory: () => '/my-app-url/'
-  }
+  [
+    URL_TOKEN,
+    {
+      factory: () => '/my-app-url/'
+    }
+  ]
 ]);
 ```
 
@@ -231,12 +237,12 @@ const url: string = await app.inject(URL_TOKEN);
 This allows you to dynamically import services
 
 ```ts
-const HTTP_SERVICE = new StaticToken('HTTP_SERVICE', () => {
+const HttpService = new StaticToken('HTTP_SERVICE', () => {
   return import('./http.service.js').then((m) => new m.HttpService());
 });
 
 class HackerNewsService {
-  #http = inject(HTTP_SERVICE);
+  #http = inject(HttpService);
 
   async getData() {
     const http = await this.#http();

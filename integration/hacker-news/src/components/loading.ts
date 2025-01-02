@@ -2,7 +2,7 @@ import { element, css } from '@joist/element';
 
 @element({
   tagName: 'hn-loading',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         border: 16px solid #f3f3f3; /* Light grey */

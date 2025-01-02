@@ -30,7 +30,7 @@ class AppLocalStorage implements Storage {
 
 @element({
   tagName: 'local-storage-ctx',
-  shadow: [
+  shadowDom: [
     css`
       :host {
         display: contents;
@@ -41,8 +41,8 @@ class AppLocalStorage implements Storage {
 })
 @injectable({
   providers: [
-    { provide: TodoService, use: TodoService },
-    { provide: AppStorage, use: AppLocalStorage }
+    [TodoService, { use: TodoService }],
+    [AppStorage, { use: AppLocalStorage }]
   ]
 })
 export class LocalStorageCtx extends HTMLElement {}

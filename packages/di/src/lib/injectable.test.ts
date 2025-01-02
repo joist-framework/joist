@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
-import { injectables } from './injector.js';
+import { injectables, Injector } from './injector.js';
 
 it('should locally override a provider', () => {
   class Foo {}
@@ -10,7 +10,7 @@ it('should locally override a provider', () => {
   class Bar extends Foo {}
 
   @injectable({
-    providers: [{ provide: Foo, use: Bar }]
+    providers: [[Foo, { use: Bar }]]
   })
   class MyService {
     foo = inject(Foo);
@@ -31,4 +31,23 @@ it('should define an injector for a service instance', () => {
 
   assert.ok(injectables.has(instance));
   assert.ok(instance.arg === 'b');
+});
+
+it('should inject the current service injectable instance', () => {
+  @injectable()
+  class MyService {
+    injector = inject(Injector);
+  }
+
+  const app = new Injector();
+  const service = app.inject(MyService);
+
+  assert.equal(service.injector(), injectables.get(service));
+});
+
+it('should not override the name of the original class', () => {
+  @injectable()
+  class MyService {}
+
+  assert.equal(MyService.name, 'MyService');
 });

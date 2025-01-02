@@ -136,3 +136,56 @@ it('should throw an error for symbols with no description', async () => {
     new MyElement();
   }).to.throw('Cannot handle Symbol property without description');
 });
+
+it('should not reflect property to attribute', async () => {
+  @element({
+    tagName: 'attr-test-5'
+  })
+  class MyElement extends HTMLElement {
+    @attr({ reflect: false })
+    accessor value = 'foo';
+  }
+
+  const el = new MyElement();
+  el.value = 'bar';
+
+  expect(el.value).to.equal('bar');
+
+  expect(el.hasAttribute('value')).to.be.false;
+});
+
+it('non reflective attributes should still read new attribute values', async () => {
+  @element({
+    tagName: 'attr-test-6'
+  })
+  class MyElement extends HTMLElement {
+    @attr({ reflect: false })
+    accessor value = 'foo';
+  }
+
+  const el = new MyElement();
+  el.setAttribute('value', 'bar');
+
+  expect(el.value).to.equal('bar');
+});
+
+it('should allow a manually defined attribute name', async () => {
+  @element({
+    tagName: 'attr-test-7'
+  })
+  class MyElement extends HTMLElement {
+    @attr({
+      name: 'aria-label'
+    })
+    accessor value = '';
+  }
+
+  const el = new MyElement();
+  el.setAttribute('aria-label', 'TEST');
+
+  document.body.append(el);
+
+  expect(el.value).to.equal('TEST');
+
+  el.remove();
+});

@@ -17,7 +17,7 @@ export class Applicator {
     this.#templateLoader = templateLoader;
   }
 
-  async apply(document: string, elements: string[]) {
+  async apply(document: string, elements: string[]): Promise<string> {
     const $ = load(document);
 
     return this.build($, elements);

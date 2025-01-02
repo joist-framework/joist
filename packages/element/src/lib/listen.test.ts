@@ -19,13 +19,17 @@ describe('@listen()', () => {
 
     const el = new MyElement();
 
+    document.body.append(el);
+
     el.dispatchEvent(new Event('click'));
+
+    el.remove();
   });
 
   it('should add listener to the shadow root if available', (done) => {
     @element({
       tagName: 'listener-2',
-      shadow: []
+      shadowDom: []
     })
     class MyElement extends HTMLElement {
       @listen('click')
@@ -38,7 +42,11 @@ describe('@listen()', () => {
 
     const el = new MyElement();
 
+    document.body.append(el);
+
     el.shadowRoot!.dispatchEvent(new Event('click'));
+
+    el.remove();
   });
 
   it('should restrict argument to an event or an event subtype', (done) => {
@@ -64,13 +72,17 @@ describe('@listen()', () => {
 
     const el = new MyElement();
 
+    document.body.append(el);
+
     el.dispatchEvent(new CustomEvent());
+
+    el.remove();
   });
 
   it('should respect a provided selector function', (done) => {
     @element({
       tagName: 'listener-4',
-      shadow: []
+      shadowDom: []
     })
     class MyElement extends HTMLElement {
       @listen('click', (host) => host)
@@ -83,6 +95,10 @@ describe('@listen()', () => {
 
     const el = new MyElement();
 
+    document.body.append(el);
+
     el.dispatchEvent(new Event('click'));
+
+    el.remove();
   });
 });

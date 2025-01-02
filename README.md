@@ -1,6 +1,8 @@
 # Joist
 
-NOTE: This branch is for the upcoming 4.0 release. View the 3.0 branch for current docss
+**Sponsored by:**
+
+[![Noctua Logo](assets/Noctua_Logo.webp)](https://github.com/Noctua-Technology)
 
 Web components are awesome! Joist is a set of small libraries designed to add the bare minimum to web components to make you as productive as possible. The entire project started years ago when I made my first attempt at bringing dependency injection (@joist/di) to Custom Elements as a way to share state between them. Along the way, several other packages were added to solve different challenges.
 
@@ -9,7 +11,9 @@ From SalesForce to ServiceNow to React you need to write JavaScript/TypeScript a
 
 This toolkit is here to help provide just the functionality you need and nothing more. Use with Lit, FAST, Vanilla WC, Node, wherever you find yourself.
 
-### Packages
+NOTE: This branch is for the upcoming 4.0 release. View the 3.0 branch for current docss
+
+## Packages
 
 | Package                                  | Description                              |
 | ---------------------------------------- | ---------------------------------------- |
