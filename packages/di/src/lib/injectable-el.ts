@@ -1,9 +1,9 @@
-import { ContextRequestEvent } from './context.js';
+import { ContextRequestEvent } from './context/protocol.js';
+import { INJECTOR_CTX } from './context/injector-context.js';
 import { injectables } from './injector.js';
 import { callLifecycle } from './lifecycle.js';
 import { InjectableMetadata } from './metadata.js';
 import { ConstructableToken } from './provider.js';
-import { INJECTOR_CTX } from './context.js';
 
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,

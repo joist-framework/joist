@@ -1,5 +1,3 @@
-import { Injector } from './injector.js';
-
 /**
  * A context key.
  *
@@ -23,7 +21,7 @@ export type ContextType<T extends UnknownContext> = T extends Context<infer _, i
  * A function which creates a Context value object
  */
 
-function createContext<KeyType, ValueType>(key: KeyType) {
+export function createContext<KeyType, ValueType>(key: KeyType) {
   return key as Context<KeyType, ValueType>;
 }
 
@@ -66,5 +64,3 @@ declare global {
     'context-request': ContextRequestEvent<Context<unknown, unknown>>;
   }
 }
-
-export const INJECTOR_CTX: Context<'injector', Injector> = createContext('injector');
