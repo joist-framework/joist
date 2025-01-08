@@ -1,17 +1,9 @@
-import { injectables, Injector } from './injector.js';
+import { ContextRequestEvent } from './context.js';
+import { injectables } from './injector.js';
 import { callLifecycle } from './lifecycle.js';
 import { InjectableMetadata } from './metadata.js';
 import { ConstructableToken } from './provider.js';
-
-export class FindInjectorEvent extends Event {
-  callback: (i: Injector) => void;
-
-  constructor(callback: (i: Injector) => void) {
-    super('findinjectorroot', { bubbles: true, composed: true });
-
-    this.callback = callback;
-  }
-}
+import { INJECTOR_CTX } from './context.js';
 
 export function injectableEl<T extends ConstructableToken<HTMLElement>>(
   Base: T,
@@ -27,12 +19,16 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
         // assume injector exists
         const injector = injectables.get(this);
 
-        this.addEventListener('findinjectorroot', (e) => {
-          if (e instanceof FindInjectorEvent) {
-            e.stopPropagation();
+        this.addEventListener('context-request', (e) => {
+          if (e.target !== this) {
+            if (e.context === INJECTOR_CTX) {
+              e.stopPropagation();
 
-            if (injector) {
-              e.callback(injector);
+              const event = e as ContextRequestEvent<typeof INJECTOR_CTX>;
+
+              if (injector) {
+                event.callback(injector);
+              }
             }
           }
         });
@@ -43,22 +39,20 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
       }
 
       connectedCallback() {
-        if (this.isConnected) {
-          this.dispatchEvent(
-            new FindInjectorEvent((i) => {
-              const injector = injectables.get(this);
+        const injector = injectables.get(this);
 
-              if (injector) {
-                injector.setParent(i);
+        this.dispatchEvent(
+          new ContextRequestEvent(INJECTOR_CTX, (parent) => {
+            if (injector) {
+              injector.setParent(parent);
 
-                callLifecycle(this, injector, metadata?.onInjected);
-              }
-            })
-          );
+              callLifecycle(this, injector, metadata?.onInjected);
+            }
+          })
+        );
 
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
+        if (super.connectedCallback) {
+          super.connectedCallback();
         }
       }
 
@@ -74,26 +68,3 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
 
   return def[Base.name];
 }
-
-// function findInjectorRoot(e: Event): Injector | null {
-//   const path = e.composedPath();
-
-//   // find firt parent
-//   // skips the first item which is the target
-//   for (let i = 1; i < path.length; i++) {
-//     const part = path[i];
-
-//     const injector = injectables.get(part);
-
-//     if (injector) {
-//       return injector;
-//     }
-
-//     // stop checking at the document body
-//     if (part === document.body) {
-//       return null;
-//     }
-//   }
-
-//   return null;
-// }
