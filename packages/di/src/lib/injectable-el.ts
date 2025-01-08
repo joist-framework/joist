@@ -45,11 +45,13 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
           new ContextRequestEvent(INJECTOR_CTX, (parent) => {
             if (injector) {
               injector.setParent(parent);
-
-              callLifecycle(this, injector, metadata?.onInjected);
             }
           })
         );
+
+        if (injector) {
+          callLifecycle(this, injector, metadata?.onInjected);
+        }
 
         if (super.connectedCallback) {
           super.connectedCallback();
