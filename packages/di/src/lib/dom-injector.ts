@@ -1,23 +1,35 @@
 import { ContextRequestEvent } from './context/protocol.js';
 import { INJECTOR_CTX } from './context/injector.js';
-import { injectables, Injector } from './injector.js';
+import { Injector } from './injector.js';
 
 export class DOMInjector extends Injector {
   #contextCallback = (e: ContextRequestEvent<{ __context__: unknown }>) => {
     if (e.context === INJECTOR_CTX) {
-      e.stopPropagation();
+      if (e.target !== this.#element) {
+        e.stopPropagation();
 
-      const event = e as ContextRequestEvent<typeof INJECTOR_CTX>;
-
-      event.callback(this);
+        e.callback(this);
+      }
     }
   };
 
-  attach(root: HTMLElement): void {
-    root.addEventListener('context-request', this.#contextCallback);
+  #element: HTMLElement | null = null;
+
+  attach(element: HTMLElement): void {
+    this.#element = element;
+
+    this.#element.addEventListener('context-request', this.#contextCallback);
+
+    this.#element.dispatchEvent(
+      new ContextRequestEvent(INJECTOR_CTX, (parent) => {
+        this.setParent(parent);
+      })
+    );
   }
 
-  detach(root: HTMLElement): void {
-    injectables.delete(root);
+  detach(): void {
+    if (this.#element) {
+      this.#element.removeEventListener('context-request', this.#contextCallback);
+    }
   }
 }
