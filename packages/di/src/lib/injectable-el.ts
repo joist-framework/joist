@@ -16,7 +16,6 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
       constructor(..._: any[]) {
         super();
 
-        // assume injector exists
         const injector = injectables.get(this);
 
         this.addEventListener('context-request', (e) => {
