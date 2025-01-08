@@ -1,28 +1,48 @@
 import { assert } from 'chai';
-
 import { DOMInjector } from './dom-injector.js';
-import { injectables } from './injector.js';
+import { INJECTOR_CTX } from './context/injector.js';
+import { Injector } from './injector.js';
+import { ContextRequestEvent } from './context/protocol.js';
 
-it('should attach an injector to a dom element', () => {
-  const root = document.createElement('div');
-  const app = new DOMInjector();
+describe('DOMInjector', () => {
+  it('should respond to elements looking for an injector', () => {
+    const injector = new DOMInjector();
+    injector.attach(document.body);
 
-  app.attach(root);
+    const host = document.createElement('div');
+    document.body.append(host);
 
-  const injector = injectables.get(root);
+    let parent: Injector | null = null;
 
-  assert.strictEqual(injector, app);
-});
+    host.dispatchEvent(
+      new ContextRequestEvent(INJECTOR_CTX, (i) => {
+        parent = i;
+      })
+    );
 
-it('should remove an injector associated with a dom element', () => {
-  const root = document.createElement('div');
-  const app = new DOMInjector();
+    assert.equal(parent, injector);
 
-  app.attach(root);
+    injector.detach();
+    host.remove();
+  });
 
-  assert.strictEqual(injectables.get(root), app);
+  it('should send request looking for other injector contexts', () => {
+    const parent = new Injector();
+    const injector = new DOMInjector();
 
-  app.detach(root);
+    const cb = (e: any) => {
+      if (e.context === INJECTOR_CTX) {
+        e.callback(parent);
+      }
+    };
 
-  assert.strictEqual(injectables.get(root), undefined);
+    document.body.addEventListener('context-request', cb);
+
+    injector.attach(document.body);
+
+    assert.equal(injector.parent, parent);
+
+    injector.detach();
+    document.body.removeEventListener('context-request', cb);
+  });
 });
