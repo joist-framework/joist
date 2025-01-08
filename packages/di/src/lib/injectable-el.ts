@@ -1,5 +1,5 @@
 import { ContextRequestEvent } from './context/protocol.js';
-import { INJECTOR_CTX } from './context/injector-context.js';
+import { INJECTOR_CTX } from './context/injector.js';
 import { injectables } from './injector.js';
 import { callLifecycle } from './lifecycle.js';
 import { InjectableMetadata } from './metadata.js';

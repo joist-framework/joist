@@ -1,5 +1,5 @@
 import { ContextRequestEvent } from './context/protocol.js';
-import { INJECTOR_CTX } from './context/injector-context.js';
+import { INJECTOR_CTX } from './context/injector.js';
 import { injectables, Injector } from './injector.js';
 
 export class DOMInjector extends Injector {
