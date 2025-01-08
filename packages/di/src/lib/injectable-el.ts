@@ -19,13 +19,11 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
         const injector = injectables.get(this);
 
         this.addEventListener('context-request', (e) => {
-          if (e.target !== this) {
-            if (e.context === INJECTOR_CTX) {
-              e.stopPropagation();
+          if (e.target !== this && e.context === INJECTOR_CTX) {
+            e.stopPropagation();
 
-              if (injector) {
-                e.callback(injector);
-              }
+            if (injector) {
+              e.callback(injector);
             }
           }
         });
