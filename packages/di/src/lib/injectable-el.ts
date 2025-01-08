@@ -23,10 +23,8 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
             if (e.context === INJECTOR_CTX) {
               e.stopPropagation();
 
-              const event = e as ContextRequestEvent<typeof INJECTOR_CTX>;
-
               if (injector) {
-                event.callback(injector);
+                e.callback(injector);
               }
             }
           }
