@@ -65,5 +65,5 @@ it('should provide itself for spefified tokens', () => {
 
   const service = new MyService();
 
-  assert.equal(service.value(), 'MyService');
+  assert.equal(service.value(), service);
 });
