@@ -1,12 +1,13 @@
 (Symbol as any).metadata ??= Symbol('Symbol.metadata');
 
-import { ConstructableToken, Provider } from './provider.js';
+import { ConstructableToken, InjectionToken, Provider } from './provider.js';
 import { injectables, Injector } from './injector.js';
 import { injectableEl } from './injectable-el.js';
 
 export interface InjectableOpts {
   name?: string;
   providers?: Iterable<Provider<any>>;
+  provideSelfAs?: InjectionToken<any>[];
 }
 
 export function injectable(opts?: InjectableOpts) {
@@ -24,6 +25,14 @@ export function injectable(opts?: InjectableOpts) {
           injector.providers.set(Injector, {
             factory: () => injector
           });
+
+          if (opts?.provideSelfAs) {
+            for (const token of opts.provideSelfAs) {
+              injector.providers.set(token, {
+                factory: () => this
+              });
+            }
+          }
 
           injectables.set(this, injector);
         }
