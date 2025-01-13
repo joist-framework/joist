@@ -348,8 +348,8 @@ const app = new DOMInjector();
 app.attach(document.body);
 
 interface ColorCtx {
-  primary = 'red';
-  secondary = 'green';
+  primary: string;
+  secondary: string;
 }
 
 const COLOR_CTX = new StaticToken<ColorCtx>('COLOR_CTX')
@@ -384,11 +384,11 @@ customElements.define('my-element', MyElement);
 ```
 
 ```HTML
-<!-- Default Colors -->
+<!-- Error: No colors provided -->
 <my-element></my-element>
 
-<!-- Special color ctx -->
-<color-ctx>
+<!-- colors come from ctx -->
+<color-ctx primary="orange" secondard="blue">
   <my-element></my-element>
 </color-ctx>
 ```
