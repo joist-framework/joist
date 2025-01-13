@@ -73,8 +73,10 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
               }
             }
 
-            if (super.attributeChangedCallback) {
-              super.attributeChangedCallback(name, oldValue, newValue);
+            if (attr.observe) {
+              if (super.attributeChangedCallback) {
+                super.attributeChangedCallback(name, oldValue, newValue);
+              }
             }
           }
         }
