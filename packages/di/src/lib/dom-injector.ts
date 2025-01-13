@@ -1,24 +1,28 @@
-import { ContextRequestEvent } from './context/protocol.js';
+import { ContextRequestEvent, UnknownContext } from './context/protocol.js';
 import { INJECTOR_CTX } from './context/injector.js';
 import { Injector } from './injector.js';
 
 export class DOMInjector extends Injector {
-  #contextCallback = (e: ContextRequestEvent<{ __context__: unknown }>) => {
-    if (e.context === INJECTOR_CTX) {
-      if (e.target !== this.#element) {
-        e.stopPropagation();
-
-        e.callback(this);
-      }
-    }
-  };
-
   #element: HTMLElement | null = null;
+  #controller: AbortController | null = null;
 
   attach(element: HTMLElement): void {
     this.#element = element;
+    this.#controller = new AbortController();
 
-    this.#element.addEventListener('context-request', this.#contextCallback);
+    this.#element.addEventListener(
+      'context-request',
+      (e: ContextRequestEvent<UnknownContext>) => {
+        if (e.context === INJECTOR_CTX) {
+          if (e.target !== this.#element) {
+            e.stopPropagation();
+
+            e.callback(this);
+          }
+        }
+      },
+      { signal: this.#controller.signal }
+    );
 
     this.#element.dispatchEvent(
       new ContextRequestEvent(INJECTOR_CTX, (parent) => {
@@ -28,8 +32,8 @@ export class DOMInjector extends Injector {
   }
 
   detach(): void {
-    if (this.#element) {
-      this.#element.removeEventListener('context-request', this.#contextCallback);
+    if (this.#controller) {
+      this.#controller.abort();
     }
   }
 }
