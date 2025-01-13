@@ -27,7 +27,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       [Base.name]: class extends Base {
         static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
-        #removeListeners: Set<Function> = new Set();
+        #abortController: AbortController | null = null;
 
         constructor(...args: any[]) {
           super(...args);
@@ -85,12 +85,10 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
               const root = selector(this);
 
               if (root) {
-                const thisCb = cb.bind(this);
+                this.#abortController = new AbortController();
 
-                root.addEventListener(event, thisCb);
-
-                this.#removeListeners.add(() => {
-                  root.removeEventListener(event, thisCb);
+                root.addEventListener(event, cb.bind(this), {
+                  signal: this.#abortController.signal
                 });
               } else {
                 throw new Error(`could not add listener to ${root}`);
@@ -106,8 +104,9 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
 
         disconnectedCallback(): void {
-          for (let remove of this.#removeListeners) {
-            remove();
+          if (this.#abortController) {
+            this.#abortController.abort();
+            this.#abortController = null;
           }
 
           if (super.disconnectedCallback) {
