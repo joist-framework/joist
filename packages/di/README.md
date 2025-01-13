@@ -347,13 +347,15 @@ const app = new DOMInjector();
 
 app.attach(document.body);
 
-class ColorCtx {
+interface ColorCtx {
   primary = 'red';
   secondary = 'green';
 }
 
+const COLOR_CTX = new StaticToken<ColorCtx>('COLOR_CTX')
+
 @injectable({
-  provideSelfAs: [ColorCtx]
+  provideSelfAs: [COLOR_CTX]
 })
 class ColorCtx extends HTMLElement implements ColorCtx {
   get primary() {
@@ -367,7 +369,7 @@ class ColorCtx extends HTMLElement implements ColorCtx {
 
 @injectable()
 class MyElement extends HTMLElement {
-  #colors = inject(Colors);
+  #colors = inject(COLOR_CTX);
 
   connectedCallback() {
     const { primary } = this.#colors();
