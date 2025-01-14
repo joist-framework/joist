@@ -6,12 +6,24 @@ import {
 import { Injector } from "./injector.js";
 
 export class DOMInjector extends Injector {
+  #element: HTMLElement | null = null;
   #controller: AbortController | null = null;
 
+  get isAttached(): boolean {
+    return this.#element !== null && this.#controller !== null;
+  }
+
   attach(element: HTMLElement): void {
+    if (this.isAttached) {
+      throw new Error(
+        `This DOMInjector is already attached to ${this.#element}. Detach first before attaching again`,
+      );
+    }
+
+    this.#element = element;
     this.#controller = new AbortController();
 
-    element.addEventListener(
+    this.#element.addEventListener(
       "context-request",
       (e: ContextRequestEvent<UnknownContext>) => {
         if (e.context === INJECTOR_CTX) {
@@ -25,7 +37,7 @@ export class DOMInjector extends Injector {
       { signal: this.#controller.signal },
     );
 
-    element.dispatchEvent(
+    this.#element.dispatchEvent(
       new ContextRequestEvent(INJECTOR_CTX, (parent) => {
         this.setParent(parent);
       }),
@@ -36,5 +48,7 @@ export class DOMInjector extends Injector {
     if (this.#controller) {
       this.#controller.abort();
     }
+
+    this.#element = null;
   }
 }

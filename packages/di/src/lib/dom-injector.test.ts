@@ -49,4 +49,16 @@ describe("DOMInjector", () => {
     injector.detach();
     document.body.removeEventListener("context-request", cb);
   });
+
+  it("should throw an error if attempting to attach an already attached DOMInjector", () => {
+    const injector = new DOMInjector();
+
+    const el = document.createElement("div");
+
+    injector.attach(el);
+
+    assert.throw(() => {
+      injector.attach(el);
+    });
+  });
 });
