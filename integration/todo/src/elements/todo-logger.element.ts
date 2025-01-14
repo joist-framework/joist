@@ -1,11 +1,11 @@
-import { element } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from "@joist/di";
+import { element } from "@joist/element";
 
-import { TodoService } from '../services/todo.service.js';
+import { TodoService } from "../services/todo.service.js";
 
 @injectable()
 @element({
-  tagName: 'todo-logger'
+  tagName: "todo-logger",
 })
 export class TodoLoggerElement extends HTMLElement {
   #todo = inject(TodoService);
@@ -15,16 +15,16 @@ export class TodoLoggerElement extends HTMLElement {
 
     console.log(await service.getTodos());
 
-    service.addEventListener('todo_added', console.log);
-    service.addEventListener('todo_removed', console.log);
-    service.addEventListener('todo_updated', console.log);
+    service.addEventListener("todo_added", console.log);
+    service.addEventListener("todo_removed", console.log);
+    service.addEventListener("todo_updated", console.log);
   }
 
   disconnectedCallback() {
     const service = this.#todo();
 
-    service.removeEventListener('todo_added', console.log);
-    service.removeEventListener('todo_removed', console.log);
-    service.removeEventListener('todo_updated', console.log);
+    service.removeEventListener("todo_added", console.log);
+    service.removeEventListener("todo_removed", console.log);
+    service.removeEventListener("todo_updated", console.log);
   }
 }

@@ -1,4 +1,4 @@
-import { metadataStore } from './metadata.js';
+import { metadataStore } from "./metadata.js";
 
 export interface AttrOpts {
   name?: string;
@@ -9,7 +9,7 @@ export interface AttrOpts {
 export function attr(opts?: AttrOpts) {
   return function attrDecorator<This extends HTMLElement>(
     { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
-    ctx: ClassAccessorDecoratorContext<This>
+    ctx: ClassAccessorDecoratorContext<This>,
   ): ClassAccessorDecoratorResult<This, any> {
     const attrName = opts?.name ?? parseAttrName(ctx.name);
     const meta = metadataStore.read<This>(ctx.metadata);
@@ -20,7 +20,7 @@ export function attr(opts?: AttrOpts) {
       observe: opts?.observed ?? true,
       reflect,
       getPropValue: get,
-      setPropValue: set
+      setPropValue: set,
     });
 
     return {
@@ -28,7 +28,7 @@ export function attr(opts?: AttrOpts) {
         if (reflect) {
           if (value === true) {
             if (!this.hasAttribute(attrName)) {
-              this.setAttribute(attrName, '');
+              this.setAttribute(attrName, "");
             }
           } else if (value === false) {
             if (this.hasAttribute(attrName)) {
@@ -44,7 +44,7 @@ export function attr(opts?: AttrOpts) {
         }
 
         set.call(this, value);
-      }
+      },
     };
   };
 }
@@ -52,15 +52,15 @@ export function attr(opts?: AttrOpts) {
 function parseAttrName(val: string | symbol): string {
   let value: string;
 
-  if (typeof val === 'symbol') {
+  if (typeof val === "symbol") {
     if (val.description) {
       value = val.description;
     } else {
-      throw new Error('Cannot handle Symbol property without description');
+      throw new Error("Cannot handle Symbol property without description");
     }
   } else {
     value = val;
   }
 
-  return value.toLowerCase().replaceAll(' ', '-');
+  return value.toLowerCase().replaceAll(" ", "-");
 }

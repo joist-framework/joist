@@ -1,10 +1,11 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-import { effect, observe } from './observe.js';
-import { Changes } from './metadata.js';
+import type { Changes } from "./metadata.js";
+import { effect, observe } from "./observe.js";
 
-it('should work with static accessors', () => {
+it("should work with static accessors", () => {
   return new Promise<void>((resolve) => {
+    // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
     class Counter {
       @observe()
       static accessor value = 0;
@@ -24,7 +25,7 @@ it('should work with static accessors', () => {
   });
 });
 
-it('should work with instance accessors', () => {
+it("should work with instance accessors", () => {
   return new Promise<void>((resolve) => {
     class Counter {
       @observe()
@@ -49,15 +50,15 @@ it('should work with instance accessors', () => {
   });
 });
 
-it('should return a set of changed props', () => {
+it("should return a set of changed props", () => {
   return new Promise<void>((resolve) => {
     class Counter {
       @observe() accessor value = 0;
 
       @effect() onChange(changes: Changes<this>) {
-        assert.deepEqual(changes.get('value'), {
+        assert.deepEqual(changes.get("value"), {
           oldValue: 0,
-          newValue: 1
+          newValue: 1,
         });
 
         resolve();
@@ -69,7 +70,7 @@ it('should return a set of changed props', () => {
   });
 });
 
-it('should upgrade custom elements', () => {
+it("should upgrade custom elements", () => {
   return new Promise<void>((resolve) => {
     class Counter extends HTMLElement {
       @observe()
@@ -88,15 +89,15 @@ it('should upgrade custom elements', () => {
       }
     }
 
-    const el = document.createElement('observable-1') as Counter;
+    const el = document.createElement("observable-1") as Counter;
     el.value = 100;
 
     document.body.append(el);
 
-    customElements.whenDefined('observable-1').then(() => {
+    customElements.whenDefined("observable-1").then(() => {
       el.value++;
     });
 
-    customElements.define('observable-1', Counter);
+    customElements.define("observable-1", Counter);
   });
 });

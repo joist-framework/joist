@@ -1,25 +1,32 @@
-import { Applicator } from '@joist/ssr';
-import { PluginOption } from 'vite';
+import type { Applicator } from "@joist/ssr";
+import type { PluginOption } from "vite";
 
 function plugin(applicator: Applicator): PluginOption {
   return {
-    name: 'Joist',
+    name: "Joist",
     transformIndexHtml: {
-      order: 'pre',
+      order: "pre",
       handler(html) {
-        return applicator.apply(html, ['joist-header', 'joist-nav', 'joist-main']);
-      }
+        return applicator.apply(html, [
+          "joist-header",
+          "joist-nav",
+          "joist-main",
+        ]);
+      },
     },
     handleHotUpdate({ file, server }) {
-      if (file.includes('elements') && (file.endsWith('.html') || file.endsWith('.css'))) {
+      if (
+        file.includes("elements") &&
+        (file.endsWith(".html") || file.endsWith(".css"))
+      ) {
         console.log(`${file} updated...`);
 
         server.ws.send({
-          type: 'full-reload',
-          path: '*'
+          type: "full-reload",
+          path: "*",
         });
       }
-    }
+    },
   };
 }
 

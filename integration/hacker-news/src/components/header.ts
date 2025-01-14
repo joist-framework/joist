@@ -1,8 +1,8 @@
-import { attr, css, element, html } from '@joist/element';
-import { template } from '@joist/element/template.js';
+import { attr, css, element, html } from "@joist/element";
+import { template } from "@joist/element/template.js";
 
 @element({
-  tagName: 'hn-header',
+  tagName: "hn-header",
   shadowDom: [
     css`
       :host {
@@ -36,15 +36,15 @@ import { template } from '@joist/element/template.js';
       <nav>
         <slot></slot>
       </nav>
-    `
-  ]
+    `,
+  ],
 })
 export class HnHeader extends HTMLElement {
   @attr()
-  accessor role = 'banner';
+  accessor role = "banner";
 
   @attr()
-  accessor img = '/public/images/y18.svg';
+  accessor img = "/public/images/y18.svg";
 
   #render = template();
 

@@ -1,6 +1,9 @@
-import { ContextRequestEvent, UnknownContext } from './context/protocol.js';
-import { INJECTOR_CTX } from './context/injector.js';
-import { Injector } from './injector.js';
+import { INJECTOR_CTX } from "./context/injector.js";
+import {
+  ContextRequestEvent,
+  type UnknownContext,
+} from "./context/protocol.js";
+import { Injector } from "./injector.js";
 
 export class DOMInjector extends Injector {
   #controller: AbortController | null = null;
@@ -9,7 +12,7 @@ export class DOMInjector extends Injector {
     this.#controller = new AbortController();
 
     element.addEventListener(
-      'context-request',
+      "context-request",
       (e: ContextRequestEvent<UnknownContext>) => {
         if (e.context === INJECTOR_CTX) {
           if (e.target !== element) {
@@ -19,13 +22,13 @@ export class DOMInjector extends Injector {
           }
         }
       },
-      { signal: this.#controller.signal }
+      { signal: this.#controller.signal },
     );
 
     element.dispatchEvent(
       new ContextRequestEvent(INJECTOR_CTX, (parent) => {
         this.setParent(parent);
-      })
+      }),
     );
   }
 

@@ -1,9 +1,9 @@
 module.exports = {
-  files: ['*.html', 'target/**', '../../packages/**/target/**'],
+  files: ["*.html", "target/**", "../../packages/**/target/**"],
   server: {
-    baseDir: './',
+    baseDir: "./",
     routes: {
-      '/node_modules': '../../node_modules'
-    }
-  }
+      "/node_modules": "../../node_modules",
+    },
+  },
 };

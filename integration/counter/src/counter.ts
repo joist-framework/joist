@@ -1,7 +1,7 @@
-import { css, html, listen, element } from '@joist/element';
+import { css, element, html, listen } from "@joist/element";
 
 @element({
-  tagName: 'joist-counter',
+  tagName: "joist-counter",
   shadowDom: [
     css`
       * {
@@ -32,22 +32,22 @@ import { css, html, listen, element } from '@joist/element';
       <button id="dec">-</button>
       <slot></slot>
       <button id="inc">+</button>
-    `
-  ]
+    `,
+  ],
 })
 export class CounterElement extends HTMLElement {
   connectedCallback() {
     if (!this.children.length) {
-      this.innerHTML = '0';
+      this.innerHTML = "0";
     }
   }
 
-  @listen('click', '#inc')
+  @listen("click", "#inc")
   onIncrement() {
     this.#update(1);
   }
 
-  @listen('click', '#dec')
+  @listen("click", "#dec")
   onDecrement() {
     this.#update(-1);
   }

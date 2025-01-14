@@ -1,6 +1,12 @@
-import { callLifecycle } from './lifecycle.js';
-import { readMetadata } from './metadata.js';
-import { InjectionToken, Provider, ProviderDef, ProviderFactory, StaticToken } from './provider.js';
+import { callLifecycle } from "./lifecycle.js";
+import { readMetadata } from "./metadata.js";
+import {
+  type InjectionToken,
+  type Provider,
+  type ProviderDef,
+  type ProviderFactory,
+  StaticToken,
+} from "./provider.js";
 
 /**
  * Keeps track of all Injectable services and their Injector
@@ -47,12 +53,16 @@ export class Injector {
   inject<T>(token: InjectionToken<T>): T {
     // check for a local instance
     if (this.#instances.has(token)) {
-      const instance = this.#instances.get(token)!;
+      const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
 
       if (metadata) {
-        callLifecycle(instance, injectables.get(instance) ?? this, metadata.onInjected);
+        callLifecycle(
+          instance,
+          injectables.get(instance) ?? this,
+          metadata.onInjected,
+        );
       }
 
       return instance;
@@ -62,15 +72,17 @@ export class Injector {
 
     // check for a provider definition
     if (provider) {
-      if ('use' in provider) {
+      if ("use" in provider) {
         return this.#createAndCache<T>(token, () => new provider.use());
-      } else if ('factory' in provider) {
-        return this.#createAndCache<T>(token, provider.factory);
-      } else {
-        throw new Error(
-          `Provider for ${token.name} found but is missing either 'use' or 'factory'`
-        );
       }
+
+      if ("factory" in provider) {
+        return this.#createAndCache<T>(token, provider.factory);
+      }
+
+      throw new Error(
+        `Provider for ${token.name} found but is missing either 'use' or 'factory'`,
+      );
     }
 
     // check for a parent and attempt to get there
@@ -105,7 +117,7 @@ export class Injector {
     /**
      * Only values that are objects are able to have associated injectors
      */
-    if (typeof instance === 'object' && instance !== null) {
+    if (typeof instance === "object" && instance !== null) {
       const injector = injectables.get(instance);
 
       if (injector && injector !== this) {

@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile } from "node:fs/promises";
 
 /**
  * A template loader defines how css and html are generated for a given component template.

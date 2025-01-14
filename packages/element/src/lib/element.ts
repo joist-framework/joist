@@ -1,5 +1,5 @@
-import { AttrMetadata, metadataStore } from './metadata.js';
-import { ShadowResult } from './result.js';
+import { type AttrMetadata, metadataStore } from "./metadata.js";
+import type { ShadowResult } from "./result.js";
 
 export interface ElementOpts {
   tagName?: string;
@@ -34,20 +34,24 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
           if (opts?.shadowDom) {
             if (!this.shadowRoot) {
-              this.attachShadow(opts.shadowDomOpts ?? { mode: 'open' });
+              this.attachShadow(opts.shadowDomOpts ?? { mode: "open" });
             }
 
-            for (let res of opts.shadowDom) {
+            for (const res of opts.shadowDom) {
               res.apply(this);
             }
           }
 
-          for (let cb of meta.onReady) {
+          for (const cb of meta.onReady) {
             cb.call(this);
           }
         }
 
-        attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        attributeChangedCallback(
+          name: string,
+          oldValue: string,
+          newValue: string,
+        ) {
           const attr = meta.attrs.get(name);
           const cbs = meta.attrChanges.get(name);
 
@@ -55,10 +59,10 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             if (oldValue !== newValue) {
               const ogValue = attr.getPropValue.call(this);
 
-              if (newValue === '') {
+              if (newValue === "") {
                 // treat as boolean
                 attr.setPropValue.call(this, true);
-              } else if (typeof ogValue === 'number') {
+              } else if (typeof ogValue === "number") {
                 // treat as number
                 attr.setPropValue.call(this, Number(newValue));
               } else {
@@ -68,7 +72,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             }
 
             if (cbs) {
-              for (let cb of cbs) {
+              for (const cb of cbs) {
                 cb.call(this, oldValue, newValue);
               }
             }
@@ -83,14 +87,14 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
         connectedCallback() {
           if (this.isConnected) {
-            for (let { event, cb, selector } of meta.listeners) {
+            for (const { event, cb, selector } of meta.listeners) {
               const root = selector(this);
 
               if (root) {
                 this.#abortController = new AbortController();
 
                 root.addEventListener(event, cb.bind(this), {
-                  signal: this.#abortController.signal
+                  signal: this.#abortController.signal,
                 });
               } else {
                 throw new Error(`could not add listener to ${root}`);
@@ -115,25 +119,28 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             super.disconnectedCallback();
           }
         }
-      }
+      },
     };
 
     return def[Base.name];
   };
 }
 
-function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadata) {
-  for (let [attrName, { getPropValue, reflect }] of attrs) {
+function reflectAttributeValues<T extends HTMLElement>(
+  el: T,
+  attrs: AttrMetadata,
+) {
+  for (const [attrName, { getPropValue, reflect }] of attrs) {
     if (reflect) {
       const value = getPropValue.call(el);
 
       // reflect values back to attributes
-      if (value !== null && value !== undefined && value !== '') {
-        if (typeof value === 'boolean') {
+      if (value !== null && value !== undefined && value !== "") {
+        if (typeof value === "boolean") {
           if (value === true) {
             // set boolean attribute
             if (!el.hasAttribute(attrName)) {
-              el.setAttribute(attrName, '');
+              el.setAttribute(attrName, "");
             }
           }
         } else {

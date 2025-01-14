@@ -1,15 +1,19 @@
-import { assert } from 'chai';
-import { DOMInjector } from './dom-injector.js';
-import { INJECTOR_CTX } from './context/injector.js';
-import { Injector } from './injector.js';
-import { ContextRequestEvent } from './context/protocol.js';
+import { assert } from "chai";
 
-describe('DOMInjector', () => {
-  it('should respond to elements looking for an injector', () => {
+import { INJECTOR_CTX } from "./context/injector.js";
+import {
+  ContextRequestEvent,
+  type UnknownContext,
+} from "./context/protocol.js";
+import { DOMInjector } from "./dom-injector.js";
+import { Injector } from "./injector.js";
+
+describe("DOMInjector", () => {
+  it("should respond to elements looking for an injector", () => {
     const injector = new DOMInjector();
     injector.attach(document.body);
 
-    const host = document.createElement('div');
+    const host = document.createElement("div");
     document.body.append(host);
 
     let parent: Injector | null = null;
@@ -17,7 +21,7 @@ describe('DOMInjector', () => {
     host.dispatchEvent(
       new ContextRequestEvent(INJECTOR_CTX, (i) => {
         parent = i;
-      })
+      }),
     );
 
     assert.equal(parent, injector);
@@ -26,23 +30,23 @@ describe('DOMInjector', () => {
     host.remove();
   });
 
-  it('should send request looking for other injector contexts', () => {
+  it("should send request looking for other injector contexts", () => {
     const parent = new Injector();
     const injector = new DOMInjector();
 
-    const cb = (e: any) => {
+    const cb = (e: ContextRequestEvent<UnknownContext>) => {
       if (e.context === INJECTOR_CTX) {
         e.callback(parent);
       }
     };
 
-    document.body.addEventListener('context-request', cb);
+    document.body.addEventListener("context-request", cb);
 
     injector.attach(document.body);
 
     assert.equal(injector.parent, parent);
 
     injector.detach();
-    document.body.removeEventListener('context-request', cb);
+    document.body.removeEventListener("context-request", cb);
   });
 });

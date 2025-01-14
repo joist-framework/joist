@@ -1,8 +1,8 @@
 export default {
-  rootDir: '../../',
+  rootDir: "../../",
   nodeResolve: {
-    exportConditions: ['production']
+    exportConditions: ["production"],
   },
-  files: 'target/**/*.test.js',
-  port: 8081
+  files: "target/**/*.test.js",
+  port: 8081,
 };

@@ -1,8 +1,8 @@
-import { attr, css, element, html } from '@joist/element';
-import { template } from '@joist/element/template.js';
+import { attr, css, element, html } from "@joist/element";
+import { template } from "@joist/element/template.js";
 
 @element({
-  tagName: 'hn-header-link',
+  tagName: "hn-header-link",
   shadowDom: [
     css`
       :host {
@@ -29,12 +29,12 @@ import { template } from '@joist/element/template.js';
       <a #:href="href">
         <slot></slot>
       </a>
-    `
-  ]
+    `,
+  ],
 })
 export class HnHeader extends HTMLElement {
   @attr()
-  accessor href = '#';
+  accessor href = "#";
 
   #update = template();
 

@@ -1,14 +1,14 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-import { inject } from './inject.js';
-import { injectable } from './injectable.js';
-import { Injector } from './injector.js';
-import { StaticToken } from './provider.js';
+import { inject } from "./inject.js";
+import { injectable } from "./injectable.js";
+import { Injector } from "./injector.js";
+import { StaticToken } from "./provider.js";
 
-it('should throw error if called in constructor', () => {
+it("should throw error if called in constructor", () => {
   assert.throws(() => {
     class FooService {
-      value = '1';
+      value = "1";
     }
 
     @injectable()
@@ -23,12 +23,12 @@ it('should throw error if called in constructor', () => {
     const parent = new Injector();
 
     parent.inject(BarService);
-  }, 'BarService is either not injectable or a service is being called in the constructor.');
+  }, "BarService is either not injectable or a service is being called in the constructor.");
 });
 
-it('should throw error if static token is unavailable', () => {
+it("should throw error if static token is unavailable", () => {
   assert.throws(() => {
-    const TOKEN = new StaticToken('test');
+    const TOKEN = new StaticToken("test");
 
     const parent = new Injector();
 
@@ -36,9 +36,9 @@ it('should throw error if static token is unavailable', () => {
   }, 'Provider not found for "test"');
 });
 
-it('should use the calling injector as parent', () => {
+it("should use the calling injector as parent", () => {
   class FooService {
-    value = '1';
+    value = "1";
   }
 
   @injectable()
@@ -52,23 +52,23 @@ it('should use the calling injector as parent', () => {
         FooService,
         {
           use: class extends FooService {
-            value = '100';
-          }
-        }
-      ]
-    ]
+            value = "100";
+          },
+        },
+      ],
+    ],
   });
 
-  assert.strictEqual(parent.inject(BarService).foo().value, '100');
+  assert.strictEqual(parent.inject(BarService).foo().value, "100");
 });
 
-it('should inject a static token', () => {
-  const TOKEN = new StaticToken('test', () => 'Hello World');
+it("should inject a static token", () => {
+  const TOKEN = new StaticToken("test", () => "Hello World");
 
   @injectable()
   class HelloWorld {
     hello = inject(TOKEN);
   }
 
-  assert.strictEqual(new HelloWorld().hello(), 'Hello World');
+  assert.strictEqual(new HelloWorld().hello(), "Hello World");
 });

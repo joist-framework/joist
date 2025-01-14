@@ -1,7 +1,7 @@
-import { element, css } from '@joist/element';
+import { css, element } from "@joist/element";
 
 @element({
-  tagName: 'hn-loading',
+  tagName: "hn-loading",
   shadowDom: [
     css`
       :host {
@@ -22,7 +22,7 @@ import { element, css } from '@joist/element';
           transform: rotate(360deg);
         }
       }
-    `
-  ]
+    `,
+  ],
 })
 export class HnLoadingElement extends HTMLElement {}

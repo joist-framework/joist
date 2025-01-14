@@ -1,7 +1,7 @@
-import { CheerioAPI, load } from 'cheerio';
+import { type CheerioAPI, load } from "cheerio";
 
-import { TemplateCache } from './template-cache.js';
-import { TemplateLoader } from './template-loader.js';
+import type { TemplateCache } from "./template-cache.js";
+import type { TemplateLoader } from "./template-loader.js";
 
 export interface ApplicatorOpts {
   templateCache: TemplateCache;
@@ -33,12 +33,15 @@ export class Applicator {
 
         if (!elementTemplate) {
           const template = await this.#buildTemplate(element);
-          elementTemplate = await this.build(load(template, null, false), elements);
+          elementTemplate = await this.build(
+            load(template, null, false),
+            elements,
+          );
 
           await this.#templateCache.set(element, elementTemplate);
         }
 
-        if (node.find('> template[shadowrootmode]').length === 0) {
+        if (node.find("> template[shadowrootmode]").length === 0) {
           node.prepend(elementTemplate);
         }
       }
@@ -50,12 +53,12 @@ export class Applicator {
   async #buildTemplate(tag: string) {
     const [html, styles] = await Promise.all([
       this.#templateLoader.loadHTML(tag),
-      this.#templateLoader.loadCSS(tag)
+      this.#templateLoader.loadCSS(tag),
     ]);
 
     return `<template shadowroot="open" shadowrootmode="open">
-      ${styles ? `<style>${styles}</style>` : ''}
-      ${html || ''}
+      ${styles ? `<style>${styles}</style>` : ""}
+      ${html || ""}
     </template>
   `;
   }

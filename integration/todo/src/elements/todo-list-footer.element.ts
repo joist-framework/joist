@@ -1,11 +1,11 @@
-import { css, html, element } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from "@joist/di";
+import { css, element, html } from "@joist/element";
 
-import { TodoService } from '../services/todo.service.js';
+import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
-  ['one', 'item'],
-  ['other', 'items']
+  ["one", "item"],
+  ["other", "items"],
 ]);
 
 class PluralRules extends Intl.PluralRules {}
@@ -17,13 +17,13 @@ class PluralRules extends Intl.PluralRules {}
       {
         factory() {
           return new Intl.PluralRules();
-        }
-      }
-    ]
-  ]
+        },
+      },
+    ],
+  ],
 })
 @element({
-  tagName: 'todo-list-footer',
+  tagName: "todo-list-footer",
   shadowDom: [
     css`
       :host {
@@ -72,13 +72,13 @@ class PluralRules extends Intl.PluralRules {}
       <div id="footer"><slot></slot> left</div>
 
       <div id="decoration"></div>
-    `
-  ]
+    `,
+  ],
 })
 export class TodoListFooterElement extends HTMLElement {
   #todo = inject(TodoService);
   #pr = inject(PluralRules);
-  #listeners: Function[] = [];
+  #listeners: Array<() => void> = [];
 
   connectedCallback() {
     const todo = this.#todo();
@@ -89,11 +89,11 @@ export class TodoListFooterElement extends HTMLElement {
 
     onTodoUpdate();
 
-    this.#listeners = [todo.listen('todo_sync', onTodoUpdate)];
+    this.#listeners = [todo.listen("todo_sync", onTodoUpdate)];
   }
 
   disconnectedCallback() {
-    for (let remove of this.#listeners) {
+    for (const remove of this.#listeners) {
       remove();
     }
   }

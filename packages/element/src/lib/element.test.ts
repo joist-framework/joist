@@ -1,16 +1,16 @@
-import { expect, assert } from 'chai';
+import { assert, expect } from "chai";
 
-import { attr } from './attr.js';
-import { element } from './element.js';
-import { css, html } from './tags.js';
+import { attr } from "./attr.js";
+import { element } from "./element.js";
+import { css, html } from "./tags.js";
 
-it('should write default value to attribute', async () => {
+it("should write default value to attribute", async () => {
   @element({
-    tagName: 'element-1'
+    tagName: "element-1",
   })
   class MyElement extends HTMLElement {
     @attr()
-    accessor value1 = 'hello'; // no attribute
+    accessor value1 = "hello"; // no attribute
 
     @attr()
     accessor value2 = 0; // number
@@ -19,17 +19,17 @@ it('should write default value to attribute', async () => {
     accessor value3 = true; // boolean
 
     @attr({ reflect: false })
-    accessor value4 = 'foo';
+    accessor value4 = "foo";
   }
 
   const el = new MyElement();
 
   document.body.append(el);
 
-  expect(el.getAttribute('value1')).to.equal('hello');
-  expect(el.getAttribute('value2')).to.equal('0');
-  expect(el.getAttribute('value3')).to.equal('');
-  expect(el.getAttribute('value4')).to.equal(null);
+  expect(el.getAttribute("value1")).to.equal("hello");
+  expect(el.getAttribute("value2")).to.equal("0");
+  expect(el.getAttribute("value3")).to.equal("");
+  expect(el.getAttribute("value4")).to.equal(null);
 
   el.remove();
 });
@@ -60,10 +60,10 @@ it('should write default value to attribute', async () => {
 //   ]);
 // });
 
-it('should attach shadow root when the shadow property exists', async () => {
+it("should attach shadow root when the shadow property exists", async () => {
   @element({
-    tagName: 'element-3',
-    shadowDom: []
+    tagName: "element-3",
+    shadowDom: [],
   })
   class MyElement extends HTMLElement {}
 
@@ -72,9 +72,9 @@ it('should attach shadow root when the shadow property exists', async () => {
   expect(el.shadowRoot).to.be.instanceOf(ShadowRoot);
 });
 
-it('should apply html and css', async () => {
+it("should apply html and css", async () => {
   @element({
-    tagName: 'element-4',
+    tagName: "element-4",
     shadowDom: [
       css`
         :host {
@@ -84,30 +84,30 @@ it('should apply html and css', async () => {
       html`<slot></slot>`,
       {
         apply(el) {
-          const div = document.createElement('div');
-          div.innerHTML = 'hello world';
+          const div = document.createElement("div");
+          div.innerHTML = "hello world";
 
           el.append(div);
-        }
-      }
-    ]
+        },
+      },
+    ],
   })
   class MyElement extends HTMLElement {}
 
   const el = new MyElement();
 
-  expect(el.shadowRoot!.adoptedStyleSheets.length).to.equal(1);
-  expect(el.shadowRoot!.innerHTML).to.equal(`<slot></slot>`);
-  expect(el.innerHTML).to.equal(`<div>hello world</div>`);
+  expect(el.shadowRoot?.adoptedStyleSheets.length).to.equal(1);
+  expect(el.shadowRoot?.innerHTML).to.equal("<slot></slot>");
+  expect(el.innerHTML).to.equal("<div>hello world</div>");
 });
 
-it('should the correct shadow dom mode', async () => {
+it("should the correct shadow dom mode", async () => {
   @element({
-    tagName: 'element-5',
+    tagName: "element-5",
     shadowDom: [],
     shadowDomOpts: {
-      mode: 'closed'
-    }
+      mode: "closed",
+    },
   })
   class MyElement extends HTMLElement {}
 

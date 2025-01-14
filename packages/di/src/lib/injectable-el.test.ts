@@ -1,9 +1,9 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-import { inject } from './inject.js';
-import { injectable } from './injectable.js';
+import { inject } from "./inject.js";
+import { injectable } from "./injectable.js";
 
-it('should allow services to be injected into custom element', () => {
+it("should allow services to be injected into custom element", () => {
   class Foo {}
 
   @injectable()
@@ -11,14 +11,14 @@ it('should allow services to be injected into custom element', () => {
     foo = inject(Foo);
   }
 
-  customElements.define('injectable-1', MyElement);
+  customElements.define("injectable-1", MyElement);
 
   const el = new MyElement();
 
   assert.instanceOf(el.foo(), Foo);
 });
 
-it('should allow services to be injected into custom elements that has been extended', () => {
+it("should allow services to be injected into custom elements that has been extended", () => {
   class Foo {}
 
   class MyBaseElement extends HTMLElement {}
@@ -28,14 +28,14 @@ it('should allow services to be injected into custom elements that has been exte
     foo = inject(Foo);
   }
 
-  customElements.define('injectable-2', MyElement);
+  customElements.define("injectable-2", MyElement);
 
   const el = new MyElement();
 
   assert.instanceOf(el.foo(), Foo);
 });
 
-it('should handle parent HTML Injectors', async () => {
+it("should handle parent HTML Injectors", async () => {
   @injectable()
   class A {}
 
@@ -49,8 +49,8 @@ it('should handle parent HTML Injectors', async () => {
   @injectable({
     providers: [
       [B, { use: B }],
-      [A, { use: AltA }]
-    ]
+      [A, { use: AltA }],
+    ],
   })
   class Parent extends HTMLElement {}
 
@@ -59,10 +59,10 @@ it('should handle parent HTML Injectors', async () => {
     b = inject(B);
   }
 
-  customElements.define('injectable-parent-1', Parent);
-  customElements.define('injectable-child-1', Child);
+  customElements.define("injectable-parent-1", Parent);
+  customElements.define("injectable-child-1", Child);
 
-  const el = document.createElement('div');
+  const el = document.createElement("div");
   el.innerHTML = /*html*/ `
     <injectable-parent-1>
       <injectable-child-1></injectable-child-1>
@@ -71,24 +71,24 @@ it('should handle parent HTML Injectors', async () => {
 
   document.body.append(el);
 
-  const child = el.querySelector<Child>('injectable-child-1')!;
+  const child = el.querySelector<Child>("injectable-child-1");
 
-  assert.instanceOf(child.b().a(), AltA);
+  assert.instanceOf(child?.b().a(), AltA);
 
   el.remove();
 });
 
-it('should handle changing contexts', async () => {
+it("should handle changing contexts", async () => {
   class A {}
   class AltA implements A {}
 
   @injectable({
-    providers: [[A, { use: A }]]
+    providers: [[A, { use: A }]],
   })
   class Ctx1 extends HTMLElement {}
 
   @injectable({
-    providers: [[A, { use: AltA }]]
+    providers: [[A, { use: AltA }]],
   })
   class Ctx2 extends HTMLElement {}
 
@@ -97,11 +97,11 @@ it('should handle changing contexts', async () => {
     a = inject(A);
   }
 
-  customElements.define('ctx-1', Ctx1);
-  customElements.define('ctx-2', Ctx2);
-  customElements.define('ctx-child', Child);
+  customElements.define("ctx-1", Ctx1);
+  customElements.define("ctx-2", Ctx2);
+  customElements.define("ctx-child", Child);
 
-  const el = document.createElement('div');
+  const el = document.createElement("div");
   el.innerHTML = /*html*/ `
     <div>
       <ctx-1>
@@ -114,17 +114,17 @@ it('should handle changing contexts', async () => {
 
   document.body.append(el);
 
-  const ctx2 = el.querySelector('ctx-2')!;
+  const ctx2 = el.querySelector("ctx-2");
 
-  let child = el.querySelector<Child>('ctx-child')!;
+  let child = el.querySelector<Child>("ctx-child");
 
-  assert.instanceOf(child.a(), A);
+  assert.instanceOf(child?.a(), A);
 
   child.remove();
 
-  ctx2.append(child);
+  ctx2?.append(child);
 
-  child = el.querySelector<Child>('ctx-child')!;
+  child = el.querySelector<Child>("ctx-child");
 
-  assert.instanceOf(child.a(), AltA);
+  assert.instanceOf(child?.a(), AltA);
 });

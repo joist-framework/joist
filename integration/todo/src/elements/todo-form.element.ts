@@ -1,11 +1,11 @@
-import { inject, injectable } from '@joist/di';
-import { css, html, listen, element, query } from '@joist/element';
+import { inject, injectable } from "@joist/di";
+import { css, element, html, listen, query } from "@joist/element";
 
-import { TodoService, Todo } from '../services/todo.service.js';
+import { Todo, TodoService } from "../services/todo.service.js";
 
 @injectable()
 @element({
-  tagName: 'todo-form',
+  tagName: "todo-form",
   shadowDom: [
     css`
       :host {
@@ -61,15 +61,15 @@ import { TodoService, Todo } from '../services/todo.service.js';
           autofocus
         />
       </form>
-    `
-  ]
+    `,
+  ],
 })
 export class TodoFormElement extends HTMLElement {
-  #input = query<HTMLInputElement>('#input');
+  #input = query<HTMLInputElement>("#input");
 
   #todos = inject(TodoService);
 
-  @listen('submit', '#todo-form')
+  @listen("submit", "#todo-form")
   onSubmit(e: Event) {
     const service = this.#todos();
 
@@ -78,9 +78,9 @@ export class TodoFormElement extends HTMLElement {
     const input = this.#input();
 
     if (input.value) {
-      service.addTodo(Todo.create(input.value, 'active'));
+      service.addTodo(Todo.create(input.value, "active"));
 
-      input.value = '';
+      input.value = "";
     }
   }
 }

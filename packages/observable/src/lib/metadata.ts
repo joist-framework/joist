@@ -1,8 +1,11 @@
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+(Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
 export type EffectFn<T> = (changes: Changes<T>) => void;
 
-export class Changes<T> extends Map<keyof T, { oldValue: unknown; newValue: unknown }> {}
+export class Changes<T> extends Map<
+  keyof T,
+  { oldValue: unknown; newValue: unknown }
+> {}
 
 export class ObservableInstanceMetadata<T> {
   scheduler: Promise<void> | null = null;
@@ -30,7 +33,10 @@ export class ObservableMetadata<T> {
   effects: Set<EffectFn<T>> = new Set();
 }
 
-export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<unknown>> {
+export class ObservableMetadataStore extends WeakMap<
+  object,
+  ObservableMetadata<unknown>
+> {
   read<T extends object>(key: object): ObservableMetadata<T> {
     let data = this.get(key);
 
@@ -47,4 +53,5 @@ export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<
 export const instanceMetadataStore: ObservableInstanceMetaDataStore =
   new ObservableInstanceMetaDataStore();
 
-export const observableMetadataStore: ObservableMetadataStore = new ObservableMetadataStore();
+export const observableMetadataStore: ObservableMetadataStore =
+  new ObservableMetadataStore();

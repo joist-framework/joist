@@ -1,9 +1,9 @@
-import { attr, css, element, ready, html } from '@joist/element';
-import { template } from '@joist/element/template.js';
-import { observe, effect } from '@joist/observable';
+import { attr, css, element, html, ready } from "@joist/element";
+import { template } from "@joist/element/template.js";
+import { effect, observe } from "@joist/observable";
 
 @element({
-  tagName: 'hn-news-card',
+  tagName: "hn-news-card",
   shadowDom: [
     css`
       :host {
@@ -60,8 +60,8 @@ import { observe, effect } from '@joist/observable';
           </div>
         </div>
       </div>
-    `
-  ]
+    `,
+  ],
 })
 export class HnNewsCard extends HTMLElement {
   @attr()
@@ -78,17 +78,17 @@ export class HnNewsCard extends HTMLElement {
 
   @attr()
   @observe()
-  accessor href = '';
+  accessor href = "";
 
   @attr()
   @observe()
-  accessor author = '';
+  accessor author = "";
 
   get host() {
     try {
       return new URL(this.href).hostname;
     } catch {
-      return '';
+      return "";
     }
   }
 

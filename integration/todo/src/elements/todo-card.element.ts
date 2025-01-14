@@ -1,9 +1,9 @@
-import { css, html, listen, attr, element, query } from '@joist/element';
+import { attr, css, element, html, listen, query } from "@joist/element";
 
-import { Todo, TodoStatus } from '../services/todo.service.js';
+import type { Todo, TodoStatus } from "../services/todo.service.js";
 
 @element({
-  tagName: 'todo-card',
+  tagName: "todo-card",
   shadowDom: [
     css`
       :host {
@@ -42,16 +42,16 @@ import { Todo, TodoStatus } from '../services/todo.service.js';
       <button id="remove">remove</button>
 
       <button id="complete">complete</button>
-    `
-  ]
+    `,
+  ],
 })
 export class TodoCardElement extends HTMLElement {
   @attr()
-  accessor status: TodoStatus = 'active';
+  accessor status: TodoStatus = "active";
 
-  #complete = query<HTMLButtonElement>('#complete');
+  #complete = query<HTMLButtonElement>("#complete");
 
-  @listen('click')
+  @listen("click")
   onClick(e: Event) {
     if (e.target instanceof HTMLButtonElement) {
       this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
@@ -60,7 +60,7 @@ export class TodoCardElement extends HTMLElement {
 
   attributeChangedCallback() {
     this.#complete({
-      innerHTML: this.status === 'active' ? 'complete' : 'active'
+      innerHTML: this.status === "active" ? "complete" : "active",
     });
   }
 }

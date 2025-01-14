@@ -6,10 +6,10 @@ export interface Storage {
 export class AppStorage implements Storage {
   static service = true;
 
-  #data = new Map<string, any>();
+  #data = new Map<string, unknown>();
 
   async loadJSON<T>(key: string): Promise<T | undefined> {
-    return this.#data.get(key);
+    return this.#data.get(key) as T | undefined;
   }
 
   async saveJSON<T>(key: string, val: T): Promise<boolean> {

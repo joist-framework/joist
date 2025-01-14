@@ -1,4 +1,4 @@
-import { inject, injectable, StaticToken } from '@joist/di';
+import { StaticToken, inject, injectable } from "@joist/di";
 
 export interface HnItem {
   by: string;
@@ -12,9 +12,12 @@ export interface HnItem {
   url?: string;
 }
 
-export const HN_API = new StaticToken('HN_API', async () => 'https://hacker-news.firebaseio.com');
-export const HTTP = new StaticToken('HTTP', async () =>
-  import('./http.service.js').then((m) => new m.HttpService())
+export const HN_API = new StaticToken(
+  "HN_API",
+  async () => "https://hacker-news.firebaseio.com",
+);
+export const HTTP = new StaticToken("HTTP", async () =>
+  import("./http.service.js").then((m) => new m.HttpService()),
 );
 
 @injectable()
@@ -32,7 +35,9 @@ export class HnService {
       });
 
       return Promise.allSettled(storyRequests).then((res) =>
-        res.filter((item) => item.status === 'fulfilled').map((item) => item.value)
+        res
+          .filter((item) => item.status === "fulfilled")
+          .map((item) => item.value),
       );
     });
   }
@@ -42,8 +47,8 @@ export class HnService {
     const hnApi = await this.#hnApi();
 
     const url = new URL(`${hnApi}/v0/beststories.json`);
-    url.searchParams.set('limitToFirst', count.toString());
-    url.searchParams.set('orderBy', '"$key"');
+    url.searchParams.set("limitToFirst", count.toString());
+    url.searchParams.set("orderBy", '"$key"');
 
     return http.fetchJson<string[]>(url);
   }

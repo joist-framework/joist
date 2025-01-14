@@ -1,4 +1,4 @@
-import { Injector } from './injector.js';
+import type { Injector } from "./injector.js";
 
 export type ProviderFactory<T> = (injector: Injector) => T;
 

@@ -1,17 +1,17 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-import { element } from './element.js';
-import { listen } from './listen.js';
+import { element } from "./element.js";
+import { listen } from "./listen.js";
 
-describe('@listen()', () => {
-  it('should add listener to an outer HTMLElement', (done) => {
+describe("@listen()", () => {
+  it("should add listener to an outer HTMLElement", (done) => {
     @element({
-      tagName: 'listener-1'
+      tagName: "listener-1",
     })
     class MyElement extends HTMLElement {
-      @listen('click')
+      @listen("click")
       onClick(e: Event) {
-        assert.equal(e.type, 'click');
+        assert.equal(e.type, "click");
 
         done();
       }
@@ -21,20 +21,20 @@ describe('@listen()', () => {
 
     document.body.append(el);
 
-    el.dispatchEvent(new Event('click'));
+    el.dispatchEvent(new Event("click"));
 
     el.remove();
   });
 
-  it('should add listener to the shadow root if available', (done) => {
+  it("should add listener to the shadow root if available", (done) => {
     @element({
-      tagName: 'listener-2',
-      shadowDom: []
+      tagName: "listener-2",
+      shadowDom: [],
     })
     class MyElement extends HTMLElement {
-      @listen('click')
+      @listen("click")
       onClick(e: Event) {
-        assert.equal(e.type, 'click');
+        assert.equal(e.type, "click");
 
         done();
       }
@@ -44,27 +44,27 @@ describe('@listen()', () => {
 
     document.body.append(el);
 
-    el.shadowRoot!.dispatchEvent(new Event('click'));
+    el.shadowRoot?.dispatchEvent(new Event("click"));
 
     el.remove();
   });
 
-  it('should restrict argument to an event or an event subtype', (done) => {
+  it("should restrict argument to an event or an event subtype", (done) => {
     class CustomEvent extends Event {
-      test = 'Hello World';
+      test = "Hello World";
 
       constructor() {
-        super('customevent');
+        super("customevent");
       }
     }
 
     @element({
-      tagName: 'listener-3'
+      tagName: "listener-3",
     })
     class MyElement extends HTMLElement {
-      @listen('customevent')
+      @listen("customevent")
       onClick(e: CustomEvent) {
-        assert.equal(e.type, 'customevent');
+        assert.equal(e.type, "customevent");
 
         done();
       }
@@ -79,15 +79,15 @@ describe('@listen()', () => {
     el.remove();
   });
 
-  it('should respect a provided selector function', (done) => {
+  it("should respect a provided selector function", (done) => {
     @element({
-      tagName: 'listener-4',
-      shadowDom: []
+      tagName: "listener-4",
+      shadowDom: [],
     })
     class MyElement extends HTMLElement {
-      @listen('click', (host) => host)
+      @listen("click", (host) => host)
       onClick(e: Event) {
-        assert.equal(e.type, 'click');
+        assert.equal(e.type, "click");
 
         done();
       }
@@ -97,7 +97,7 @@ describe('@listen()', () => {
 
     document.body.append(el);
 
-    el.dispatchEvent(new Event('click'));
+    el.dispatchEvent(new Event("click"));
 
     el.remove();
   });

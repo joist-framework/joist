@@ -1,8 +1,8 @@
-import { injectable } from '@joist/di';
-import { css, html, element } from '@joist/element';
+import { injectable } from "@joist/di";
+import { css, element, html } from "@joist/element";
 
-import { AppStorage, Storage } from '../services/storage.service.js';
-import { TodoService } from '../services/todo.service.js';
+import { AppStorage, type Storage } from "../services/storage.service.js";
+import { TodoService } from "../services/todo.service.js";
 
 class AppLocalStorage implements Storage {
   async loadJSON<T>(key: string): Promise<T | undefined> {
@@ -29,20 +29,20 @@ class AppLocalStorage implements Storage {
 }
 
 @element({
-  tagName: 'local-storage-ctx',
+  tagName: "local-storage-ctx",
   shadowDom: [
     css`
       :host {
         display: contents;
       }
     `,
-    html`<slot></slot>`
-  ]
+    html`<slot></slot>`,
+  ],
 })
 @injectable({
   providers: [
     [TodoService, { use: TodoService }],
-    [AppStorage, { use: AppLocalStorage }]
-  ]
+    [AppStorage, { use: AppLocalStorage }],
+  ],
 })
 export class LocalStorageCtx extends HTMLElement {}
