@@ -2,7 +2,7 @@ import { metadataStore } from "./metadata.js";
 
 export function attrChanged(name: string) {
   return function attrChangedDecorator<This extends HTMLElement>(
-    cb: () => void,
+    cb: (oldValue: string, newValue: string) => void,
     ctx: ClassMethodDecoratorContext<This>,
   ): void {
     const meta = metadataStore.read(ctx.metadata);
