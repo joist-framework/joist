@@ -101,10 +101,6 @@ export class Injector {
     return this.#createAndCache(token, () => new token());
   }
 
-  setParent(parent: Injector | undefined): void {
-    this.parent = parent;
-  }
-
   clear(): void {
     this.#instances = new WeakMap();
   }
@@ -127,7 +123,7 @@ export class Injector {
          * this means that each calling injector will be the parent of what it creates.
          * this allows the created service to navigate up it's chain to find a root
          */
-        injector.setParent(this);
+        injector.parent = this;
       }
 
       /**

@@ -39,7 +39,7 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
         if (injector) {
           this.dispatchEvent(
             new ContextRequestEvent(INJECTOR_CTX, (ctx) => {
-              injector.setParent(ctx);
+              injector.parent = ctx;
             }),
           );
 
@@ -52,7 +52,11 @@ export function injectableEl<T extends ConstructableToken<HTMLElement>>(
       }
 
       disconnectedCallback() {
-        injectables.get(this)?.setParent(undefined);
+        const injector = injectables.get(this);
+
+        if (injector) {
+          injector.parent = undefined;
+        }
 
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
