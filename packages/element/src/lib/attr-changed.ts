@@ -1,8 +1,8 @@
-import { metadataStore } from "./metadata.js";
+import { type AttrChangedCallback, metadataStore } from "./metadata.js";
 
 export function attrChanged(name: string) {
   return function attrChangedDecorator<This extends HTMLElement>(
-    cb: (oldValue: string, newValue: string) => void,
+    cb: AttrChangedCallback,
     ctx: ClassMethodDecoratorContext<This>,
   ): void {
     const meta = metadataStore.read(ctx.metadata);

@@ -16,11 +16,10 @@ export interface Listener<T> {
   selector: ListenerSelector<T>;
 }
 
+export type AttrChangedCallback = (oldValue: string, newValue: string) => void;
+
 export class AttrMetadata extends Map<string, AttrDef> {}
-export class AttrChangeMetadata extends Map<
-  string,
-  Set<(oldValue: string, newValue: string) => void>
-> {}
+export class AttrChangeMetadata extends Map<string, Set<AttrChangedCallback>> {}
 
 export class ElementMetadata<T> {
   attrs: AttrMetadata = new AttrMetadata();
