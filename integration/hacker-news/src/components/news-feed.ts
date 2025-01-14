@@ -6,42 +6,42 @@ import { HnNewsCard } from "./news-card.js";
 
 @injectable()
 @element({
-	tagName: "hn-news-feed",
-	shadowDom: [
-		css`
+  tagName: "hn-news-feed",
+  shadowDom: [
+    css`
       :host {
         display: contents;
       }
     `,
-		html`<slot></slot>`,
-	],
+    html`<slot></slot>`,
+  ],
 })
 export class HnNewsFeed extends HTMLElement {
-	#hn = inject(HnService);
+  #hn = inject(HnService);
 
-	@injected()
-	async onInjected() {
-		const hn = this.#hn();
+  @injected()
+  async onInjected() {
+    const hn = this.#hn();
 
-		const stories = await hn.getTopStories();
+    const stories = await hn.getTopStories();
 
-		this.innerHTML = "";
+    this.innerHTML = "";
 
-		let number = 1;
+    let number = 1;
 
-		for (const value of stories) {
-			const card = new HnNewsCard();
+    for (const value of stories) {
+      const card = new HnNewsCard();
 
-			card.number = number;
-			card.textContent = value.title;
-			card.author = value.by;
-			card.comments = value.kids.length;
-			card.points = value.score;
-			card.href = value.url ?? "";
+      card.number = number;
+      card.textContent = value.title;
+      card.author = value.by;
+      card.comments = value.kids.length;
+      card.points = value.score;
+      card.href = value.url ?? "";
 
-			this.append(card);
+      this.append(card);
 
-			number++;
-		}
-	}
+      number++;
+    }
+  }
 }

@@ -2,9 +2,9 @@ import { attr, css, element, html } from "@joist/element";
 import { template } from "@joist/element/template.js";
 
 @element({
-	tagName: "hn-header-link",
-	shadowDom: [
-		css`
+  tagName: "hn-header-link",
+  shadowDom: [
+    css`
       :host {
         display: inline-flex;
         align-items: center;
@@ -25,20 +25,20 @@ import { template } from "@joist/element/template.js";
         text-decoration: underline;
       }
     `,
-		html`
+    html`
       <a #:href="href">
         <slot></slot>
       </a>
     `,
-	],
+  ],
 })
 export class HnHeader extends HTMLElement {
-	@attr()
-	accessor href = "#";
+  @attr()
+  accessor href = "#";
 
-	#update = template();
+  #update = template();
 
-	attributeChangedCallback() {
-		this.#update();
-	}
+  attributeChangedCallback() {
+    this.#update();
+  }
 }

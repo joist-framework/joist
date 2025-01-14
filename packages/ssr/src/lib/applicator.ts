@@ -4,62 +4,62 @@ import type { TemplateCache } from "./template-cache.js";
 import type { TemplateLoader } from "./template-loader.js";
 
 export interface ApplicatorOpts {
-	templateCache: TemplateCache;
-	templateLoader: TemplateLoader;
+  templateCache: TemplateCache;
+  templateLoader: TemplateLoader;
 }
 
 export class Applicator {
-	#templateCache: TemplateCache;
-	#templateLoader: TemplateLoader;
+  #templateCache: TemplateCache;
+  #templateLoader: TemplateLoader;
 
-	constructor(templateCache: TemplateCache, templateLoader: TemplateLoader) {
-		this.#templateCache = templateCache;
-		this.#templateLoader = templateLoader;
-	}
+  constructor(templateCache: TemplateCache, templateLoader: TemplateLoader) {
+    this.#templateCache = templateCache;
+    this.#templateLoader = templateLoader;
+  }
 
-	async apply(document: string, elements: string[]): Promise<string> {
-		const $ = load(document);
+  async apply(document: string, elements: string[]): Promise<string> {
+    const $ = load(document);
 
-		return this.build($, elements);
-	}
+    return this.build($, elements);
+  }
 
-	async build($: CheerioAPI, elements: string[]): Promise<string> {
-		for (let i = 0; i < elements.length; i++) {
-			const element = elements[i];
-			const node = $(element);
+  async build($: CheerioAPI, elements: string[]): Promise<string> {
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      const node = $(element);
 
-			if (node.length) {
-				let elementTemplate = await this.#templateCache.get(element);
+      if (node.length) {
+        let elementTemplate = await this.#templateCache.get(element);
 
-				if (!elementTemplate) {
-					const template = await this.#buildTemplate(element);
-					elementTemplate = await this.build(
-						load(template, null, false),
-						elements,
-					);
+        if (!elementTemplate) {
+          const template = await this.#buildTemplate(element);
+          elementTemplate = await this.build(
+            load(template, null, false),
+            elements,
+          );
 
-					await this.#templateCache.set(element, elementTemplate);
-				}
+          await this.#templateCache.set(element, elementTemplate);
+        }
 
-				if (node.find("> template[shadowrootmode]").length === 0) {
-					node.prepend(elementTemplate);
-				}
-			}
-		}
+        if (node.find("> template[shadowrootmode]").length === 0) {
+          node.prepend(elementTemplate);
+        }
+      }
+    }
 
-		return $.html();
-	}
+    return $.html();
+  }
 
-	async #buildTemplate(tag: string) {
-		const [html, styles] = await Promise.all([
-			this.#templateLoader.loadHTML(tag),
-			this.#templateLoader.loadCSS(tag),
-		]);
+  async #buildTemplate(tag: string) {
+    const [html, styles] = await Promise.all([
+      this.#templateLoader.loadHTML(tag),
+      this.#templateLoader.loadCSS(tag),
+    ]);
 
-		return `<template shadowroot="open" shadowrootmode="open">
+    return `<template shadowroot="open" shadowrootmode="open">
       ${styles ? `<style>${styles}</style>` : ""}
       ${html || ""}
     </template>
   `;
-	}
+  }
 }

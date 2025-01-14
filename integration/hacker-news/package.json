@@ -1,44 +1,44 @@
 {
-	"name": "@integration/hacker-news",
-	"version": "3.0.0",
-	"private": true,
-	"description": "",
-	"keywords": [],
-	"author": "deebloo",
-	"license": "MIT",
-	"type": "module",
-	"scripts": {
-		"start": "wireit",
-		"build": "wireit",
-		"test": "wireit"
-	},
-	"wireit": {
-		"start": {
-			"command": "browser-sync start --config=browser-sync.cjs",
-			"service": true,
-			"dependencies": [
-				{
-					"script": "build",
-					"cascade": false
-				}
-			]
-		},
-		"test": {
-			"command": "wtr --config wtr.config.mjs",
-			"files": ["wtr.config.mjs", "target/**"],
-			"output": [],
-			"dependencies": ["build"]
-		},
-		"build": {
-			"command": "tsc --build --pretty",
-			"clean": "if-file-deleted",
-			"files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
-			"output": ["target/**", "tsconfig.tsbuildinfo"],
-			"dependencies": [
-				"../../packages/element:build",
-				"../../packages/di:build",
-				"../../packages/observable:build"
-			]
-		}
-	}
+  "name": "@integration/hacker-news",
+  "version": "3.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "author": "deebloo",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "wireit",
+    "build": "wireit",
+    "test": "wireit"
+  },
+  "wireit": {
+    "start": {
+      "command": "browser-sync start --config=browser-sync.cjs",
+      "service": true,
+      "dependencies": [
+        {
+          "script": "build",
+          "cascade": false
+        }
+      ]
+    },
+    "test": {
+      "command": "wtr --config wtr.config.mjs",
+      "files": ["wtr.config.mjs", "target/**"],
+      "output": [],
+      "dependencies": ["build"]
+    },
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
+      "output": ["target/**", "tsconfig.tsbuildinfo"],
+      "dependencies": [
+        "../../packages/element:build",
+        "../../packages/di:build",
+        "../../packages/observable:build"
+      ]
+    }
+  }
 }

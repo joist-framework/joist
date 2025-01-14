@@ -1,4 +1,4 @@
 declare interface HTMLElement {
-	connectedCallback?(): void;
-	disconnectedCallback?(): void;
+  connectedCallback?(): void;
+  disconnectedCallback?(): void;
 }

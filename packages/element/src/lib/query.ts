@@ -5,37 +5,37 @@ type MathTags = keyof MathMLElementTagNameMap;
 type QueryResult<T> = (updates?: Partial<T>) => T;
 
 export function query<K extends Tags>(
-	selectors: K,
+  selectors: K,
 ): QueryResult<HTMLElementTagNameMap[K]>;
 export function query<K extends SVGTags>(
-	selectors: K,
+  selectors: K,
 ): QueryResult<SVGElementTagNameMap[K]>;
 export function query<K extends MathTags>(
-	selectors: K,
+  selectors: K,
 ): QueryResult<MathMLElementTagNameMap[K]>;
 export function query<E extends HTMLElement = HTMLElement>(
-	selectors: string,
+  selectors: string,
 ): QueryResult<E>;
 export function query<K extends Tags>(
-	query: K,
+  query: K,
 ): QueryResult<HTMLElementTagNameMap[K]> {
-	let res: HTMLElementTagNameMap[K] | null = null;
+  let res: HTMLElementTagNameMap[K] | null = null;
 
-	return function (this: HTMLElement) {
-		if (res) {
-			return res;
-		}
+  return function (this: HTMLElement) {
+    if (res) {
+      return res;
+    }
 
-		if (this.shadowRoot) {
-			res = this.shadowRoot.querySelector<K>(query);
-		} else {
-			res = this.querySelector<K>(query);
-		}
+    if (this.shadowRoot) {
+      res = this.shadowRoot.querySelector<K>(query);
+    } else {
+      res = this.querySelector<K>(query);
+    }
 
-		if (!res) {
-			throw new Error("could not find element");
-		}
+    if (!res) {
+      throw new Error("could not find element");
+    }
 
-		return res;
-	};
+    return res;
+  };
 }

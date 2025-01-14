@@ -1,49 +1,49 @@
 {
-	"name": "@joist/ssr",
-	"version": "4.0.0-next.42",
-	"type": "module",
-	"main": "./target/lib.js",
-	"module": "./target/lib.js",
-	"exports": {
-		".": "./target/lib.js",
-		"./*": "./target/lib/*",
-		"./package.json": "./package.json"
-	},
-	"files": ["src", "target"],
-	"sideEffects": false,
-	"description": "server side render shadow dom (Declarative Shadow DOM)",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/deebloo/joist.git"
-	},
-	"keywords": [],
-	"author": "deebloo",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/deebloo/joist/issues"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"scripts": {
-		"test": "wireit",
-		"build": "wireit"
-	},
-	"wireit": {
-		"build": {
-			"command": "tsc --build --pretty",
-			"clean": "if-file-deleted",
-			"files": ["src/**", "tsconfig.json"],
-			"output": ["target/**", "tsconfig.tsbuildinfo"]
-		},
-		"test": {
-			"command": "mocha target/**/*.test.js",
-			"files": ["target/**"],
-			"output": [],
-			"dependencies": ["build"]
-		}
-	},
-	"dependencies": {
-		"cheerio": "^1.0.0-rc.12"
-	}
+  "name": "@joist/ssr",
+  "version": "4.0.0-next.42",
+  "type": "module",
+  "main": "./target/lib.js",
+  "module": "./target/lib.js",
+  "exports": {
+    ".": "./target/lib.js",
+    "./*": "./target/lib/*",
+    "./package.json": "./package.json"
+  },
+  "files": ["src", "target"],
+  "sideEffects": false,
+  "description": "server side render shadow dom (Declarative Shadow DOM)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deebloo/joist.git"
+  },
+  "keywords": [],
+  "author": "deebloo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deebloo/joist/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": ["src/**", "tsconfig.json"],
+      "output": ["target/**", "tsconfig.tsbuildinfo"]
+    },
+    "test": {
+      "command": "mocha target/**/*.test.js",
+      "files": ["target/**"],
+      "output": [],
+      "dependencies": ["build"]
+    }
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  }
 }

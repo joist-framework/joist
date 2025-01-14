@@ -3,9 +3,9 @@ import { attr, css, element, html, listen, query } from "@joist/element";
 import type { Todo, TodoStatus } from "../services/todo.service.js";
 
 @element({
-	tagName: "todo-card",
-	shadowDom: [
-		css`
+  tagName: "todo-card",
+  shadowDom: [
+    css`
       :host {
         align-items: center;
         display: flex;
@@ -34,7 +34,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
         color: darkred;
       }
     `,
-		html`
+    html`
       <div id="name">
         <slot></slot>
       </div>
@@ -43,33 +43,33 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
 
       <button id="complete">complete</button>
     `,
-	],
+  ],
 })
 export class TodoCardElement extends HTMLElement {
-	@attr()
-	accessor status: TodoStatus = "active";
+  @attr()
+  accessor status: TodoStatus = "active";
 
-	#complete = query<HTMLButtonElement>("#complete");
+  #complete = query<HTMLButtonElement>("#complete");
 
-	@listen("click")
-	onClick(e: Event) {
-		if (e.target instanceof HTMLButtonElement) {
-			this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
-		}
-	}
+  @listen("click")
+  onClick(e: Event) {
+    if (e.target instanceof HTMLButtonElement) {
+      this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
+    }
+  }
 
-	attributeChangedCallback() {
-		this.#complete({
-			innerHTML: this.status === "active" ? "complete" : "active",
-		});
-	}
+  attributeChangedCallback() {
+    this.#complete({
+      innerHTML: this.status === "active" ? "complete" : "active",
+    });
+  }
 }
 
 export function createTodoCard(todo: Todo) {
-	const card = new TodoCardElement();
-	card.id = todo.id;
-	card.innerHTML = todo.name;
-	card.status = todo.status;
+  const card = new TodoCardElement();
+  card.id = todo.id;
+  card.innerHTML = todo.name;
+  card.status = todo.status;
 
-	return card;
+  return card;
 }

@@ -3,9 +3,9 @@ import { template } from "@joist/element/template.js";
 import { effect, observe } from "@joist/observable";
 
 @element({
-	tagName: "hn-news-card",
-	shadowDom: [
-		css`
+  tagName: "hn-news-card",
+  shadowDom: [
+    css`
       :host {
         padding: 1rem;
         display: flex;
@@ -31,7 +31,7 @@ import { effect, observe } from "@joist/observable";
         gap: 1rem;
       }
     `,
-		html`
+    html`
       <div id="number" #:bind="number"></div>
 
       <div>
@@ -61,46 +61,46 @@ import { effect, observe } from "@joist/observable";
         </div>
       </div>
     `,
-	],
+  ],
 })
 export class HnNewsCard extends HTMLElement {
-	@attr()
-	@observe()
-	accessor number = 1;
+  @attr()
+  @observe()
+  accessor number = 1;
 
-	@attr()
-	@observe()
-	accessor comments = 0;
+  @attr()
+  @observe()
+  accessor comments = 0;
 
-	@attr()
-	@observe()
-	accessor points = 0;
+  @attr()
+  @observe()
+  accessor points = 0;
 
-	@attr()
-	@observe()
-	accessor href = "";
+  @attr()
+  @observe()
+  accessor href = "";
 
-	@attr()
-	@observe()
-	accessor author = "";
+  @attr()
+  @observe()
+  accessor author = "";
 
-	get host() {
-		try {
-			return new URL(this.href).hostname;
-		} catch {
-			return "";
-		}
-	}
+  get host() {
+    try {
+      return new URL(this.href).hostname;
+    } catch {
+      return "";
+    }
+  }
 
-	#render = template();
+  #render = template();
 
-	@ready()
-	onElementReady() {
-		this.#render();
-	}
+  @ready()
+  onElementReady() {
+    this.#render();
+  }
 
-	@effect()
-	onPropChange() {
-		this.#render();
-	}
+  @effect()
+  onPropChange() {
+    this.#render();
+  }
 }

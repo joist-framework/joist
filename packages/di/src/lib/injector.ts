@@ -1,11 +1,11 @@
 import { callLifecycle } from "./lifecycle.js";
 import { readMetadata } from "./metadata.js";
 import {
-	type InjectionToken,
-	type Provider,
-	type ProviderDef,
-	type ProviderFactory,
-	StaticToken,
+  type InjectionToken,
+  type Provider,
+  type ProviderDef,
+  type ProviderFactory,
+  StaticToken,
 } from "./provider.js";
 
 /**
@@ -14,9 +14,9 @@ import {
 export const injectables: WeakMap<object, Injector> = new WeakMap();
 
 export interface InjectorOpts {
-	name?: string;
-	providers?: Iterable<Provider<any>>;
-	parent?: Injector;
+  name?: string;
+  providers?: Iterable<Provider<any>>;
+  parent?: Injector;
 }
 
 /**
@@ -37,112 +37,112 @@ export interface InjectorOpts {
  * If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
  */
 export class Injector {
-	// keep track of instances. One Token can have one instance
-	#instances = new WeakMap<InjectionToken<any>, any>();
+  // keep track of instances. One Token can have one instance
+  #instances = new WeakMap<InjectionToken<any>, any>();
 
-	name?: string;
-	parent?: Injector;
-	providers: WeakMap<InjectionToken<any>, ProviderDef<any>>;
+  name?: string;
+  parent?: Injector;
+  providers: WeakMap<InjectionToken<any>, ProviderDef<any>>;
 
-	constructor(opts?: InjectorOpts) {
-		this.parent = opts?.parent;
-		this.providers = new Map(opts?.providers);
-	}
+  constructor(opts?: InjectorOpts) {
+    this.parent = opts?.parent;
+    this.providers = new Map(opts?.providers);
+  }
 
-	// resolves and retuns and instance of the requested service
-	inject<T>(token: InjectionToken<T>): T {
-		// check for a local instance
-		if (this.#instances.has(token)) {
-			const instance = this.#instances.get(token);
+  // resolves and retuns and instance of the requested service
+  inject<T>(token: InjectionToken<T>): T {
+    // check for a local instance
+    if (this.#instances.has(token)) {
+      const instance = this.#instances.get(token);
 
-			const metadata = readMetadata<T>(token);
+      const metadata = readMetadata<T>(token);
 
-			if (metadata) {
-				callLifecycle(
-					instance,
-					injectables.get(instance) ?? this,
-					metadata.onInjected,
-				);
-			}
+      if (metadata) {
+        callLifecycle(
+          instance,
+          injectables.get(instance) ?? this,
+          metadata.onInjected,
+        );
+      }
 
-			return instance;
-		}
+      return instance;
+    }
 
-		const provider = this.providers.get(token);
+    const provider = this.providers.get(token);
 
-		// check for a provider definition
-		if (provider) {
-			if ("use" in provider) {
-				return this.#createAndCache<T>(token, () => new provider.use());
-			}
+    // check for a provider definition
+    if (provider) {
+      if ("use" in provider) {
+        return this.#createAndCache<T>(token, () => new provider.use());
+      }
 
-			if ("factory" in provider) {
-				return this.#createAndCache<T>(token, provider.factory);
-			}
+      if ("factory" in provider) {
+        return this.#createAndCache<T>(token, provider.factory);
+      }
 
-			throw new Error(
-				`Provider for ${token.name} found but is missing either 'use' or 'factory'`,
-			);
-		}
+      throw new Error(
+        `Provider for ${token.name} found but is missing either 'use' or 'factory'`,
+      );
+    }
 
-		// check for a parent and attempt to get there
-		if (this.parent) {
-			return this.parent.inject(token);
-		}
+    // check for a parent and attempt to get there
+    if (this.parent) {
+      return this.parent.inject(token);
+    }
 
-		if (token instanceof StaticToken) {
-			if (!token.factory) {
-				throw new Error(`Provider not found for "${token.name}"`);
-			}
+    if (token instanceof StaticToken) {
+      if (!token.factory) {
+        throw new Error(`Provider not found for "${token.name}"`);
+      }
 
-			return this.#createAndCache(token, token.factory);
-		}
+      return this.#createAndCache(token, token.factory);
+    }
 
-		return this.#createAndCache(token, () => new token());
-	}
+    return this.#createAndCache(token, () => new token());
+  }
 
-	setParent(parent: Injector | undefined): void {
-		this.parent = parent;
-	}
+  setParent(parent: Injector | undefined): void {
+    this.parent = parent;
+  }
 
-	clear(): void {
-		this.#instances = new WeakMap();
-	}
+  clear(): void {
+    this.#instances = new WeakMap();
+  }
 
-	#createAndCache<T>(token: InjectionToken<T>, factory: ProviderFactory<T>): T {
-		const instance = factory(this);
+  #createAndCache<T>(token: InjectionToken<T>, factory: ProviderFactory<T>): T {
+    const instance = factory(this);
 
-		this.#instances.set(token, instance);
+    this.#instances.set(token, instance);
 
-		/**
-		 * Only values that are objects are able to have associated injectors
-		 */
-		if (typeof instance === "object" && instance !== null) {
-			const injector = injectables.get(instance);
+    /**
+     * Only values that are objects are able to have associated injectors
+     */
+    if (typeof instance === "object" && instance !== null) {
+      const injector = injectables.get(instance);
 
-			if (injector && injector !== this) {
-				/**
-				 * set the this injector instance as a parent.
-				 * This should ONLY happen in the injector is not self. This would cause an infinite loop.
-				 * this means that each calling injector will be the parent of what it creates.
-				 * this allows the created service to navigate up it's chain to find a root
-				 */
-				injector.setParent(this);
-			}
+      if (injector && injector !== this) {
+        /**
+         * set the this injector instance as a parent.
+         * This should ONLY happen in the injector is not self. This would cause an infinite loop.
+         * this means that each calling injector will be the parent of what it creates.
+         * this allows the created service to navigate up it's chain to find a root
+         */
+        injector.setParent(this);
+      }
 
-			/**
-			 * the onInject and onInit lifecycle hook should be called after the parent is defined.
-			 * this ensures that services are initialized when the chain is settled
-			 * this is required since the parent is set after the instance is constructed
-			 */
-			const metadata = readMetadata<T>(token);
+      /**
+       * the onInject and onInit lifecycle hook should be called after the parent is defined.
+       * this ensures that services are initialized when the chain is settled
+       * this is required since the parent is set after the instance is constructed
+       */
+      const metadata = readMetadata<T>(token);
 
-			if (metadata) {
-				callLifecycle(instance, injector ?? this, metadata.onCreated);
-				callLifecycle(instance, injector ?? this, metadata.onInjected);
-			}
-		}
+      if (metadata) {
+        callLifecycle(instance, injector ?? this, metadata.onCreated);
+        callLifecycle(instance, injector ?? this, metadata.onInjected);
+      }
+    }
 
-		return instance;
-	}
+    return instance;
+  }
 }

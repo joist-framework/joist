@@ -16,18 +16,18 @@ export type UnknownContext = Context<unknown, unknown>;
  * A helper type which can extract a Context value type from a Context type
  */
 export type ContextType<T extends UnknownContext> = T extends Context<
-	infer _,
-	infer V
+  infer _,
+  infer V
 >
-	? V
-	: never;
+  ? V
+  : never;
 
 /**
  * A function which creates a Context value object
  */
 
 export function createContext<KeyType, ValueType>(key: KeyType) {
-	return key as Context<KeyType, ValueType>;
+  return key as Context<KeyType, ValueType>;
 }
 
 /**
@@ -35,8 +35,8 @@ export function createContext<KeyType, ValueType>(key: KeyType) {
  * This callback can be called multiple times by context providers as the requested value is changed.
  */
 export type ContextCallback<ValueType> = (
-	value: ValueType,
-	unsubscribe?: () => void,
+  value: ValueType,
+  unsubscribe?: () => void,
 ) => void;
 
 /**
@@ -50,29 +50,29 @@ export type ContextCallback<ValueType> = (
  * function to the callback which requesters can invoke to indicate they no longer wish to receive these updates.
  */
 export class ContextRequestEvent<T extends UnknownContext> extends Event {
-	context: T;
-	callback: ContextCallback<ContextType<T>>;
-	subscribe?: boolean;
+  context: T;
+  callback: ContextCallback<ContextType<T>>;
+  subscribe?: boolean;
 
-	public constructor(
-		context: T,
-		callback: ContextCallback<ContextType<T>>,
-		subscribe?: boolean,
-	) {
-		super("context-request", { bubbles: true, composed: true });
+  public constructor(
+    context: T,
+    callback: ContextCallback<ContextType<T>>,
+    subscribe?: boolean,
+  ) {
+    super("context-request", { bubbles: true, composed: true });
 
-		this.context = context;
-		this.callback = callback;
-		this.subscribe = subscribe;
-	}
+    this.context = context;
+    this.callback = callback;
+    this.subscribe = subscribe;
+  }
 }
 
 declare global {
-	interface HTMLElementEventMap {
-		/**
-		 * A 'context-request' event can be emitted by any element which desires
-		 * a context value to be injected by an external provider.
-		 */
-		"context-request": ContextRequestEvent<Context<unknown, unknown>>;
-	}
+  interface HTMLElementEventMap {
+    /**
+     * A 'context-request' event can be emitted by any element which desires
+     * a context value to be injected by an external provider.
+     */
+    "context-request": ContextRequestEvent<Context<unknown, unknown>>;
+  }
 }
