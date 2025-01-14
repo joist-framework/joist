@@ -1,19 +1,19 @@
-import { inject, injectable } from '@joist/di';
-import { css, html, listen, element } from '@joist/element';
+import { inject, injectable } from "@joist/di";
+import { css, element, html, listen } from "@joist/element";
 
 import {
-  TodoAddedEvent,
-  TodoUpdatedEvent,
-  TodoRemovedEvent,
-  TodoService
-} from '../services/todo.service.js';
-import { createTodoCard, TodoCardElement } from './todo-card.element.js';
+	TodoAddedEvent,
+	TodoRemovedEvent,
+	TodoService,
+	TodoUpdatedEvent,
+} from "../services/todo.service.js";
+import { TodoCardElement, createTodoCard } from "./todo-card.element.js";
 
 @injectable()
 @element({
-  tagName: 'todo-list',
-  shadowDom: [
-    css`
+	tagName: "todo-list",
+	shadowDom: [
+		css`
       :host {
         display: block;
         background: #fff;
@@ -28,77 +28,97 @@ import { createTodoCard, TodoCardElement } from './todo-card.element.js';
         border-bottom: none;
       }
     `,
-    html`<slot></slot>`
-  ]
+		html`<slot></slot>`,
+	],
 })
 export class TodoListElement extends HTMLElement {
-  #listeners: Function[] = [];
-  #todo = inject(TodoService);
+	#controller: AbortController | null = null;
+	#todo = inject(TodoService);
 
-  async connectedCallback() {
-    const service = this.#todo();
-    const todos = await service.getTodos();
+	async connectedCallback() {
+		const service = this.#todo();
+		const todos = await service.getTodos();
 
-    todos.forEach((todo) => {
-      if (!this.querySelector('#' + todo.id)) {
-        this.appendChild(createTodoCard(todo));
-      }
-    });
+		for (const todo of todos) {
+			if (!this.querySelector(`#${todo.id}`)) {
+				this.appendChild(createTodoCard(todo));
+			}
+		}
 
-    this.#listeners = [
-      service.listen('todo_added', this.#onTodoAdded.bind(this)),
-      service.listen('todo_removed', this.#onTodoRemoved.bind(this)),
-      service.listen('todo_updated', this.#onTodoChanged.bind(this))
-    ];
-  }
+		this.#controller = new AbortController();
 
-  disconnectedCallback() {
-    this.#listeners.forEach((remove) => remove());
-  }
+		service.addEventListener(
+			"todo_added",
+			(e: Event) => {
+				this.#onTodoAdded(e);
+			},
+			{ signal: this.#controller.signal },
+		);
 
-  @listen('remove')
-  onRemove(e: Event) {
-    if (e.target instanceof TodoCardElement) {
-      this.#todo().removeTodo(e.target.id);
-    }
-  }
+		service.addEventListener(
+			"todo_removed",
+			(e: Event) => {
+				this.#onTodoRemoved(e);
+			},
+			{ signal: this.#controller.signal },
+		);
 
-  @listen('complete')
-  onComplete(e: Event) {
-    if (e.target instanceof TodoCardElement) {
-      const status = e.target.getAttribute('status');
+		service.addEventListener(
+			"todo_updated",
+			(e: Event) => {
+				this.#onTodoChanged(e);
+			},
+			{ signal: this.#controller.signal },
+		);
+	}
 
-      this.#todo().updateTodo(e.target.id, {
-        status: status === 'active' ? 'complete' : 'active'
-      });
-    }
-  }
+	disconnectedCallback() {
+		this.#controller?.abort();
+	}
 
-  #onTodoAdded(e: Event) {
-    if (e instanceof TodoAddedEvent) {
-      this.appendChild(createTodoCard(e.todo));
-    }
-  }
+	@listen("remove")
+	onRemove(e: Event) {
+		if (e.target instanceof TodoCardElement) {
+			this.#todo().removeTodo(e.target.id);
+		}
+	}
 
-  #onTodoRemoved(e: Event) {
-    if (e instanceof TodoRemovedEvent) {
-      const el = this.querySelector('#' + e.todo);
+	@listen("complete")
+	onComplete(e: Event) {
+		if (e.target instanceof TodoCardElement) {
+			const status = e.target.getAttribute("status");
 
-      if (el instanceof TodoCardElement) {
-        this.removeChild(el);
-      }
-    }
-  }
+			this.#todo().updateTodo(e.target.id, {
+				status: status === "active" ? "complete" : "active",
+			});
+		}
+	}
 
-  #onTodoChanged(e: Event) {
-    if (e instanceof TodoUpdatedEvent) {
-      const el = this.querySelector('#' + e.todo.id);
+	#onTodoAdded(e: Event) {
+		if (e instanceof TodoAddedEvent) {
+			this.appendChild(createTodoCard(e.todo));
+		}
+	}
 
-      if (el instanceof TodoCardElement) {
-        el.innerHTML = e.todo.name;
+	#onTodoRemoved(e: Event) {
+		if (e instanceof TodoRemovedEvent) {
+			const el = this.querySelector(`#${e.todo}`);
 
-        el.setAttribute('status', e.todo.status);
-      }
-    }
-  }
+			if (el instanceof TodoCardElement) {
+				this.removeChild(el);
+			}
+		}
+	}
+
+	#onTodoChanged(e: Event) {
+		if (e instanceof TodoUpdatedEvent) {
+			const el = this.querySelector(`#${e.todo.id}`);
+
+			if (el instanceof TodoCardElement) {
+				el.innerHTML = e.todo.name;
+
+				el.setAttribute("status", e.todo.status);
+			}
+		}
+	}
 }

@@ -1,13 +1,13 @@
-import { inject, injectable } from '@joist/di';
-import { css, html, listen, element, query } from '@joist/element';
+import { inject, injectable } from "@joist/di";
+import { css, element, html, listen, query } from "@joist/element";
 
-import { TodoService, Todo } from '../services/todo.service.js';
+import { Todo, TodoService } from "../services/todo.service.js";
 
 @injectable()
 @element({
-  tagName: 'todo-form',
-  shadowDom: [
-    css`
+	tagName: "todo-form",
+	shadowDom: [
+		css`
       :host {
         display: block;
         background: #fff;
@@ -51,7 +51,7 @@ import { TodoService, Todo } from '../services/todo.service.js';
         color: #e6e6e6;
       }
     `,
-    html`
+		html`
       <form id="todo-form">
         <input
           id="input"
@@ -61,26 +61,26 @@ import { TodoService, Todo } from '../services/todo.service.js';
           autofocus
         />
       </form>
-    `
-  ]
+    `,
+	],
 })
 export class TodoFormElement extends HTMLElement {
-  #input = query<HTMLInputElement>('#input');
+	#input = query<HTMLInputElement>("#input");
 
-  #todos = inject(TodoService);
+	#todos = inject(TodoService);
 
-  @listen('submit', '#todo-form')
-  onSubmit(e: Event) {
-    const service = this.#todos();
+	@listen("submit", "#todo-form")
+	onSubmit(e: Event) {
+		const service = this.#todos();
 
-    e.preventDefault();
+		e.preventDefault();
 
-    const input = this.#input();
+		const input = this.#input();
 
-    if (input.value) {
-      service.addTodo(Todo.create(input.value, 'active'));
+		if (input.value) {
+			service.addTodo(Todo.create(input.value, "active"));
 
-      input.value = '';
-    }
-  }
+			input.value = "";
+		}
+	}
 }

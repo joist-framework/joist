@@ -1,31 +1,31 @@
-import { css, html, element } from '@joist/element';
-import { inject, injectable } from '@joist/di';
+import { inject, injectable } from "@joist/di";
+import { css, element, html } from "@joist/element";
 
-import { TodoService } from '../services/todo.service.js';
+import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
-  ['one', 'item'],
-  ['other', 'items']
+	["one", "item"],
+	["other", "items"],
 ]);
 
 class PluralRules extends Intl.PluralRules {}
 
 @injectable({
-  providers: [
-    [
-      PluralRules,
-      {
-        factory() {
-          return new Intl.PluralRules();
-        }
-      }
-    ]
-  ]
+	providers: [
+		[
+			PluralRules,
+			{
+				factory() {
+					return new Intl.PluralRules();
+				},
+			},
+		],
+	],
 })
 @element({
-  tagName: 'todo-list-footer',
-  shadowDom: [
-    css`
+	tagName: "todo-list-footer",
+	shadowDom: [
+		css`
       :host {
         --card-height: 50px;
 
@@ -68,33 +68,33 @@ class PluralRules extends Intl.PluralRules {}
           0 17px 2px -6px rgba(0, 0, 0, 0.2);
       }
     `,
-    html`
+		html`
       <div id="footer"><slot></slot> left</div>
 
       <div id="decoration"></div>
-    `
-  ]
+    `,
+	],
 })
 export class TodoListFooterElement extends HTMLElement {
-  #todo = inject(TodoService);
-  #pr = inject(PluralRules);
-  #listeners: Function[] = [];
+	#todo = inject(TodoService);
+	#pr = inject(PluralRules);
+	#listeners: Array<() => void> = [];
 
-  connectedCallback() {
-    const todo = this.#todo();
+	connectedCallback() {
+		const todo = this.#todo();
 
-    const onTodoUpdate = async () => {
-      this.innerHTML = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
-    };
+		const onTodoUpdate = async () => {
+			this.innerHTML = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
+		};
 
-    onTodoUpdate();
+		onTodoUpdate();
 
-    this.#listeners = [todo.listen('todo_sync', onTodoUpdate)];
-  }
+		this.#listeners = [todo.listen("todo_sync", onTodoUpdate)];
+	}
 
-  disconnectedCallback() {
-    for (let remove of this.#listeners) {
-      remove();
-    }
-  }
+	disconnectedCallback() {
+		for (const remove of this.#listeners) {
+			remove();
+		}
+	}
 }

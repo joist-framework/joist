@@ -1,50 +1,57 @@
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+(Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
 export type EffectFn<T> = (changes: Changes<T>) => void;
 
-export class Changes<T> extends Map<keyof T, { oldValue: unknown; newValue: unknown }> {}
+export class Changes<T> extends Map<
+	keyof T,
+	{ oldValue: unknown; newValue: unknown }
+> {}
 
 export class ObservableInstanceMetadata<T> {
-  scheduler: Promise<void> | null = null;
-  changes: Changes<T> = new Changes();
+	scheduler: Promise<void> | null = null;
+	changes: Changes<T> = new Changes();
 }
 
 export class ObservableInstanceMetaDataStore extends WeakMap<
-  object,
-  ObservableInstanceMetadata<unknown>
+	object,
+	ObservableInstanceMetadata<unknown>
 > {
-  read<T extends object>(key: T): ObservableInstanceMetadata<T> {
-    let data = this.get(key);
+	read<T extends object>(key: T): ObservableInstanceMetadata<T> {
+		let data = this.get(key);
 
-    if (!data) {
-      data = new ObservableInstanceMetadata();
+		if (!data) {
+			data = new ObservableInstanceMetadata();
 
-      this.set(key, data);
-    }
+			this.set(key, data);
+		}
 
-    return data;
-  }
+		return data;
+	}
 }
 
 export class ObservableMetadata<T> {
-  effects: Set<EffectFn<T>> = new Set();
+	effects: Set<EffectFn<T>> = new Set();
 }
 
-export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<unknown>> {
-  read<T extends object>(key: object): ObservableMetadata<T> {
-    let data = this.get(key);
+export class ObservableMetadataStore extends WeakMap<
+	object,
+	ObservableMetadata<unknown>
+> {
+	read<T extends object>(key: object): ObservableMetadata<T> {
+		let data = this.get(key);
 
-    if (!data) {
-      data = new ObservableMetadata();
+		if (!data) {
+			data = new ObservableMetadata();
 
-      this.set(key, data);
-    }
+			this.set(key, data);
+		}
 
-    return data as ObservableMetadata<T>;
-  }
+		return data as ObservableMetadata<T>;
+	}
 }
 
 export const instanceMetadataStore: ObservableInstanceMetaDataStore =
-  new ObservableInstanceMetaDataStore();
+	new ObservableInstanceMetaDataStore();
 
-export const observableMetadataStore: ObservableMetadataStore = new ObservableMetadataStore();
+export const observableMetadataStore: ObservableMetadataStore =
+	new ObservableMetadataStore();

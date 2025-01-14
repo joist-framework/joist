@@ -1,20 +1,20 @@
 export interface Storage {
-  loadJSON<T>(key: string): Promise<T | undefined>;
-  saveJSON<T>(key: string, val: T): Promise<boolean>;
+	loadJSON<T>(key: string): Promise<T | undefined>;
+	saveJSON<T>(key: string, val: T): Promise<boolean>;
 }
 
 export class AppStorage implements Storage {
-  static service = true;
+	static service = true;
 
-  #data = new Map<string, any>();
+	#data = new Map<string, unknown>();
 
-  async loadJSON<T>(key: string): Promise<T | undefined> {
-    return this.#data.get(key);
-  }
+	async loadJSON<T>(key: string): Promise<T | undefined> {
+		return this.#data.get(key) as T | undefined;
+	}
 
-  async saveJSON<T>(key: string, val: T): Promise<boolean> {
-    this.#data.set(key, val);
+	async saveJSON<T>(key: string, val: T): Promise<boolean> {
+		this.#data.set(key, val);
 
-    return true;
-  }
+		return true;
+	}
 }

@@ -1,49 +1,42 @@
 {
-  "name": "@integration/todo",
-  "version": "2.0.0",
-  "sideEffects": false,
-  "private": true,
-  "description": "",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/deebloo/joist.git"
-  },
-  "keywords": [],
-  "author": "deebloo",
-  "license": "MIT",
-  "scripts": {
-    "start": "wireit",
-    "build": "wireit"
-  },
-  "wireit": {
-    "start": {
-      "command": "browser-sync start --config=browser-sync.cjs",
-      "service": true,
-      "dependencies": [
-        {
-          "script": "build",
-          "cascade": false
-        }
-      ]
-    },
-    "build": {
-      "command": "tsc --build --pretty",
-      "clean": "if-file-deleted",
-      "files": [
-        "src/**",
-        "tsconfig.json",
-        "../../tsconfig.json"
-      ],
-      "output": [
-        "target/**",
-        "tsconfig.tsbuildinfo"
-      ],
-      "dependencies": [
-        "../../packages/element:build",
-        "../../packages/di:build",
-        "../../packages/observable:build"
-      ]
-    }
-  }
+	"name": "@integration/todo",
+	"version": "2.0.0",
+	"sideEffects": false,
+	"private": true,
+	"description": "",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/deebloo/joist.git"
+	},
+	"keywords": [],
+	"author": "deebloo",
+	"license": "MIT",
+	"scripts": {
+		"start": "wireit",
+		"build": "wireit"
+	},
+	"wireit": {
+		"start": {
+			"command": "browser-sync start --config=browser-sync.cjs",
+			"service": true,
+			"dependencies": [
+				{
+					"script": "build",
+					"cascade": false
+				}
+			]
+		},
+		"build": {
+			"command": "tsc --build --pretty",
+			"clean": "if-file-deleted",
+			"files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
+			"output": ["target/**", "tsconfig.tsbuildinfo"],
+			"dependencies": [
+				"../../packages/element:build",
+				"../../packages/di:build",
+				"../../packages/observable:build"
+			]
+		}
+	}
 }

@@ -1,7 +1,7 @@
 export default {
-  rootDir: '../../',
-  nodeResolve: {
-    exportConditions: ['production']
-  },
-  files: 'target/**/*.test.js'
+	rootDir: "../../",
+	nodeResolve: {
+		exportConditions: ["production"],
+	},
+	files: "target/**/*.test.js",
 };

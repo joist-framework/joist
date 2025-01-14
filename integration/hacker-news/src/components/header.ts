@@ -1,10 +1,10 @@
-import { attr, css, element, html } from '@joist/element';
-import { template } from '@joist/element/template.js';
+import { attr, css, element, html } from "@joist/element";
+import { template } from "@joist/element/template.js";
 
 @element({
-  tagName: 'hn-header',
-  shadowDom: [
-    css`
+	tagName: "hn-header",
+	shadowDom: [
+		css`
       :host {
         background: rgb(255, 102, 0);
         display: flex;
@@ -28,7 +28,7 @@ import { template } from '@joist/element/template.js';
         margin: 0.5rem;
       }
     `,
-    html`
+		html`
       <img #:src="img" aria-hidden="true" height="20" width="20" />
 
       <h1>Hacker News</h1>
@@ -36,19 +36,19 @@ import { template } from '@joist/element/template.js';
       <nav>
         <slot></slot>
       </nav>
-    `
-  ]
+    `,
+	],
 })
 export class HnHeader extends HTMLElement {
-  @attr()
-  accessor role = 'banner';
+	@attr()
+	accessor role = "banner";
 
-  @attr()
-  accessor img = '/public/images/y18.svg';
+	@attr()
+	accessor img = "/public/images/y18.svg";
 
-  #render = template();
+	#render = template();
 
-  attributeChangedCallback() {
-    this.#render();
-  }
+	attributeChangedCallback() {
+		this.#render();
+	}
 }

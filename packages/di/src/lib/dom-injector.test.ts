@@ -1,48 +1,52 @@
-import { assert } from 'chai';
-import { DOMInjector } from './dom-injector.js';
-import { INJECTOR_CTX } from './context/injector.js';
-import { Injector } from './injector.js';
-import { ContextRequestEvent } from './context/protocol.js';
+import { assert } from "chai";
 
-describe('DOMInjector', () => {
-  it('should respond to elements looking for an injector', () => {
-    const injector = new DOMInjector();
-    injector.attach(document.body);
+import { INJECTOR_CTX } from "./context/injector.js";
+import {
+	ContextRequestEvent,
+	type UnknownContext,
+} from "./context/protocol.js";
+import { DOMInjector } from "./dom-injector.js";
+import { Injector } from "./injector.js";
 
-    const host = document.createElement('div');
-    document.body.append(host);
+describe("DOMInjector", () => {
+	it("should respond to elements looking for an injector", () => {
+		const injector = new DOMInjector();
+		injector.attach(document.body);
 
-    let parent: Injector | null = null;
+		const host = document.createElement("div");
+		document.body.append(host);
 
-    host.dispatchEvent(
-      new ContextRequestEvent(INJECTOR_CTX, (i) => {
-        parent = i;
-      })
-    );
+		let parent: Injector | null = null;
 
-    assert.equal(parent, injector);
+		host.dispatchEvent(
+			new ContextRequestEvent(INJECTOR_CTX, (i) => {
+				parent = i;
+			}),
+		);
 
-    injector.detach();
-    host.remove();
-  });
+		assert.equal(parent, injector);
 
-  it('should send request looking for other injector contexts', () => {
-    const parent = new Injector();
-    const injector = new DOMInjector();
+		injector.detach();
+		host.remove();
+	});
 
-    const cb = (e: any) => {
-      if (e.context === INJECTOR_CTX) {
-        e.callback(parent);
-      }
-    };
+	it("should send request looking for other injector contexts", () => {
+		const parent = new Injector();
+		const injector = new DOMInjector();
 
-    document.body.addEventListener('context-request', cb);
+		const cb = (e: ContextRequestEvent<UnknownContext>) => {
+			if (e.context === INJECTOR_CTX) {
+				e.callback(parent);
+			}
+		};
 
-    injector.attach(document.body);
+		document.body.addEventListener("context-request", cb);
 
-    assert.equal(injector.parent, parent);
+		injector.attach(document.body);
 
-    injector.detach();
-    document.body.removeEventListener('context-request', cb);
-  });
+		assert.equal(injector.parent, parent);
+
+		injector.detach();
+		document.body.removeEventListener("context-request", cb);
+	});
 });

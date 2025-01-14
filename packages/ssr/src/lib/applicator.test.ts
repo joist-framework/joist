@@ -1,22 +1,25 @@
-import { assert } from 'chai';
+import { assert } from "chai";
 
-import { Applicator } from './applicator.js';
-import { NoopTemplateCache } from './template-cache.js';
-import { TemplateLoader } from './template-loader.js';
+import { Applicator } from "./applicator.js";
+import { NoopTemplateCache } from "./template-cache.js";
+import type { TemplateLoader } from "./template-loader.js";
 
-it('should apply declarative shadow dom to specified elements', async () => {
-  class MockTemplateLoader implements TemplateLoader {
-    loadCSS(tag: string): Promise<string | null> {
-      return Promise.resolve(`:host { content: 'css for ${tag}' }`);
-    }
-    loadHTML(tag: string): Promise<string | null> {
-      return Promise.resolve(`<div>html for ${tag}</div>`);
-    }
-  }
+it("should apply declarative shadow dom to specified elements", async () => {
+	class MockTemplateLoader implements TemplateLoader {
+		loadCSS(tag: string): Promise<string | null> {
+			return Promise.resolve(`:host { content: 'css for ${tag}' }`);
+		}
+		loadHTML(tag: string): Promise<string | null> {
+			return Promise.resolve(`<div>html for ${tag}</div>`);
+		}
+	}
 
-  const applicator = new Applicator(new NoopTemplateCache(), new MockTemplateLoader());
+	const applicator = new Applicator(
+		new NoopTemplateCache(),
+		new MockTemplateLoader(),
+	);
 
-  const document = /*html*/ `
+	const document = /*html*/ `
     <html>
         <head></head>
 
@@ -28,11 +31,15 @@ it('should apply declarative shadow dom to specified elements', async () => {
     </html>
   `;
 
-  const res = await applicator.apply(document, ['mock-header', 'mock-content', 'mock-footer']);
+	const res = await applicator.apply(document, [
+		"mock-header",
+		"mock-content",
+		"mock-footer",
+	]);
 
-  assert.equal(
-    trim(res),
-    trim(`
+	assert.equal(
+		trim(res),
+		trim(`
     <html>
         <head></head>
 
@@ -59,38 +66,45 @@ it('should apply declarative shadow dom to specified elements', async () => {
             </mock-footer>
         </body>
     </html>
-  `)
-  );
+  `),
+	);
 });
 
-it('should apply declarative shadow dom recursively', async () => {
-  class MockTemplateLoader implements TemplateLoader {
-    async loadCSS(tag: string): Promise<string | null> {
-      return `:host { content: 'css for ${tag}' }`;
-    }
+it("should apply declarative shadow dom recursively", async () => {
+	class MockTemplateLoader implements TemplateLoader {
+		async loadCSS(tag: string): Promise<string | null> {
+			return `:host { content: 'css for ${tag}' }`;
+		}
 
-    async loadHTML(tag: string): Promise<string | null> {
-      switch (tag) {
-        case 'mock-foo':
-          return `<mock-bar></mock-bar>`;
+		async loadHTML(tag: string): Promise<string | null> {
+			switch (tag) {
+				case "mock-foo":
+					return "<mock-bar></mock-bar>";
 
-        case 'mock-bar':
-          return `<mock-baz></mock-baz>`;
-      }
+				case "mock-bar":
+					return "<mock-baz></mock-baz>";
+			}
 
-      return `<div>html for ${tag}</div>`;
-    }
-  }
+			return `<div>html for ${tag}</div>`;
+		}
+	}
 
-  const applicator = new Applicator(new NoopTemplateCache(), new MockTemplateLoader());
+	const applicator = new Applicator(
+		new NoopTemplateCache(),
+		new MockTemplateLoader(),
+	);
 
-  const document = `<mock-foo></mock-foo>`;
+	const document = "<mock-foo></mock-foo>";
 
-  const res = await applicator.apply(document, ['mock-foo', 'mock-bar', 'mock-baz']);
+	const res = await applicator.apply(document, [
+		"mock-foo",
+		"mock-bar",
+		"mock-baz",
+	]);
 
-  assert.equal(
-    trim(res),
-    trim(`
+	assert.equal(
+		trim(res),
+		trim(`
     <html>
         <head></head>
 
@@ -113,10 +127,10 @@ it('should apply declarative shadow dom recursively', async () => {
             </mock-foo>
         </body>
     </html>
-  `)
-  );
+  `),
+	);
 });
 
 function trim(value: string) {
-  return value.replace(/\s+/g, '').replace(/(\r\n|\n|\r)/gm, '');
+	return value.replace(/\s+/g, "").replace(/(\r\n|\n|\r)/gm, "");
 }

@@ -1,32 +1,32 @@
 {
-  "name": "@integration/templating",
-  "version": "3.0.0",
-  "private": true,
-  "description": "",
-  "keywords": [],
-  "author": "deebloo",
-  "license": "MIT",
-  "scripts": {
-    "start": "wireit",
-    "build": "wireit"
-  },
-  "wireit": {
-    "start": {
-      "command": "browser-sync start --config=browser-sync.js",
-      "service": true,
-      "dependencies": [
-        {
-          "script": "build",
-          "cascade": false
-        }
-      ]
-    },
-    "build": {
-      "dependencies": [
-        "../../packages/element:build",
-        "../../packages/di:build",
-        "../../packages/observable:build"
-      ]
-    }
-  }
+	"name": "@integration/templating",
+	"version": "3.0.0",
+	"private": true,
+	"description": "",
+	"keywords": [],
+	"author": "deebloo",
+	"license": "MIT",
+	"scripts": {
+		"start": "wireit",
+		"build": "wireit"
+	},
+	"wireit": {
+		"start": {
+			"command": "browser-sync start --config=browser-sync.js",
+			"service": true,
+			"dependencies": [
+				{
+					"script": "build",
+					"cascade": false
+				}
+			]
+		},
+		"build": {
+			"dependencies": [
+				"../../packages/element:build",
+				"../../packages/di:build",
+				"../../packages/observable:build"
+			]
+		}
+	}
 }

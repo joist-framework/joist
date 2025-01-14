@@ -1,3 +1,3 @@
 export interface ShadowResult {
-  apply(el: Element): void;
+	apply(el: Element): void;
 }
