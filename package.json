@@ -14,7 +14,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@types/chai": "^5.0.0",
+    "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.7",
     "@types/node": "^22.0.0",
     "@web/test-runner": "^0.19.0",
