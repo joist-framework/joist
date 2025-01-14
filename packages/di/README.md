@@ -338,34 +338,38 @@ customElements.define('my-element', MyElement);
 
 ### Context Elements:
 
-Context elements are where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements. Since custom elements are treated the same as any other class they can define providers for their local scope.
+Context elements are where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements. 
+Since custom elements are treated the same as any other class they can define providers for their local scope. The `provideSelfAs` property will provide the current class for the tokens given.
+This also makes it easy to attributes to define values for the service.
 
 ```TS
 const app = new DOMInjector();
 
 app.attach(document.body);
 
-class Colors {
-  primary = 'red';
-  secodnary = 'green';
+interface ColorCtx {
+  primary: string;
+  secondary: string;
 }
 
+const COLOR_CTX = new StaticToken<ColorCtx>('COLOR_CTX')
+
 @injectable({
-  providers: [
-    {
-      provide: Colors,
-      use: class implements Colors {
-        primary = 'orange';
-        secondary = 'purple';
-      }
-    }
-  ]
+  provideSelfAs: [COLOR_CTX]
 })
-class ColorCtx extends HTMLElement {}
+class ColorCtx extends HTMLElement implements ColorCtx {
+  get primary() {
+    return this.getAttribute("primary") ?? "red"
+  }
+
+  get secondary() {
+    return this.getAttribute("secondary") ?? "green"
+  }
+}
 
 @injectable()
 class MyElement extends HTMLElement {
-  #colors = inject(Colors);
+  #colors = inject(COLOR_CTX);
 
   connectedCallback() {
     const { primary } = this.#colors();
@@ -374,17 +378,17 @@ class MyElement extends HTMLElement {
   }
 }
 
-// Note: To use parent providers, the parent elements need to be defined first in correct order!
+// Note: To use parent providers, the parent elements need to be defined first!
 customElements.define('color-ctx', ColorCtx);
 customElements.define('my-element', MyElement);
 ```
 
 ```HTML
-<!-- Default Colors -->
+<!-- Error: No colors provided -->
 <my-element></my-element>
 
-<!-- Special color ctx -->
-<color-ctx>
+<!-- colors come from ctx -->
+<color-ctx primary="orange" secondard="blue">
   <my-element></my-element>
 </color-ctx>
 ```

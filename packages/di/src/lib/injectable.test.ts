@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { injectable } from './injectable.js';
 import { inject } from './inject.js';
 import { injectables, Injector } from './injector.js';
+import { StaticToken } from './provider.js';
 
 it('should locally override a provider', () => {
   class Foo {}
@@ -50,4 +51,19 @@ it('should not override the name of the original class', () => {
   class MyService {}
 
   assert.equal(MyService.name, 'MyService');
+});
+
+it('should provide itself for spefified tokens', () => {
+  const TOKEN = new StaticToken('MY_TOKEN');
+
+  @injectable({
+    provideSelfAs: [TOKEN]
+  })
+  class MyService {
+    value = inject(TOKEN);
+  }
+
+  const service = new MyService();
+
+  assert.equal(service.value(), service);
 });
