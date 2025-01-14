@@ -3,11 +3,12 @@
   "version": "4.0.0-next.42",
   "description": "",
   "type": "module",
-  "author": "",
+  "author": "deebloo",
   "license": "MIT",
   "workspaces": [
     "packages/**",
-    "integration/**"
+    "integration/**",
+    "website"
   ],
   "scripts": {
     "prepare": "husky"
