@@ -170,7 +170,7 @@ it("should create an instance from a StaticToken factory", () => {
 });
 
 it("should create an instance from an async StaticToken factory", async () => {
-  const TOKEN = new StaticToken("test", () => Promise.resolve("Hello World"));
+  const TOKEN = new StaticToken("test", async () => "Hello World");
   const injector = new Injector();
 
   const res = await injector.inject(TOKEN);

@@ -46,7 +46,7 @@ export function injectable(opts?: InjectableOpts) {
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
     if ("HTMLElement" in globalThis) {
       if (
-        HTMLElement.prototype.isPrototypeOf.call(
+        Object.prototype.isPrototypeOf.call(
           HTMLElement.prototype,
           Base.prototype,
         )

@@ -1,3 +1,5 @@
+(Symbol as any).metadata ??= Symbol("Symbol.metadata");
+
 import { INJECTOR_CTX } from "./context/injector.js";
 import { ContextRequestEvent } from "./context/protocol.js";
 import { injectables } from "./injector.js";
