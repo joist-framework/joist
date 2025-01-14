@@ -1,5 +1,3 @@
-(Symbol as any).metadata ??= Symbol('Symbol.metadata');
-
 import { Injector } from './injector.js';
 import { InjectableMetadata, LifecycleCallback } from './metadata.js';
 
@@ -9,8 +7,8 @@ export function injected() {
     ctx: ClassMethodDecoratorContext
   ): void {
     const metadata: InjectableMetadata = ctx.metadata;
-    metadata.onInjected ??= [];
-    metadata.onInjected.push(val);
+    metadata.onInjected ??= new Set();
+    metadata.onInjected.add(val);
   };
 }
 
@@ -20,12 +18,16 @@ export function created() {
     ctx: ClassMethodDecoratorContext
   ): void {
     const metadata: InjectableMetadata = ctx.metadata;
-    metadata.onCreated ??= [];
-    metadata.onCreated.push(val);
+    metadata.onCreated ??= new Set();
+    metadata.onCreated.add(val);
   };
 }
 
-export function callLifecycle(instance: object, i: Injector, methods?: LifecycleCallback[]): void {
+export function callLifecycle(
+  instance: object,
+  i: Injector,
+  methods?: Set<LifecycleCallback>
+): void {
   if (methods) {
     for (let cb of methods) {
       cb.call(instance, i);

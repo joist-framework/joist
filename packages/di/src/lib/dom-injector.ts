@@ -26,7 +26,7 @@ export class DOMInjector extends Injector {
 
     this.#element.dispatchEvent(
       new ContextRequestEvent(INJECTOR_CTX, (parent) => {
-        this.setParent(parent);
+        this.parent = parent;
       })
     );
   }
