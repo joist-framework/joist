@@ -11,7 +11,32 @@
     "website"
   ],
   "scripts": {
+    "test": "wireit",
+    "build": "wireit",
     "prepare": "husky"
+  },
+  "wireit": {
+    "build": {
+      "dependencies": [
+        "./packages/di:build",
+        "./packages/element:build",
+        "./packages/observable:build",
+        "./packages/ssr:build",
+        "./integration/counter:build",
+        "./integration/hacker-news:build",
+        "./integration/templating:build",
+        "./integration/todo:build"
+      ]
+    },
+    "test": {
+      "dependencies": [
+        "./packages/di:test",
+        "./packages/element:test",
+        "./packages/observable:test",
+        "./packages/ssr:test",
+        "./integration/hacker-news:test"
+      ]
+    }
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",

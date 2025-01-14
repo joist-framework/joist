@@ -3,5 +3,6 @@ export default {
   nodeResolve: {
     exportConditions: ['production']
   },
-  files: 'target/**/*.test.js'
+  files: 'target/**/*.test.js',
+  port: 8082
 };
