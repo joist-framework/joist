@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+
 import { DOMInjector } from './dom-injector.js';
 import { INJECTOR_CTX } from './context/injector.js';
 import { Injector } from './injector.js';
@@ -29,20 +30,23 @@ describe('DOMInjector', () => {
   it('should send request looking for other injector contexts', () => {
     const parent = new Injector();
     const injector = new DOMInjector();
+    const controller = new AbortController();
 
-    const cb = (e: any) => {
-      if (e.context === INJECTOR_CTX) {
-        e.callback(parent);
-      }
-    };
-
-    document.body.addEventListener('context-request', cb);
+    document.body.addEventListener(
+      'context-request',
+      (e: any) => {
+        if (e.context === INJECTOR_CTX) {
+          e.callback(parent);
+        }
+      },
+      { signal: controller.signal }
+    );
 
     injector.attach(document.body);
 
     assert.equal(injector.parent, parent);
 
     injector.detach();
-    document.body.removeEventListener('context-request', cb);
+    controller.abort();
   });
 });

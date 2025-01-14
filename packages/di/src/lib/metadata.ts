@@ -1,11 +1,13 @@
+(Symbol as any).metadata ??= Symbol('Symbol.metadata');
+
 import { Injector } from './injector.js';
 import { InjectionToken } from './provider.js';
 
 export type LifecycleCallback = (i: Injector) => void;
 
 export interface InjectableMetadata {
-  onCreated?: LifecycleCallback[];
-  onInjected?: LifecycleCallback[];
+  onCreated?: Set<LifecycleCallback>;
+  onInjected?: Set<LifecycleCallback>;
 }
 
 export function readMetadata<T>(target: InjectionToken<T>): InjectableMetadata | null {

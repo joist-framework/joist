@@ -1,4 +1,3 @@
-
 # Joist
 
 **Sponsored by:**
