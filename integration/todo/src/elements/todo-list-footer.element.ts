@@ -78,7 +78,7 @@ class PluralRules extends Intl.PluralRules {}
 export class TodoListFooterElement extends HTMLElement {
   #todo = inject(TodoService);
   #pr = inject(PluralRules);
-  #listeners: Array<() => void> = [];
+  #controller = new AbortController();
 
   connectedCallback() {
     const todo = this.#todo();
@@ -89,12 +89,12 @@ export class TodoListFooterElement extends HTMLElement {
 
     onTodoUpdate();
 
-    this.#listeners = [todo.listen("todo_sync", onTodoUpdate)];
+    todo.addEventListener("todo_sync", onTodoUpdate, {
+      signal: this.#controller.signal,
+    });
   }
 
   disconnectedCallback() {
-    for (const remove of this.#listeners) {
-      remove();
-    }
+    this.#controller.abort();
   }
 }

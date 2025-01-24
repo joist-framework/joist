@@ -5,10 +5,7 @@ import {
 } from "./metadata.js";
 
 export function observe() {
-  return function observeDecorator<
-    This extends object,
-    Value extends This[keyof This],
-  >(
+  return function observeDecorator<This extends object, Value>(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
