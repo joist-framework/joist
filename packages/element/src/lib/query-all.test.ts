@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { element } from "./element.js";
-import { query } from "./query.js";
+import { queryAll } from "./query-all.js";
 import { html } from "./tags.js";
 
 it("should work", () => {
@@ -17,36 +17,42 @@ it("should work", () => {
     ],
   })
   class MyElement extends HTMLElement {
-    fname = query<HTMLInputElement>("#fname");
-    lname = query<HTMLInputElement>("#lname");
+    inputs = queryAll("input");
   }
 
   const el = new MyElement();
 
-  expect(el.fname()).to.equal(el.shadowRoot?.querySelector("#fname"));
-  expect(el.lname()).to.equal(el.shadowRoot?.querySelector("#lname"));
+  expect(el.inputs()[0]).to.equal(el.shadowRoot?.querySelector("#fname"));
+  expect(el.inputs()[1]).to.equal(el.shadowRoot?.querySelector("#lname"));
 });
 
-it("should patch the selected item", () => {
+it("should patch items when patch is returned", () => {
   @element({
     tagName: "query-test-2",
     shadowDom: [
       html`
         <form>
-          <input id="fname" name="fname" />
-          <input id="lname" name="lname" />
+          <input id="fname" name="fname" value="Danny" />
+          <input id="lname" name="lname" value="Blue" />
         </form>
       `,
     ],
   })
   class MyElement extends HTMLElement {
-    fname = query<HTMLInputElement>("#fname");
-    lname = query<HTMLInputElement>("#lname");
+    inputs = queryAll("input");
   }
 
   const el = new MyElement();
-  el.fname({ value: "Foo" });
-  el.lname({ value: "Bar" });
+
+  el.inputs((node) => {
+    if (node.id === "fname") {
+      return {
+        value: "Foo",
+      };
+    }
+
+    return null;
+  });
 
   expect(
     el.shadowRoot?.querySelector<HTMLInputElement>("#fname")?.value,
@@ -54,7 +60,7 @@ it("should patch the selected item", () => {
 
   expect(
     el.shadowRoot?.querySelector<HTMLInputElement>("#lname")?.value,
-  ).to.equal("Bar");
+  ).to.equal("Blue");
 });
 
 it("should patch the selected item when cached", () => {
@@ -70,15 +76,23 @@ it("should patch the selected item when cached", () => {
     ],
   })
   class MyElement extends HTMLElement {
-    fname = query<HTMLInputElement>("#fname");
-    lname = query<HTMLInputElement>("#lname");
+    inputs = queryAll("input");
   }
 
   const el = new MyElement();
-  el.fname();
-  el.lname();
-  el.fname({ value: "Foo" });
-  el.lname({ value: "Bar" });
+  el.inputs();
+
+  el.inputs((node) => {
+    if (node.id === "fname") {
+      return {
+        value: "Foo",
+      };
+    }
+
+    return {
+      value: "Bar",
+    };
+  });
 
   expect(
     el.shadowRoot?.querySelector<HTMLInputElement>("#fname")?.value,

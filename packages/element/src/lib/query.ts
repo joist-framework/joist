@@ -40,7 +40,7 @@ export function query<K extends Tags>(
   };
 }
 
-function patch<T extends HTMLElement>(target: T, updates?: Partial<T>) {
+function patch<T extends HTMLElement>(target: T, updates?: Partial<T>): T {
   if (!updates) {
     return target;
   }
