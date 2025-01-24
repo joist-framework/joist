@@ -26,3 +26,65 @@ it("should work", () => {
   expect(el.fname()).to.equal(el.shadowRoot?.querySelector("#fname"));
   expect(el.lname()).to.equal(el.shadowRoot?.querySelector("#lname"));
 });
+
+it("should patch the selected item", () => {
+  @element({
+    tagName: "query-test-2",
+    shadowDom: [
+      html`
+        <form>
+          <input id="fname" name="fname" />
+          <input id="lname" name="lname" />
+        </form>
+      `,
+    ],
+  })
+  class MyElement extends HTMLElement {
+    fname = query<HTMLInputElement>("#fname");
+    lname = query<HTMLInputElement>("#lname");
+  }
+
+  const el = new MyElement();
+  el.fname({ value: "Foo" });
+  el.lname({ value: "Bar" });
+
+  expect(
+    el.shadowRoot?.querySelector<HTMLInputElement>("#fname")?.value,
+  ).to.equal("Foo");
+
+  expect(
+    el.shadowRoot?.querySelector<HTMLInputElement>("#lname")?.value,
+  ).to.equal("Bar");
+});
+
+it("should patch the selected item when cached", () => {
+  @element({
+    tagName: "query-test-3",
+    shadowDom: [
+      html`
+        <form>
+          <input id="fname" name="fname" />
+          <input id="lname" name="lname" />
+        </form>
+      `,
+    ],
+  })
+  class MyElement extends HTMLElement {
+    fname = query<HTMLInputElement>("#fname");
+    lname = query<HTMLInputElement>("#lname");
+  }
+
+  const el = new MyElement();
+  el.fname();
+  el.lname();
+  el.fname({ value: "Foo" });
+  el.lname({ value: "Bar" });
+
+  expect(
+    el.shadowRoot?.querySelector<HTMLInputElement>("#fname")?.value,
+  ).to.equal("Foo");
+
+  expect(
+    el.shadowRoot?.querySelector<HTMLInputElement>("#lname")?.value,
+  ).to.equal("Bar");
+});

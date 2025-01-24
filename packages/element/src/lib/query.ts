@@ -21,8 +21,14 @@ export function query<K extends Tags>(
 ): QueryResult<HTMLElementTagNameMap[K]> {
   let res: HTMLElementTagNameMap[K] | null = null;
 
-  return function (this: HTMLElement) {
+  return function (this: HTMLElement, updates) {
     if (res) {
+      if (updates) {
+        for (const update in updates) {
+          Reflect.set(res, update, updates[update]);
+        }
+      }
+
       return res;
     }
 
@@ -34,6 +40,12 @@ export function query<K extends Tags>(
 
     if (!res) {
       throw new Error("could not find element");
+    }
+
+    if (updates) {
+      for (const update in updates) {
+        Reflect.set(res, update, updates[update]);
+      }
     }
 
     return res;
