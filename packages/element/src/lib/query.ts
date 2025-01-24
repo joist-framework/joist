@@ -2,7 +2,9 @@ type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
 type MathTags = keyof MathMLElementTagNameMap;
 
-type QueryResult<T> = (updates?: Partial<T>) => T;
+type NodeUpdate<T extends Node> = Partial<T> | ((node: T) => Partial<T>);
+
+type QueryResult<T extends Node> = (updates?: NodeUpdate<T>) => T;
 
 export function query<K extends Tags>(
   selectors: K,
@@ -40,10 +42,16 @@ export function query<K extends Tags>(
   };
 }
 
-function patch<T extends HTMLElement>(target: T, updates?: Partial<T>): T {
-  if (!updates) {
+function patch<T extends HTMLElement>(
+  target: T,
+  updateValues?: Partial<T> | ((node: T) => Partial<T>),
+): T {
+  if (!updateValues) {
     return target;
   }
+
+  const updates =
+    typeof updateValues === "function" ? updateValues(target) : updateValues;
 
   for (const update in updates) {
     const newValue = updates[update];

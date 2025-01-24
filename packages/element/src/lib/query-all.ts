@@ -2,8 +2,10 @@ type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
 type MathTags = keyof MathMLElementTagNameMap;
 
+type NodeUpdate<T extends Node> = Partial<T> | ((node: T) => Partial<T> | null);
+
 type QueryAllResult<T extends Node> = (
-  updates?: (node: T) => Partial<T> | null,
+  updates?: NodeUpdate<T>,
 ) => NodeListOf<T>;
 
 export function queryAll<K extends Tags>(
@@ -25,9 +27,7 @@ export function queryAll<K extends Tags>(
 
   return function (
     this: HTMLElementTagNameMap[K],
-    update?: (
-      node: HTMLElementTagNameMap[K],
-    ) => Partial<HTMLElementTagNameMap[K]> | null,
+    update?: NodeUpdate<HTMLElementTagNameMap[K]>,
   ) {
     if (res) {
       return patch(res, update);
@@ -49,14 +49,14 @@ export function queryAll<K extends Tags>(
 
 function patch<T extends HTMLElement>(
   target: NodeListOf<T>,
-  updates?: (node: T) => Partial<T> | null,
+  updates?: NodeUpdate<T>,
 ): NodeListOf<T> {
   if (!updates) {
     return target;
   }
 
   for (const node of target) {
-    const patch = updates(node);
+    const patch = typeof updates === "function" ? updates(node) : updates;
 
     if (patch) {
       for (const update in patch) {
