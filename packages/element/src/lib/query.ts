@@ -21,15 +21,9 @@ export function query<K extends Tags>(
 ): QueryResult<HTMLElementTagNameMap[K]> {
   let res: HTMLElementTagNameMap[K] | null = null;
 
-  return function (this: HTMLElement, updates) {
+  return function (this: HTMLElementTagNameMap[K], updates) {
     if (res) {
-      if (updates) {
-        for (const update in updates) {
-          Reflect.set(res, update, updates[update]);
-        }
-      }
-
-      return res;
+      return patch(res, updates);
     }
 
     if (this.shadowRoot) {
@@ -39,15 +33,26 @@ export function query<K extends Tags>(
     }
 
     if (!res) {
-      throw new Error("could not find element");
+      throw new Error(`could not find ${query}`);
     }
 
-    if (updates) {
-      for (const update in updates) {
-        Reflect.set(res, update, updates[update]);
-      }
-    }
-
-    return res;
+    return patch(res, updates);
   };
+}
+
+function patch<T extends HTMLElement>(target: T, updates?: Partial<T>) {
+  if (!updates) {
+    return target;
+  }
+
+  for (const update in updates) {
+    const newValue = updates[update];
+    const oldValue = target[update];
+
+    if (newValue && newValue !== oldValue) {
+      target[update] = newValue;
+    }
+  }
+
+  return target;
 }
