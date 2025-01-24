@@ -30,7 +30,7 @@ export function queryAll<K extends Tags>(
     update?: NodeUpdate<HTMLElementTagNameMap[K]>,
   ) {
     if (res) {
-      return patch(res, update);
+      return patchNodes(res, update);
     }
 
     if (this.shadowRoot) {
@@ -43,25 +43,26 @@ export function queryAll<K extends Tags>(
       throw new Error(`could not find ${query}`);
     }
 
-    return patch(res, update);
+    return patchNodes(res, update);
   };
 }
 
-function patch<T extends HTMLElement>(
+function patchNodes<T extends HTMLElement>(
   target: NodeListOf<T>,
-  updates?: NodeUpdate<T>,
+  update?: NodeUpdate<T>,
 ): NodeListOf<T> {
-  if (!updates) {
+  if (!update) {
     return target;
   }
 
   for (const node of target) {
-    const patch = typeof updates === "function" ? updates(node) : updates;
+    const patch = typeof update === "function" ? update(node) : update;
 
     if (patch) {
       for (const update in patch) {
         const newValue = patch[update];
         const oldValue = node[update];
+
         if (newValue && newValue !== oldValue) {
           node[update] = newValue;
         }
