@@ -5,7 +5,10 @@ import {
 } from "./metadata.js";
 
 export function observe() {
-  return function observeDecorator<This extends object, Value>(
+  return function observeDecorator<
+    This extends object,
+    Value extends This[keyof This],
+  >(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
@@ -29,26 +32,30 @@ export function observe() {
 
         return value;
       },
-      set(value) {
-        const instanceMeta = instanceMetadataStore.read<This>(this);
+      set(newValue: Value) {
+        const oldValue = base.get.call(this);
 
-        if (instanceMeta.scheduler === null) {
-          instanceMeta.scheduler = Promise.resolve().then(() => {
-            for (const effect of observableMeta.effects) {
-              effect.call(this, instanceMeta.changes);
-            }
+        if (newValue !== oldValue) {
+          const instanceMeta = instanceMetadataStore.read<This>(this);
 
-            instanceMeta.scheduler = null;
-            instanceMeta.changes.clear();
+          if (instanceMeta.scheduler === null) {
+            instanceMeta.scheduler = Promise.resolve().then(() => {
+              for (const effect of observableMeta.effects) {
+                effect.call(this, instanceMeta.changes);
+              }
+
+              instanceMeta.scheduler = null;
+              instanceMeta.changes.clear();
+            });
+          }
+
+          instanceMeta.changes.set(ctx.name as keyof This, {
+            oldValue,
+            newValue,
           });
+
+          base.set.call(this, newValue);
         }
-
-        instanceMeta.changes.set(ctx.name as keyof This, {
-          oldValue: base.get.call(this) as This[keyof This],
-          newValue: value as This[keyof This],
-        });
-
-        base.set.call(this, value);
       },
     };
   };
