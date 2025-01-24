@@ -1,0 +1,33 @@
+{
+  "name": "@joist/website",
+  "scripts": {
+    "start": "wireit",
+    "build": "wireit"
+  },
+  "wireit": {
+    "start": {
+      "command": "npx @11ty/eleventy --serve --incremental --config eleventy.dev.js",
+      "service": true,
+      "dependencies": [
+        {
+          "script": "joist",
+          "cascade": false
+        }
+      ]
+    },
+    "build": {
+      "command": "npx @11ty/eleventy --config eleventy.prod.js",
+      "dependencies": ["joist"]
+    },
+    "joist": {
+      "dependencies": [
+        "../packages/di:build",
+        "../packages/element:build",
+        "../packages/observable:build"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
