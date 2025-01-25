@@ -118,3 +118,25 @@ it("should use function to update", () => {
     el.shadowRoot?.querySelector<HTMLInputElement>("#lname")?.value,
   ).to.equal("Bar");
 });
+
+it("should use passed in root", () => {
+  @element({
+    tagName: "query-test-5",
+    shadowDom: [],
+  })
+  class MyElement extends HTMLElement {
+    fname = query<HTMLInputElement>("#fname", this);
+    lname = query<HTMLInputElement>("#lname", this);
+  }
+
+  const el = new MyElement();
+  el.innerHTML = /*html*/ `
+    <form>
+      <input id="fname" name="fname" />
+      <input id="lname" name="lname" />
+    </form>
+  `;
+
+  expect(el.fname()).to.equal(el.querySelector("#fname"));
+  expect(el.lname()).to.equal(el.querySelector("#lname"));
+});

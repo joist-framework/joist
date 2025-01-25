@@ -10,18 +10,23 @@ type QueryAllResult<T extends Node> = (
 
 export function queryAll<K extends Tags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryAllResult<HTMLElementTagNameMap[K]>;
 export function queryAll<K extends SVGTags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryAllResult<SVGElementTagNameMap[K]>;
 export function queryAll<K extends MathTags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryAllResult<MathMLElementTagNameMap[K]>;
 export function queryAll<E extends HTMLElement = HTMLElement>(
   selectors: string,
+  root?: HTMLElement | ShadowRoot,
 ): QueryAllResult<E>;
 export function queryAll<K extends Tags>(
   query: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryAllResult<HTMLElementTagNameMap[K]> {
   let res: NodeListOf<HTMLElementTagNameMap[K]> | null = null;
 
@@ -33,7 +38,9 @@ export function queryAll<K extends Tags>(
       return patchNodes(res, update);
     }
 
-    if (this.shadowRoot) {
+    if (root) {
+      res = root.querySelectorAll<K>(query);
+    } else if (this.shadowRoot) {
       res = this.shadowRoot.querySelectorAll<K>(query);
     } else {
       res = this.querySelectorAll<K>(query);

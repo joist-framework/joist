@@ -130,3 +130,24 @@ it("should apply the same patch to all elements", () => {
     el.shadowRoot?.querySelector<HTMLInputElement>("#lname")?.value,
   ).to.equal("TEST");
 });
+
+it("should use passed in root", () => {
+  @element({
+    tagName: "query-test-5",
+    shadowDom: [],
+  })
+  class MyElement extends HTMLElement {
+    inputs = queryAll("input", this);
+  }
+
+  const el = new MyElement();
+  el.innerHTML = /*html*/ `
+    <form>
+      <input id="fname" name="fname" />
+      <input id="lname" name="lname" />
+    </form>
+  `;
+
+  expect(el.inputs()[0]).to.equal(el.querySelector("#fname"));
+  expect(el.inputs()[1]).to.equal(el.querySelector("#lname"));
+});

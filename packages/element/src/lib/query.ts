@@ -8,18 +8,23 @@ type QueryResult<T extends Node> = (updates?: NodeUpdate<T>) => T;
 
 export function query<K extends Tags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryResult<HTMLElementTagNameMap[K]>;
 export function query<K extends SVGTags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryResult<SVGElementTagNameMap[K]>;
 export function query<K extends MathTags>(
   selectors: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryResult<MathMLElementTagNameMap[K]>;
 export function query<E extends HTMLElement = HTMLElement>(
   selectors: string,
+  root?: HTMLElement | ShadowRoot,
 ): QueryResult<E>;
 export function query<K extends Tags>(
   query: K,
+  root?: HTMLElement | ShadowRoot,
 ): QueryResult<HTMLElementTagNameMap[K]> {
   let res: HTMLElementTagNameMap[K] | null = null;
 
@@ -28,7 +33,9 @@ export function query<K extends Tags>(
       return patchNode(res, updates);
     }
 
-    if (this.shadowRoot) {
+    if (root) {
+      res = root.querySelector<K>(query);
+    } else if (this.shadowRoot) {
       res = this.shadowRoot.querySelector<K>(query);
     } else {
       res = this.querySelector<K>(query);
