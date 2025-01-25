@@ -53,7 +53,6 @@ export class CounterElement extends HTMLElement {
   }
 
   #update(change: number) {
-    const value = Number(this.innerHTML.trim());
-    this.innerHTML = String(value + change);
+    this.innerHTML = String(Number(this.innerHTML.trim()) + change);
   }
 }

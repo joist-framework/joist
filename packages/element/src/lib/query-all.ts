@@ -63,8 +63,8 @@ function patchNodes<T extends HTMLElement>(
         const newValue = patch[update];
         const oldValue = node[update];
 
-        if (newValue && newValue !== oldValue) {
-          node[update] = newValue;
+        if (newValue !== oldValue) {
+          Reflect.set(node, update, newValue);
         }
       }
     }
