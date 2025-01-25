@@ -2,7 +2,9 @@ type Tags = keyof HTMLElementTagNameMap;
 type SVGTags = keyof SVGElementTagNameMap;
 type MathTags = keyof MathMLElementTagNameMap;
 
-type QueryResult<T> = (updates?: Partial<T>) => T;
+type NodeUpdate<T extends Node> = Partial<T> | ((node: T) => Partial<T>);
+
+type QueryResult<T extends Node> = (updates?: NodeUpdate<T>) => T;
 
 export function query<K extends Tags>(
   selectors: K,
@@ -23,7 +25,7 @@ export function query<K extends Tags>(
 
   return function (this: HTMLElementTagNameMap[K], updates) {
     if (res) {
-      return patch(res, updates);
+      return patchNode(res, updates);
     }
 
     if (this.shadowRoot) {
@@ -36,21 +38,26 @@ export function query<K extends Tags>(
       throw new Error(`could not find ${query}`);
     }
 
-    return patch(res, updates);
+    return patchNode(res, updates);
   };
 }
 
-function patch<T extends HTMLElement>(target: T, updates?: Partial<T>) {
-  if (!updates) {
+function patchNode<T extends HTMLElement>(
+  target: T,
+  update?: Partial<T> | ((node: T) => Partial<T>),
+): T {
+  if (!update) {
     return target;
   }
 
-  for (const update in updates) {
-    const newValue = updates[update];
-    const oldValue = target[update];
+  const patch = typeof update === "function" ? update(target) : update;
+
+  for (const key in patch) {
+    const newValue = patch[key];
+    const oldValue = target[key];
 
     if (newValue && newValue !== oldValue) {
-      target[update] = newValue;
+      target[key] = newValue;
     }
   }
 
