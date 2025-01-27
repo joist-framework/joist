@@ -45,7 +45,8 @@ export class MyElement extends HTMLElement {
 ## HTML and CSS
 
 HTML templates can be applied by passing the result of the `html` tag to the shaodw list.
-CSS can be applied by passing the result of the `css` tag to the shadow list.
+CSS can be applied by passing the result of the `css` tag to the shadow list. 
+Any new tagged template literal that returns a `ShadowResult` can be used.
 
 ```ts
 @element({
@@ -94,7 +95,7 @@ export class MyElement extends HTMLElement {
 }
 ```
 
-## Queries
+## Query
 
 The `query` function will query for a particular element and allow you to easily patch that element with new properties.
 
@@ -119,8 +120,36 @@ export class MyElement extends HTMLElement {
 
   @effect()
   onChange() {
-    const input = this.#input();
-    input.value = this.value;
+    const input = this.#input({ value: this.value});
+  }
+}
+```
+
+## QueryAll
+
+The `queryAll` function will get all elements that match the given query. A patching function can be passed to update any or all items in the list
+
+```ts
+@element({
+  tagName: 'my-element',
+  shadowDom: [
+    html`
+      <input id="first" />
+      <input id="second" />
+    `
+  ]
+})
+export class MyElement extends HTMLElement {
+  @observe()
+  value: string;
+
+  #inputs = queryAll('input');
+
+  @effect()
+  onChange() {
+    this.#input(() => {
+      return { value: this.value }
+    })
   }
 }
 ```
