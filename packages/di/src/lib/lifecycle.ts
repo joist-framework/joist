@@ -1,5 +1,3 @@
-(Symbol as any).metadata ??= Symbol("Symbol.metadata");
-
 import type { Injector } from "./injector.js";
 import type { InjectableMetadata, LifecycleCallback } from "./metadata.js";
 
