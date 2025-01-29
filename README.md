@@ -8,8 +8,6 @@ From SalesForce to ServiceNow to React you need to write JavaScript/TypeScript a
 
 This toolkit is here to help provide just the functionality you need and nothing more. Use with Lit, FAST, Vanilla WC, Node, wherever you find yourself.
 
-NOTE: This branch is for the upcoming 4.0 release. View the 3.0 branch for current docss
-
 ## Packages
 
 | Package                                  | Description                              |
