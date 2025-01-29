@@ -18,13 +18,7 @@ export function readMetadata<T>(
 
 export function readInjector<T extends object>(target: T): Injector | null {
   if (INJECTOR in target) {
-    const injector = target[INJECTOR];
-
-    if (injector) {
-      return injector as Injector;
-    }
-
-    return null;
+    return target[INJECTOR] as Injector;
   }
 
   return null;
