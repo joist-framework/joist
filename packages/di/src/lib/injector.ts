@@ -53,10 +53,10 @@ export class Injector {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
-      const injector = readInjector(instance);
+      const injector = readInjector(instance) ?? this;
 
       if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
+        callLifecycle(instance, injector, metadata.onInjected);
       }
 
       return instance;
@@ -108,7 +108,7 @@ export class Injector {
      * Only values that are objects are able to have associated injectors
      */
     if (typeof instance === "object" && instance !== null) {
-      const injector = readInjector(instance);
+      const injector = readInjector(instance) ?? this;
 
       if (injector && injector !== this) {
         /**
@@ -128,8 +128,8 @@ export class Injector {
       const metadata = readMetadata<T>(token);
 
       if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onCreated);
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
+        callLifecycle(instance, injector, metadata.onCreated);
+        callLifecycle(instance, injector, metadata.onInjected);
       }
     }
 
