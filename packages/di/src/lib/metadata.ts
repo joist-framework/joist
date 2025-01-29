@@ -1,4 +1,4 @@
-import type { Injector } from "./injector.js";
+import { INJECTOR, type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
 
 export type LifecycleCallback = (i: Injector) => void;
@@ -14,4 +14,12 @@ export function readMetadata<T>(
   const metadata: InjectableMetadata | null = target[Symbol.metadata];
 
   return metadata;
+}
+
+export function readInjector<T extends object>(target: T): Injector | null {
+  if (INJECTOR in target) {
+    return target[INJECTOR] as Injector;
+  }
+
+  return null;
 }

@@ -1,5 +1,5 @@
 import { callLifecycle } from "./lifecycle.js";
-import { readMetadata } from "./metadata.js";
+import { readInjector, readMetadata } from "./metadata.js";
 import {
   type InjectionToken,
   type Provider,
@@ -8,16 +8,13 @@ import {
   StaticToken,
 } from "./provider.js";
 
-/**
- * Keeps track of all Injectable services and their Injector
- */
-export const injectables: WeakMap<object, Injector> = new WeakMap();
-
 export interface InjectorOpts {
   name?: string;
   providers?: Iterable<Provider<any>>;
   parent?: Injector;
 }
+
+export const INJECTOR: unique symbol = Symbol("JOIST_INJECTOR");
 
 /**
  * Injectors create and store instances of services.
@@ -56,13 +53,10 @@ export class Injector {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
+      const injector = readInjector(instance) ?? this;
 
       if (metadata) {
-        callLifecycle(
-          instance,
-          injectables.get(instance) ?? this,
-          metadata.onInjected,
-        );
+        callLifecycle(instance, injector, metadata.onInjected);
       }
 
       return instance;
@@ -114,7 +108,7 @@ export class Injector {
      * Only values that are objects are able to have associated injectors
      */
     if (typeof instance === "object" && instance !== null) {
-      const injector = injectables.get(instance);
+      const injector = readInjector(instance) ?? this;
 
       if (injector && injector !== this) {
         /**
@@ -134,8 +128,8 @@ export class Injector {
       const metadata = readMetadata<T>(token);
 
       if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onCreated);
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
+        callLifecycle(instance, injector, metadata.onCreated);
+        callLifecycle(instance, injector, metadata.onInjected);
       }
     }
 
