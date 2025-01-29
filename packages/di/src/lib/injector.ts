@@ -1,5 +1,5 @@
 import { callLifecycle } from "./lifecycle.js";
-import { readMetadata } from "./metadata.js";
+import { readInjector, readMetadata } from "./metadata.js";
 import {
   type InjectionToken,
   type Provider,
@@ -53,13 +53,10 @@ export class Injector {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
+      const injector = readInjector(instance);
 
       if (metadata) {
-        callLifecycle(
-          instance,
-          instance[INJECTOR] ?? this,
-          metadata.onInjected,
-        );
+        callLifecycle(instance, injector ?? this, metadata.onInjected);
       }
 
       return instance;
@@ -111,7 +108,7 @@ export class Injector {
      * Only values that are objects are able to have associated injectors
      */
     if (typeof instance === "object" && instance !== null) {
-      const injector: any = Reflect.get(instance, INJECTOR);
+      const injector = readInjector(instance);
 
       if (injector && injector !== this) {
         /**
