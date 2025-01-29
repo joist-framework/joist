@@ -1,13 +1,13 @@
-import { injectables } from "./injector.js";
+import { INJECTOR, type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
 
 export type Injected<T> = () => T;
 
-export function inject<This extends object, T>(
+export function inject<This extends object & { [INJECTOR]?: Injector }, T>(
   token: InjectionToken<T>,
 ): Injected<T> {
   return function (this: This) {
-    const injector = injectables.get(this);
+    const injector = this[INJECTOR];
 
     if (injector === undefined) {
       throw new Error(

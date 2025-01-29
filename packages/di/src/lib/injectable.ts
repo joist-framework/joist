@@ -1,7 +1,7 @@
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
 import { injectableEl } from "./injectable-el.js";
-import { Injector, injectables } from "./injector.js";
+import { INJECTOR, Injector } from "./injector.js";
 import type {
   ConstructableToken,
   InjectionToken,
@@ -21,6 +21,8 @@ export function injectable(opts?: InjectableOpts) {
   ): T {
     const def = {
       [Base.name]: class extends Base {
+        [INJECTOR]: Injector;
+
         constructor(...args: any[]) {
           super(...args);
 
@@ -38,7 +40,7 @@ export function injectable(opts?: InjectableOpts) {
             }
           }
 
-          injectables.set(this, injector);
+          this[INJECTOR] = injector;
         }
       },
     };

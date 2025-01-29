@@ -2,7 +2,7 @@ import { assert } from "chai";
 
 import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
-import { Injector, injectables } from "./injector.js";
+import { INJECTOR, Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
 
 it("should locally override a provider", () => {
@@ -30,7 +30,7 @@ it("should define an injector for a service instance", () => {
 
   const instance = new MyService("b");
 
-  assert.ok(injectables.has(instance));
+  assert.ok(Reflect.get(instance, INJECTOR));
   assert.ok(instance.arg === "b");
 });
 
@@ -43,7 +43,7 @@ it("should inject the current service injectable instance", () => {
   const app = new Injector();
   const service = app.inject(MyService);
 
-  assert.equal(service.injector(), injectables.get(service));
+  assert.equal(service.injector(), Reflect.get(service, INJECTOR));
 });
 
 it("should not override the name of the original class", () => {
