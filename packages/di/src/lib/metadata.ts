@@ -18,9 +18,11 @@ export function readMetadata<T>(
   return metadata;
 }
 
-export function readInjector<T extends object>(target: T): Injector | null {
-  if (INJECTOR in target) {
-    return target[INJECTOR] as Injector;
+export function readInjector<T>(target: T): Injector | null {
+  if (typeof target === "object" && target !== null) {
+    if (INJECTOR in target) {
+      return target[INJECTOR] as Injector;
+    }
   }
 
   return null;
