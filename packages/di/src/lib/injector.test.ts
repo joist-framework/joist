@@ -198,3 +198,24 @@ it("should allow static token to be overridden", () => {
 
   assert.equal(res, "Hello World");
 });
+
+it("should allow you to get ALL available instances in a particular injector chain", () => {
+  const TOKEN = new StaticToken<string>("test");
+
+  const injector = new Injector({
+    providers: [[TOKEN, { factory: () => "first" }]],
+    parent: new Injector({
+      providers: [[TOKEN, { factory: () => "second" }]],
+      parent: new Injector({
+        providers: [[TOKEN, { factory: () => "third" }]],
+        parent: new Injector({
+          providers: [[TOKEN, { factory: () => "fourth" }]],
+        }),
+      }),
+    }),
+  });
+
+  const res = injector.injectAll(TOKEN);
+
+  assert.deepEqual(res, ["first", "second", "third", "fourth"]);
+});

@@ -46,8 +46,18 @@ export class Injector {
     this.providers = new Map(opts?.providers);
   }
 
+  injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
+    const result = [...collection, this.inject<T>(token, true)];
+
+    if (this.parent) {
+      return this.parent.injectAll(token, result);
+    }
+
+    return result;
+  }
+
   // resolves and retuns and instance of the requested service
-  inject<T>(token: InjectionToken<T>): T {
+  inject<T>(token: InjectionToken<T>, skipParent?: boolean): T {
     // check for a local instance
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token);
@@ -80,7 +90,7 @@ export class Injector {
     }
 
     // check for a parent and attempt to get there
-    if (this.parent) {
+    if (this.parent && !skipParent) {
       return this.parent.inject(token);
     }
 
