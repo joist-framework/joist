@@ -200,7 +200,7 @@ it("should allow static token to be overridden", () => {
 });
 
 it("should allow you to get ALL available instances in a particular injector chain", () => {
-  const TOKEN = new StaticToken<string>("test");
+  const TOKEN = new StaticToken<string>("TOKEN");
 
   const injector = new Injector({
     providers: [[TOKEN, { factory: () => "first" }]],

@@ -39,7 +39,7 @@ export class Injector {
 
   name?: string;
   parent?: Injector;
-  providers: WeakMap<InjectionToken<any>, ProviderDef<any>>;
+  providers: Map<InjectionToken<any>, ProviderDef<any>>;
 
   constructor(opts?: InjectorOpts) {
     this.parent = opts?.parent;
@@ -47,26 +47,29 @@ export class Injector {
   }
 
   injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
-    const result = [...collection, this.inject<T>(token, true)];
+    const result: T[] = [
+      ...collection,
+      this.inject<T>(token, { skipParent: true }),
+    ];
 
     if (this.parent) {
-      return this.parent.injectAll(token, result);
+      return this.parent.injectAll<T>(token, result);
     }
 
     return result;
   }
 
   // resolves and retuns and instance of the requested service
-  inject<T>(token: InjectionToken<T>, skipParent?: boolean): T {
+  inject<T>(token: InjectionToken<T>, opts?: { skipParent: boolean }): T {
     // check for a local instance
     if (this.#instances.has(token)) {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
-      const injector = readInjector(instance) ?? this;
+      const injector = readInjector(instance);
 
       if (metadata) {
-        callLifecycle(instance, injector, metadata.onInjected);
+        callLifecycle(instance, injector ?? this, metadata.onInjected);
       }
 
       return instance;
@@ -90,7 +93,7 @@ export class Injector {
     }
 
     // check for a parent and attempt to get there
-    if (this.parent && !skipParent) {
+    if (this.parent && !opts?.skipParent) {
       return this.parent.inject(token);
     }
 
@@ -117,10 +120,10 @@ export class Injector {
     /**
      * Only values that are objects are able to have associated injectors
      */
-    if (typeof instance === "object" && instance !== null) {
-      const injector = readInjector(instance) ?? this;
+    const injector = readInjector(instance);
 
-      if (injector && injector !== this) {
+    if (injector) {
+      if (injector !== this) {
         /**
          * set the this injector instance as a parent.
          * This should ONLY happen in the injector is not self. This would cause an infinite loop.
@@ -138,8 +141,8 @@ export class Injector {
       const metadata = readMetadata<T>(token);
 
       if (metadata) {
-        callLifecycle(instance, injector, metadata.onCreated);
-        callLifecycle(instance, injector, metadata.onInjected);
+        callLifecycle(instance ?? this, injector, metadata.onCreated);
+        callLifecycle(instance ?? this, injector, metadata.onInjected);
       }
     }
 
