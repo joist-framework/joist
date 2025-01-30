@@ -16,6 +16,8 @@ export interface InjectorOpts {
 
 export const INJECTOR: unique symbol = Symbol("JOIST_INJECTOR");
 
+export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
+
 /**
  * Injectors create and store instances of services.
  * A service is any constructable class.
@@ -39,11 +41,11 @@ export class Injector {
 
   name?: string;
   parent?: Injector;
-  providers: Map<InjectionToken<any>, ProviderDef<any>>;
+  providers: ProviderMap;
 
   constructor(opts?: InjectorOpts) {
     this.parent = opts?.parent;
-    this.providers = new Map(opts?.providers);
+    this.providers = new ProviderMap(opts?.providers);
   }
 
   injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
