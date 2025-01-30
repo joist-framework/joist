@@ -1,5 +1,3 @@
-(Symbol as any).metadata ??= Symbol("Symbol.metadata");
-
 import { injectableEl } from "./injectable-el.js";
 import { INJECTOR, Injector } from "./injector.js";
 import type {
