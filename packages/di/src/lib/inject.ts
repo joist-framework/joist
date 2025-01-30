@@ -1,20 +1,19 @@
+import type { Injector } from "./injector.js";
 import { readInjector } from "./metadata.js";
 import type { InjectionToken } from "./provider.js";
 
 export type Injected<T> = () => T;
 
-export function inject<This extends object, T>(
-  token: InjectionToken<T>,
-  opts: { all: true },
-): Injected<T[]>;
-export function inject<This extends object, T>(
-  token: InjectionToken<T>,
-): Injected<T>;
-export function inject<This extends object, T>(
-  token: InjectionToken<T>,
-  opts?: { all: boolean },
-) {
-  return function (this: This) {
+export function inject<T>(token: InjectionToken<T>): Injected<T> {
+  return internalInject((i) => i.inject(token));
+}
+
+export function injectAll<T>(token: InjectionToken<T>): Injected<T[]> {
+  return internalInject((i) => i.injectAll(token));
+}
+
+function internalInject<T extends object, R>(cb: (i: Injector) => R) {
+  return function (this: T) {
     const injector = readInjector(this);
 
     if (injector === null) {
@@ -23,10 +22,6 @@ export function inject<This extends object, T>(
       );
     }
 
-    if (opts?.all === true) {
-      return injector.injectAll(token);
-    }
-
-    return injector.inject(token);
+    return cb(injector);
   };
 }

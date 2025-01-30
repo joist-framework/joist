@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-import { inject } from "./inject.js";
+import { inject, injectAll } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
@@ -104,7 +104,7 @@ it("should all you to inject all", () => {
 
   @injectable()
   class HelloWorld {
-    hello = inject(TOKEN, { all: true });
+    hello = injectAll(TOKEN);
   }
 
   assert.deepEqual(new HelloWorld().hello(), ["Hello World"]);
