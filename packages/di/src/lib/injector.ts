@@ -27,11 +27,11 @@ export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
  * 2. Do I have a local provider definition for the token?
  * 3. Do I have a parent? Check parent for 1 and 2
  * 5. All clear, go ahead and construct and cache the requested service
- *
+ * ```
  * RootInjector |--> InjectorA |--> InjectorB
  *                             |--> InjectorC
  *                             |--> InjectorD |--> InjectorE
- *
+ * ```
  * in the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
  * If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
  */
