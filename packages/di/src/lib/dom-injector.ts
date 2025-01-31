@@ -5,6 +5,9 @@ import {
 } from "./context/protocol.js";
 import { Injector } from "./injector.js";
 
+/**
+ * Special Injector that allows you to register an injector with a particular DOM element.
+ */
 export class DOMInjector extends Injector {
   #element: HTMLElement | null = null;
   #controller: AbortController | null = null;

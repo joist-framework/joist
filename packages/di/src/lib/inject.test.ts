@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-import { inject } from "./inject.js";
+import { inject, injectAll } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
@@ -71,4 +71,41 @@ it("should inject a static token", () => {
   }
 
   assert.strictEqual(new HelloWorld().hello(), "Hello World");
+});
+
+it("should use the calling injector as parent", () => {
+  class FooService {
+    value = "1";
+  }
+
+  @injectable()
+  class BarService {
+    foo = inject(FooService);
+  }
+
+  const parent = new Injector({
+    providers: [
+      [
+        FooService,
+        {
+          use: class extends FooService {
+            value = "100";
+          },
+        },
+      ],
+    ],
+  });
+
+  assert.strictEqual(parent.inject(BarService).foo().value, "100");
+});
+
+it("should all you to inject all", () => {
+  const TOKEN = new StaticToken("test", () => "Hello World");
+
+  @injectable()
+  class HelloWorld {
+    hello = injectAll(TOKEN);
+  }
+
+  assert.deepEqual(new HelloWorld().hello(), ["Hello World"]);
 });

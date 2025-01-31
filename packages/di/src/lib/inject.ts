@@ -1,12 +1,25 @@
+import type { Injector } from "./injector.js";
 import { readInjector } from "./metadata.js";
 import type { InjectionToken } from "./provider.js";
 
 export type Injected<T> = () => T;
 
-export function inject<This extends object, T>(
-  token: InjectionToken<T>,
-): Injected<T> {
-  return function (this: This) {
+/**
+ * Injects a service into an `injectable` class.
+ */
+export function inject<T>(token: InjectionToken<T>): Injected<T> {
+  return internalInject((i) => i.inject(token));
+}
+
+/**
+ * Finds and injects ALL instances of a service from the current points up.
+ */
+export function injectAll<T>(token: InjectionToken<T>): Injected<T[]> {
+  return internalInject((i) => i.injectAll(token));
+}
+
+function internalInject<T extends object, R>(cb: (i: Injector) => R) {
+  return function (this: T) {
     const injector = readInjector(this);
 
     if (injector === null) {
@@ -15,6 +28,6 @@ export function inject<This extends object, T>(
       );
     }
 
-    return injector.inject(token);
+    return cb(injector);
   };
 }

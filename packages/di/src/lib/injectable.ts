@@ -24,21 +24,19 @@ export function injectable(opts?: InjectableOpts) {
         constructor(...args: any[]) {
           super(...args);
 
-          const injector = new Injector(opts);
+          this[INJECTOR] = new Injector(opts);
 
-          injector.providers.set(Injector, {
-            factory: () => injector,
+          this[INJECTOR].providers.set(Injector, {
+            factory: () => this[INJECTOR],
           });
 
           if (opts?.provideSelfAs) {
             for (const token of opts.provideSelfAs) {
-              injector.providers.set(token, {
+              this[INJECTOR].providers.set(token, {
                 factory: () => this,
               });
             }
           }
-
-          this[INJECTOR] = injector;
         }
       },
     };

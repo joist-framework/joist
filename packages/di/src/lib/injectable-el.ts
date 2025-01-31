@@ -30,15 +30,13 @@ export function injectableEl<
       }
 
       connectedCallback() {
-        const injector = this[INJECTOR];
-
         this.dispatchEvent(
           new ContextRequestEvent(INJECTOR_CTX, (ctx) => {
-            injector.parent = ctx;
+            this[INJECTOR].parent = ctx;
           }),
         );
 
-        callLifecycle(this, injector, metadata?.onInjected);
+        callLifecycle(this, this[INJECTOR], metadata?.onInjected);
 
         if (super.connectedCallback) {
           super.connectedCallback();
