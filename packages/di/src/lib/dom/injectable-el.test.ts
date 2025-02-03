@@ -1,7 +1,7 @@
 import { assert } from "chai";
 
-import { inject } from "./inject.js";
-import { injectable } from "./injectable.js";
+import { inject } from "../inject.js";
+import { injectable } from "../injectable.js";
 
 it("should allow services to be injected into custom element", () => {
   class Foo {}

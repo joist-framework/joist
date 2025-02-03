@@ -1,12 +1,12 @@
 import { assert } from "chai";
 
-import { INJECTOR_CTX } from "./context/injector.js";
+import { INJECTOR_CTX } from "../context/injector.js";
 import {
   ContextRequestEvent,
   type UnknownContext,
-} from "./context/protocol.js";
+} from "../context/protocol.js";
+import { Injector } from "../injector.js";
 import { DOMInjector } from "./dom-injector.js";
-import { Injector } from "./injector.js";
 
 describe("DOMInjector", () => {
   it("should respond to elements looking for an injector", () => {

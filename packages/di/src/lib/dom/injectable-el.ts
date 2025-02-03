@@ -1,10 +1,10 @@
-import { INJECTOR_CTX } from "./context/injector.js";
-import { ContextRequestEvent } from "./context/protocol.js";
-import { INJECTOR } from "./injector.js";
-import type { Injector } from "./injector.js";
-import { callLifecycle } from "./lifecycle.js";
-import type { InjectableMetadata } from "./metadata.js";
-import type { ConstructableToken } from "./provider.js";
+import { INJECTOR_CTX } from "../context/injector.js";
+import { ContextRequestEvent } from "../context/protocol.js";
+import { INJECTOR } from "../injector.js";
+import type { Injector } from "../injector.js";
+import { callLifecycle } from "../lifecycle.js";
+import type { InjectableMetadata } from "../metadata.js";
+import type { ConstructableToken } from "../provider.js";
 
 export function injectableEl<
   T extends ConstructableToken<HTMLElement & { [INJECTOR]: Injector }>,

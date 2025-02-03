@@ -1,4 +1,4 @@
-import { injectableEl } from "./injectable-el.js";
+import { injectableEl } from "./dom/injectable-el.js";
 import { INJECTOR, Injector } from "./injector.js";
 import type {
   ConstructableToken,
