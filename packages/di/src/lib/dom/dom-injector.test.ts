@@ -8,57 +8,55 @@ import {
 import { Injector } from "../injector.js";
 import { DOMInjector } from "./dom-injector.js";
 
-describe("DOMInjector", () => {
-  it("should respond to elements looking for an injector", () => {
-    const injector = new DOMInjector();
-    injector.attach(document.body);
+it("should respond to elements looking for an injector", () => {
+  const injector = new DOMInjector();
+  injector.attach(document.body);
 
-    const host = document.createElement("div");
-    document.body.append(host);
+  const host = document.createElement("div");
+  document.body.append(host);
 
-    let parent: Injector | null = null;
+  let parent: Injector | null = null;
 
-    host.dispatchEvent(
-      new ContextRequestEvent(INJECTOR_CTX, (i) => {
-        parent = i;
-      }),
-    );
+  host.dispatchEvent(
+    new ContextRequestEvent(INJECTOR_CTX, (i) => {
+      parent = i;
+    }),
+  );
 
-    assert.equal(parent, injector);
+  assert.equal(parent, injector);
 
-    injector.detach();
-    host.remove();
-  });
+  injector.detach();
+  host.remove();
+});
 
-  it("should send request looking for other injector contexts", () => {
-    const parent = new Injector();
-    const injector = new DOMInjector();
+it("should send request looking for other injector contexts", () => {
+  const parent = new Injector();
+  const injector = new DOMInjector();
 
-    const cb = (e: ContextRequestEvent<UnknownContext>) => {
-      if (e.context === INJECTOR_CTX) {
-        e.callback(parent);
-      }
-    };
+  const cb = (e: ContextRequestEvent<UnknownContext>) => {
+    if (e.context === INJECTOR_CTX) {
+      e.callback(parent);
+    }
+  };
 
-    document.body.addEventListener("context-request", cb);
+  document.body.addEventListener("context-request", cb);
 
-    injector.attach(document.body);
+  injector.attach(document.body);
 
-    assert.equal(injector.parent, parent);
+  assert.equal(injector.parent, parent);
 
-    injector.detach();
-    document.body.removeEventListener("context-request", cb);
-  });
+  injector.detach();
+  document.body.removeEventListener("context-request", cb);
+});
 
-  it("should throw an error if attempting to attach an already attached DOMInjector", () => {
-    const injector = new DOMInjector();
+it("should throw an error if attempting to attach an already attached DOMInjector", () => {
+  const injector = new DOMInjector();
 
-    const el = document.createElement("div");
+  const el = document.createElement("div");
 
+  injector.attach(el);
+
+  assert.throw(() => {
     injector.attach(el);
-
-    assert.throw(() => {
-      injector.attach(el);
-    });
   });
 });
