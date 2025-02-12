@@ -343,10 +343,6 @@ Since custom elements are treated the same as any other class they can define pr
 This also makes it easy to attributes to define values for the service.
 
 ```TS
-const app = new DOMInjector();
-
-app.attach(document.body);
-
 interface ColorCtx {
   primary: string;
   secondary: string;
@@ -355,6 +351,7 @@ interface ColorCtx {
 const COLOR_CTX = new StaticToken<ColorCtx>('COLOR_CTX')
 
 @injectable({
+  name: 'color-ctx',
   provideSelfAs: [COLOR_CTX]
 })
 class ColorCtx extends HTMLElement implements ColorCtx {
