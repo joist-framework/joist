@@ -343,12 +343,10 @@ Since custom elements are treated the same as any other class they can define pr
 This also makes it easy to attributes to define values for the service.
 
 ```TS
-interface ColorCtx {
-  primary: string;
-  secondary: string;
+class ColorCtx {
+  primary = "red";
+  secondary = "green";
 }
-
-const COLOR_CTX = new StaticToken<ColorCtx>('COLOR_CTX')
 
 @injectable({
   name: 'color-ctx',
@@ -381,7 +379,7 @@ customElements.define('my-element', MyElement);
 ```
 
 ```HTML
-<!-- Error: No colors provided -->
+<!-- Default Colors -->
 <my-element></my-element>
 
 <!-- colors come from ctx -->
