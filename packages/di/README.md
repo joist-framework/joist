@@ -350,7 +350,7 @@ class ColorCtx {
 
 @injectable({
   name: 'color-ctx',
-  provideSelfAs: [COLOR_CTX]
+  provideSelfAs: [ColorCtx]
 })
 class ColorCtx extends HTMLElement implements ColorCtx {
   get primary() {
