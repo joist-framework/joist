@@ -2,6 +2,7 @@ import { assert } from "chai";
 
 import { inject } from "../inject.js";
 import { injectable } from "../injectable.js";
+import { DOMInjector } from "./dom-injector.js";
 
 it("should allow services to be injected into custom element", () => {
   class Foo {}
@@ -127,4 +128,48 @@ it("should handle changing contexts", async () => {
   child = el.querySelector<Child>("ctx-child");
 
   assert.instanceOf(child?.a(), AltA);
+});
+
+it("should provide the same context in disconnectedCallback as connectedCallback", async () => {
+  class A {}
+
+  class AltA {}
+
+  const app = new DOMInjector({
+    providers: [[A, { use: AltA }]],
+  });
+
+  app.attach(document.body);
+
+  @injectable()
+  class Example extends HTMLElement {
+    #ctx = inject(A);
+
+    connected: A | null = null;
+    disconnected: A | null = null;
+
+    connectedCallback(): void {
+      this.connected = this.#ctx();
+    }
+
+    disconnectedCallback(): void {
+      this.disconnected = this.#ctx();
+    }
+  }
+
+  customElements.define("ctx-3", Example);
+
+  const el = document.createElement("ctx-3") as Example;
+
+  document.body.append(el);
+
+  assert.instanceOf(el.connected, AltA);
+
+  el.remove();
+
+  assert.instanceOf(el.disconnected, AltA);
+
+  assert.equal(el.connected, el.disconnected);
+
+  app.detach();
 });
