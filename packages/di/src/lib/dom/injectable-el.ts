@@ -44,11 +44,11 @@ export function injectableEl<
       }
 
       disconnectedCallback() {
-        this[INJECTOR].parent = undefined;
-
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
+
+        this[INJECTOR].parent = undefined;
       }
     },
   };
