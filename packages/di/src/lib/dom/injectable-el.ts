@@ -44,6 +44,9 @@ export function injectableEl<
       }
 
       disconnectedCallback() {
+        // super disconnect needs to be called first.
+        // If not the context could be different since the element will be removed from the injector chain.
+        // This leads to unexpected behaviors.
         if (super.disconnectedCallback) {
           super.disconnectedCallback();
         }
