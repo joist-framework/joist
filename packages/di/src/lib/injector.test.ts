@@ -219,3 +219,62 @@ it("should allow you to get ALL available instances in a particular injector cha
 
   assert.deepEqual(res, ["first", "second", "third", "fourth"]);
 });
+
+it("should respect skipParent option when injecting", () => {
+  class Service {
+    value = "child";
+  }
+
+  const parent = new Injector({
+    providers: [
+      [
+        Service,
+        {
+          use: class extends Service {
+            value = "parent";
+          },
+        },
+      ],
+    ],
+  });
+
+  const child = new Injector({ parent });
+
+  // Without skipParent, should get parent's instance
+  assert.equal(child.inject(Service).value, "parent");
+
+  // With skipParent, should get child's instance
+  assert.equal(child.inject(Service, { skipParent: true }).value, "child");
+});
+
+it("should handle skipParent with static tokens", () => {
+  const TOKEN = new StaticToken("test", () => "child-value");
+
+  const parent = new Injector({
+    providers: [[TOKEN, { factory: () => "parent-value" }]],
+  });
+
+  const child = new Injector({ parent });
+
+  // Without skipParent, should get parent's value
+  assert.equal(child.inject(TOKEN), "parent-value");
+
+  // With skipParent, should get child's value
+  assert.equal(child.inject(TOKEN, { skipParent: true }), "child-value");
+});
+
+it("should handle StaticToken with null/undefined factory", () => {
+  const TOKEN = new StaticToken<string | null>("test");
+  const injector = new Injector();
+
+  assert.throws(() => injector.inject(TOKEN), 'Provider not found for "test"');
+});
+
+it("should handle StaticToken factory throwing errors", () => {
+  const TOKEN = new StaticToken<string>("test", () => {
+    throw new Error("Factory error");
+  });
+  const injector = new Injector();
+
+  assert.throws(() => injector.inject(TOKEN), "Factory error");
+});
