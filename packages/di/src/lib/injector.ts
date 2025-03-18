@@ -49,16 +49,13 @@ export class Injector {
   }
 
   injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
-    const result: T[] = [
-      ...collection,
-      this.inject<T>(token, { skipParent: true }),
-    ];
+    collection.push(this.inject<T>(token, { skipParent: true }));
 
     if (this.parent) {
-      return this.parent.injectAll<T>(token, result);
+      return this.parent.injectAll<T>(token, collection);
     }
 
-    return result;
+    return collection;
   }
 
   // resolves and retuns and instance of the requested service
