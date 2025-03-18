@@ -124,28 +124,30 @@ export class Injector {
      */
     const injector = readInjector(instance);
 
-    if (injector) {
-      if (injector !== this) {
-        /**
-         * set the this injector instance as a parent.
-         * This should ONLY happen in the injector is not self. This would cause an infinite loop.
-         * this means that each calling injector will be the parent of what it creates.
-         * this allows the created service to navigate up it's chain to find a root
-         */
-        injector.parent = this;
-      }
+    if (!injector) {
+      return instance;
+    }
 
+    if (injector !== this) {
       /**
-       * the onInject and onInit lifecycle hook should be called after the parent is defined.
-       * this ensures that services are initialized when the chain is settled
-       * this is required since the parent is set after the instance is constructed
+       * set the this injector instance as a parent.
+       * This should ONLY happen in the injector is not self. This would cause an infinite loop.
+       * this means that each calling injector will be the parent of what it creates.
+       * this allows the created service to navigate up it's chain to find a root
        */
-      const metadata = readMetadata<T>(token);
+      injector.parent = this;
+    }
 
-      if (metadata) {
-        callLifecycle(instance ?? this, injector, metadata.onCreated);
-        callLifecycle(instance ?? this, injector, metadata.onInjected);
-      }
+    /**
+     * the onInject and onInit lifecycle hook should be called after the parent is defined.
+     * this ensures that services are initialized when the chain is settled
+     * this is required since the parent is set after the instance is constructed
+     */
+    const metadata = readMetadata<T>(token);
+
+    if (metadata) {
+      callLifecycle(instance ?? this, injector, metadata.onCreated);
+      callLifecycle(instance ?? this, injector, metadata.onInjected);
     }
 
     return instance;
