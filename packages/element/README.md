@@ -114,7 +114,7 @@ The `query` function will query for a particular element and allow you to easily
 })
 export class MyElement extends HTMLElement {
   @observe()
-  value: string;
+  accessor value: string;
 
   #input = query('input');
 
@@ -141,7 +141,7 @@ The `queryAll` function will get all elements that match the given query. A patc
 })
 export class MyElement extends HTMLElement {
   @observe()
-  value: string;
+  accessor value: string;
 
   #inputs = queryAll('input');
 
