@@ -5,7 +5,7 @@ Adds the ability to monitor class properties (static and instance) for changes
 #### Installation:
 
 ```BASH
-npm i @joist/observable@next
+npm i @joist/observable
 ```
 
 ```TS
