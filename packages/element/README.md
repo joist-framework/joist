@@ -14,7 +14,7 @@ Utilities for building web compnennts. Especially targeted at
 ## Installation
 
 ```BASH
-npm i @joist/element@next
+npm i @joist/element
 ```
 
 ## Custom Element
