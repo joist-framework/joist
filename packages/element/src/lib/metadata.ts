@@ -16,7 +16,11 @@ export interface Listener<T> {
   selector: ListenerSelector<T>;
 }
 
-export type AttrChangedCallback = (oldValue: string, newValue: string) => void;
+export type AttrChangedCallback = (
+  name: string,
+  oldValue: string,
+  newValue: string,
+) => void;
 
 export class AttrMetadata extends Map<string, AttrDef> {}
 export class AttrChangeMetadata extends Map<string, Set<AttrChangedCallback>> {}

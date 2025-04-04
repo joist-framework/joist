@@ -1,15 +1,18 @@
 import { type AttrChangedCallback, metadataStore } from "./metadata.js";
 
-export function attrChanged(name: string) {
+export function attrChanged(...names: string[]) {
   return function attrChangedDecorator<This extends HTMLElement>(
     cb: AttrChangedCallback,
     ctx: ClassMethodDecoratorContext<This>,
   ): void {
     const meta = metadataStore.read(ctx.metadata);
-    const val = meta.attrChanges.get(name) ?? new Set();
 
-    val.add(cb);
+    for (const name of names) {
+      const val = meta.attrChanges.get(name) ?? new Set();
 
-    meta.attrChanges.set(name, val);
+      val.add(cb);
+
+      meta.attrChanges.set(name, val);
+    }
   };
 }

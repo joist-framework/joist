@@ -73,7 +73,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
             if (cbs) {
               for (const cb of cbs) {
-                cb.call(this, oldValue, newValue);
+                cb.call(this, name, oldValue, newValue);
               }
             }
 
