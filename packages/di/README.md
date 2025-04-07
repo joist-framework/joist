@@ -2,7 +2,7 @@
 
 Small and efficient dependency injection.
 
-Allows you to inject services into other class instances (including custom elements and node).
+Allows you to inject services into other class instances (including custom elements and Node.js).
 
 ## Table of Contents
 
@@ -18,17 +18,21 @@ Allows you to inject services into other class instances (including custom eleme
 
 ## Installation
 
-```BASH
+```bash
 npm i @joist/di
 ```
 
 ## Injectors
 
-Injectors are what are used to construct new [services](#services). Injectors can manually [provide implementations](#defining-providers) of services. Injectors can also have [parents](#hierarchical-injectors), parent injectors can define services for all of it's children.
+Injectors are the core of the dependency injection system. They:
+- Create and manage service instances
+- Handle dependency resolution
+- Maintain a hierarchy of injectors
+- Cache service instances
 
 ## Services
 
-At their simplest, services are classses. Services can be constructed via an `Injector` and treated are singletons (The same instance is returned for each call to Injector.inject()).
+At their simplest, services are classes. Services can be constructed via an `Injector` and treated as singletons (the same instance is returned for each call to `Injector.inject()`).
 
 ```ts
 const app = new Injector();
@@ -41,14 +45,16 @@ class Counter {
   }
 }
 
-// these two calls will return the same instance
+// These two calls will return the same instance
 const foo = app.inject(Counter);
 const bar = app.inject(Counter);
+
+console.log(foo === bar); // true
 ```
 
 ## Injectable Services
 
-Singleton services are great but the real benefit can be seen when passing instances of one service to another. Services are injected into other services using the `inject()` fuction. In order to use `inject()` classes must be decorated with `@injectable`.
+Singleton services are great, but the real benefit can be seen when passing instances of one service to another. Services are injected into other services using the `inject()` function. In order to use `inject()`, classes must be decorated with `@injectable`.
 
 `inject()` returns a function that will then return an instance of the requested service. This means that services are only created when they are needed and not when the class is constructed.
 
@@ -59,7 +65,6 @@ class App {
 
   update(val: number) {
     const instance = this.#counter();
-
     instance.inc(val);
   }
 }
@@ -67,13 +72,12 @@ class App {
 
 ## Defining Providers
 
-A big reason to use dependency injection is the ability to provide multiple implementations for a particular service. For example we probably want a different http client when running unit tests vs in our main application.
+A key reason to use dependency injection is the ability to provide multiple implementations for a particular service. For example, we probably want a different HTTP client when running unit tests versus in our main application.
 
-In the below example we have a defined HttpService that wraps fetch. but for our unit test we will use a custom implementation that returns just the data we want. This also has the benefit of avoiding test framework specific mocks.
+In the example below, we have a defined `HttpService` that wraps fetch. For our unit test, we'll use a custom implementation that returns just the data we want. This also has the benefit of avoiding test framework-specific mocks.
 
 ```ts
 // services.ts
-
 class HttpService {
   fetch(url: string, init?: RequestInit) {
     return fetch(url, init);
@@ -94,7 +98,6 @@ class ApiService {
 
 ```ts
 // services.test.ts
-
 test('should return json', async () => {
   class MockHttpService extends HttpService {
     async fetch() {
@@ -114,11 +117,11 @@ test('should return json', async () => {
 });
 ```
 
-### Service level providers
+### Service Level Providers
 
-Under the hood, each service decorated with `@injectable()` creates its own injector. This means that it is possible to defined providers from that level down.
+Under the hood, each service decorated with `@injectable()` creates its own injector. This means that it is possible to define providers from that level down.
 
-The below example will use this particular instance of Logger as wall as any other services injected into this service.
+The example below will use this particular instance of `Logger` as well as any other services injected into this service.
 
 ```ts
 class Logger {
@@ -139,7 +142,7 @@ class MyService {}
 
 ### Factories
 
-In addition to defining providers with classes you can also use factory functions. Factories allow for more flexibility for deciding exactly how a service is created. This is helpful when which instance that is provided depends on some runtime value.
+In addition to defining providers with classes, you can also use factory functions. Factories allow for more flexibility in deciding exactly how a service is created. This is helpful when the instance that is provided depends on some runtime value.
 
 ```ts
 class Logger {
@@ -162,9 +165,9 @@ const app = new Injector([
 ]);
 ```
 
-### Accessing the injector in factories
+### Accessing the Injector in Factories
 
-Factories provide more flexibility but sometimes will require access to the injector itself. For this reason the factory method is passed the injector that is being used to construct the requested service.
+Factories provide more flexibility but sometimes will require access to the injector itself. For this reason, the factory method is passed the injector that is being used to construct the requested service.
 
 ```ts
 class Logger {
@@ -187,7 +190,6 @@ const app = new Injector([
     {
       factory(i) {
         const logger = i.inject(Logger);
-
         return new Feature(logger);
       }
     }
@@ -197,10 +199,10 @@ const app = new Injector([
 
 ## StaticTokens
 
-In most cases a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
+In most cases, a token is any constructable class. There are cases where you might want to return other data types that aren't objects.
 
 ```ts
-// token that resolves to a string
+// Token that resolves to a string
 const URL_TOKEN = new StaticToken<string>('app_url');
 
 const app = new Injector([
@@ -213,7 +215,7 @@ const app = new Injector([
 ]);
 ```
 
-### Default values
+### Default Values
 
 A static token can be provided a default factory function to use on creation.
 
@@ -221,9 +223,9 @@ A static token can be provided a default factory function to use on creation.
 const URL_TOKEN = new StaticToken('app_url', () => '/default-url/');
 ```
 
-### Async values
+### Async Values
 
-Static tokens can also leverage promises for cases when you need to async create your service instances.
+Static tokens can also leverage promises for cases when you need to asynchronously create your service instances.
 
 ```ts
 // StaticToken<Promise<string>>
@@ -234,7 +236,7 @@ const app = new Injector();
 const url: string = await app.inject(URL_TOKEN);
 ```
 
-This allows you to dynamically import services
+This allows you to dynamically import services:
 
 ```ts
 const HttpService = new StaticToken('HTTP_SERVICE', () => {
@@ -254,72 +256,70 @@ class HackerNewsService {
     return http.fetchJson<string[]>(url);
   }
 }
-
-const url: string = await app.inject(URL_TOKEN);
 ```
 
 ## LifeCycle
 
-To help provide more information to services that are being created, joist will call several life cycle hooks as services are created. These hooks are defined using the provided symbols so there is no risk of naming colisions.
+To help provide more information to services that are being created, Joist will call several lifecycle hooks as services are created. These hooks are defined using the provided decorators so there is no risk of naming collisions.
 
 ```ts
 class MyService {
   @created()
   onCreated() {
-    // called the first time a service is created. (not pulled from cache)
+    // Called the first time a service is created (not pulled from cache)
   }
 
   @injected()
   onInjected() {
-    // called every time a service is returned, whether it is from cache or not
+    // Called every time a service is returned, whether it is from cache or not
   }
 }
 ```
 
 ## Hierarchical Injectors
 
-Injectors can be defined with a parent. The top most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as following.
+Injectors can be defined with a parent. The top-most parent will (by default) be where services are constructed and cached. Only if manually defined providers are found earlier in the chain will services be constructed lower. The injector resolution algorithm behaves as follows:
 
 1. Do I have a cached instance locally?
 2. Do I have a local provider definition for the token?
 3. Do I have a parent?
 4. Does parent have a local instance or provider definition?
 5. If parent exists but no instance found, create instance in parent.
-6. If not parent, All clear, go ahead and construct and cache the requested service.
+6. If no parent, all clear, go ahead and construct and cache the requested service.
 
 Having injectors resolve this way means that all children have access to services created by their parents.
 
 ```mermaid
 graph TD
   RootInjector --> InjectorA;
-  InjectorA -->InjectorB;
+  InjectorA --> InjectorB;
   InjectorA --> InjectorC;
   InjectorA --> InjectorD;
   InjectorD --> InjectorE;
 ```
 
 In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
-If InjectorB then requests the same token, it will recieve the same cached instance from RootInjector.
+If InjectorB then requests the same token, it will receive the same cached instance from RootInjector.
 
-On the other hand if a provider is defined at InjectorD, then the service will be constructed and cached there.
-InjectorB would given a NEW instances created from RootInjector.
+On the other hand, if a provider is defined at InjectorD, then the service will be constructed and cached there.
+InjectorB would be given a NEW instance created from RootInjector.
 This is because InjectorB does not fall under InjectorD.
 This behavior allows for services to be "scoped" within a certain branch of the tree. This is what allows for the scoped custom element behavior defined in the next section.
 
-## Custom Elements:
+## Custom Elements
 
-Joist is built to work with custom elements. Since the document is a tree we can search up that tree for providers.
+Joist is built to work with custom elements. Since the document is a tree, we can search up that tree for providers.
 
-Setting your web page to work is very similar to any other JavaScript environment. There is a special `DOMInjector` class that will allow you to attach an injector to any location in the dom, in most cases this will be document.body.
+Setting your web page to work is very similar to any other JavaScript environment. There is a special `DOMInjector` class that will allow you to attach an injector to any location in the DOM, in most cases this will be document.body.
 
-```TS
+```ts
 const app = new DOMInjector();
 
-app.attach(document.body); // anything rendered in the body will have access to this injector.
+app.attach(document.body); // Anything rendered in the body will have access to this injector.
 
 class Colors {
   primary = 'red';
-  secodnary = 'green';
+  secondary = 'green';
 }
 
 @injectable()
@@ -328,7 +328,6 @@ class MyElement extends HTMLElement {
 
   connectedCallback() {
     const { primary } = this.#colors();
-
     this.style.background = primary;
   }
 }
@@ -336,13 +335,13 @@ class MyElement extends HTMLElement {
 customElements.define('my-element', MyElement);
 ```
 
-### Context Elements:
+### Context Elements
 
-Context elements are where Hierarchical Injectors can really shine as they allow you to defined React/Preact esq "context" elements. 
-Since custom elements are treated the same as any other class they can define providers for their local scope. The `provideSelfAs` property will provide the current class for the tokens given.
-This also makes it easy to attributes to define values for the service.
+Context elements are where Hierarchical Injectors can really shine as they allow you to define React/Preact-esque "context" elements. 
+Since custom elements are treated the same as any other class, they can define providers for their local scope. The `provideSelfAs` property will provide the current class for the tokens given.
+This also makes it easy to use attributes to define values for the service.
 
-```TS
+```ts
 class ColorCtx {
   primary = "red";
   secondary = "green";
@@ -364,11 +363,10 @@ class ColorCtx extends HTMLElement implements ColorCtx {
 
 @injectable()
 class MyElement extends HTMLElement {
-  #colors = inject(COLOR_CTX);
+  #colors = inject(ColorCtx);
 
   connectedCallback() {
     const { primary } = this.#colors();
-
     this.style.background = primary;
   }
 }
@@ -378,12 +376,12 @@ customElements.define('color-ctx', ColorCtx);
 customElements.define('my-element', MyElement);
 ```
 
-```HTML
+```html
 <!-- Default Colors -->
 <my-element></my-element>
 
-<!-- colors come from ctx -->
-<color-ctx primary="orange" secondard="blue">
+<!-- Colors come from context -->
+<color-ctx primary="orange" secondary="blue">
   <my-element></my-element>
 </color-ctx>
 ```
