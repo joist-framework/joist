@@ -8,15 +8,9 @@ describe("tags", () => {
       assert.instanceOf(result, HTMLResult);
     });
 
-    it("should create a template element with correct content", () => {
-      const result = html`<div>Hello</div>`;
-      assert.instanceOf(result.template, HTMLTemplateElement);
-      assert.equal(result.template.innerHTML, "<div>Hello</div>");
-    });
-
     it("should create a cloneable node", () => {
       const result = html`<div>Hello</div>`;
-      const node = result.createElement();
+      const node = result.createNode();
       assert.instanceOf(node, Node);
       assert.equal(node.textContent, "Hello");
     });
@@ -37,14 +31,6 @@ describe("tags", () => {
       result.apply(element);
 
       assert.equal(element.innerHTML, "");
-    });
-
-    it("should handle multiple elements", () => {
-      const result = html`<div>Hello</div><span>World</span>`;
-      assert.equal(
-        result.template.innerHTML.trim(),
-        "<div>Hello</div><span>World</span>",
-      );
     });
   });
 

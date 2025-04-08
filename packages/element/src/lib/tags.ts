@@ -1,20 +1,20 @@
 import type { ShadowResult } from "./result.js";
 
 export class HTMLResult<T extends HTMLElement> implements ShadowResult {
-  template: HTMLTemplateElement;
+  #template: HTMLTemplateElement;
 
   constructor(raw: TemplateStringsArray, ..._values: any[]) {
-    this.template = document.createElement("template");
-    this.template.innerHTML = concat(raw);
+    this.#template = document.createElement("template");
+    this.#template.innerHTML = concat(raw);
   }
 
-  createElement(): Node {
-    return this.template.content.cloneNode(true);
+  createNode(): Node {
+    return this.#template.content.cloneNode(true);
   }
 
   apply(el: T): void {
     if (el.shadowRoot) {
-      el.shadowRoot.append(this.createElement());
+      el.shadowRoot.append(this.createNode());
     }
   }
 }
