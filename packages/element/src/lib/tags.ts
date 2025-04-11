@@ -9,7 +9,7 @@ export class HTMLResult<T extends HTMLElement> implements ShadowResult {
   }
 
   createNode(): Node {
-    return this.#template.content.cloneNode(true);
+    return document.importNode(this.#template.content, true);
   }
 
   apply(el: T): void {
