@@ -8,7 +8,7 @@ export interface AttrDef {
   setPropValue: (value: unknown) => void;
 }
 
-export type ListenerSelector<T> = (el: T) => Element | ShadowRoot | null;
+export type ListenerSelector<T> = (el: T) => EventTarget | null;
 
 export interface Listener<T> {
   event: string;
