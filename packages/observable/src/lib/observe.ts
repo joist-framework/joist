@@ -4,6 +4,8 @@ import {
   observableMetadataStore,
 } from "./metadata.js";
 
+const INIT_VALUE = Symbol("init");
+
 export function observe() {
   return function observeDecorator<This extends object, Value>(
     base: ClassAccessorDecoratorTarget<This, Value>,
@@ -13,14 +15,14 @@ export function observe() {
 
     return {
       init(value) {
-        let val: Value | null = null;
+        let val: Value | typeof INIT_VALUE = INIT_VALUE;
 
         // START: Make upgradable custom elements work
         try {
           val = ctx.access.get(this);
         } catch {}
 
-        if (val) {
+        if (val !== INIT_VALUE) {
           Reflect.deleteProperty(this, ctx.name);
 
           return val;

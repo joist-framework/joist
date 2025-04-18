@@ -6,7 +6,11 @@ it("should return default metadata", () => {
   const key = {};
   const data = new ObservableInstanceMetaDataStore().read(key);
 
-  assert.deepEqual(data, { changes: new Changes(), scheduler: null });
+  assert.deepEqual(data, {
+    changes: new Changes(),
+    scheduler: null,
+    binding: null,
+  });
 });
 
 it("should return the same metadata object after init", () => {

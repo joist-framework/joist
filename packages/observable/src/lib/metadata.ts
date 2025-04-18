@@ -1,3 +1,5 @@
+import type { JoistValueEvent } from "./dom/value.events.js";
+
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
 export type EffectFn<T> = (changes: Changes<T>) => void;
@@ -10,6 +12,7 @@ export class Changes<T> extends Map<
 export class ObservableInstanceMetadata<T> {
   scheduler: Promise<void> | null = null;
   changes: Changes<T> = new Changes();
+  binding: JoistValueEvent | null = null;
 }
 
 export class ObservableInstanceMetaDataStore extends WeakMap<
