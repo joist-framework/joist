@@ -13,25 +13,23 @@ export function bind() {
 
     return {
       init(value) {
-        if (this instanceof HTMLElement) {
-          this.addEventListener("joist::value", (e) => {
-            if (e.bindTo === ctx.name) {
-              e.stopPropagation();
+        this.addEventListener("joist::value", (e) => {
+          if (e.bindTo === ctx.name) {
+            e.stopPropagation();
 
-              e.cb(value);
+            e.cb(value);
 
-              observableMeta.effects.add((changes) => {
-                const key = ctx.name as keyof This;
+            observableMeta.effects.add((changes) => {
+              const key = ctx.name as keyof This;
 
-                if (changes.has(key)) {
-                  const res = changes.get(key);
+              if (changes.has(key)) {
+                const res = changes.get(key);
 
-                  return e.cb(res?.newValue);
-                }
-              });
-            }
-          });
-        }
+                return e.cb(res?.newValue);
+              }
+            });
+          }
+        });
 
         if (internalObserver.init) {
           return internalObserver.init.call(this, value);
