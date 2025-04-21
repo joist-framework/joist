@@ -20,12 +20,10 @@ export class JoistValueElement extends HTMLElement {
   accessor bind = "";
 
   connectedCallback(): void {
-    if (this.parentNode) {
-      this.parentNode.dispatchEvent(
-        new JoistValueEvent(this.bind, (value) => {
-          this.innerHTML = String(value);
-        }),
-      );
-    }
+    this.parentNode?.dispatchEvent(
+      new JoistValueEvent(this.bind, (value) => {
+        this.innerHTML = String(value.newValue);
+      }),
+    );
   }
 }

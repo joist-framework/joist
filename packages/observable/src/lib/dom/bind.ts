@@ -1,5 +1,4 @@
-// import { observableMetadataStore } from "../metadata.js";
-import { observableMetadataStore } from "../metadata.js";
+import { instanceMetadataStore } from "../metadata.js";
 import { observe } from "../observe.js";
 
 export function bind() {
@@ -7,37 +6,36 @@ export function bind() {
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
-    const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
-
-    const internalObserver = observe()(base, ctx);
+    const internalObserve = observe()(base, ctx);
 
     return {
       init(value) {
         this.addEventListener("joist::value", (e) => {
           if (e.bindTo === ctx.name) {
+            const instanceMeta = instanceMetadataStore.read<This>(this);
+
             e.stopPropagation();
 
-            e.cb(value);
+            e.cb({ oldValue: null, newValue: ctx.access.get(this) });
 
-            observableMeta.effects.add((changes) => {
+            instanceMeta.bindings.add((changes) => {
               const key = ctx.name as keyof This;
+              const res = changes.get(key);
 
-              if (changes.has(key)) {
-                const res = changes.get(key);
-
-                return e.cb(res?.newValue);
+              if (res) {
+                e.cb(res);
               }
             });
           }
         });
 
-        if (internalObserver.init) {
-          return internalObserver.init.call(this, value);
+        if (internalObserve.init) {
+          return internalObserve.init.call(this, value);
         }
 
         return value;
       },
-      set: internalObserver.set,
+      set: internalObserve.set,
     };
   };
 }

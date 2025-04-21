@@ -1,4 +1,5 @@
 import { attr, css, element, html, listen } from "@joist/element";
+import { effect } from "@joist/observable";
 import { bind } from "@joist/observable/dom.js";
 
 @element({
@@ -41,6 +42,9 @@ export class CounterElement extends HTMLElement {
   @bind()
   accessor count = 0;
 
+  @bind()
+  accessor show = false;
+
   @listen("click", "#inc")
   onIncrement() {
     this.count++;
@@ -49,5 +53,15 @@ export class CounterElement extends HTMLElement {
   @listen("click", "#dec")
   onDecrement() {
     this.count--;
+  }
+
+  @effect()
+  onCountChange() {
+    this.show = this.count > 10;
+  }
+
+  @effect()
+  onShowChange() {
+    console.log("show", this.show);
   }
 }

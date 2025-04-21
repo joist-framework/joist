@@ -33,14 +33,17 @@ export function observe() {
       },
       set(newValue: Value) {
         const oldValue = base.get.call(this);
+        const instanceMeta = instanceMetadataStore.read<This>(this);
 
         if (newValue !== oldValue) {
-          const instanceMeta = instanceMetadataStore.read<This>(this);
-
           if (instanceMeta.scheduler === null) {
             instanceMeta.scheduler = Promise.resolve().then(() => {
               for (const effect of observableMeta.effects) {
                 effect.call(this, instanceMeta.changes);
+              }
+
+              for (const binding of instanceMeta.bindings) {
+                binding(instanceMeta.changes);
               }
 
               instanceMeta.scheduler = null;

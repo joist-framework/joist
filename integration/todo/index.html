@@ -1,13 +1,14 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<head>
+  <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <script type="importmap">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script type="importmap">
       {
         "imports": {
           "@joist/di": "/node_modules/@joist/di/target/lib.js",
@@ -21,124 +22,129 @@
       }
     </script>
 
-    <title>Todo App</title>
-  </head>
+  <title>Todo App</title>
+</head>
 
-  <body>
-    <style>
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        line-height: 1.4em;
+<body>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.4em;
+    }
+
+    body,
+    html {
+      background: #f5f5f5;
+      color: #4d4d4d;
+      min-width: 230px;
+      max-width: 550px;
+      margin: 0 auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 300;
+    }
+
+    header h1 {
+      width: 100%;
+      font-size: 100px;
+      font-weight: 100;
+      text-align: center;
+      color: rgba(175, 47, 47, 0.15);
+      -webkit-text-rendering: optimizeLegibility;
+      -moz-text-rendering: optimizeLegibility;
+      text-rendering: optimizeLegibility;
+      margin: 0;
+    }
+
+    .todo-app {
+      background: #fff;
+      position: relative;
+      box-shadow:
+        0 2px 4px 0 rgba(0, 0, 0, 0.2),
+        0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    todo-form:not(:defined) {
+      border-bottom: solid 1px rgb(243, 243, 243);
+      background: #fff;
+      display: block;
+      height: 65px;
+    }
+
+    todo-list:not(:defined) {
+      border-bottom: solid 1px rgb(243, 243, 243);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    #loader {
+      content: '';
+      box-sizing: border-box;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border-top: 2px solid #07d;
+      border-right: 2px solid transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+
+    todo-list-footer:not(:defined) {
+      background: #fff;
+      display: block;
+      height: 50px;
+    }
+
+    :not(:defined) {
+      visibility: hidden;
+    }
+
+    @keyframes spinner {
+      to {
+        transform: rotate(360deg);
       }
+    }
+  </style>
 
-      body,
-      html {
-        background: #f5f5f5;
-        color: #4d4d4d;
-        min-width: 230px;
-        max-width: 550px;
-        margin: 0 auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-weight: 300;
-      }
+  <header>
+    <h1>todos</h1>
+  </header>
 
-      header h1 {
-        width: 100%;
-        font-size: 100px;
-        font-weight: 100;
-        text-align: center;
-        color: rgba(175, 47, 47, 0.15);
-        -webkit-text-rendering: optimizeLegibility;
-        -moz-text-rendering: optimizeLegibility;
-        text-rendering: optimizeLegibility;
-        margin: 0;
-      }
+  <local-storage-ctx>
+    <todo-form></todo-form>
 
-      .todo-app {
-        background: #fff;
-        position: relative;
-        box-shadow:
-          0 2px 4px 0 rgba(0, 0, 0, 0.2),
-          0 25px 50px 0 rgba(0, 0, 0, 0.1);
-      }
+    <todo-list>
+      <div id="loader" slot="loading"></div>
+    </todo-list>
 
-      todo-form:not(:defined) {
-        border-bottom: solid 1px rgb(243, 243, 243);
-        background: #fff;
-        display: block;
-        height: 65px;
-      }
+    <todo-list-footer></todo-list-footer>
 
-      todo-list:not(:defined) {
-        border-bottom: solid 1px rgb(243, 243, 243);
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        padding: 2rem 0;
-      }
+    <todo-logger></todo-logger>
+  </local-storage-ctx>
 
-      #loader {
-        content: '';
-        box-sizing: border-box;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border-top: 2px solid #07d;
-        border-right: 2px solid transparent;
-        animation: spinner 0.6s linear infinite;
-      }
+  <script type="module">
+    import { DOMInjector } from '@joist/di';
 
-      todo-list-footer:not(:defined) {
-        background: #fff;
-        display: block;
-        height: 50px;
-      }
+    const app = new DOMInjector();
 
-      :not(:defined) {
-        visibility: hidden;
-      }
+    app.attach(document.body);
+  </script>
 
-      @keyframes spinner {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+  <script type="module" src="./target/ctx/storage.ctx.js"></script>
+  <script type="module" src="./target/elements/todo-card.element.js"></script>
+  <script type="module" src="./target/elements/todo-form.element.js"></script>
+  <script type="module" src="./target/elements/todo-list-footer.element.js"></script>
+  <script type="module" src="./target/elements/todo-list.element.js"></script>
+  <script type="module" src="./target/elements/todo-logger.element.js"></script>
 
-    <header>
-      <h1>todos</h1>
-    </header>
+  <script type="module">
+    import "@joist/observable/dom/define.js";
+  </script>
+</body>
 
-    <local-storage-ctx>
-      <todo-form></todo-form>
-
-      <todo-list>
-        <div id="loader" slot="loading"></div>
-      </todo-list>
-
-      <todo-list-footer></todo-list-footer>
-
-      <todo-logger></todo-logger>
-    </local-storage-ctx>
-
-    <script type="module">
-      import { DOMInjector } from '@joist/di';
-
-      const app = new DOMInjector();
-
-      app.attach(document.body);
-    </script>
-
-    <script type="module" src="./target/ctx/storage.ctx.js"></script>
-    <script type="module" src="./target/elements/todo-card.element.js"></script>
-    <script type="module" src="./target/elements/todo-form.element.js"></script>
-    <script type="module" src="./target/elements/todo-list-footer.element.js"></script>
-    <script type="module" src="./target/elements/todo-list.element.js"></script>
-    <script type="module" src="./target/elements/todo-logger.element.js"></script>
-  </body>
 </html>

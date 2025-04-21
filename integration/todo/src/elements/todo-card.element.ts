@@ -1,4 +1,5 @@
-import { attr, css, element, html, listen, query } from "@joist/element";
+import { attr, css, element, html, listen } from "@joist/element";
+import { bind } from "@joist/observable/dom.js";
 
 import type { Todo, TodoStatus } from "../services/todo.service.js";
 
@@ -40,8 +41,10 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
       </div>
 
       <button id="remove">remove</button>
-
-      <button id="complete">complete</button>
+      
+      <button id="complete">
+        <j-value bind="actionValue"></j-value>
+      </button>
     `,
   ],
 })
@@ -49,19 +52,21 @@ export class TodoCardElement extends HTMLElement {
   @attr()
   accessor status: TodoStatus = "active";
 
-  #complete = query<HTMLButtonElement>("#complete");
+  @bind()
+  accessor actionValue = "complete";
 
-  @listen("click")
-  onClick(e: Event) {
-    if (e.target instanceof HTMLButtonElement) {
-      this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
-    }
+  @listen("click", "#complete")
+  onClick() {
+    this.dispatchEvent(new Event("complete", { bubbles: true }));
+  }
+
+  @listen("click", "#remove")
+  onRemove() {
+    this.dispatchEvent(new Event("remove", { bubbles: true }));
   }
 
   attributeChangedCallback() {
-    this.#complete({
-      innerHTML: this.status === "active" ? "complete" : "active",
-    });
+    this.actionValue = this.status === "active" ? "complete" : "active";
   }
 }
 

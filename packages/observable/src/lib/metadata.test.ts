@@ -9,7 +9,7 @@ it("should return default metadata", () => {
   assert.deepEqual(data, {
     changes: new Changes(),
     scheduler: null,
-    binding: null,
+    bindings: new Set<() => void>(),
   });
 });
 
