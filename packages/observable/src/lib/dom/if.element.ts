@@ -34,8 +34,6 @@ export class JoistIfElement extends HTMLElement {
   connectedCallback(): void {
     const childTemplate = this.childTemplate();
 
-    console.log(this.parentNode);
-
     this.parentNode?.dispatchEvent(
       new JoistValueEvent(this.bind, (value) => {
         if (value.newValue !== value.oldValue) {

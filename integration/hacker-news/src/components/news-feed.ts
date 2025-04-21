@@ -24,8 +24,7 @@ export class HnNewsFeed extends HTMLElement {
     const hn = this.#hn();
 
     const stories = await hn.getTopStories();
-
-    this.innerHTML = "";
+    const fragment = document.createDocumentFragment();
 
     let number = 1;
 
@@ -39,9 +38,11 @@ export class HnNewsFeed extends HTMLElement {
       card.points = value.score;
       card.href = value.url ?? "";
 
-      this.append(card);
+      fragment.append(card);
 
       number++;
     }
+
+    this.replaceChildren(fragment);
   }
 }
