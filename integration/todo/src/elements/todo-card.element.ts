@@ -37,7 +37,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
     `,
     html`
       <div id="name">
-        <j-if bind="status" value="complete">
+        <j-if bind="status" equals="complete">
           <template>
             <span>⭐</span>
           </template>

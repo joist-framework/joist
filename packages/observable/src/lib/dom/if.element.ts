@@ -27,7 +27,7 @@ export class JoistIfElement extends HTMLElement {
   accessor bind = "";
 
   @attr()
-  accessor value = "true";
+  accessor equals = "true";
 
   childTemplate: QueryResult<HTMLTemplateElement> = query("template", this);
 
@@ -40,11 +40,9 @@ export class JoistIfElement extends HTMLElement {
       new JoistValueEvent(this.bind, (value) => {
         if (value.newValue !== value.oldValue) {
           const compareTo =
-            this.value === "true" || this.value === "false"
-              ? Boolean(this.value)
-              : this.value;
-
-          console.log("####", value.newValue, compareTo);
+            this.equals === "true" || this.equals === "false"
+              ? Boolean(this.equals)
+              : this.equals;
 
           if (value.newValue === compareTo) {
             const res = document.importNode(childTemplate.content, true);
