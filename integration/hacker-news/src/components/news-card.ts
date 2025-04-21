@@ -1,4 +1,4 @@
-import { attr, css, element, html, queryAll } from "@joist/element";
+import { attr, css, element, html } from "@joist/element";
 import { type Changes, effect } from "@joist/observable";
 import { bind } from "@joist/observable/dom.js";
 
@@ -47,9 +47,11 @@ import { bind } from "@joist/observable/dom.js";
 
           <j-if bind="href">
             <template>
-              <a target="_blank">
-                (<j-value bind="host"></j-value>)
-              </a>
+              <j-attr #href:href>
+                <a target="_blank">
+                  (<j-value bind="host"></j-value>)
+                </a>
+              </j-attr>
             </template>
           </j-if>
         </div>
@@ -98,13 +100,9 @@ export class HnNewsCard extends HTMLElement {
   @bind()
   accessor host = "";
 
-  #anchors = queryAll("a");
-
   @effect()
   onPropChange(changes: Changes<this>) {
     if (changes.has("href")) {
-      this.#anchors({ href: this.href });
-
       this.host = new URL(this.href).hostname;
     }
   }

@@ -26,10 +26,7 @@ export class JoistIfElement extends HTMLElement {
         this.parentNode?.dispatchEvent(
           new JoistValueEvent(token, (value) => {
             if (this.firstElementChild) {
-              this.firstElementChild.setAttribute(
-                childAttr,
-                String(value.newValue),
-              );
+              Reflect.set(this.firstElementChild, childAttr, value.newValue);
             }
           }),
         );
