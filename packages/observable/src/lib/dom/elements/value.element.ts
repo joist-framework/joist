@@ -1,6 +1,6 @@
 import { attr, css, element, html } from "@joist/element";
 
-import { JoistValueEvent } from "./value.events.js";
+import { JoistValueEvent } from "../value.events.js";
 
 @element({
   tagName: "j-value",

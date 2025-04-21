@@ -32,7 +32,6 @@ import { bind } from "@joist/observable/dom.js";
       }
     `,
     html`
-      
       <div id="number">
         <j-value bind="number"></j-value>
       </div>

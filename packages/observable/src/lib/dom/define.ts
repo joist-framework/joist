@@ -1,3 +1,3 @@
-import "./value.element.js";
-import "./if.element.js";
-import "./attr.element.js";
+import "./elements/value.element.js";
+import "./elements/if.element.js";
+import "./elements/attr.element.js";

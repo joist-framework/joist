@@ -1,5 +1,6 @@
 import { attr, css, element, html } from "@joist/element";
 import { template } from "@joist/element/template.js";
+import { bind } from "@joist/observable/dom.js";
 
 @element({
   tagName: "hn-header",
@@ -29,7 +30,9 @@ import { template } from "@joist/element/template.js";
       }
     `,
     html`
-      <img #:src="img" aria-hidden="true" height="20" width="20" />
+      <j-attr #img:src>
+        <img aria-hidden="true" height="20" width="20" />
+      </j-attr>
 
       <h1>Hacker News</h1>
 
@@ -44,6 +47,7 @@ export class HnHeader extends HTMLElement {
   accessor role = "banner";
 
   @attr()
+  @bind()
   accessor img = "/public/images/y18.svg";
 
   #render = template();

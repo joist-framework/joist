@@ -7,7 +7,7 @@ import {
   query,
 } from "@joist/element";
 
-import { JoistValueEvent } from "./value.events.js";
+import { JoistValueEvent } from "../value.events.js";
 
 @element({
   tagName: "j-if",
@@ -36,7 +36,6 @@ export class JoistIfElement extends HTMLElement {
 
     this.parentNode?.dispatchEvent(
       new JoistValueEvent(this.bind, (value) => {
-        console.log(value);
         if (value.newValue !== value.oldValue) {
           const compareTo =
             this.equals === "true" || this.equals === "false"
