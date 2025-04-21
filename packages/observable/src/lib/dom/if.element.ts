@@ -26,26 +26,34 @@ export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
+  @attr()
+  accessor value = "true";
+
   childTemplate: QueryResult<HTMLTemplateElement> = query("template", this);
 
   connectedCallback(): void {
     const childTemplate = this.childTemplate();
-    const isNegated = this.bind.startsWith("!");
-    const bindToken = isNegated ? this.bind.slice(1) : this.bind;
+
+    console.log(this.parentNode);
 
     this.parentNode?.dispatchEvent(
-      new JoistValueEvent(bindToken, (value) => {
+      new JoistValueEvent(this.bind, (value) => {
         if (value.newValue !== value.oldValue) {
-          const valueToCheck = isNegated ? !value.newValue : value.newValue;
+          const compareTo =
+            this.value === "true" || this.value === "false"
+              ? Boolean(this.value)
+              : this.value;
 
-          if (valueToCheck === false) {
-            while (childTemplate.nextSibling) {
-              childTemplate.nextSibling.remove();
-            }
-          } else {
+          console.log("####", value.newValue, compareTo);
+
+          if (value.newValue === compareTo) {
             const res = document.importNode(childTemplate.content, true);
 
             this.appendChild(res);
+          } else {
+            while (childTemplate.nextSibling) {
+              childTemplate.nextSibling.remove();
+            }
           }
         }
       }),

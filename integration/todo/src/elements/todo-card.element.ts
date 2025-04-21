@@ -37,6 +37,12 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
     `,
     html`
       <div id="name">
+        <j-if bind="status" value="complete">
+          <template>
+            <span>⭐</span>
+          </template>
+        </j-if>
+
         <slot></slot>
       </div>
 
@@ -50,6 +56,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
 })
 export class TodoCardElement extends HTMLElement {
   @attr()
+  @bind()
   accessor status: TodoStatus = "active";
 
   @bind()

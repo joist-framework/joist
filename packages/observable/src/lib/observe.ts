@@ -43,7 +43,7 @@ export function observe() {
               }
 
               for (const binding of instanceMeta.bindings) {
-                binding(instanceMeta.changes);
+                binding.call(this, instanceMeta.changes);
               }
 
               instanceMeta.scheduler = null;
