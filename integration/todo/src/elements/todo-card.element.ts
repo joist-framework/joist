@@ -37,7 +37,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
     `,
     html`
       <div id="name">
-        <j-if bind="actionState.showStar">
+        <j-if bind="!actionState.showStar">
           <template>
             <span>⭐</span>
           </template>
