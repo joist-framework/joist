@@ -1,8 +1,8 @@
 import { inject, injectable, injected } from "@joist/di";
 import { css, element, html } from "@joist/element";
 
-import { HnService } from "../services/hn.service.js";
-import { HnNewsCard } from "./news-card.js";
+import { bind } from "@joist/observable/dom.js";
+import { type HnItem, HnService } from "../services/hn.service.js";
 
 @injectable()
 @element({
@@ -13,36 +13,29 @@ import { HnNewsCard } from "./news-card.js";
         display: contents;
       }
     `,
-    html`<slot></slot>`,
+    html`
+      <j-for bind="stories">
+        <template>
+          <j-attr #by:author #descendants:comments #score:points #url:href>
+            <hn-news-card>
+              <j-value bind="title"></j-value>
+            </hn-news-card>
+          </j-attr>
+        </template>
+      </j-for>
+    `,
   ],
 })
 export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
 
+  @bind()
+  accessor stories: HnItem[] | null = null;
+
   @injected()
   async onInjected() {
     const hn = this.#hn();
 
-    const stories = await hn.getTopStories();
-    const fragment = document.createDocumentFragment();
-
-    let number = 1;
-
-    for (const value of stories) {
-      const card = new HnNewsCard();
-
-      card.number = number;
-      card.textContent = value.title;
-      card.author = value.by;
-      card.comments = value.kids.length;
-      card.points = value.score;
-      card.href = value.url ?? "";
-
-      fragment.append(card);
-
-      number++;
-    }
-
-    this.replaceChildren(fragment);
+    this.stories = await hn.getTopStories();
   }
 }

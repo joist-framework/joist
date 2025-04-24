@@ -1,5 +1,4 @@
-import { attr, css, element, html, listen } from "@joist/element";
-import { effect } from "@joist/observable";
+import { css, element, html, listen } from "@joist/element";
 import { bind } from "@joist/observable/dom.js";
 
 @element({
@@ -32,36 +31,28 @@ import { bind } from "@joist/observable/dom.js";
     `,
     html`
       <button id="dec">-</button>
-      <j-value bind="count"></j-value>
+      <j-value bind="count.value"></j-value>
       <button id="inc">+</button>
     `,
   ],
 })
 export class CounterElement extends HTMLElement {
-  @attr()
   @bind()
-  accessor count = 0;
-
-  @bind()
-  accessor show = false;
+  accessor count = {
+    value: 0,
+  };
 
   @listen("click", "#inc")
   onIncrement() {
-    this.count++;
+    this.count = {
+      value: this.count.value + 1,
+    };
   }
 
   @listen("click", "#dec")
   onDecrement() {
-    this.count--;
-  }
-
-  @effect()
-  onCountChange() {
-    this.show = this.count > 10;
-  }
-
-  @effect()
-  onShowChange() {
-    console.log("show", this.show);
+    this.count = {
+      value: this.count.value - 1,
+    };
   }
 }

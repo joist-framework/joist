@@ -26,37 +26,55 @@ export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  @attr()
-  accessor equals = "";
-
   childTemplate: QueryResult<HTMLTemplateElement> = query("template", this);
 
   connectedCallback(): void {
-    const childTemplate = this.childTemplate();
+    const path = this.bind.split(".").slice(1);
 
     this.parentNode?.dispatchEvent(
       new JoistValueEvent(this.bind, (value) => {
         if (value.newValue !== value.oldValue) {
-          const compareTo =
-            this.equals === "true" || this.equals === "false"
-              ? Boolean(this.equals)
-              : this.equals;
-
-          if (
-            !childTemplate.nextSibling && this.equals === ""
-              ? value.newValue
-              : value.newValue === compareTo
-          ) {
-            const res = document.importNode(childTemplate.content, true);
-
-            this.appendChild(res);
-          } else {
-            while (childTemplate.nextSibling) {
-              childTemplate.nextSibling.remove();
+          if (value.newValue) {
+            if (typeof value.newValue === "object") {
+              if (this.getTemplateValue(value.newValue, path)) {
+                this.#render();
+              } else {
+                this.#clear();
+              }
+            } else {
+              this.#render();
             }
+          } else {
+            this.#clear();
           }
         }
       }),
     );
+  }
+
+  getTemplateValue(obj: object, path: string[]): any {
+    let pointer: any = obj;
+
+    for (const part of path) {
+      pointer = pointer[part];
+    }
+
+    return pointer;
+  }
+
+  #clear() {
+    const childTemplate = this.childTemplate();
+
+    while (childTemplate.nextSibling) {
+      childTemplate.nextSibling.remove();
+    }
+  }
+
+  #render() {
+    const childTemplate = this.childTemplate();
+
+    const res = document.importNode(childTemplate.content, true);
+
+    this.appendChild(res);
   }
 }

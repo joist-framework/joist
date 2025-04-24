@@ -20,10 +20,26 @@ export class JoistValueElement extends HTMLElement {
   accessor bind = "";
 
   connectedCallback(): void {
-    this.parentNode?.dispatchEvent(
+    const path = this.bind.split(".").slice(1);
+
+    this.dispatchEvent(
       new JoistValueEvent(this.bind, (value) => {
-        this.innerHTML = String(value.newValue);
+        if (typeof value.newValue === "object" && value.newValue !== null) {
+          this.innerHTML = String(this.getTemplateValue(value.newValue, path));
+        } else {
+          this.innerHTML = String(value.newValue);
+        }
       }),
     );
+  }
+
+  getTemplateValue(obj: object, path: string[]): any {
+    let pointer: any = obj;
+
+    for (const part of path) {
+      pointer = pointer[part];
+    }
+
+    return pointer;
   }
 }

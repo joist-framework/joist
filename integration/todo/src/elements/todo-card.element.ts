@@ -37,7 +37,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
     `,
     html`
       <div id="name">
-        <j-if bind="status" equals="complete">
+        <j-if bind="actionState.showStar">
           <template>
             <span>⭐</span>
           </template>
@@ -49,7 +49,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
       <button id="remove">remove</button>
       
       <button id="complete">
-        <j-value bind="actionValue"></j-value>
+        <j-value bind="actionState.value"></j-value>
       </button>
     `,
   ],
@@ -60,7 +60,10 @@ export class TodoCardElement extends HTMLElement {
   accessor status: TodoStatus = "active";
 
   @bind()
-  accessor actionValue = "complete";
+  accessor actionState = {
+    value: "active",
+    showStar: false,
+  };
 
   @listen("click", "#complete")
   onClick() {
@@ -73,7 +76,10 @@ export class TodoCardElement extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    this.actionValue = this.status === "active" ? "complete" : "active";
+    this.actionState = {
+      value: this.status === "active" ? "complete" : "active",
+      showStar: this.status === "complete",
+    };
   }
 }
 

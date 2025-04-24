@@ -22,7 +22,7 @@ export class JoistIfElement extends HTMLElement {
           .split(":")
           .map((part) => part.trim());
 
-        this.parentNode?.dispatchEvent(
+        this.dispatchEvent(
           new JoistValueEvent(token, (value) => {
             if (this.firstElementChild) {
               Reflect.set(this.firstElementChild, childAttr, value.newValue);
