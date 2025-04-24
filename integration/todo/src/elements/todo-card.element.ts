@@ -39,7 +39,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
       <div id="name">
         <j-if bind="!actionState.showStar">
           <template>
-            <span>⭐</span>
+            <span style="color: red; font-weight: bold;">!</span>
           </template>
         </j-if>
 
