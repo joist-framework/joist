@@ -23,13 +23,35 @@ export class JoistIfElement extends HTMLElement {
           .map((part) => part.trim());
 
         this.dispatchEvent(
-          new JoistValueEvent(token, (value) => {
+          new JoistValueEvent(token, ({ newValue, oldValue }) => {
+            if (newValue === oldValue) {
+              return;
+            }
+
             if (this.firstElementChild) {
-              Reflect.set(this.firstElementChild, childAttr, value.newValue);
+              if (typeof newValue === "object" && newValue !== null) {
+                Reflect.set(
+                  this.firstElementChild,
+                  childAttr,
+                  this.getTemplateValue(newValue, token.split(".").slice(1)),
+                );
+              } else {
+                Reflect.set(this.firstElementChild, childAttr, newValue);
+              }
             }
           }),
         );
       }
     }
+  }
+
+  getTemplateValue(obj: object, path: string[]): any {
+    let pointer: any = obj;
+
+    for (const part of path) {
+      pointer = pointer[part];
+    }
+
+    return pointer;
   }
 }
