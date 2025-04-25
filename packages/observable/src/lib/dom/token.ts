@@ -1,0 +1,34 @@
+export class JToken {
+  rawToken: string;
+  isNegated = false;
+  bindTo: string;
+  path: string[] = [];
+
+  constructor(rawToken: string) {
+    this.rawToken = rawToken;
+
+    this.isNegated = this.rawToken.startsWith("!");
+
+    this.path = this.rawToken.split(".");
+    this.bindTo = this.path.shift() ?? "";
+    this.bindTo = this.bindTo.replaceAll("!", "");
+  }
+
+  readTokenValueFrom<T = unknown>(obj: object): T {
+    let pointer: any = obj;
+
+    if (!this.path.length) {
+      return pointer;
+    }
+
+    for (const part of this.path) {
+      pointer = pointer[part];
+
+      if (pointer === undefined) {
+        break;
+      }
+    }
+
+    return pointer;
+  }
+}

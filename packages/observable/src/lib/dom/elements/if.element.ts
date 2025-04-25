@@ -7,6 +7,7 @@ import {
   query,
 } from "@joist/element";
 
+import { JToken } from "../token.js";
 import { JoistValueEvent } from "../value.events.js";
 
 @element({
@@ -30,16 +31,15 @@ export class JoistIfElement extends HTMLElement {
     // make sure there are no other nodes after the template
     this.#clean();
 
-    const path = this.bind.split(".").slice(1);
-    const isNegative = this.bind.startsWith("!");
+    const token = new JToken(this.bind);
 
     this.dispatchEvent(
-      new JoistValueEvent(this.bind, ({ newValue, oldValue }) => {
+      new JoistValueEvent(token, ({ newValue, oldValue }) => {
         if (newValue && newValue !== oldValue) {
           if (typeof newValue === "object") {
-            this.apply(this.getTemplateValue(newValue, path), isNegative);
+            this.apply(token.readTokenValueFrom(newValue), token.isNegated);
           } else {
-            this.apply(newValue, isNegative);
+            this.apply(newValue, token.isNegated);
           }
         }
       }),

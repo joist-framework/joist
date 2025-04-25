@@ -1,5 +1,6 @@
 import { attr, css, element, html } from "@joist/element";
 
+import { JToken } from "../token.js";
 import { JoistValueEvent } from "../value.events.js";
 
 @element({
@@ -18,26 +19,16 @@ export class JoistValueElement extends HTMLElement {
   accessor bind = "";
 
   connectedCallback(): void {
-    const path = this.bind.split(".").slice(1);
+    const token = new JToken(this.bind);
 
     this.dispatchEvent(
-      new JoistValueEvent(this.bind, (value) => {
+      new JoistValueEvent(token, (value) => {
         if (typeof value.newValue === "object" && value.newValue !== null) {
-          this.innerHTML = String(this.getTemplateValue(value.newValue, path));
+          this.innerHTML = String(token.readTokenValueFrom(value.newValue));
         } else {
           this.innerHTML = String(value.newValue);
         }
       }),
     );
-  }
-
-  getTemplateValue(obj: unknown, path: string[]): any {
-    let pointer: any = obj;
-
-    for (const part of path) {
-      pointer = pointer[part];
-    }
-
-    return pointer;
   }
 }

@@ -1,4 +1,5 @@
 import type { Change } from "../metadata.js";
+import type { JToken } from "./token.js";
 
 declare global {
   interface HTMLElementEventMap {
@@ -7,13 +8,13 @@ declare global {
 }
 
 export class JoistValueEvent extends Event {
-  bindTo: string;
+  token: JToken;
   cb: (value: Change<unknown>) => void;
 
-  constructor(bindTo: string, cb: (value: Change<unknown>) => void) {
+  constructor(bindTo: JToken, cb: (value: Change<unknown>) => void) {
     super("joist::value", { bubbles: true, composed: true });
 
-    this.bindTo = bindTo;
+    this.token = bindTo;
     this.cb = cb;
   }
 }

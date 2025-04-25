@@ -11,9 +11,7 @@ export function bind() {
     return {
       init(value) {
         this.addEventListener("joist::value", (e) => {
-          const bindToken = e.bindTo.split(".").shift()?.replaceAll("!", "");
-
-          if (bindToken === ctx.name) {
+          if (e.token.bindTo === ctx.name) {
             const instanceMeta = instanceMetadataStore.read<This>(this);
 
             e.stopPropagation();

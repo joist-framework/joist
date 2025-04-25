@@ -1,5 +1,6 @@
 import { css, element, html } from "@joist/element";
 
+import { JToken } from "../token.js";
 import { JoistValueEvent } from "../value.events.js";
 
 @element({
@@ -17,10 +18,12 @@ export class JoistIfElement extends HTMLElement {
   connectedCallback(): void {
     for (const attr of this.attributes) {
       if (attr.name.startsWith("#")) {
-        const [token, childAttr] = attr.name
+        const [bindTo, childAttr] = attr.name
           .slice(1)
           .split(":")
           .map((part) => part.trim());
+
+        const token = new JToken(bindTo);
 
         this.dispatchEvent(
           new JoistValueEvent(token, ({ newValue, oldValue }) => {
@@ -33,7 +36,7 @@ export class JoistIfElement extends HTMLElement {
                 Reflect.set(
                   this.firstElementChild,
                   childAttr,
-                  this.getTemplateValue(newValue, token.split(".").slice(1)),
+                  token.readTokenValueFrom(newValue),
                 );
               } else {
                 Reflect.set(this.firstElementChild, childAttr, newValue);
