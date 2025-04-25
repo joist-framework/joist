@@ -14,27 +14,26 @@ import { JoistValueEvent } from "../value.events.js";
   shadowDom: [
     css`
       :host {
-        display: contents
+        display: contents;
       }
     `,
-    html`
-      <slot></slot>
-    `,
+    html` <slot></slot> `,
   ],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  isDisplayed = false;
-
   childTemplate: QueryResult<HTMLTemplateElement> = query("template", this);
 
   connectedCallback(): void {
+    // make sure there are no other nodes after the template
+    this.#clean();
+
     const path = this.bind.split(".").slice(1);
     const isNegative = this.bind.startsWith("!");
 
-    this.parentNode?.dispatchEvent(
+    this.dispatchEvent(
       new JoistValueEvent(this.bind, ({ newValue, oldValue }) => {
         if (newValue && newValue !== oldValue) {
           if (typeof newValue === "object") {
@@ -51,21 +50,13 @@ export class JoistIfElement extends HTMLElement {
     const childTemplate = this.childTemplate();
 
     if (isNegative ? !value : value) {
-      if (this.isDisplayed) {
-        return;
+      if (childTemplate.nextSibling === null) {
+        const res = document.importNode(childTemplate.content, true);
+
+        this.appendChild(res);
       }
-
-      this.isDisplayed = true;
-
-      const res = document.importNode(childTemplate.content, true);
-
-      this.appendChild(res);
     } else {
-      this.isDisplayed = false;
-
-      while (childTemplate.nextSibling) {
-        childTemplate.nextSibling.remove();
-      }
+      this.#clean();
     }
   }
 
@@ -77,5 +68,13 @@ export class JoistIfElement extends HTMLElement {
     }
 
     return pointer;
+  }
+
+  #clean() {
+    const childTemplate = this.childTemplate();
+
+    while (childTemplate.nextSibling) {
+      childTemplate.nextSibling.remove();
+    }
   }
 }

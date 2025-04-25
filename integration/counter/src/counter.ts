@@ -31,7 +31,9 @@ import { bind } from "@joist/observable/dom.js";
     `,
     html`
       <button id="dec">-</button>
+
       <j-value bind="count.value"></j-value>
+
       <button id="inc">+</button>
     `,
   ],

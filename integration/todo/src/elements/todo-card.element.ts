@@ -17,7 +17,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
         flex-grow: 1;
       }
 
-      :host([status='complete']) #name {
+      :host([status="complete"]) #name {
         text-decoration: line-through;
         opacity: 0.5;
       }
@@ -47,7 +47,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
       </div>
 
       <button id="remove">remove</button>
-      
+
       <button id="complete">
         <j-value bind="actionState.value"></j-value>
       </button>

@@ -7,12 +7,10 @@ import { JoistValueEvent } from "../value.events.js";
   shadowDom: [
     css`
       :host {
-        display: contents
+        display: contents;
       }
     `,
-    html`
-      <slot></slot>
-    `,
+    html` <slot></slot> `,
   ],
 })
 export class JoistValueElement extends HTMLElement {
@@ -33,7 +31,7 @@ export class JoistValueElement extends HTMLElement {
     );
   }
 
-  getTemplateValue(obj: object, path: string[]): any {
+  getTemplateValue(obj: unknown, path: string[]): any {
     let pointer: any = obj;
 
     for (const part of path) {
