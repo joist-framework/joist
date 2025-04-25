@@ -12,14 +12,7 @@ import { JoistValueEvent } from "../value.events.js";
 
 @element({
   tagName: "j-if",
-  shadowDom: [
-    css`
-      :host {
-        display: contents;
-      }
-    `,
-    html` <slot></slot> `,
-  ],
+  shadowDom: [css`:host { display: contents }`, html`<slot></slot>`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
@@ -51,6 +44,7 @@ export class JoistIfElement extends HTMLElement {
 
     if (isNegative ? !value : value) {
       if (childTemplate.nextSibling === null) {
+        // only clone the template if it is not already in the DOM
         const res = document.importNode(childTemplate.content, true);
 
         this.appendChild(res);
@@ -58,16 +52,6 @@ export class JoistIfElement extends HTMLElement {
     } else {
       this.#clean();
     }
-  }
-
-  getTemplateValue(obj: object, path: string[]): any {
-    let pointer: any = obj;
-
-    for (const part of path) {
-      pointer = pointer[part];
-    }
-
-    return pointer;
   }
 
   #clean() {
