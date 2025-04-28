@@ -10,6 +10,12 @@ import {
 import { JToken } from "../token.js";
 import { JoistValueEvent } from "../value.events.js";
 
+declare global {
+  interface HTMLElementTagNameMap {
+    "j-if": JoistIfElement;
+  }
+}
+
 @element({
   tagName: "j-if",
   shadowDom: [css`:host { display: contents }`, html`<slot></slot>`],
@@ -28,8 +34,8 @@ export class JoistIfElement extends HTMLElement {
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
-        if (newValue && newValue !== oldValue) {
-          if (typeof newValue === "object") {
+        if (newValue !== oldValue) {
+          if (typeof newValue === "object" && newValue !== null) {
             this.apply(token.readTokenValueFrom(newValue), token.isNegated);
           } else {
             this.apply(newValue, token.isNegated);
