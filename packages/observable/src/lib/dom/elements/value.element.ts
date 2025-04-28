@@ -1,7 +1,7 @@
 import { attr, css, element, html } from "@joist/element";
 
+import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
-import { JoistValueEvent } from "../value.events.js";
 
 declare global {
   interface HTMLElementTagNameMap {
