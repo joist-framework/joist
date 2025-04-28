@@ -43,8 +43,8 @@ export class JoistIfElement extends HTMLElement {
     const childTemplate = this.childTemplate();
 
     if (isNegative ? !value : value) {
+      // only clone the template if it is not already in the DOM
       if (childTemplate.nextSibling === null) {
-        // only clone the template if it is not already in the DOM
         const res = document.importNode(childTemplate.content, true);
 
         this.appendChild(res);

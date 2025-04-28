@@ -16,11 +16,11 @@ import { type HnItem, HnService } from "../services/hn.service.js";
     html`
       <j-for bind="stories">
         <template>
-          <j-attr #by:author #descendants:comments #score:points #url:href>
+          <j-props #by:author #descendants:comments #score:points #url:href>
             <hn-news-card>
               <j-value bind="title"></j-value>
             </hn-news-card>
-          </j-attr>
+          </j-props>
         </template>
       </j-for>
     `,

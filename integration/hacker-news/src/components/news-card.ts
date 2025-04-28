@@ -38,19 +38,19 @@ import { bind } from "@joist/observable/dom.js";
 
       <div>
         <div class="title-box">
-          <j-attr #href:href>
+          <j-props #href:href>
             <a id="title" target="_blank">
               <slot></slot>
             </a>
-          </j-attr>
+          </j-props>
 
           <j-if bind="href">
             <template>
-              <j-attr #href:href>
+              <j-props #href:href>
                 <a target="_blank">
                   (<j-value bind="host"></j-value>)
                 </a>
-              </j-attr>
+              </j-props>
             </template>
           </j-if>
         </div>

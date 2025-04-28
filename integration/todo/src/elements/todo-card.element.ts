@@ -56,7 +56,6 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
 })
 export class TodoCardElement extends HTMLElement {
   @attr()
-  @bind()
   accessor status: TodoStatus = "active";
 
   @bind()

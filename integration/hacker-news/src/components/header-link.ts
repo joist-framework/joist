@@ -26,11 +26,11 @@ import { bind } from "@joist/observable/dom.js";
       }
     `,
     html`
-      <j-attr #href:href>
+      <j-props #href:href>
         <a>
           <slot></slot>
         </a>
-      </j-attr>
+      </j-props>
     `,
   ],
 })

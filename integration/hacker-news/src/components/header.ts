@@ -30,9 +30,9 @@ import { bind } from "@joist/observable/dom.js";
       }
     `,
     html`
-      <j-attr #img:src>
+      <j-props #img:src>
         <img aria-hidden="true" height="20" width="20" />
-      </j-attr>
+      </j-props>
 
       <h1>Hacker News</h1>
 
