@@ -22,6 +22,7 @@ it("should render content when the bind value is truthy", () => {
 it("should not render content when the bind value is falsy", () => {
   const element = fixtureSync(html`
     <div @joist::value=${(e: JoistValueEvent) => {
+      e.cb({ oldValue: null, newValue: true });
       e.cb({ oldValue: null, newValue: false });
     }}>
       <j-if bind="test">
