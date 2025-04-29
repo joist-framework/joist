@@ -30,7 +30,7 @@ export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
 
   @bind()
-  accessor stories: HnItem[] | null = null;
+  accessor stories: HnItem[] = [];
 
   @injected()
   async onInjected() {
