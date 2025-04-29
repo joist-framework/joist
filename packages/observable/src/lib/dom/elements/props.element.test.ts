@@ -11,7 +11,7 @@ it("should pass props to child", () => {
       if (e.token.bindTo === "href") {
         e.cb({
           oldValue: null,
-          newValue: "#foo",
+          newValue: "$foo",
         });
       }
 
@@ -24,7 +24,7 @@ it("should pass props to child", () => {
         });
       }
     }}>
-      <j-props #href:href #target.value:target>
+      <j-props $href:href $target.value:target>
         <a>Hello World</a>
       </j-props>
     </div>
@@ -32,7 +32,7 @@ it("should pass props to child", () => {
 
   const anchor = element.querySelector("a");
 
-  assert.equal(anchor?.getAttribute("href"), "#foo");
+  assert.equal(anchor?.getAttribute("href"), "$foo");
   assert.equal(anchor?.getAttribute("target"), "_blank");
 });
 
@@ -41,10 +41,10 @@ it("should pass props to specified child", () => {
     <div @joist::value=${(e: JoistValueEvent) => {
       e.cb({
         oldValue: null,
-        newValue: "#foo",
+        newValue: "$foo",
       });
     }}>
-      <j-props target="#test" #href:href>
+      <j-props target="#test" $href:href>
         <a>Default</a>
         <a id="test">Target</a>
       </j-props>
@@ -54,5 +54,5 @@ it("should pass props to specified child", () => {
   const anchor = element.querySelectorAll("a");
 
   assert.equal(anchor[0].getAttribute("href"), null);
-  assert.equal(anchor[1].getAttribute("href"), "#foo");
+  assert.equal(anchor[1].getAttribute("href"), "$foo");
 });
