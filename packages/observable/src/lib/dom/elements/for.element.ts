@@ -1,53 +1,36 @@
-import { attr, css, element, html, listen, query } from "@joist/element";
+import { attr, css, element, html, query } from "@joist/element";
 
-import type { Changes } from "../../metadata.js";
-import { effect, observe } from "../../observe.js";
+import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 
 declare global {
   interface HTMLElementTagNameMap {
     "j-for": JositForElement;
-    "j-scope": JScope;
+    "j-scope": JForScope;
+    "j-for-scope": JForScope;
   }
 }
-
-type ForScopeItem = Record<string | symbol, unknown>;
 
 @element({
   tagName: "j-scope",
   shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
 })
-export class JScope extends HTMLElement {
-  @observe()
-  accessor context: ForScopeItem = {};
+export class JScope<T = unknown> extends HTMLElement {
+  @bind()
+  accessor value: T | null = null;
+}
 
-  #ctxEvent: JoistValueEvent | null = null;
+@element({
+  tagName: "j-for-scope",
+  shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
+})
+export class JForScope<T = unknown> extends JScope<T> {
+  @bind()
+  accessor index: number | null = null;
 
-  @listen("joist::value", (host) => host)
-  onValue(event: JoistValueEvent): void {
-    if (event.token.bindTo in this.context) {
-      event.stopPropagation();
-
-      this.#ctxEvent = event;
-
-      event.cb({ oldValue: null, newValue: this.context[event.token.bindTo] });
-    }
-  }
-
-  @effect()
-  onContextChange(changes: Changes<this>): void {
-    if (this.#ctxEvent) {
-      const change = changes.get("context");
-
-      if (change) {
-        this.#ctxEvent.cb({
-          oldValue: change.oldValue,
-          newValue: this.context[this.#ctxEvent.token.bindTo],
-        });
-      }
-    }
-  }
+  @bind()
+  accessor number: number | null = null;
 }
 
 @element({
@@ -58,7 +41,7 @@ export class JositForElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  #items: any[] = [];
+  #items: Iterable<unknown> = [];
   #template = query("template", this);
 
   connectedCallback(): void {
@@ -67,7 +50,13 @@ export class JositForElement extends HTMLElement {
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
         if (newValue !== oldValue) {
-          this.#items = Array.isArray(newValue) ? newValue : [];
+          if (isIterable(newValue)) {
+            this.#items = newValue;
+          } else {
+            this.#items = [];
+          }
+
+          // this.#items = newValue;
           this.render();
         }
       }),
@@ -75,19 +64,25 @@ export class JositForElement extends HTMLElement {
   }
 
   render(): void {
-    const template = this.#template();
-
     this.clear();
 
+    const template = this.#template();
     const children = document.createDocumentFragment();
 
+    let index = 0;
+
     for (const item of this.#items) {
-      const scope = new JScope();
+      const scope = new JForScope();
+
       scope.append(document.importNode(template.content, true));
 
-      scope.context = item;
+      scope.number = index + 1;
+      scope.index = index;
+      scope.value = item;
 
       children.appendChild(scope);
+
+      index++;
     }
 
     template.after(children);
@@ -100,4 +95,8 @@ export class JositForElement extends HTMLElement {
       template.nextSibling.remove();
     }
   }
+}
+
+function isIterable<T = unknown>(obj: any): obj is Iterable<T> {
+  return obj != null && typeof obj[Symbol.iterator] === "function";
 }

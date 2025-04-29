@@ -16,9 +16,15 @@ import { type HnItem, HnService } from "../services/hn.service.js";
     html`
       <j-for bind="stories">
         <template>
-          <j-props #number:number #by:author #descendants:comments #score:points #url:href>
+          <j-props
+            $number:number 
+            $value.by:author 
+            $value.descendants:comments 
+            $value.score:points 
+            $value.url:href
+          >
             <hn-news-card>
-              <j-value bind="title"></j-value>
+              <j-value bind="value.title"></j-value>
             </hn-news-card>
           </j-props>
         </template>

@@ -7,8 +7,8 @@ export class JAttrToken extends JToken {
   mapToAttr: string;
 
   constructor(raw: string) {
-    if (!raw.startsWith("#")) {
-      throw new Error(`Invalid attribute token: ${raw}, should start with #`);
+    if (!raw.startsWith("$")) {
+      throw new Error(`Invalid attribute token: ${raw}, should start with $`);
     }
 
     const parsed = raw
@@ -58,7 +58,7 @@ export class JoistIfElement extends HTMLElement {
 
   connectedCallback(): void {
     for (const attr of this.attributes) {
-      if (attr.name.startsWith("#")) {
+      if (attr.name.startsWith("$")) {
         const token = new JAttrToken(attr.name);
 
         this.dispatchEvent(
