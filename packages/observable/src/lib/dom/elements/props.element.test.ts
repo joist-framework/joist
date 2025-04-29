@@ -41,7 +41,7 @@ it("should pass props to specified child", () => {
     <div @joist::value=${(e: JoistValueEvent) => {
       e.cb({
         oldValue: null,
-        newValue: "$foo",
+        newValue: "#foo",
       });
     }}>
       <j-props target="#test" $href:href>
@@ -54,5 +54,5 @@ it("should pass props to specified child", () => {
   const anchor = element.querySelectorAll("a");
 
   assert.equal(anchor[0].getAttribute("href"), null);
-  assert.equal(anchor[1].getAttribute("href"), "$foo");
+  assert.equal(anchor[1].getAttribute("href"), "#foo");
 });
