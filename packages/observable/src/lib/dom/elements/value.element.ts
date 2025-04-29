@@ -11,7 +11,7 @@ declare global {
 
 @element({
   tagName: "j-value",
-  shadowDom: [css`:host { display: contents }`, html`<slot></slot>`],
+  shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
 })
 export class JoistValueElement extends HTMLElement {
   @attr()

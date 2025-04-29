@@ -3,7 +3,7 @@ import { attr, css, element, html } from "@joist/element";
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 
-class JAttrToken extends JToken {
+export class JAttrToken extends JToken {
   mapToAttr: string;
 
   constructor(raw: string) {
@@ -30,7 +30,7 @@ class JAttrToken extends JToken {
 
 @element({
   tagName: "j-props",
-  shadowDom: [css`:host { display: contents }`, html`<slot></slot>`],
+  shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
