@@ -8,9 +8,7 @@ class JAttrToken extends JToken {
 
   constructor(raw: string) {
     if (!raw.startsWith("#")) {
-      throw new Error(
-        `Invalid attribute token: ${raw}, should be in the form #attrName:attrValue`,
-      );
+      throw new Error(`Invalid attribute token: ${raw}, should start with #`);
     }
 
     const parsed = raw
@@ -26,7 +24,7 @@ class JAttrToken extends JToken {
 
     super(parsed[0]);
 
-    this.mapToAttr = parsed[0];
+    this.mapToAttr = parsed[1];
   }
 }
 
@@ -61,7 +59,7 @@ export class JoistIfElement extends HTMLElement {
   connectedCallback(): void {
     for (const attr of this.attributes) {
       if (attr.name.startsWith("#")) {
-        const token = new JAttrToken(attr.value);
+        const token = new JAttrToken(attr.name);
 
         this.dispatchEvent(
           new JoistValueEvent(token, ({ newValue, oldValue }) => {
