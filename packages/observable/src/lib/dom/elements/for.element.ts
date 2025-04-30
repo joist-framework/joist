@@ -56,7 +56,6 @@ export class JositForElement extends HTMLElement {
             this.#items = [];
           }
 
-          // this.#items = newValue;
           this.render();
         }
       }),

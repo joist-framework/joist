@@ -1,5 +1,4 @@
 import { attr, css, element, html } from "@joist/element";
-import { template } from "@joist/element/template.js";
 import { bind } from "@joist/observable/dom.js";
 
 @element({
@@ -30,7 +29,7 @@ import { bind } from "@joist/observable/dom.js";
       }
     `,
     html`
-      <j-props #img:src>
+      <j-props $img:src>
         <img aria-hidden="true" height="20" width="20" />
       </j-props>
 
@@ -49,10 +48,4 @@ export class HnHeader extends HTMLElement {
   @attr()
   @bind()
   accessor img = "/public/images/y18.svg";
-
-  #render = template();
-
-  attributeChangedCallback() {
-    this.#render();
-  }
 }
