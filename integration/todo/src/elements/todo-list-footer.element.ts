@@ -1,6 +1,7 @@
 import { inject, injectable } from "@joist/di";
 import { css, element, html } from "@joist/element";
 
+import { bind } from "@joist/observable/dom.js";
 import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
@@ -69,7 +70,9 @@ class PluralRules extends Intl.PluralRules {}
       }
     `,
     html`
-      <div id="footer"><slot></slot> left</div>
+      <div id="footer">
+        <j-value bind="totalActive"></j-value> left
+      </div>
 
       <div id="decoration"></div>
     `,
@@ -80,11 +83,14 @@ export class TodoListFooterElement extends HTMLElement {
   #pr = inject(PluralRules);
   #controller = new AbortController();
 
+  @bind()
+  accessor totalActive = "0 items";
+
   connectedCallback() {
     const todo = this.#todo();
 
     const onTodoUpdate = async () => {
-      this.innerHTML = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
+      this.totalActive = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
     };
 
     onTodoUpdate();

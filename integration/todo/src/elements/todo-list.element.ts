@@ -2,11 +2,7 @@ import { inject, injectable } from "@joist/di";
 import { css, element, html, listen } from "@joist/element";
 
 import { bind } from "@joist/observable/dom.js";
-import {
-  type Todo,
-  TodoService,
-  TodoSyncEvent,
-} from "../services/todo.service.js";
+import { type Todo, TodoService } from "../services/todo.service.js";
 import { TodoCardElement } from "./todo-card.element.js";
 
 @injectable()
@@ -51,10 +47,8 @@ export class TodoListElement extends HTMLElement {
   async connectedCallback() {
     const service = this.#todo();
 
-    service.addEventListener("todo_sync", (e) => {
-      if (e instanceof TodoSyncEvent) {
-        this.todos = e.todos;
-      }
+    service.addEventListener("todo_sync", () => {
+      this.todos = service.todos;
     });
   }
 
