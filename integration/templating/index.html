@@ -1,62 +1,91 @@
 <!doctype html>
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
 
-    <script type="importmap">
-      {
-        "imports": {
-          "@joist/element": "/node_modules/@joist/element/target/lib.js",
-          "@joist/element/": "/node_modules/@joist/element/target/lib/"
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@joist/di": "/node_modules/@joist/di/target/lib.js",
+        "@joist/di/": "/node_modules/@joist/di/target/lib/",
+        "@joist/element": "/node_modules/@joist/element/target/lib.js",
+        "@joist/element/": "/node_modules/@joist/element/target/lib/",
+        "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
+        "@joist/observable/": "/node_modules/@joist/observable/target/lib/",
+        "tslib": "/node_modules/tslib/tslib.es6.js"
+      }
+    }
+  </script>
+
+  <title>Template Test</title>
+</head>
+
+<body>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.4em;
+    }
+  </style>
+
+  <h1>
+    <j-value bind="greeting"></j-value>
+    <j-value bind="counter"></j-value>
+  </h1>
+
+  <j-for bind="items">
+    <template>
+      <li>
+        <j-value bind="value.label"></j-value>
+      </li>
+    </template>
+  </j-for>
+
+  <script type="module">
+    const model = new Proxy({
+      bindings: {},
+      greeting: "Hello World",
+      counter: 0,
+      items: ["first", "second", "third", "fourth", "fifth"]
+    }, {
+      get(target, prop) {
+        return target[prop];
+      },
+      set(target, prop, newValue) {
+        const oldValue = target[prop];
+
+        target[prop] = newValue;
+
+        if (target.bindings[prop]) {
+          target.bindings[prop]({ oldValue: oldValue, newValue });
         }
+
+        return true;
       }
-    </script>
+    });
 
-    <title>Template Test</title>
-  </head>
+    setInterval(() => model.counter++, 1000);
 
-  <body>
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
+    // bind all values globally
+    document.addEventListener("joist::value", (event) => {
+      const res = model[event.token.bindTo];
+
+      if (res !== undefined) {
+        model.bindings[event.token.bindTo] = event.cb; // store binding callback
+        event.cb({ oldValue: null, newValue: res }) // call binding callback with initial value
       }
+    });
+  </script>
 
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        line-height: 1.4em;
-      }
-    </style>
+  <script type="module">
+    import "@joist/observable/dom/define.js";
+  </script>
+</body>
 
-    <h1 #:bind="greeting"></h1>
-
-    <ul #:hidden="hideList">
-      <li #:bind="items.0"></li>
-      <li #:bind="items.1"></li>
-      <li #:bind="items.2"></li>
-      <li #:bind="items.3"></li>
-      <li #:bind="items.4"></li>
-    </ul>
-
-    <script type="module">
-      import { template, getTemplateValue } from '@joist/element/template.js';
-
-      const data = {
-        hideList: false,
-        greeting: 'Hello World',
-        items: ['first', 'second', 'third', 'fourth', 'fifth']
-      };
-
-      const render = template({
-        value: (key) => getTemplateValue(data, key)
-      }).bind(document.body);
-
-      render();
-    </script>
-  </body>
 </html>

@@ -14,6 +14,12 @@ import { type HnItem, HnService } from "../services/hn.service.js";
       }
     `,
     html`
+      <j-if bind="isLoading">
+        <template>
+          <hn-loading></hn-loading>
+        </template>
+      </j-if>
+
       <j-for bind="stories">
         <template>
           <j-props
@@ -38,10 +44,15 @@ export class HnNewsFeed extends HTMLElement {
   @bind()
   accessor stories: HnItem[] = [];
 
+  @bind()
+  accessor isLoading = true;
+
   @injected()
   async onInjected() {
     const hn = this.#hn();
 
     this.stories = await hn.getTopStories();
+
+    this.isLoading = false;
   }
 }

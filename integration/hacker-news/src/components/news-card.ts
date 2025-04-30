@@ -38,7 +38,7 @@ import { bind } from "@joist/observable/dom.js";
 
       <div>
         <div class="title-box">
-          <j-props #href:href>
+          <j-props $href:href>
             <a id="title" target="_blank">
               <slot></slot>
             </a>
@@ -46,7 +46,7 @@ import { bind } from "@joist/observable/dom.js";
 
           <j-if bind="href">
             <template>
-              <j-props #href:href>
+              <j-props $href:href>
                 <a target="_blank">
                   (<j-value bind="host"></j-value>)
                 </a>

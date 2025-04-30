@@ -36,7 +36,7 @@ export class TodoRemovedEvent extends Event {
 }
 
 export class TodoSyncEvent extends Event {
-  constructor() {
+  constructor(public todos: Todo[]) {
     super("todo_sync");
   }
 }
@@ -62,7 +62,7 @@ export class TodoService extends EventTarget {
       0,
     );
 
-    this.dispatchEvent(new TodoSyncEvent());
+    this.dispatchEvent(new TodoSyncEvent(this.#todos));
   }
 
   async getTodos(): Promise<Todo[]> {
