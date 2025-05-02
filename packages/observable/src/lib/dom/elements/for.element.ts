@@ -70,13 +70,10 @@ export class JositForElement extends HTMLElement {
 
   #items: Iterable<unknown> = [];
   #template = query("template", this);
+  #scopes = new Map<unknown, JForScope>();
 
   connectedCallback(): void {
     const token = new JToken(this.bind);
-
-    if (this.firstElementChild?.tagName !== "TEMPLATE") {
-      throw new Error("j-for element must have a template as its first child");
-    }
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
@@ -95,15 +92,7 @@ export class JositForElement extends HTMLElement {
 
   updateItems(): void {
     const template = this.#template();
-    const existingScopes = new Map<unknown, JForScope>();
-
-    // Collect existing scopes
-    let currentNode = template.nextElementSibling;
-
-    while (currentNode instanceof JForScope) {
-      existingScopes.set(currentNode.key, currentNode);
-      currentNode = currentNode.nextElementSibling;
-    }
+    const leftoverScopes = new Map<unknown, JForScope>(this.#scopes);
 
     let index = 0;
 
@@ -111,13 +100,13 @@ export class JositForElement extends HTMLElement {
       const key =
         this.key && hasProperty(item, this.key) ? item[this.key] : index;
 
-      let scope = existingScopes.get(key);
+      let scope = leftoverScopes.get(key);
 
       if (!scope) {
         scope = new JForScope();
         scope.append(document.importNode(template.content, true));
       } else {
-        existingScopes.delete(key); // Remove from map to track unused scopes
+        leftoverScopes.delete(key); // Remove from map to track unused scopes
       }
 
       scope.number = index + 1;
@@ -126,31 +115,32 @@ export class JositForElement extends HTMLElement {
       scope.key = String(key);
 
       if (!this.contains(scope)) {
-        // skip first element since it should be the template
         const child = this.children[index + 1];
 
         if (child) {
-          scope.before(child);
+          child.before(scope);
         } else {
           this.append(scope);
         }
+
+        this.#scopes.set(key, scope);
       }
 
       index++;
     }
 
     // Remove unused scopes
-    for (const [_, scope] of existingScopes) {
+    for (const [_, scope] of leftoverScopes) {
       scope.remove();
     }
   }
 
-  clear(): void {
-    const template = this.#template();
-
-    while (template.nextSibling) {
-      template.nextSibling.remove();
+  disconnectedCallback(): void {
+    for (const scope of this.#scopes.values()) {
+      scope.remove();
     }
+
+    this.#scopes.clear();
   }
 }
 
