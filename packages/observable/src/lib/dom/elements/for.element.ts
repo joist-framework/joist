@@ -65,7 +65,7 @@ export class JositForElement extends HTMLElement {
   connectedCallback(): void {
     const template = this.#template();
 
-    if (this.firstChild !== template) {
+    if (this.firstElementChild !== template) {
       throw new Error("The first Node in j-for needs to be a template");
     }
 
@@ -112,7 +112,7 @@ export class JositForElement extends HTMLElement {
         value: item,
       };
 
-      if (!this.contains(scope)) {
+      if (!scope.isConnected) {
         const child = this.children[index + 1];
 
         if (child) {
