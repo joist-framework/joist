@@ -7,25 +7,27 @@ import type { JoistValueEvent } from "../events.js";
 
 it("should pass props to child", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      if (e.token.bindTo === "href") {
-        e.cb({
-          oldValue: null,
-          newValue: "$foo",
-        });
-      }
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        if (e.token.bindTo === "href") {
+          e.cb({
+            oldValue: null,
+            newValue: "$foo",
+          });
+        }
 
-      if (e.token.bindTo === "target") {
-        e.cb({
-          oldValue: null,
-          newValue: {
-            value: "_blank",
-          },
-        });
-      }
-    }}>
-      <j-props $href:href $target.value:target>
-        <a>Hello World</a>
+        if (e.token.bindTo === "target") {
+          e.cb({
+            oldValue: null,
+            newValue: {
+              value: "_blank",
+            },
+          });
+        }
+      }}
+    >
+      <j-props>
+        <a $href="href" $target="target.value">Hello World</a>
       </j-props>
     </div>
   `);
@@ -38,15 +40,17 @@ it("should pass props to child", () => {
 
 it("should pass props to specified child", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      e.cb({
-        oldValue: null,
-        newValue: "#foo",
-      });
-    }}>
-      <j-props target="#test" $href:href>
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.cb({
+          oldValue: null,
+          newValue: "#foo",
+        });
+      }}
+    >
+      <j-props>
         <a>Default</a>
-        <a id="test">Target</a>
+        <a id="test" $href="href">Target</a>
       </j-props>
     </div>
   `);

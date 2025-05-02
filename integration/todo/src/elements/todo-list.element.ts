@@ -38,7 +38,6 @@ import { TodoCardElement } from "./todo-card.element.js";
   ],
 })
 export class TodoListElement extends HTMLElement {
-  // #controller: AbortController | null = null;
   #todo = inject(TodoService);
 
   @bind()
