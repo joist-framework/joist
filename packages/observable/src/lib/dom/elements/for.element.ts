@@ -58,11 +58,17 @@ export class JositForElement extends HTMLElement {
   @attr()
   accessor key = "";
 
-  #items: Iterable<unknown> = [];
   #template = query("template", this);
+  #items: Iterable<unknown> = [];
   #scopes = new Map<unknown, JForScope>();
 
   connectedCallback(): void {
+    const template = this.#template();
+
+    if (this.firstChild !== template) {
+      throw new Error("The first Node in j-for needs to be a template");
+    }
+
     const token = new JToken(this.bind);
 
     this.dispatchEvent(
@@ -133,6 +139,7 @@ export class JositForElement extends HTMLElement {
     }
 
     this.#scopes.clear();
+    this.#items = [];
   }
 }
 
