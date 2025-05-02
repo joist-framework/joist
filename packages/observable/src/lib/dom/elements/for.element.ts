@@ -57,6 +57,13 @@ export class JositForElement extends HTMLElement {
       throw new Error("The first Node in j-for needs to be a template");
     }
 
+    let currentScope = template.nextElementSibling;
+
+    while (currentScope instanceof JForScope) {
+      this.#scopes.set(currentScope.key, currentScope);
+      currentScope = currentScope.nextElementSibling;
+    }
+
     const token = new JToken(this.bind);
 
     this.dispatchEvent(

@@ -29,16 +29,16 @@ import { type HnItem, HnService } from "../services/hn.service.js";
         </template>
       </j-if>
 
-      <j-for bind="stories">
+      <j-for bind="stories" key="id">
         <template>
-          <j-props
-            $each.position:number
-            $each.value.by:author
-            $each.value.descendants:comments
-            $each.value.score:points
-            $each.value.url:href
-          >
-            <hn-news-card>
+          <j-props>
+            <hn-news-card
+              $.number="each.position"
+              $.author="each.value.by"
+              $.comments="each.value.descendants"
+              $.points="each.value.score"
+              $.href="each.value.url"
+            >
               <j-value bind="each.value.title"></j-value>
             </hn-news-card>
           </j-props>

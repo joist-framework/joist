@@ -4,27 +4,21 @@ import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 
 export class JAttrToken extends JToken {
-  mapToAttr: string;
+  mapTo: string;
+  mapsToProp: boolean;
 
-  constructor(raw: string) {
-    if (!raw.startsWith("$")) {
-      throw new Error(`Invalid attribute token: ${raw}, should start with $`);
-    }
-
-    const parsed = raw
-      .slice(1)
-      .split(":")
-      .map((part) => part.trim());
-
-    if (parsed.length !== 2) {
+  constructor(attr: Attr) {
+    if (!attr.name.startsWith("$")) {
       throw new Error(
-        `Invalid attribute token: ${raw}, should be in the form #attrName:attrValue`,
+        `Invalid attribute token: ${attr.name}, should start with $`,
       );
     }
 
-    super(parsed[0]);
+    super(attr.value);
 
-    this.mapToAttr = parsed[1];
+    this.mapsToProp = attr.name.startsWith("$.");
+
+    this.mapTo = attr.name.slice(this.mapsToProp ? 2 : 1);
   }
 }
 
@@ -37,46 +31,32 @@ export class JoistIfElement extends HTMLElement {
   @attr()
   accessor target = "";
 
-  #targetElement: Element | null = null;
-
-  get targetElement(): Element {
-    if (this.#targetElement) {
-      return this.#targetElement;
-    }
-
-    if (this.target) {
-      this.#targetElement = this.querySelector(this.target);
-    } else {
-      this.#targetElement = this.firstElementChild;
-    }
-
-    if (!this.#targetElement) {
-      throw new Error("Target element not found");
-    }
-
-    return this.#targetElement;
-  }
-
   connectedCallback(): void {
-    for (const attr of this.attributes) {
-      if (attr.name.startsWith("$")) {
-        const token = new JAttrToken(attr.name);
+    for (const child of this.children) {
+      for (const attr of child.attributes) {
+        if (attr.name.startsWith("$")) {
+          const token = new JAttrToken(attr);
 
-        this.dispatchEvent(
-          new JoistValueEvent(token, ({ newValue, oldValue }) => {
-            if (newValue === oldValue) {
-              return;
-            }
+          this.dispatchEvent(
+            new JoistValueEvent(token, ({ newValue, oldValue }) => {
+              if (newValue === oldValue) {
+                return;
+              }
 
-            let valueToWrite = newValue;
+              let valueToWrite = newValue;
 
-            if (typeof newValue === "object" && newValue !== null) {
-              valueToWrite = token.readTokenValueFrom(newValue);
-            }
+              if (typeof newValue === "object" && newValue !== null) {
+                valueToWrite = token.readTokenValueFrom(newValue);
+              }
 
-            Reflect.set(this.targetElement, token.mapToAttr, valueToWrite);
-          }),
-        );
+              if (token.mapsToProp) {
+                Reflect.set(child, token.mapTo, valueToWrite);
+              } else {
+                child.setAttribute(token.mapTo, String(valueToWrite));
+              }
+            }),
+          );
+        }
       }
     }
   }

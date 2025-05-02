@@ -29,8 +29,8 @@ import { bind } from "@joist/observable/dom.js";
       }
     `,
     html`
-      <j-props $img:src>
-        <img aria-hidden="true" height="20" width="20" />
+      <j-props>
+        <img $.src="img" aria-hidden="true" height="20" width="20" />
       </j-props>
 
       <h1>Hacker News</h1>
