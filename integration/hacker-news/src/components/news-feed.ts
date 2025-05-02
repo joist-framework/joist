@@ -12,25 +12,34 @@ import { type HnItem, HnService } from "../services/hn.service.js";
       :host {
         display: contents;
       }
+
+      .loading-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem;
+      }
     `,
     html`
       <j-if bind="isLoading">
         <template>
-          <hn-loading></hn-loading>
+          <div class="loading-container">
+            <hn-loading></hn-loading>
+          </div>
         </template>
       </j-if>
 
       <j-for bind="stories">
         <template>
           <j-props
-            $number:number 
-            $value.by:author 
-            $value.descendants:comments 
-            $value.score:points 
-            $value.url:href
+            $each.position:number
+            $each.value.by:author
+            $each.value.descendants:comments
+            $each.value.score:points
+            $each.value.url:href
           >
             <hn-news-card>
-              <j-value bind="value.title"></j-value>
+              <j-value bind="each.value.title"></j-value>
             </hn-news-card>
           </j-props>
         </template>
