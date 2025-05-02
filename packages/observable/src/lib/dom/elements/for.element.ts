@@ -19,14 +19,8 @@ export interface EachCtx<T> {
 
 @element({
   tagName: "j-for-scope",
-  shadowDom: [
-    css`
-      :host {
-        display: contents;
-      }
-    `,
-    html`<slot></slot>`,
-  ],
+  // prettier-ignore
+  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })
 export class JForScope<T = unknown> extends HTMLElement {
   @bind()
@@ -42,14 +36,8 @@ export class JForScope<T = unknown> extends HTMLElement {
 
 @element({
   tagName: "j-for",
-  shadowDom: [
-    css`
-      :host {
-        display: contents;
-      }
-    `,
-    html`<slot></slot>`,
-  ],
+  // prettier-ignore
+  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })
 export class JositForElement extends HTMLElement {
   @attr()
@@ -127,7 +115,7 @@ export class JositForElement extends HTMLElement {
     }
 
     // Remove unused scopes
-    for (const [_, scope] of leftoverScopes) {
+    for (const scope of leftoverScopes.values()) {
       scope.remove();
     }
   }
