@@ -18,7 +18,8 @@ declare global {
 
 @element({
   tagName: "j-if",
-  shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
+  // prettier-ignore
+  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
