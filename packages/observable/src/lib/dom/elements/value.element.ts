@@ -11,7 +11,14 @@ declare global {
 
 @element({
   tagName: "j-value",
-  shadowDom: [css`:host{display:contents}`, html`<slot></slot>`],
+  shadowDom: [
+    css`
+      :host {
+        display: contents;
+      }
+    `,
+    html`<slot></slot>`,
+  ],
 })
 export class JoistValueElement extends HTMLElement {
   @attr()
@@ -22,10 +29,16 @@ export class JoistValueElement extends HTMLElement {
 
     this.dispatchEvent(
       new JoistValueEvent(token, (value) => {
+        let valueToWrite: string;
+
         if (typeof value.newValue === "object" && value.newValue !== null) {
-          this.innerHTML = String(token.readTokenValueFrom(value.newValue));
+          valueToWrite = String(token.readTokenValueFrom(value.newValue));
         } else {
-          this.innerHTML = String(value.newValue);
+          valueToWrite = String(value.newValue);
+        }
+
+        if (this.textContent !== valueToWrite) {
+          this.textContent = valueToWrite;
         }
       }),
     );

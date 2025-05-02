@@ -7,7 +7,7 @@ export type TodoStatus = "active" | "complete";
 
 export class Todo {
   static create(name: string, status: TodoStatus) {
-    return new Todo(`todo--${crypto.randomUUID()}`, name, status);
+    return new Todo(crypto.randomUUID(), name, status);
   }
 
   constructor(
@@ -69,7 +69,7 @@ export class TodoService extends EventTarget {
   }
 
   addTodo(todo: Todo) {
-    this.#todos = [...this.#todos, todo];
+    this.#todos = [todo, ...this.#todos];
   }
 
   removeTodo(id: string) {
