@@ -74,6 +74,10 @@ export class JositForElement extends HTMLElement {
   connectedCallback(): void {
     const token = new JToken(this.bind);
 
+    if (this.firstElementChild?.tagName !== "TEMPLATE") {
+      throw new Error("j-for element must have a template as its first child");
+    }
+
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
         if (newValue !== oldValue) {
@@ -122,7 +126,14 @@ export class JositForElement extends HTMLElement {
       scope.key = String(key);
 
       if (!this.contains(scope)) {
-        this.append(scope);
+        // skip first element since it should be the template
+        const child = this.children[index + 1];
+
+        if (child) {
+          scope.before(child);
+        } else {
+          this.append(scope);
+        }
       }
 
       index++;
