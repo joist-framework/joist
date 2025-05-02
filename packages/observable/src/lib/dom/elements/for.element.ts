@@ -93,8 +93,7 @@ export class JositForElement extends HTMLElement {
     let index = 0;
 
     for (const item of this.#items) {
-      const key =
-        this.key && hasProperty(item, this.key) ? item[this.key] : index;
+      const key = hasProperty(item, this.key) ? item[this.key] : index;
 
       let scope = leftoverScopes.get(key);
 
