@@ -27,8 +27,8 @@ import { TodoCardElement } from "./todo-card.element.js";
     html`
       <j-for bind="todos" key="id">
         <template>
-          <j-props $each.value.id:id $each.value.status:status>
-            <todo-card>
+          <j-props>
+            <todo-card $.id="each.value.id" $.status="each.value.status">
               <j-value bind="each.value.name"></j-value>
             </todo-card>
           </j-props>
@@ -47,6 +47,8 @@ export class TodoListElement extends HTMLElement {
   async connectedCallback() {
     const service = this.#todo();
 
+    this.todos = await service.getTodos();
+
     service.addEventListener("todo_sync", () => {
       this.todos = service.todos;
     });
@@ -54,18 +56,17 @@ export class TodoListElement extends HTMLElement {
 
   @listen("remove")
   onRemove(e: Event) {
-    const service = this.#todo();
-
     if (e.target instanceof TodoCardElement) {
+      const service = this.#todo();
       service.removeTodo(e.target.id);
     }
   }
 
   @listen("complete")
   onComplete(e: Event) {
-    const service = this.#todo();
-
     if (e.target instanceof TodoCardElement) {
+      const service = this.#todo();
+
       const status = e.target.getAttribute("status");
 
       service.updateTodo(e.target.id, {
