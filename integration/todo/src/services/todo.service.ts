@@ -69,7 +69,7 @@ export class TodoService extends EventTarget {
   }
 
   addTodo(todo: Todo) {
-    this.#todos = [todo, ...this.#todos];
+    this.#todos = [...this.#todos, todo];
   }
 
   removeTodo(id: string) {

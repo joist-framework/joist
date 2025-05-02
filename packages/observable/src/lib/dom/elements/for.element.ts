@@ -7,25 +7,14 @@ import { JToken } from "../token.js";
 declare global {
   interface HTMLElementTagNameMap {
     "j-for": JositForElement;
-    "j-scope": JForScope;
     "j-for-scope": JForScope;
   }
 }
 
-@element({
-  tagName: "j-scope",
-  shadowDom: [
-    css`
-      :host {
-        display: contents;
-      }
-    `,
-    html`<slot></slot>`,
-  ],
-})
-export class JScope<T = unknown> extends HTMLElement {
-  @bind()
-  accessor value: T | null = null;
+export interface EachCtx<T> {
+  value: T | null;
+  index: number | null;
+  position: number | null;
 }
 
 @element({
@@ -39,12 +28,13 @@ export class JScope<T = unknown> extends HTMLElement {
     html`<slot></slot>`,
   ],
 })
-export class JForScope<T = unknown> extends JScope<T> {
+export class JForScope<T = unknown> extends HTMLElement {
   @bind()
-  accessor index: number | null = null;
-
-  @bind()
-  accessor number: number | null = null;
+  accessor each: EachCtx<T> = {
+    value: null,
+    index: null,
+    position: null,
+  };
 
   @attr()
   accessor key = "";
@@ -109,10 +99,12 @@ export class JositForElement extends HTMLElement {
         leftoverScopes.delete(key); // Remove from map to track unused scopes
       }
 
-      scope.number = index + 1;
-      scope.index = index;
-      scope.value = item;
       scope.key = String(key);
+      scope.each = {
+        position: index + 1,
+        index: index,
+        value: item,
+      };
 
       if (!this.contains(scope)) {
         const child = this.children[index + 1];

@@ -27,9 +27,9 @@ import { TodoCardElement } from "./todo-card.element.js";
     html`
       <j-for bind="todos" key="id">
         <template>
-          <j-props $value.id:id $value.status:status>
+          <j-props $each.value.id:id $each.value.status:status>
             <todo-card>
-              <j-value bind="value.name"></j-value>
+              <j-value bind="each.value.name"></j-value>
             </todo-card>
           </j-props>
         </template>
