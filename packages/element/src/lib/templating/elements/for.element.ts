@@ -1,4 +1,7 @@
-import { attr, css, element, html, query } from "@joist/element";
+import { attr } from "../../attr.js";
+import { element } from "../../element.js";
+import { query } from "../../query.js";
+import { css, html } from "../../tags.js";
 
 import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
@@ -37,7 +40,7 @@ export class JForScope<T = unknown> extends HTMLElement {
 @element({
   tagName: "j-for",
   // prettier-ignore
-  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
+  shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
 })
 export class JositForElement extends HTMLElement {
   @attr()
@@ -107,7 +110,7 @@ export class JositForElement extends HTMLElement {
       };
 
       if (!scope.isConnected) {
-        const child = this.children[index + 1];
+        const child = this.children[index + 1]; // skip first child since it should be the template element
 
         if (child) {
           child.before(scope);

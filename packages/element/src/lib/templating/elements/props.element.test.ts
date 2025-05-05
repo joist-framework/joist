@@ -10,14 +10,14 @@ it("should pass props to child", () => {
     <div
       @joist::value=${(e: JoistValueEvent) => {
         if (e.token.bindTo === "href") {
-          e.cb({
+          e.update({
             oldValue: null,
             newValue: "$foo",
           });
         }
 
         if (e.token.bindTo === "target") {
-          e.cb({
+          e.update({
             oldValue: null,
             newValue: {
               value: "_blank",
@@ -42,7 +42,7 @@ it("should pass props to specified child", () => {
   const element = fixtureSync(html`
     <div
       @joist::value=${(e: JoistValueEvent) => {
-        e.cb({
+        e.update({
           oldValue: null,
           newValue: "#foo",
         });

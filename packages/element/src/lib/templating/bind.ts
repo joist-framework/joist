@@ -1,5 +1,4 @@
-import { instanceMetadataStore } from "../metadata.js";
-import { observe } from "../observe.js";
+import { instanceMetadataStore, observe } from "@joist/observable";
 
 export function bind() {
   return function bindDecorator<This extends HTMLElement, Value>(
@@ -16,14 +15,14 @@ export function bind() {
 
             e.stopPropagation();
 
-            e.cb({ oldValue: null, newValue: ctx.access.get(this) });
+            e.update({ oldValue: null, newValue: ctx.access.get(this) });
 
             instanceMeta.bindings.add((changes) => {
               const key = ctx.name as keyof This;
               const res = changes.get(key);
 
               if (res) {
-                e.cb(res);
+                e.update(res);
               }
             });
           }

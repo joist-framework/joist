@@ -1,11 +1,7 @@
-import {
-  type QueryResult,
-  attr,
-  css,
-  element,
-  html,
-  query,
-} from "@joist/element";
+import { attr } from "../../attr.js";
+import { element } from "../../element.js";
+import { type QueryResult, query } from "../../query.js";
+import { css, html } from "../../tags.js";
 
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";

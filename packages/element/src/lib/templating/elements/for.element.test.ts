@@ -10,7 +10,7 @@ it("should iterate over an iterable", () => {
   const element = fixtureSync(html`
     <div
       @joist::value=${(e: JoistValueEvent) => {
-        e.cb({
+        e.update({
           oldValue: null,
           newValue: new Set([
             { id: "123", label: "Hello" },
@@ -36,4 +36,5 @@ it("should iterate over an iterable", () => {
   assert.equal(listItems.length, 2);
   assert.equal(listItems[0].textContent?.trim(), "Hello");
   assert.equal(listItems[1].textContent?.trim(), "World");
+  assert.isAccessible(element);
 });

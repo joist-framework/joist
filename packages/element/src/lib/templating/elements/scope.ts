@@ -1,5 +1,7 @@
-import { attr, css, element, html, listen } from "@joist/element";
-
+import { attr } from "../../attr.js";
+import { element } from "../../element.js";
+import { listen } from "../../listen.js";
+import { css, html } from "../../tags.js";
 import type { JoistValueEvent } from "../events.js";
 
 declare global {
@@ -29,7 +31,7 @@ export class JoistScopeElement extends HTMLElement {
 
       this.#binding = e;
 
-      this.#binding.cb({ oldValue: null, newValue: this.value });
+      this.#binding.update({ oldValue: null, newValue: this.value });
     }
   }
 
@@ -38,6 +40,6 @@ export class JoistScopeElement extends HTMLElement {
     oldValue: string,
     newValue: string,
   ): void {
-    this.#binding?.cb({ oldValue, newValue });
+    this.#binding?.update({ oldValue, newValue });
   }
 }

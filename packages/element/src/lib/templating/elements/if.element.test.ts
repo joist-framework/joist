@@ -7,9 +7,11 @@ import type { JoistValueEvent } from "../events.js";
 
 it("should render content when the bind value is truthy", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      e.cb({ oldValue: null, newValue: true });
-    }}>
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: true });
+      }}
+    >
       <j-if bind="test">
         <template>Visible Content</template>
       </j-if>
@@ -21,10 +23,12 @@ it("should render content when the bind value is truthy", () => {
 
 it("should not render content when the bind value is falsy", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      e.cb({ oldValue: null, newValue: true });
-      e.cb({ oldValue: null, newValue: false });
-    }}>
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: true });
+        e.update({ oldValue: null, newValue: false });
+      }}
+    >
       <j-if bind="test">
         <template>Visible Content</template>
       </j-if>
@@ -36,9 +40,11 @@ it("should not render content when the bind value is falsy", () => {
 
 it("should handle negated tokens correctly", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      e.cb({ oldValue: null, newValue: false });
-    }}>
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: false });
+      }}
+    >
       <j-if bind="!test">
         <template>Visible Content</template>
       </j-if>

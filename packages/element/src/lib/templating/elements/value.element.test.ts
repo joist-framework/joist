@@ -7,9 +7,11 @@ import type { JoistValueEvent } from "../events.js";
 
 it("should render content when the bind value is truthy", () => {
   const element = fixtureSync(html`
-    <div @joist::value=${(e: JoistValueEvent) => {
-      e.cb({ oldValue: null, newValue: "Hello World" });
-    }}>
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: "Hello World" });
+      }}
+    >
       <j-value bind="test"></j-value>
     </div>
   `);

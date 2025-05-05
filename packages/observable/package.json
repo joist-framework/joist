@@ -34,8 +34,7 @@
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
       "files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
-      "output": ["target/**", "tsconfig.tsbuildinfo"],
-      "dependencies": ["../element:build"]
+      "output": ["target/**", "tsconfig.tsbuildinfo"]
     },
     "test": {
       "command": "wtr --config wtr.config.mjs",

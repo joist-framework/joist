@@ -1,5 +1,6 @@
-import { attr, css, element, html } from "@joist/element";
-
+import { attr } from "../../attr.js";
+import { element } from "../../element.js";
+import { css, html } from "../../tags.js";
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 
