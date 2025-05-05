@@ -67,16 +67,55 @@ Conditionally renders content based on a boolean expression:
 </j-if>
 ```
 
+### Property Binding (`j-props`)
+
+Binds values to element properties (rather than attributes). This is particularly useful for boolean properties, form inputs, and other cases where attribute binding isn't sufficient:
+
+```html
+<j-props>
+  <!-- Bind to boolean properties -->
+  <input type="checkbox" $.checked="isComplete">
+  
+  <!-- Bind to form input values -->
+  <input type="text" $.value="userName">
+  
+  <!-- Bind to custom element properties -->
+  <my-element $.data="complexObject">
+</j-props>
+```
+
+Note the `$.` prefix for property bindings. This distinguishes property bindings from attribute bindings.
+
+Common use cases:
+- Form input states (`checked`, `value`, `disabled`)
+- Boolean properties that don't work well as attributes
+- Complex objects that need to be passed as properties
+- Custom element properties
+
 ### List Rendering (`j-for`)
 
 Renders lists of items with support for keyed updates:
 
 ```html
-<j-for bind="items" key="id">
+<j-for bind="todos" key="id">
   <template>
-    <j-value bind="each.value.name"></j-value>
-    Position: <j-value bind="each.position"></j-value>
-    Index: <j-value bind="each.index"></j-value>
+    <j-props>
+      <div 
+        class="todo-item" 
+        $.dataset.id="each.value.id"
+        $.dataset.completed="each.value.completed"
+      >
+        <j-props>
+          <input type="checkbox" $.checked="each.value.completed">
+        </j-props>
+
+        <j-value bind="each.value.text"></j-value>
+
+        <j-props>
+          <button $.disabled="!each.value.text">×</button>
+        </j-props>
+      </div>
+    </j-props>
   </template>
 </j-for>
 ```
@@ -117,117 +156,64 @@ interface Todo {
         display: block;
         max-width: 600px;
         margin: 2rem auto;
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border-radius: 8px;
-      }
-      h2 {
-        margin-top: 0;
-        color: #333;
       }
       .form {
         display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-      }
-      input[type="text"] {
-        flex: 1;
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-      .add-btn {
-        padding: 0.5rem 1rem;
-        background: #0066ff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .add-btn:hover {
-        background: #0052cc;
+        gap: 1rem;
       }
       .todo-item {
         display: flex;
-        align-items: center;
         gap: 0.5rem;
-        padding: 0.5rem;
-        border-bottom: 1px solid #eee;
-      }
-      .todo-item.completed .todo-text {
-        color: #888;
-        text-decoration: line-through;
+        margin: 0.5rem 0;
       }
       .todo-text {
         flex: 1;
       }
-      .delete-btn {
-        padding: 0.25rem 0.5rem;
-        background: #ff4444;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-      .todo-item:hover .delete-btn {
-        opacity: 1;
-      }
-      .delete-btn:hover {
-        background: #cc0000;
-      }
-      .stats {
-        display: flex;
-        justify-content: space-between;
-        padding: 1rem 0;
-        color: #666;
-        font-size: 0.9rem;
+      [data-completed="true"] .todo-text {
+        text-decoration: line-through;
+        opacity: 0.6;
       }
     `,
     html`
-      <h2>Todo List</h2>
-      
       <form class="form">
         <input type="text" placeholder="What needs to be done?">
-        <button type="submit" class="add-btn">Add Todo</button>
+        <button type="submit">Add</button>
       </form>
-      
+
       <j-if bind="!todos.length">
         <template>
-          <p>No todos yet! Add one above.</p>
+          <p>No todos yet!</p>
         </template>
       </j-if>
 
       <j-for bind="todos" key="id">
         <template>
-          <div class="todo-item" data-id="each.value.id">
-            <j-props>
-              <input 
-                type="checkbox" 
-                $.checked="each.value.completed"
-              >
-            </j-props>
+          <j-props>
+            <div 
+              class="todo-item" 
+              $.dataset.id="each.value.id"
+              $.dataset.completed="each.value.completed"
+            >
+              <j-props>
+                <input type="checkbox" $.checked="each.value.completed">
+              </j-props>
 
-            <j-value class="todo-text" bind="each.value.text"></j-value>
+              <j-value 
+                class="todo-text" 
+                bind="each.value.text"
+              ></j-value>
 
-            <button class="delete-btn">×</button>
-          </div>
+              <j-props>
+                <button $.disabled="!each.value.text">×</button>
+              </j-props>
+            </div>
+          </j-props>
         </template>
       </j-for>
 
-      <j-if bind="todos.length">
-        <template>
-          <div class="stats">
-            <span>
-              <j-value bind="stats.remaining"></j-value> items left
-            </span>
-            <span>
-              <j-value bind="stats.completed"></j-value> completed
-            </span>
-          </div>
-        </template>
-      </j-if>
+      <div>
+        <j-value bind="stats.remaining"></j-value> remaining
+      </div>
     `
   ]
 })
@@ -282,13 +268,15 @@ export class TodoList extends HTMLElement {
 
       return todo;
     });
-    
+
     this.#updateStats();
   }
 
-  @listen('click', '.delete-btn')
+  @listen('click', 'button')
   onDelete(e: Event) {
     const button = e.target as HTMLButtonElement;
+    if (button.type === 'submit') return;
+    
     const todoItem = button.closest('.todo-item') as HTMLElement;
     const id = Number(todoItem.dataset.id);
 
@@ -297,21 +285,6 @@ export class TodoList extends HTMLElement {
     this.#updateStats();
   }
 }
-```
-
-Usage in HTML:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Joist Todo App</title>
-</head>
-<body>
-  <todo-list></todo-list>
-  <script type="module" src="./todo.ts"></script>
-</body>
-</html>
 ```
 
 ## Usage
