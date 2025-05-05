@@ -1,6 +1,6 @@
 import { attr, css, element, html } from "@joist/element";
+import { bind } from "@joist/element/templating.js";
 import { type Changes, effect } from "@joist/observable";
-import { bind } from "@joist/observable/dom.js";
 
 @element({
   tagName: "hn-news-card",
@@ -47,9 +47,7 @@ import { bind } from "@joist/observable/dom.js";
           <j-if bind="href">
             <template>
               <j-props $href:href>
-                <a target="_blank">
-                  (<j-value bind="host"></j-value>)
-                </a>
+                <a target="_blank"> (<j-value bind="host"></j-value>) </a>
               </j-props>
             </template>
           </j-if>
