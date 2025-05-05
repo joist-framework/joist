@@ -32,27 +32,64 @@
         Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       line-height: 1.4em;
     }
+
+    .form {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .todo-item {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .todo-text {
+      flex: 1;
+    }
+
+    [data-completed="true"] .todo-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
   </style>
 
-  <h1>
-    <j-value bind="greeting"></j-value>
-    <j-value bind="counter"></j-value>
-  </h1>
+  <form class="form">
+    <input type="text" placeholder="What needs to be done?">
+    <button type="submit">Add</button>
+  </form>
 
-  <j-for bind="items">
+  <j-if bind="!todos.length">
     <template>
-      <li>
-        <j-value bind="value.label"></j-value>
-      </li>
+      <p>No todos yet!</p>
+    </template>
+  </j-if>
+
+  <j-for id="todos" bind="todos" key="id">
+    <template>
+      <j-props class="todo-item" $.dataset.completed="each.value.completed">
+        <j-props>
+          <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed">
+          <j-value class="todo-text" bind="each.value.text"></j-value>
+          <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
+        </j-props>
+      </j-props>
     </template>
   </j-for>
+
+  <j-if bind="stats.remaining">
+    <template>
+      <j-value bind="stats.remaining"></j-value> remaining
+    </template>
+  </j-if>
 
   <script type="module">
     const model = new Proxy({
       bindings: {},
-      greeting: "Hello World",
-      counter: 0,
-      items: ["first", "second", "third", "fourth", "fifth"]
+      stats: {
+        remaining: 0
+      },
+      todos: []
     }, {
       get(target, prop) {
         return target[prop];
@@ -62,24 +99,54 @@
 
         target[prop] = newValue;
 
-        if (target.bindings[prop]) {
-          target.bindings[prop]({ oldValue: oldValue, newValue });
+        if (Array.isArray(target.bindings[prop])) {
+          for (const binding of target.bindings[prop]) {
+            binding({ oldValue: oldValue, newValue });
+          }
         }
 
         return true;
       }
     });
 
-    setInterval(() => model.counter++, 1000);
-
     // bind all values globally
     document.addEventListener("joist::value", (event) => {
       const res = model[event.token.bindTo];
 
       if (res !== undefined) {
-        model.bindings[event.token.bindTo] = event.cb; // store binding callback
-        event.cb({ oldValue: null, newValue: res }) // call binding callback with initial value
+        const bindings = model.bindings[event.token.bindTo] ?? [];
+
+        bindings.push(event.update);
+
+        model.bindings[event.token.bindTo] = bindings;
+
+        event.update({ oldValue: null, newValue: res }) // call binding callback with initial value
       }
+    });
+
+    const form = document.querySelector("form");
+    const input = document.querySelector("input[type=text]");
+    const listContainer = document.querySelector("#todos");
+
+    let nextId = 1;
+
+    listContainer.addEventListener("click", () => { })
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      model.todos = [
+        ...model.todos,
+        { id: nextId, text: input.value.trim(), completed: false }
+      ];
+
+      nextId++;
+
+      model.stats = {
+        remaining: model.stats.remaining + 1
+      }
+
+      input.value = "";
     });
   </script>
 

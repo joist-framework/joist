@@ -9,21 +9,13 @@ declare global {
 }
 
 export class JoistValueEvent extends Event {
-  #token: JToken;
-  #update: (value: Change<unknown>) => void;
-
-  get token(): JToken {
-    return this.#token;
-  }
+  readonly token: JToken;
+  readonly update: (value: Change<unknown>) => void;
 
   constructor(bindTo: JToken, update: (value: Change<unknown>) => void) {
     super("joist::value", { bubbles: true, composed: true });
 
-    this.#token = bindTo;
-    this.#update = update;
-  }
-
-  update(value: Change<unknown>): void {
-    this.#update(value);
+    this.token = bindTo;
+    this.update = update;
   }
 }

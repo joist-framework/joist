@@ -56,10 +56,20 @@ export class JoistIfElement extends HTMLElement {
                 valueToWrite = token.readTokenValueFrom(newValue);
               }
 
+              if (token.isNegated) {
+                valueToWrite = !valueToWrite;
+              }
+
               if (token.mapsToProp) {
                 Reflect.set(child, token.mapTo, valueToWrite);
               } else {
-                child.setAttribute(token.mapTo, String(valueToWrite));
+                if (valueToWrite === true) {
+                  child.setAttribute(token.mapTo, "");
+                } else if (valueToWrite === false) {
+                  child.removeAttribute(token.mapTo);
+                } else {
+                  child.setAttribute(token.mapTo, String(valueToWrite));
+                }
               }
             }),
           );
