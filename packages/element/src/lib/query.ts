@@ -4,7 +4,7 @@ type MathTags = keyof MathMLElementTagNameMap;
 
 type NodeUpdate<T extends Node> = Partial<T> | ((node: T) => Partial<T>);
 
-type QueryResult<T extends Node> = (updates?: NodeUpdate<T>) => T;
+export type QueryResult<T extends Node> = (updates?: NodeUpdate<T>) => T;
 
 export function query<K extends Tags>(
   selectors: K,

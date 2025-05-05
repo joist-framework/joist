@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<head>
+  <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <title>Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script type="importmap">
+  <title>Counter</title>
+
+  <script type="importmap">
       {
         "imports": {
           "@joist/di": "/node_modules/@joist/di/target/lib.js",
@@ -22,20 +23,25 @@
         }
       }
     </script>
-  </head>
+</head>
 
-  <body>
-    <style>
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        line-height: 1.4em;
-      }
-    </style>
+<body>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.4em;
+    }
+  </style>
 
-    <joist-counter></joist-counter>
+  <joist-counter></joist-counter>
 
-    <script type="module" src="./target/counter.js"></script>
-  </body>
+  <script type="module">
+    import "./target/counter.js";
+
+    import "@joist/element/templating/define.js";
+  </script>
+</body>
+
 </html>

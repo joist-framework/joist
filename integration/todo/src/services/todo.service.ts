@@ -7,7 +7,7 @@ export type TodoStatus = "active" | "complete";
 
 export class Todo {
   static create(name: string, status: TodoStatus) {
-    return new Todo(`todo--${crypto.randomUUID()}`, name, status);
+    return new Todo(crypto.randomUUID(), name, status);
   }
 
   constructor(
@@ -17,26 +17,8 @@ export class Todo {
   ) {}
 }
 
-export class TodoUpdatedEvent extends Event {
-  constructor(public todo: Todo) {
-    super("todo_updated");
-  }
-}
-
-export class TodoAddedEvent extends Event {
-  constructor(public todo: Todo) {
-    super("todo_added");
-  }
-}
-
-export class TodoRemovedEvent extends Event {
-  constructor(public todo: string) {
-    super("todo_removed");
-  }
-}
-
 export class TodoSyncEvent extends Event {
-  constructor() {
+  constructor(public todos: Todo[]) {
     super("todo_sync");
   }
 }
@@ -46,10 +28,13 @@ export class TodoService extends EventTarget {
   @observe()
   accessor #todos: Todo[] = [];
 
-  @observe()
   accessor #initialized = false;
 
   totalActive = 0;
+
+  get todos() {
+    return this.#todos;
+  }
 
   #store = inject(AppStorage);
 
@@ -62,7 +47,7 @@ export class TodoService extends EventTarget {
       0,
     );
 
-    this.dispatchEvent(new TodoSyncEvent());
+    this.dispatchEvent(new TodoSyncEvent(this.#todos));
   }
 
   async getTodos(): Promise<Todo[]> {
@@ -85,31 +70,19 @@ export class TodoService extends EventTarget {
 
   addTodo(todo: Todo) {
     this.#todos = [...this.#todos, todo];
-
-    this.dispatchEvent(new TodoAddedEvent(todo));
   }
 
   removeTodo(id: string) {
     this.#todos = this.#todos.filter((todo) => todo.id !== id);
-
-    this.dispatchEvent(new TodoRemovedEvent(id));
   }
 
   updateTodo(id: string, patch: Partial<Todo>) {
-    let updated: Todo | undefined = undefined;
-
     this.#todos = this.#todos.map((todo) => {
       if (todo.id === id) {
-        updated = { ...todo, ...patch };
-
-        return updated;
+        return { ...todo, ...patch };
       }
 
       return todo;
     });
-
-    if (updated) {
-      this.dispatchEvent(new TodoUpdatedEvent(updated));
-    }
   }
 }

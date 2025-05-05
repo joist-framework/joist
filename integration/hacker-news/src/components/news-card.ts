@@ -1,6 +1,6 @@
-import { attr, css, element, html, ready } from "@joist/element";
-import { template } from "@joist/element/template.js";
-import { effect, observe } from "@joist/observable";
+import { attr, css, element, html } from "@joist/element";
+import { bind } from "@joist/element/templating.js";
+import { type Changes, effect } from "@joist/observable";
 
 @element({
   tagName: "hn-news-card",
@@ -32,30 +32,40 @@ import { effect, observe } from "@joist/observable";
       }
     `,
     html`
-      <div id="number" #:bind="number"></div>
+      <div id="number">
+        <j-value bind="number"></j-value>
+      </div>
 
       <div>
         <div class="title-box">
-          <a id="title" #:href="href" target="_blank">
-            <slot></slot>
-          </a>
+          <j-props $href:href>
+            <a id="title" target="_blank">
+              <slot></slot>
+            </a>
+          </j-props>
 
-          <a #:hidden="!href" #:href="href" target="_blank"> (<span #:bind="host"></span>) </a>
+          <j-if bind="href">
+            <template>
+              <j-props $href:href>
+                <a target="_blank"> (<j-value bind="host"></j-value>) </a>
+              </j-props>
+            </template>
+          </j-if>
         </div>
 
         <div class="details">
           <div class="detils-section">
-            <span #:bind="points"></span>
+            <j-value bind="points"></j-value>
             points
           </div>
 
           <div class="detils-section">
             by
-            <span #:bind="author"></span>
+            <j-value bind="author"></j-value>
           </div>
 
           <div class="detils-section">
-            <span #:bind="comments"></span>
+            <j-value bind="comments"></j-value>
             comments
           </div>
         </div>
@@ -65,42 +75,32 @@ import { effect, observe } from "@joist/observable";
 })
 export class HnNewsCard extends HTMLElement {
   @attr()
-  @observe()
+  @bind()
   accessor number = 1;
 
   @attr()
-  @observe()
+  @bind()
   accessor comments = 0;
 
   @attr()
-  @observe()
+  @bind()
   accessor points = 0;
 
   @attr()
-  @observe()
+  @bind()
   accessor href = "";
 
   @attr()
-  @observe()
+  @bind()
   accessor author = "";
 
-  get host() {
-    try {
-      return new URL(this.href).hostname;
-    } catch {
-      return "";
-    }
-  }
-
-  #render = template();
-
-  @ready()
-  onElementReady() {
-    this.#render();
-  }
+  @bind()
+  accessor host = "";
 
   @effect()
-  onPropChange() {
-    this.#render();
+  onPropChange(changes: Changes<this>) {
+    if (changes.has("href")) {
+      this.host = new URL(this.href).hostname;
+    }
   }
 }

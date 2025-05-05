@@ -1,6 +1,7 @@
 import { StaticToken, inject, injectable } from "@joist/di";
 
 export interface HnItem {
+  number: number;
   by: string;
   descendants: number;
   id: number;
@@ -37,7 +38,7 @@ export class HnService {
       return Promise.allSettled(storyRequests).then((res) =>
         res
           .filter((item) => item.status === "fulfilled")
-          .map((item) => item.value),
+          .map((item, index) => ({ ...item.value, number: index + 1 })),
       );
     });
   }

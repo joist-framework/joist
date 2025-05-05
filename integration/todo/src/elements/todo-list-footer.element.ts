@@ -1,6 +1,7 @@
 import { inject, injectable } from "@joist/di";
 import { css, element, html } from "@joist/element";
 
+import { bind } from "@joist/element/templating.js";
 import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
@@ -52,7 +53,7 @@ class PluralRules extends Intl.PluralRules {}
 
       #decoration {
         background: white;
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         right: 0;
@@ -60,16 +61,13 @@ class PluralRules extends Intl.PluralRules {}
         left: 0;
         height: calc(var(--card-height) - 11px);
         overflow: hidden;
-        box-shadow:
-          0 1px 1px rgba(0, 0, 0, 0.2),
-          0 8px 0 -3px #f6f6f6,
-          0 9px 1px -3px rgba(0, 0, 0, 0.2),
-          0 16px 0 -6px #f6f6f6,
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
+          0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
           0 17px 2px -6px rgba(0, 0, 0, 0.2);
       }
     `,
     html`
-      <div id="footer"><slot></slot> left</div>
+      <div id="footer"><j-value bind="totalActive"></j-value> left</div>
 
       <div id="decoration"></div>
     `,
@@ -80,11 +78,16 @@ export class TodoListFooterElement extends HTMLElement {
   #pr = inject(PluralRules);
   #controller = new AbortController();
 
+  @bind()
+  accessor totalActive = "0 items";
+
   connectedCallback() {
     const todo = this.#todo();
 
     const onTodoUpdate = async () => {
-      this.innerHTML = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
+      this.totalActive = `${todo.totalActive} ${sfxs.get(
+        this.#pr().select(todo.totalActive),
+      )}`;
     };
 
     onTodoUpdate();

@@ -1,5 +1,5 @@
 import { attr, css, element, html } from "@joist/element";
-import { template } from "@joist/element/template.js";
+import { bind } from "@joist/element/templating.js";
 
 @element({
   tagName: "hn-header-link",
@@ -26,19 +26,16 @@ import { template } from "@joist/element/template.js";
       }
     `,
     html`
-      <a #:href="href">
-        <slot></slot>
-      </a>
+      <j-props #href:href>
+        <a>
+          <slot></slot>
+        </a>
+      </j-props>
     `,
   ],
 })
 export class HnHeader extends HTMLElement {
   @attr()
+  @bind()
   accessor href = "#";
-
-  #update = template();
-
-  attributeChangedCallback() {
-    this.#update();
-  }
 }

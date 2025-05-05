@@ -4,6 +4,8 @@ import {
   observableMetadataStore,
 } from "./metadata.js";
 
+const INIT_VALUE = Symbol("init");
+
 export function observe() {
   return function observeDecorator<This extends object, Value>(
     base: ClassAccessorDecoratorTarget<This, Value>,
@@ -13,14 +15,14 @@ export function observe() {
 
     return {
       init(value) {
-        let val: Value | null = null;
+        let val: Value | typeof INIT_VALUE = INIT_VALUE;
 
         // START: Make upgradable custom elements work
         try {
           val = ctx.access.get(this);
         } catch {}
 
-        if (val) {
+        if (val !== INIT_VALUE) {
           Reflect.deleteProperty(this, ctx.name);
 
           return val;
@@ -31,14 +33,17 @@ export function observe() {
       },
       set(newValue: Value) {
         const oldValue = base.get.call(this);
+        const instanceMeta = instanceMetadataStore.read<This>(this);
 
         if (newValue !== oldValue) {
-          const instanceMeta = instanceMetadataStore.read<This>(this);
-
           if (instanceMeta.scheduler === null) {
             instanceMeta.scheduler = Promise.resolve().then(() => {
               for (const effect of observableMeta.effects) {
                 effect.call(this, instanceMeta.changes);
+              }
+
+              for (const binding of instanceMeta.bindings) {
+                binding.call(this, instanceMeta.changes);
               }
 
               instanceMeta.scheduler = null;

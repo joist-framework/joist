@@ -2,14 +2,17 @@
 
 export type EffectFn<T> = (changes: Changes<T>) => void;
 
-export class Changes<T> extends Map<
-  keyof T,
-  { oldValue: unknown; newValue: unknown }
-> {}
+export interface Change<T> {
+  oldValue: T;
+  newValue: T;
+}
+
+export class Changes<T> extends Map<keyof T, Change<unknown>> {}
 
 export class ObservableInstanceMetadata<T> {
   scheduler: Promise<void> | null = null;
   changes: Changes<T> = new Changes();
+  bindings: Set<(changes: Changes<T>) => void> = new Set();
 }
 
 export class ObservableInstanceMetaDataStore extends WeakMap<
@@ -25,7 +28,7 @@ export class ObservableInstanceMetaDataStore extends WeakMap<
       this.set(key, data);
     }
 
-    return data;
+    return data as ObservableInstanceMetadata<T>;
   }
 }
 

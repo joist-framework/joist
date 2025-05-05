@@ -1,4 +1,5 @@
-import { attr, css, element, html, listen, query } from "@joist/element";
+import { attr, css, element, html, listen } from "@joist/element";
+import { bind } from "@joist/element/templating.js";
 
 import type { Todo, TodoStatus } from "../services/todo.service.js";
 
@@ -16,7 +17,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
         flex-grow: 1;
       }
 
-      :host([status='complete']) #name {
+      :host([status="complete"]) #name {
         text-decoration: line-through;
         opacity: 0.5;
       }
@@ -36,12 +37,20 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
     `,
     html`
       <div id="name">
+        <j-if bind="!actionState.showStar">
+          <template>
+            <span style="color: red; font-weight: bold;">!</span>
+          </template>
+        </j-if>
+
         <slot></slot>
       </div>
 
       <button id="remove">remove</button>
 
-      <button id="complete">complete</button>
+      <button id="complete">
+        <j-value bind="actionState.value"></j-value>
+      </button>
     `,
   ],
 })
@@ -49,19 +58,27 @@ export class TodoCardElement extends HTMLElement {
   @attr()
   accessor status: TodoStatus = "active";
 
-  #complete = query<HTMLButtonElement>("#complete");
+  @bind()
+  accessor actionState = {
+    value: "active",
+    showStar: false,
+  };
 
-  @listen("click")
-  onClick(e: Event) {
-    if (e.target instanceof HTMLButtonElement) {
-      this.dispatchEvent(new Event(e.target.id, { bubbles: true }));
-    }
+  @listen("click", "#complete")
+  onClick() {
+    this.dispatchEvent(new Event("complete", { bubbles: true }));
+  }
+
+  @listen("click", "#remove")
+  onRemove() {
+    this.dispatchEvent(new Event("remove", { bubbles: true }));
   }
 
   attributeChangedCallback() {
-    this.#complete({
-      innerHTML: this.status === "active" ? "complete" : "active",
-    });
+    this.actionState = {
+      value: this.status === "active" ? "complete" : "active",
+      showStar: this.status === "complete",
+    };
   }
 }
 

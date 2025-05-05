@@ -1,62 +1,158 @@
 <!doctype html>
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
 
-    <script type="importmap">
-      {
-        "imports": {
-          "@joist/element": "/node_modules/@joist/element/target/lib.js",
-          "@joist/element/": "/node_modules/@joist/element/target/lib/"
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@joist/di": "/node_modules/@joist/di/target/lib.js",
+        "@joist/di/": "/node_modules/@joist/di/target/lib/",
+        "@joist/element": "/node_modules/@joist/element/target/lib.js",
+        "@joist/element/": "/node_modules/@joist/element/target/lib/",
+        "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
+        "@joist/observable/": "/node_modules/@joist/observable/target/lib/",
+        "tslib": "/node_modules/tslib/tslib.es6.js"
+      }
+    }
+  </script>
+
+  <title>Template Test</title>
+</head>
+
+<body>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.4em;
+    }
+
+    .form {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .todo-item {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .todo-text {
+      flex: 1;
+    }
+
+    [data-completed="true"] .todo-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  </style>
+
+  <form class="form">
+    <input type="text" placeholder="What needs to be done?">
+    <button type="submit">Add</button>
+  </form>
+
+  <j-if bind="!todos.length">
+    <template>
+      <p>No todos yet!</p>
+    </template>
+  </j-if>
+
+  <j-for id="todos" bind="todos" key="id">
+    <template>
+      <j-props class="todo-item" $.dataset.completed="each.value.completed">
+        <j-props>
+          <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed">
+          <j-value class="todo-text" bind="each.value.text"></j-value>
+          <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
+        </j-props>
+      </j-props>
+    </template>
+  </j-for>
+
+  <j-if bind="stats.remaining">
+    <template>
+      <j-value bind="stats.remaining"></j-value> remaining
+    </template>
+  </j-if>
+
+  <script type="module">
+    const model = new Proxy({
+      bindings: {},
+      stats: {
+        remaining: 0
+      },
+      todos: []
+    }, {
+      get(target, prop) {
+        return target[prop];
+      },
+      set(target, prop, newValue) {
+        const oldValue = target[prop];
+
+        target[prop] = newValue;
+
+        if (Array.isArray(target.bindings[prop])) {
+          for (const binding of target.bindings[prop]) {
+            binding({ oldValue: oldValue, newValue });
+          }
         }
+
+        return true;
       }
-    </script>
+    });
 
-    <title>Template Test</title>
-  </head>
+    // bind all values globally
+    document.addEventListener("joist::value", (event) => {
+      const res = model[event.token.bindTo];
 
-  <body>
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
+      if (res !== undefined) {
+        const bindings = model.bindings[event.token.bindTo] ?? [];
+
+        bindings.push(event.update);
+
+        model.bindings[event.token.bindTo] = bindings;
+
+        event.update({ oldValue: null, newValue: res }) // call binding callback with initial value
+      }
+    });
+
+    const form = document.querySelector("form");
+    const input = document.querySelector("input[type=text]");
+    const listContainer = document.querySelector("#todos");
+
+    let nextId = 1;
+
+    listContainer.addEventListener("click", () => { })
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      model.todos = [
+        ...model.todos,
+        { id: nextId, text: input.value.trim(), completed: false }
+      ];
+
+      nextId++;
+
+      model.stats = {
+        remaining: model.stats.remaining + 1
       }
 
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        line-height: 1.4em;
-      }
-    </style>
+      input.value = "";
+    });
+  </script>
 
-    <h1 #:bind="greeting"></h1>
+  <script type="module">
+    import "@joist/element/templating/define.js";
+  </script>
+</body>
 
-    <ul #:hidden="hideList">
-      <li #:bind="items.0"></li>
-      <li #:bind="items.1"></li>
-      <li #:bind="items.2"></li>
-      <li #:bind="items.3"></li>
-      <li #:bind="items.4"></li>
-    </ul>
-
-    <script type="module">
-      import { template, getTemplateValue } from '@joist/element/template.js';
-
-      const data = {
-        hideList: false,
-        greeting: 'Hello World',
-        items: ['first', 'second', 'third', 'fourth', 'fifth']
-      };
-
-      const render = template({
-        value: (key) => getTemplateValue(data, key)
-      }).bind(document.body);
-
-      render();
-    </script>
-  </body>
 </html>

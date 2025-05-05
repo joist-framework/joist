@@ -1,8 +1,8 @@
 import { inject, injectable, injected } from "@joist/di";
 import { css, element, html } from "@joist/element";
+import { bind } from "@joist/element/templating.js";
 
-import { HnService } from "../services/hn.service.js";
-import { HnNewsCard } from "./news-card.js";
+import { type HnItem, HnService } from "../services/hn.service.js";
 
 @injectable()
 @element({
@@ -12,36 +12,56 @@ import { HnNewsCard } from "./news-card.js";
       :host {
         display: contents;
       }
+
+      .loading-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem;
+      }
     `,
-    html`<slot></slot>`,
+    html`
+      <j-if bind="isLoading">
+        <template>
+          <div class="loading-container">
+            <hn-loading></hn-loading>
+          </div>
+        </template>
+      </j-if>
+
+      <j-for bind="stories" key="id">
+        <template>
+          <j-props>
+            <hn-news-card
+              $.number="each.position"
+              $.author="each.value.by"
+              $.comments="each.value.descendants"
+              $.points="each.value.score"
+              $.href="each.value.url"
+            >
+              <j-value bind="each.value.title"></j-value>
+            </hn-news-card>
+          </j-props>
+        </template>
+      </j-for>
+    `,
   ],
 })
 export class HnNewsFeed extends HTMLElement {
   #hn = inject(HnService);
 
+  @bind()
+  accessor stories: HnItem[] = [];
+
+  @bind()
+  accessor isLoading = true;
+
   @injected()
   async onInjected() {
     const hn = this.#hn();
 
-    const stories = await hn.getTopStories();
+    this.stories = await hn.getTopStories();
 
-    this.innerHTML = "";
-
-    let number = 1;
-
-    for (const value of stories) {
-      const card = new HnNewsCard();
-
-      card.number = number;
-      card.textContent = value.title;
-      card.author = value.by;
-      card.comments = value.kids.length;
-      card.points = value.score;
-      card.href = value.url ?? "";
-
-      this.append(card);
-
-      number++;
-    }
+    this.isLoading = false;
   }
 }

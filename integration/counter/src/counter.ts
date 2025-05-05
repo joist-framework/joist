@@ -1,4 +1,5 @@
 import { css, element, html, listen } from "@joist/element";
+import { bind } from "@joist/element/templating.js";
 
 @element({
   tagName: "joist-counter",
@@ -12,7 +13,7 @@ import { css, element, html, listen } from "@joist/element";
         display: block;
       }
 
-      slot {
+      j-value {
         width: 4rem;
         display: inline-block;
         text-align: center;
@@ -30,29 +31,30 @@ import { css, element, html, listen } from "@joist/element";
     `,
     html`
       <button id="dec">-</button>
-      <slot></slot>
+
+      <j-value bind="count.value"></j-value>
+
       <button id="inc">+</button>
     `,
   ],
 })
 export class CounterElement extends HTMLElement {
-  connectedCallback() {
-    if (!this.children.length) {
-      this.innerHTML = "0";
-    }
-  }
+  @bind()
+  accessor count = {
+    value: 0,
+  };
 
   @listen("click", "#inc")
   onIncrement() {
-    this.#update(1);
+    this.count = {
+      value: this.count.value + 1,
+    };
   }
 
   @listen("click", "#dec")
   onDecrement() {
-    this.#update(-1);
-  }
-
-  #update(change: number) {
-    this.innerHTML = String(Number(this.innerHTML.trim()) + change);
+    this.count = {
+      value: this.count.value - 1,
+    };
   }
 }
