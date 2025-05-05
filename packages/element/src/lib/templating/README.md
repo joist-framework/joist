@@ -186,34 +186,19 @@ interface Todo {
         </template>
       </j-if>
 
-      <j-for bind="todos" key="id">
+      <j-for id="todos" bind="todos" key="id">
         <template>
-          <j-props>
-            <div 
-              class="todo-item" 
-              $.dataset.id="each.value.id"
-              $.dataset.completed="each.value.completed"
-            >
-              <j-props>
-                <input type="checkbox" $.checked="each.value.completed">
-              </j-props>
-
-              <j-value 
-                class="todo-text" 
-                bind="each.value.text"
-              ></j-value>
-
-              <j-props>
-                <button $.disabled="!each.value.text">×</button>
-              </j-props>
-            </div>
+          <j-props class="todo-item" $.dataset.completed="each.value.completed">
+            <j-props>
+              <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed">
+              <j-value class="todo-text" bind="each.value.text"></j-value>
+              <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
+            </j-props>
           </j-props>
         </template>
       </j-for>
 
-      <div>
-        <j-value bind="stats.remaining"></j-value> remaining
-      </div>
+      <j-value bind="stats.remaining"></j-value> remaining
     `
   ]
 })
@@ -240,49 +225,47 @@ export class TodoList extends HTMLElement {
   @listen('submit', 'form')
   onSubmit(e: SubmitEvent) {
     e.preventDefault();
-    const text = this.#input().value.trim();
+    const input = this.#input();
+    const text = input.value.trim();
     
     if (text) {
       this.todos = [
         ...this.todos,
         { id: this.#nextId++, text, completed: false }
       ];
-      this.#input().value = '';
+      
+      input.value = '';
+      
       this.#updateStats();
     }
   }
 
-  @listen('change', 'input[type="checkbox"]')
+  @listen('change', '#todos')
   onToggle(e: Event) {
-    const checkbox = e.target as HTMLInputElement;
-    const todoItem = checkbox.closest('.todo-item') as HTMLElement;
-    const id = Number(todoItem.dataset.id);
-
-    this.todos = this.todos.map(todo => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          completed: checkbox.checked
-        };
-      }
-
-      return todo;
-    });
-
-    this.#updateStats();
+    if(e.target instanceof HTMLInputElement) {
+      const id = Number(e.target.id);
+      
+      this.todos = this.todos.map(todo => {
+        if (todo.id === id) {
+          return { ...todo, completed: checkbox.checked };
+        }
+      
+        return todo;
+      });
+      
+      this.#updateStats();
+    }
   }
 
-  @listen('click', 'button')
+  @listen('click', '#todos')
   onDelete(e: Event) {
-    const button = e.target as HTMLButtonElement;
-    if (button.type === 'submit') return;
-    
-    const todoItem = button.closest('.todo-item') as HTMLElement;
-    const id = Number(todoItem.dataset.id);
+    if(e.target instanceof HTMLElement) {
+      const id = Number(e.target.id);
 
-    this.todos = this.todos.filter(todo => todo.id !== id);
-    
-    this.#updateStats();
+      this.todos = this.todos.filter(todo => todo.id !== id);
+        
+      this.#updateStats();
+    }
   }
 }
 ```

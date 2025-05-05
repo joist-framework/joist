@@ -34,7 +34,12 @@ export class JoistIfElement extends HTMLElement {
   accessor target = "";
 
   connectedCallback(): void {
-    for (const child of this.children) {
+    this.#bindProps([this]); // bind own props
+    this.#bindProps(this.children); // bind child props
+  }
+
+  #bindProps(children: Iterable<Element>) {
+    for (const child of children) {
       for (const attr of child.attributes) {
         if (attr.name.startsWith("$")) {
           const token = new JAttrToken(attr);
