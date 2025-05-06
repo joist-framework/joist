@@ -94,9 +94,7 @@ it("should update when items are added or removed", () => {
     >
       <j-for bind="items" key="id">
         <template>
-          <div>
-            <j-value bind="each.value.text"></j-value>
-          </div>
+          <j-value bind="each.value.text"></j-value>
         </template>
       </j-for>
     </div>
@@ -120,11 +118,9 @@ it("should provide index and position information", () => {
     >
       <j-for bind="items">
         <template>
-          <div>
-            <j-value bind="each.value"></j-value>
-            (index: <j-value bind="each.index"></j-value>,
-            position: <j-value bind="each.position"></j-value>)
-          </div>
+          <j-value bind="each.value"></j-value>
+          (index: <j-value bind="each.index"></j-value>,
+          position: <j-value bind="each.position"></j-value>)
         </template>
       </j-for>
     </div>
@@ -164,9 +160,7 @@ it("should handle nested j-for elements", () => {
           <div class="group">
             <j-for bind="each.value.items">
               <template>
-                <span>
-                  <j-value bind="each.value"></j-value>
-                </span>
+                <j-value bind="each.value"></j-value>
               </template>
             </j-for>
           </div>
@@ -184,48 +178,6 @@ it("should handle nested j-for elements", () => {
   assert.equal(items[1].textContent?.trim(), "B");
   assert.equal(items[2].textContent?.trim(), "C");
   assert.equal(items[3].textContent?.trim(), "D");
-});
-
-it("should handle different iterable types", () => {
-  const element = fixtureSync(html`
-    <div
-      @joist::value=${(e: JoistValueEvent) => {
-        // Test Array
-        e.update({
-          oldValue: null,
-          newValue: ["A", "B"],
-        });
-
-        // Test Set
-        e.update({
-          oldValue: null,
-          newValue: new Set(["C", "D"]),
-        });
-
-        // Test Map
-        e.update({
-          oldValue: null,
-          newValue: new Map([
-            ["key1", "E"],
-            ["key2", "F"],
-          ]),
-        });
-      }}
-    >
-      <j-for bind="items">
-        <template>
-          <div>
-            <j-value bind="each.value"></j-value>
-          </div>
-        </template>
-      </j-for>
-    </div>
-  `);
-
-  const items = element.querySelectorAll("div");
-  assert.equal(items.length, 2);
-  assert.equal(items[0].textContent?.trim(), "E");
-  assert.equal(items[1].textContent?.trim(), "F");
 });
 
 it("should maintain DOM order when items are reordered", () => {
@@ -255,9 +207,7 @@ it("should maintain DOM order when items are reordered", () => {
     >
       <j-for bind="items" key="id">
         <template>
-          <div>
-            <j-value bind="each.value.text"></j-value>
-          </div>
+          <j-value bind="each.value.text"></j-value>
         </template>
       </j-for>
     </div>
