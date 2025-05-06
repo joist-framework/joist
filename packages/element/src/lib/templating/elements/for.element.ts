@@ -140,26 +140,13 @@ export class JositForElement extends HTMLElement {
       scope.key = String(key);
       scope.each = { position: index + 1, index, value };
 
-      const child = this.children[index + 1]; // skip the first child since it's the template
+      const child = this.children[index + 1];
+
+      if (child !== scope) {
+        this.insertBefore(scope, child);
+      }
 
       index++;
-
-      // If scope is already in the correct position, no need to move it
-      // This optimization prevents unnecessary DOM operations
-      if (child === scope) {
-        continue;
-      }
-
-      // If there's a child element and either:
-      // 1. The scope isn't connected to the DOM yet, or
-      // 2. The child isn't the same as our scope
-      // Then insert the scope before the child
-      if (child && (!scope.isConnected || child !== scope)) {
-        child.before(scope);
-      } else {
-        // Otherwise append the scope to the end of this element
-        this.append(scope);
-      }
     }
 
     // Remove unused scopes

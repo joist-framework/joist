@@ -86,26 +86,29 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
 
         connectedCallback() {
-          if (this.isConnected) {
-            for (const { event, cb, selector } of meta.listeners) {
-              const root = selector(this);
+          if (this.#abortController) {
+            this.#abortController.abort();
+            this.#abortController = null;
+          }
 
-              if (root) {
-                this.#abortController = new AbortController();
+          this.#abortController = new AbortController();
 
-                root.addEventListener(event, cb.bind(this), {
-                  signal: this.#abortController.signal,
-                });
-              } else {
-                throw new Error(`could not add listener to ${root}`);
-              }
+          for (const { event, cb, selector } of meta.listeners) {
+            const root = selector(this);
+
+            if (root) {
+              root.addEventListener(event, cb.bind(this), {
+                signal: this.#abortController.signal,
+              });
+            } else {
+              throw new Error(`could not add listener to ${root}`);
             }
+          }
 
-            reflectAttributeValues(this, meta.attrs);
+          reflectAttributeValues(this, meta.attrs);
 
-            if (super.connectedCallback) {
-              super.connectedCallback();
-            }
+          if (super.connectedCallback) {
+            super.connectedCallback();
           }
         }
 
