@@ -4,5 +4,5 @@ export default {
     exportConditions: ["production"],
   },
   files: "target/**/*.test.js",
-  port: 1001,
+  port: 9876,
 };

@@ -188,9 +188,11 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
 ```html
 <j-async bind="userPromise">
   <template loading>Loading...</template>
+  
   <template success>
     <div>Welcome, <j-value bind="state.data.name"></j-value>!</div>
   </template>
+
   <template error>
     <div>Error: <j-value bind="state.error"></j-value></div>
   </template>
