@@ -132,9 +132,9 @@ it("should provide index and position information", () => {
 
   const items = element.querySelectorAll("div");
   assert.equal(items.length, 3);
-  assert.equal(items[0].textContent?.trim(), "A 0 1");
-  assert.equal(items[1].textContent?.trim(), "B 1 2)");
-  assert.equal(items[2].textContent?.trim(), "C 2 3");
+  assert.equal(items[0].textContent?.trim().replaceAll("\n", " "), "A 0 1");
+  assert.equal(items[1].textContent?.trim().replaceAll("\n", " "), "B 1 2");
+  assert.equal(items[2].textContent?.trim().replaceAll("\n", " "), "C 2 3");
 });
 
 it("should handle nested j-for elements", () => {
