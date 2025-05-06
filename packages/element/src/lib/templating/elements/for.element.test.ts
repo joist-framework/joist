@@ -122,8 +122,8 @@ it("should provide index and position information", () => {
         <template>
           <div>
             <j-value bind="each.value"></j-value>
-            <j-value bind="each.index"></j-value>
-            <j-value bind="each.position"></j-value>
+            (index: <j-value bind="each.index"></j-value>,
+            position: <j-value bind="each.position"></j-value>)
           </div>
         </template>
       </j-for>
@@ -132,9 +132,18 @@ it("should provide index and position information", () => {
 
   const items = element.querySelectorAll("div");
   assert.equal(items.length, 3);
-  assert.equal(items[0].textContent?.trim().replaceAll("\n", " "), "A 0 1");
-  assert.equal(items[1].textContent?.trim().replaceAll("\n", " "), "B 1 2");
-  assert.equal(items[2].textContent?.trim().replaceAll("\n", " "), "C 2 3");
+  assert.equal(
+    items[0].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    "A(index:0,position:1)",
+  );
+  assert.equal(
+    items[1].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    "B(index:1,position:2)",
+  );
+  assert.equal(
+    items[2].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    "C(index:2,position:3)",
+  );
 });
 
 it("should handle nested j-for elements", () => {
