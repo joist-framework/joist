@@ -117,6 +117,8 @@ export class JositForElement extends HTMLElement {
         } else {
           this.append(scope);
         }
+      } else if (child !== scope) {
+        child.before(scope);
       }
 
       this.#scopes.set(key, scope);
