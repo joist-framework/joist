@@ -24,7 +24,7 @@
       ]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs",
+      "command": "wtr --config wtr.config.mjs --puppeteer",
       "files": ["wtr.config.mjs", "target/**"],
       "output": [],
       "dependencies": ["build"]

@@ -73,14 +73,17 @@ export class JoistIfElement extends HTMLElement {
 
     const shouldShowIf = isNegative ? !value : value;
     const templateToUse = shouldShowIf ? templates[0] : templates[1];
-    const content = document.importNode(templateToUse.content, true);
 
-    this.appendChild(content);
+    if (templateToUse) {
+      const content = document.importNode(templateToUse.content, true);
+
+      this.appendChild(content);
+    }
   }
 
   #clean(): void {
-    while (!(this.lastElementChild instanceof HTMLTemplateElement)) {
-      this.lastElementChild?.remove();
+    while (!(this.lastChild instanceof HTMLTemplateElement)) {
+      this.lastChild?.remove();
     }
   }
 

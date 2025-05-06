@@ -38,7 +38,7 @@
       "dependencies": ["../observable:build"]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs",
+      "command": "wtr --config wtr.config.mjs --puppeteer",
       "files": ["vitest.config.js", "target/**"],
       "output": [],
       "dependencies": ["build"]
