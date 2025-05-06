@@ -37,7 +37,7 @@
       "output": ["target/**", "tsconfig.tsbuildinfo"]
     },
     "test": {
-      "command": "wtr --config wtr.config.mjs --puppeteer",
+      "command": "wtr --config wtr.config.mjs",
       "files": ["wtr.config.mjs", "target/**"],
       "output": [],
       "dependencies": ["build"]
