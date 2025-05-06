@@ -95,21 +95,24 @@ export class JositForElement extends HTMLElement {
   // to their correct positions based on the current iteration order
   createFromEmpty(): void {
     const template = this.#template();
+    const templateContent = template.content;
+    const keyProperty = this.key;
     const fragment = document.createDocumentFragment();
 
     let index = 0;
-
     for (const value of this.#items) {
-      const key = hasProperty(value, this.key) ? value[this.key] : index;
+      const key =
+        keyProperty && hasProperty(value, keyProperty)
+          ? value[keyProperty]
+          : index;
 
       const scope = new JForScope();
-      scope.append(document.importNode(template.content, true));
+      scope.append(document.importNode(templateContent, true));
       scope.key = String(key);
       scope.each = { position: index + 1, index, value };
 
       fragment.appendChild(scope);
       this.#scopes.set(key, scope);
-
       index++;
     }
 
@@ -176,6 +179,7 @@ export class JositForElement extends HTMLElement {
 function isIterable<T = unknown>(obj: any): obj is Iterable<T> {
   return obj != null && typeof obj[Symbol.iterator] === "function";
 }
+
 function hasProperty(
   item: unknown,
   key: string,
