@@ -53,3 +53,38 @@ it("should handle negated tokens correctly", () => {
 
   assert.equal(element.textContent?.trim(), "Visible Content");
 });
+
+it("should render else template when condition is falsy", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: false });
+      }}
+    >
+      <j-if bind="test">
+        <template>If Content</template>
+        <template else>Else Content</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Else Content");
+});
+
+it("should switch between if and else templates", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: false });
+        e.update({ oldValue: false, newValue: true });
+      }}
+    >
+      <j-if bind="test">
+        <template>If Content</template>
+        <template else>Else Content</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "If Content");
+});

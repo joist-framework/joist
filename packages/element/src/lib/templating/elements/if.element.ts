@@ -1,6 +1,7 @@
 import { attr } from "../../attr.js";
 import { element } from "../../element.js";
-import { type QueryResult, query } from "../../query.js";
+import { queryAll } from "../../query-all.js";
+import { query } from "../../query.js";
 import { css, html } from "../../tags.js";
 
 import { JoistValueEvent } from "../events.js";
@@ -21,9 +22,33 @@ export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  childTemplate: QueryResult<HTMLTemplateElement> = query("template", this);
+  #templates = queryAll<HTMLTemplateElement>("template", this);
 
   connectedCallback(): void {
+    const templates = Array.from(this.#templates());
+
+    if (templates.length === 0) {
+      throw new Error("j-if requires at least one template element");
+    }
+
+    if (templates.length > 2) {
+      throw new Error("j-if can only have two template elements (if and else)");
+    }
+
+    if (
+      templates.length === 2 &&
+      !templates.some((t) => t.hasAttribute("else"))
+    ) {
+      throw new Error(
+        "When using two templates, one must have the else attribute",
+      );
+    }
+
+    if (templates.length === 2 && templates[0].hasAttribute("else")) {
+      // Swap templates to ensure if template is first
+      [templates[0], templates[1]] = [templates[1], templates[0]];
+    }
+
     // make sure there are no other nodes after the template
     this.#clean();
 
@@ -43,25 +68,24 @@ export class JoistIfElement extends HTMLElement {
   }
 
   apply(value: unknown, isNegative: boolean): void {
-    const childTemplate = this.childTemplate();
+    this.#clean();
 
-    if (isNegative ? !value : value) {
-      // only clone the template if it is not already in the DOM
-      if (childTemplate.nextSibling === null) {
-        const res = document.importNode(childTemplate.content, true);
+    const templates = this.#templates();
 
-        this.appendChild(res);
-      }
-    } else {
-      this.#clean();
+    const shouldShowIf = isNegative ? !value : value;
+    const templateToUse = shouldShowIf ? templates[0] : templates[1];
+    const content = document.importNode(templateToUse.content, true);
+
+    this.appendChild(content);
+  }
+
+  #clean(): void {
+    while (!(this.lastElementChild instanceof HTMLTemplateElement)) {
+      this.lastElementChild?.remove();
     }
   }
 
-  #clean() {
-    const childTemplate = this.childTemplate();
-
-    while (childTemplate.nextSibling) {
-      childTemplate.nextSibling.remove();
-    }
+  disconnectedCallback(): void {
+    this.#clean();
   }
 }
