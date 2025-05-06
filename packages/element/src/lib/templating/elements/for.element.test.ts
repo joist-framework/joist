@@ -213,7 +213,7 @@ it("should maintain DOM order when items are reordered", () => {
     </div>
   `);
 
-  const items = element.querySelectorAll("div");
+  const items = element.querySelectorAll("j-value");
   assert.equal(items.length, 3);
   assert.equal(items[0].textContent?.trim(), "Third");
   assert.equal(items[1].textContent?.trim(), "First");
