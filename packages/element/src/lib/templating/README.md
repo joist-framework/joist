@@ -65,7 +65,30 @@ Conditionally renders content based on a boolean expression:
     <div>This content is shown when isHidden is false</div>
   </template>
 </j-if>
+
+<!-- With else template -->
+<j-if bind="isLoggedIn">
+  <template>
+    <div>Welcome back!</div>
+  </template>
+  <template else>
+    <div>Please log in</div>
+  </template>
+</j-if>
 ```
+
+The `j-if` element supports:
+- Boolean expressions for conditional rendering
+- Negation operator (`!`) for inverse conditions
+- Optional `else` template for fallback content
+- Automatic cleanup of removed content
+
+Common use cases:
+- Toggling visibility of UI elements
+- Conditional form fields
+- Feature flags
+- Authentication states
+- Loading states
 
 ### Property Binding (`j-props`)
 
@@ -132,6 +155,48 @@ Displays a bound value as text content:
 ```html
 <j-value bind="user.name"></j-value>
 <j-value bind="formattedPrice"></j-value>
+```
+
+### Async State Handling (`j-async`)
+
+Handles asynchronous operations and state management with loading, success, and error states:
+
+```html
+<j-async bind="userPromise">
+  <template loading>Loading user data...</template>
+  <template success>
+    <div>Welcome, <j-value bind="data.name"></j-value>!</div>
+  </template>
+  <template error>
+    <div>Error loading user data: <j-value bind="error"></j-value></div>
+  </template>
+</j-async>
+```
+
+The `j-async` element supports:
+- Promise handling with automatic state transitions
+- Loading, success, and error templates
+- Automatic cleanup on disconnection
+
+Example usage:
+```typescript
+// In your component
+@bind()
+accessor userPromise = fetch('/api/user').then(r => r.json());
+```
+
+```html
+<j-async bind="userPromise">
+  <template loading>Loading...</template>
+  
+  <template success>
+    <div>Welcome, <j-value bind="state.data.name"></j-value>!</div>
+  </template>
+
+  <template error>
+    <div>Error: <j-value bind="state.error"></j-value></div>
+  </template>
+</j-async>
 ```
 
 ## Complete Example

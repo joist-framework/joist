@@ -109,17 +109,19 @@ export class JositForElement extends HTMLElement {
         value: item,
       };
 
-      if (!scope.isConnected) {
-        const child = this.children[index + 1]; // skip first child since it should be the template element
+      const child = this.children[index + 1]; // skip first child since it should be the template element
 
+      if (!scope.isConnected) {
         if (child) {
           child.before(scope);
         } else {
           this.append(scope);
         }
-
-        this.#scopes.set(key, scope);
+      } else if (child !== scope) {
+        child.before(scope);
       }
+
+      this.#scopes.set(key, scope);
 
       index++;
     }

@@ -1,0 +1,122 @@
+import { attr } from "../../attr.js";
+import { element } from "../../element.js";
+import { queryAll } from "../../query-all.js";
+import { css, html } from "../../tags.js";
+import { bind } from "../bind.js";
+
+import { JoistValueEvent } from "../events.js";
+import { JToken } from "../token.js";
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "j-async": JoistAsyncElement;
+  }
+}
+
+export type AsyncState<T = unknown, E = unknown> = {
+  status: "loading" | "error" | "success";
+  data?: T;
+  error?: E;
+};
+
+@element({
+  tagName: "j-async",
+  // prettier-ignore
+  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
+})
+export class JoistAsyncElement extends HTMLElement {
+  @attr()
+  accessor bind = "";
+
+  @bind()
+  accessor state: AsyncState | null = null;
+
+  #templates = queryAll<HTMLTemplateElement>("template", this);
+  #currentNodes: Node[] = [];
+  #cachedTemplates: {
+    loading?: HTMLTemplateElement;
+    error?: HTMLTemplateElement;
+    success?: HTMLTemplateElement;
+  } = {
+    loading: undefined,
+    error: undefined,
+    success: undefined,
+  };
+
+  connectedCallback(): void {
+    this.#clean();
+
+    // Cache all templates
+    const templates = Array.from(this.#templates());
+
+    this.#cachedTemplates = {
+      loading: templates.find((t) => t.hasAttribute("loading")),
+      error: templates.find((t) => t.hasAttribute("error")),
+      success: templates.find((t) => t.hasAttribute("success")),
+    };
+
+    const token = new JToken(this.bind);
+
+    this.dispatchEvent(
+      new JoistValueEvent(token, ({ newValue, oldValue }) => {
+        if (newValue !== oldValue) {
+          if (newValue instanceof Promise) {
+            this.#handlePromise(newValue);
+          } else {
+            console.warn("j-async bind value must be a Promise or AsyncState");
+          }
+        }
+      }),
+    );
+  }
+
+  async #handlePromise(promise: Promise<unknown>): Promise<void> {
+    try {
+      this.#handleState({ status: "loading" });
+      const data = await promise;
+      this.#handleState({ status: "success", data });
+    } catch (error) {
+      this.#handleState({ status: "error", error });
+    }
+  }
+
+  #handleState(state: AsyncState): void {
+    this.#clean();
+
+    let template: HTMLTemplateElement | undefined = undefined;
+
+    this.state = state;
+
+    switch (state.status) {
+      case "loading":
+        template = this.#cachedTemplates.loading;
+        break;
+
+      case "error":
+        template = this.#cachedTemplates.error;
+        break;
+
+      case "success":
+        template = this.#cachedTemplates.success;
+        break;
+    }
+
+    if (template) {
+      const content = document.importNode(template.content, true);
+      const nodes = Array.from(content.childNodes);
+      this.appendChild(content);
+      this.#currentNodes = nodes;
+    }
+  }
+
+  #clean(): void {
+    for (const node of this.#currentNodes) {
+      node.parentNode?.removeChild(node);
+    }
+    this.#currentNodes = [];
+  }
+
+  disconnectedCallback(): void {
+    this.#clean();
+  }
+}

@@ -16,7 +16,6 @@ it("should call specific attrbute callback", () => {
 
     @attrChanged("test")
     onTestChanged(name: string, oldValue: string, newValue: string) {
-      console.log("onTestChanged", name, oldValue, newValue);
       args = [name, oldValue, newValue];
     }
   }
