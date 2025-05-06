@@ -44,7 +44,6 @@ class PluralRules extends Intl.PluralRules {}
         padding: 10px 15px;
         height: calc(var(--card-height) - 11px);
         text-align: center;
-        border-top: 1px solid #e6e6e6;
         font-size: 14px;
         text-align: left;
         position: relative;

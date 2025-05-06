@@ -15,14 +15,6 @@ import { TodoCardElement } from "./todo-card.element.js";
         background: #fff;
         position: relative;
       }
-
-      ::slotted(todo-card) {
-        border-bottom: solid 1px #f3f3f3;
-      }
-
-      ::slotted(todo-card:last-child) {
-        border-bottom: none;
-      }
     `,
     html`
       <j-for bind="todos" key="id">

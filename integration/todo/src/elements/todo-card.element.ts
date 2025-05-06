@@ -11,6 +11,7 @@ import type { Todo, TodoStatus } from "../services/todo.service.js";
         align-items: center;
         display: flex;
         padding: 1rem;
+        border-bottom: solid 1px #f3f3f3;
       }
 
       #name {

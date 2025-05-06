@@ -60,7 +60,7 @@ export class JositForElement extends HTMLElement {
       throw new Error("The first Node in j-for needs to be a template");
     }
 
-    let currentScope = template.nextElementSibling;
+    let currentScope: Element | null = this.firstElementChild;
 
     while (currentScope instanceof JForScope) {
       this.#scopes.set(currentScope.key, currentScope);
@@ -78,52 +78,88 @@ export class JositForElement extends HTMLElement {
             this.#items = [];
           }
 
-          this.updateItems();
+          // If there are no existing items in the DOM (template is the only child),
+          // create all items from scratch
+          if (template.nextSibling === null) {
+            this.createFromEmpty();
+          } else {
+            // Otherwise update existing items, reusing DOM nodes where possible
+            this.updateItems();
+          }
         }
       }),
     );
   }
 
+  // Updates the DOM by either inserting new scopes or moving existing ones
+  // to their correct positions based on the current iteration order
+  createFromEmpty(): void {
+    const template = this.#template();
+    const fragment = document.createDocumentFragment();
+
+    let index = 0;
+
+    for (const value of this.#items) {
+      const key = hasProperty(value, this.key) ? value[this.key] : index;
+
+      const scope = new JForScope();
+      scope.append(document.importNode(template.content, true));
+      scope.key = String(key);
+      scope.each = { position: index + 1, index, value };
+
+      fragment.appendChild(scope);
+      this.#scopes.set(key, scope);
+
+      index++;
+    }
+
+    this.append(fragment);
+  }
+
+  // Updates the DOM by either inserting new scopes or moving existing ones
+  // to their correct positions based on the current iteration order
   updateItems(): void {
     const template = this.#template();
     const leftoverScopes = new Map<unknown, JForScope>(this.#scopes);
 
     let index = 0;
 
-    for (const item of this.#items) {
-      const key = hasProperty(item, this.key) ? item[this.key] : index;
+    for (const value of this.#items) {
+      const key = hasProperty(value, this.key) ? value[this.key] : index;
 
       let scope = leftoverScopes.get(key);
 
       if (!scope) {
         scope = new JForScope();
         scope.append(document.importNode(template.content, true));
+        this.#scopes.set(key, scope);
       } else {
         leftoverScopes.delete(key); // Remove from map to track unused scopes
       }
 
       scope.key = String(key);
-      scope.each = {
-        position: index + 1,
-        index: index,
-        value: item,
-      };
+      scope.each = { position: index + 1, index, value };
 
-      const child = this.children[index + 1]; // skip first child since it should be the template element
-
-      if (!scope.isConnected) {
-        if (child) {
-          child.before(scope);
-        } else {
-          this.append(scope);
-        }
-      } else if (child !== scope) {
-        child.before(scope);
-      }
-
-      this.#scopes.set(key, scope);
+      const child = this.children[index + 1]; // skip the first child since it's the template
 
       index++;
+
+      // If scope is already in the correct position, no need to move it
+      // This optimization prevents unnecessary DOM operations
+      if (child === scope) {
+        continue;
+      }
+
+      // If there's a child element and either:
+      // 1. The scope isn't connected to the DOM yet, or
+      // 2. The child isn't the same as our scope
+      // Then insert the scope before the child
+      if (child && (!scope.isConnected || child !== scope)) {
+        child.before(scope);
+      } else {
+        // Otherwise append the scope to the end of this element
+        this.append(scope);
+      }
     }
 
     // Remove unused scopes
