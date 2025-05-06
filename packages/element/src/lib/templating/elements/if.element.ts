@@ -1,7 +1,6 @@
 import { attr } from "../../attr.js";
 import { element } from "../../element.js";
 import { queryAll } from "../../query-all.js";
-import { query } from "../../query.js";
 import { css, html } from "../../tags.js";
 
 import { JoistValueEvent } from "../events.js";
