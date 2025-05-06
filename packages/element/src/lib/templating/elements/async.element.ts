@@ -1,7 +1,8 @@
 import { attr } from "../../attr.js";
 import { element } from "../../element.js";
-import { query } from "../../query.js";
+import { queryAll } from "../../query-all.js";
 import { css, html } from "../../tags.js";
+import { bind } from "../bind.js";
 
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
@@ -27,13 +28,32 @@ export class JoistAsyncElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  #loadingTemplate = query<HTMLTemplateElement>("template[loading]", this);
-  #errorTemplate = query<HTMLTemplateElement>("template[error]", this);
-  #successTemplate = query<HTMLTemplateElement>("template[success]", this);
+  @bind()
+  accessor state: AsyncState | null = null;
+
+  #templates = queryAll<HTMLTemplateElement>("template", this);
   #currentNodes: Node[] = [];
+  #cachedTemplates: {
+    loading?: HTMLTemplateElement;
+    error?: HTMLTemplateElement;
+    success?: HTMLTemplateElement;
+  } = {
+    loading: undefined,
+    error: undefined,
+    success: undefined,
+  };
 
   connectedCallback(): void {
     this.#clean();
+
+    // Cache all templates
+    const templates = Array.from(this.#templates());
+
+    this.#cachedTemplates = {
+      loading: templates.find((t) => t.hasAttribute("loading")),
+      error: templates.find((t) => t.hasAttribute("error")),
+      success: templates.find((t) => t.hasAttribute("success")),
+    };
 
     const token = new JToken(this.bind);
 
@@ -42,8 +62,6 @@ export class JoistAsyncElement extends HTMLElement {
         if (newValue !== oldValue) {
           if (newValue instanceof Promise) {
             this.#handlePromise(newValue);
-          } else if (this.#isAsyncState(newValue)) {
-            this.#handleState(newValue);
           } else {
             console.warn("j-async bind value must be a Promise or AsyncState");
           }
@@ -65,23 +83,21 @@ export class JoistAsyncElement extends HTMLElement {
   #handleState(state: AsyncState): void {
     this.#clean();
 
-    let template: HTMLTemplateElement | null = null;
+    let template: HTMLTemplateElement | undefined = undefined;
+
+    this.state = state;
 
     switch (state.status) {
       case "loading":
-        template = this.#loadingTemplate();
+        template = this.#cachedTemplates.loading;
         break;
+
       case "error":
-        template = this.#errorTemplate();
-        if (template) {
-          template.dataset.error = JSON.stringify(state.error);
-        }
+        template = this.#cachedTemplates.error;
         break;
+
       case "success":
-        template = this.#successTemplate();
-        if (template) {
-          template.dataset.data = JSON.stringify(state.data);
-        }
+        template = this.#cachedTemplates.success;
         break;
     }
 
@@ -91,16 +107,6 @@ export class JoistAsyncElement extends HTMLElement {
       this.appendChild(content);
       this.#currentNodes = nodes;
     }
-  }
-
-  #isAsyncState(value: unknown): value is AsyncState {
-    return (
-      typeof value === "object" &&
-      value !== null &&
-      "status" in value &&
-      typeof value.status === "string" &&
-      ["loading", "error", "success"].includes(value.status)
-    );
   }
 
   #clean(): void {
