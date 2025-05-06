@@ -121,11 +121,16 @@ export class JositForElement extends HTMLElement {
   updateItems(): void {
     const template = this.#template();
     const leftoverScopes = new Map<unknown, JForScope>(this.#scopes);
+    const keyProperty = this.key; // Cache the key property
 
     let index = 0;
 
     for (const value of this.#items) {
-      const key = hasProperty(value, this.key) ? value[this.key] : index;
+      // Optimize key lookup by caching the property check
+      const key =
+        keyProperty && hasProperty(value, keyProperty)
+          ? value[keyProperty]
+          : index;
 
       let scope = leftoverScopes.get(key);
 
@@ -137,8 +142,11 @@ export class JositForElement extends HTMLElement {
         leftoverScopes.delete(key); // Remove from map to track unused scopes
       }
 
-      scope.key = String(key);
-      scope.each = { position: index + 1, index, value };
+      // Only update if values have changed
+      if (scope.key !== key || scope.each.value !== value) {
+        scope.key = String(key);
+        scope.each = { position: index + 1, index, value };
+      }
 
       const child = this.children[index + 1];
 
