@@ -290,3 +290,52 @@ The templating system is built on top of Joist's observable system (`@joist/obse
 3. Consider performance implications when binding to frequently changing values
 4. Always use a `key` attribute with `j-for` when items can be reordered
 5. Place template content directly inside `j-if` and `j-for` elements
+
+## Manual Value Handling
+
+You can manually handle value requests and updates by listening for the `joist::value` event. This is useful when you need more control over the binding process or want to implement custom binding logic:
+
+```typescript
+class MyElement extends HTMLElement {
+  connectedCallback() {
+    // Listen for value requests
+    this.addEventListener('joist::value', (e: JoistValueEvent) => {
+      const token = e.token;
+      
+      // Handle the value request
+      if (token.bindTo === 'myValue') {
+        // Update the value
+        e.update({ 
+          oldValue: this.myValue, 
+          newValue: this.myValue 
+        });
+      }
+    });
+  }
+}
+```
+
+Example with async value handling:
+```typescript
+class MyElement extends HTMLElement {
+  connectedCallback() {
+    this.addEventListener('joist::value', (e: JoistValueEvent) => {
+      const token = e.token;
+      
+      if (token.bindTo === 'userData') {
+        e.update({ 
+          oldValue: this.userData, 
+          newValue: data 
+        });
+      }
+    });
+  }
+}
+```
+
+Common use cases for manual value handling:
+- Custom data transformation before binding
+- Async data loading and caching
+- Complex state management
+- Integration with external data sources
+- Custom validation or error handling
