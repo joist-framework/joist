@@ -165,10 +165,10 @@ Handles asynchronous operations and state management with loading, success, and 
 <j-async bind="userPromise">
   <template loading>Loading user data...</template>
   <template success>
-    <div>Welcome, <j-value bind="data.name"></j-value>!</div>
+    <div>Welcome, <j-value bind="state.data.name"></j-value>!</div>
   </template>
   <template error>
-    <div>Error loading user data: <j-value bind="error"></j-value></div>
+    <div>Error loading user data: <j-value bind="state.error"></j-value></div>
   </template>
 </j-async>
 ```
