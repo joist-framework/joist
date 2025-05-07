@@ -1,7 +1,7 @@
 import { inject, injectable } from "@joist/di";
 import { css, element, html } from "@joist/element";
+import { bind } from "@joist/template";
 
-import { bind } from "@joist/element/templating.js";
 import { TodoService } from "../services/todo.service.js";
 
 const sfxs = new Map([
@@ -60,8 +60,11 @@ class PluralRules extends Intl.PluralRules {}
         left: 0;
         height: calc(var(--card-height) - 11px);
         overflow: hidden;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
-          0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
+        box-shadow:
+          0 1px 1px rgba(0, 0, 0, 0.2),
+          0 8px 0 -3px #f6f6f6,
+          0 9px 1px -3px rgba(0, 0, 0, 0.2),
+          0 16px 0 -6px #f6f6f6,
           0 17px 2px -6px rgba(0, 0, 0, 0.2);
       }
     `,
@@ -84,9 +87,7 @@ export class TodoListFooterElement extends HTMLElement {
     const todo = this.#todo();
 
     const onTodoUpdate = async () => {
-      this.totalActive = `${todo.totalActive} ${sfxs.get(
-        this.#pr().select(todo.totalActive),
-      )}`;
+      this.totalActive = `${todo.totalActive} ${sfxs.get(this.#pr().select(todo.totalActive))}`;
     };
 
     onTodoUpdate();

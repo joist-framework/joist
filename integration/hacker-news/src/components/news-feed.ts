@@ -1,6 +1,6 @@
 import { inject, injectable, injected } from "@joist/di";
 import { css, element, html } from "@joist/element";
-import { bind } from "@joist/element/templating.js";
+import { bind } from "@joist/template";
 
 import { type HnItem, HnService } from "../services/hn.service.js";
 

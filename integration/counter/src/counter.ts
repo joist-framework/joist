@@ -1,5 +1,5 @@
 import { css, element, html, listen } from "@joist/element";
-import { bind } from "@joist/element/templating.js";
+import { bind } from "@joist/template";
 
 @element({
   tagName: "joist-counter",
@@ -31,9 +31,7 @@ import { bind } from "@joist/element/templating.js";
     `,
     html`
       <button id="dec">-</button>
-
       <j-value bind="count.value"></j-value>
-
       <button id="inc">+</button>
     `,
   ],

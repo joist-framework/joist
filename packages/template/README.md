@@ -9,7 +9,7 @@ The Joist templating system provides a powerful and flexible way to handle data 
 The `bind` decorator enables reactive data binding for web component properties. It integrates with Joist's observable system to automatically track and propagate changes.
 
 ```typescript
-import { bind } from '@joist/element/templating.js';
+import { bind } from "@joist/template";
 
 class MyElement extends HTMLElement {
   @bind()
@@ -18,6 +18,7 @@ class MyElement extends HTMLElement {
 ```
 
 The decorator:
+
 - Creates a two-way binding between component properties and templates
 - Automatically handles value propagation through the `joist::value` event
 - Integrates with Joist's observable system for efficient change detection
@@ -31,8 +32,9 @@ The `JToken` class handles parsing and evaluation of binding expressions. It sup
 - Negation operator: `!isVisible`
 
 Example usage:
+
 ```typescript
-const token = new JToken('user.name');
+const token = new JToken("user.name");
 const value = token.readTokenValueFrom(context);
 ```
 
@@ -78,12 +80,14 @@ Conditionally renders content based on a boolean expression:
 ```
 
 The `j-if` element supports:
+
 - Boolean expressions for conditional rendering
 - Negation operator (`!`) for inverse conditions
 - Optional `else` template for fallback content
 - Automatic cleanup of removed content
 
 Common use cases:
+
 - Toggling visibility of UI elements
 - Conditional form fields
 - Feature flags
@@ -98,10 +102,10 @@ Binds values to element properties (rather than attributes). This is particularl
 <j-props>
   <!-- Bind to boolean properties -->
   <input type="checkbox" $.checked="isComplete">
-  
+
   <!-- Bind to form input values -->
   <input type="text" $.value="userName">
-  
+
   <!-- Bind to custom element properties -->
   <my-element $.data="complexObject">
 </j-props>
@@ -110,6 +114,7 @@ Binds values to element properties (rather than attributes). This is particularl
 Note the `$.` prefix for property bindings. This distinguishes property bindings from attribute bindings.
 
 Common use cases:
+
 - Form input states (`checked`, `value`, `disabled`)
 - Boolean properties that don't work well as attributes
 - Complex objects that need to be passed as properties
@@ -123,13 +128,13 @@ Renders lists of items with support for keyed updates:
 <j-for bind="todos" key="id">
   <template>
     <j-props>
-      <div 
-        class="todo-item" 
+      <div
+        class="todo-item"
         $.dataset.id="each.value.id"
         $.dataset.completed="each.value.completed"
       >
         <j-props>
-          <input type="checkbox" $.checked="each.value.completed">
+          <input type="checkbox" $.checked="each.value.completed" />
         </j-props>
 
         <j-value bind="each.value.text"></j-value>
@@ -144,6 +149,7 @@ Renders lists of items with support for keyed updates:
 ```
 
 The `j-for` element provides context variables:
+
 - `each.value`: The current item
 - `each.index`: Zero-based index
 - `each.position`: One-based position
@@ -153,8 +159,7 @@ The `j-for` element provides context variables:
 Displays a bound value as text content:
 
 ```html
-<j-value bind="user.name"></j-value>
-<j-value bind="formattedPrice"></j-value>
+<j-value bind="user.name"></j-value> <j-value bind="formattedPrice"></j-value>
 ```
 
 ### Async State Handling (`j-async`)
@@ -174,11 +179,13 @@ Handles asynchronous operations and state management with loading, success, and 
 ```
 
 The `j-async` element supports:
+
 - Promise handling with automatic state transitions
 - Loading, success, and error templates
 - Automatic cleanup on disconnection
 
 Example usage:
+
 ```typescript
 // In your component
 @bind()
@@ -188,7 +195,7 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
 ```html
 <j-async bind="userPromise">
   <template loading>Loading...</template>
-  
+
   <template success>
     <div>Welcome, <j-value bind="state.data.name"></j-value>!</div>
   </template>
@@ -204,8 +211,8 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
 Here's a complete todo application in a single component:
 
 ```typescript
-import { bind } from '@joist/element/templating.js';
-import { element, html, css, listen, query } from '@joist/element';
+import { bind } from "@joist/template";
+import { element, html, css, listen, query } from "@joist/element";
 
 interface Todo {
   id: number;
@@ -214,7 +221,7 @@ interface Todo {
 }
 
 @element({
-  tagName: 'todo-list',
+  tagName: "todo-list",
   shadowDom: [
     css`
       :host {
@@ -241,7 +248,7 @@ interface Todo {
     `,
     html`
       <form class="form">
-        <input type="text" placeholder="What needs to be done?">
+        <input type="text" placeholder="What needs to be done?" />
         <button type="submit">Add</button>
       </form>
 
@@ -255,7 +262,7 @@ interface Todo {
         <template>
           <j-props class="todo-item" $.dataset.completed="each.value.completed">
             <j-props>
-              <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed">
+              <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed" />
               <j-value class="todo-text" bind="each.value.text"></j-value>
               <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
             </j-props>
@@ -264,8 +271,8 @@ interface Todo {
       </j-for>
 
       <j-value bind="stats.remaining"></j-value> remaining
-    `
-  ]
+    `,
+  ],
 })
 export class TodoList extends HTMLElement {
   @bind()
@@ -274,61 +281,58 @@ export class TodoList extends HTMLElement {
   @bind()
   accessor stats = {
     remaining: 0,
-    completed: 0
+    completed: 0,
   };
 
   #nextId = 1;
-  #input = query('input');
+  #input = query("input");
 
   #updateStats() {
     this.stats = {
-      completed: this.todos.filter(todo => todo.completed).length,
-      remaining: this.todos.length - this.stats.completed
+      completed: this.todos.filter((todo) => todo.completed).length,
+      remaining: this.todos.length - this.stats.completed,
     };
   }
 
-  @listen('submit', 'form')
+  @listen("submit", "form")
   onSubmit(e: SubmitEvent) {
     e.preventDefault();
     const input = this.#input();
     const text = input.value.trim();
-    
+
     if (text) {
-      this.todos = [
-        ...this.todos,
-        { id: this.#nextId++, text, completed: false }
-      ];
-      
-      input.value = '';
-      
+      this.todos = [...this.todos, { id: this.#nextId++, text, completed: false }];
+
+      input.value = "";
+
       this.#updateStats();
     }
   }
 
-  @listen('change', '#todos')
+  @listen("change", "#todos")
   onToggle(e: Event) {
-    if(e.target instanceof HTMLInputElement) {
+    if (e.target instanceof HTMLInputElement) {
       const id = Number(e.target.id);
-      
-      this.todos = this.todos.map(todo => {
+
+      this.todos = this.todos.map((todo) => {
         if (todo.id === id) {
           return { ...todo, completed: checkbox.checked };
         }
-      
+
         return todo;
       });
-      
+
       this.#updateStats();
     }
   }
 
-  @listen('click', '#todos')
+  @listen("click", "#todos")
   onDelete(e: Event) {
-    if(e.target instanceof HTMLElement) {
+    if (e.target instanceof HTMLElement) {
       const id = Number(e.target.id);
 
-      this.todos = this.todos.filter(todo => todo.id !== id);
-        
+      this.todos = this.todos.filter((todo) => todo.id !== id);
+
       this.#updateStats();
     }
   }
@@ -344,6 +348,7 @@ export class TodoList extends HTMLElement {
 ## Integration with Observable
 
 The templating system is built on top of Joist's observable system (`@joist/observable`), providing:
+
 - Automatic change detection
 - Efficient updates
 - Integration with the component lifecycle
@@ -364,15 +369,15 @@ You can manually handle value requests and updates by listening for the `joist::
 class MyElement extends HTMLElement {
   connectedCallback() {
     // Listen for value requests
-    this.addEventListener('joist::value', (e: JoistValueEvent) => {
+    this.addEventListener("joist::value", (e: JoistValueEvent) => {
       const token = e.token;
-      
+
       // Handle the value request
-      if (token.bindTo === 'myValue') {
+      if (token.bindTo === "myValue") {
         // Update the value
-        e.update({ 
-          oldValue: this.myValue, 
-          newValue: this.myValue 
+        e.update({
+          oldValue: this.myValue,
+          newValue: this.myValue,
         });
       }
     });
@@ -381,16 +386,17 @@ class MyElement extends HTMLElement {
 ```
 
 Example with async value handling:
+
 ```typescript
 class MyElement extends HTMLElement {
   connectedCallback() {
-    this.addEventListener('joist::value', (e: JoistValueEvent) => {
+    this.addEventListener("joist::value", (e: JoistValueEvent) => {
       const token = e.token;
-      
-      if (token.bindTo === 'userData') {
-        e.update({ 
-          oldValue: this.userData, 
-          newValue: data 
+
+      if (token.bindTo === "userData") {
+        e.update({
+          oldValue: this.userData,
+          newValue: data,
         });
       }
     });
@@ -399,6 +405,7 @@ class MyElement extends HTMLElement {
 ```
 
 Common use cases for manual value handling:
+
 - Custom data transformation before binding
 - Async data loading and caching
 - Complex state management

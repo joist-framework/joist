@@ -1,7 +1,4 @@
-import { attr } from "../../attr.js";
-import { element } from "../../element.js";
-import { query } from "../../query.js";
-import { css, html } from "../../tags.js";
+import { attr, element, query, css, html } from "@joist/element";
 
 import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
@@ -101,10 +98,7 @@ export class JositForElement extends HTMLElement {
 
     let index = 0;
     for (const value of this.#items) {
-      const key =
-        keyProperty && hasProperty(value, keyProperty)
-          ? value[keyProperty]
-          : index;
+      const key = keyProperty && hasProperty(value, keyProperty) ? value[keyProperty] : index;
 
       const scope = new JForScope();
       scope.append(document.importNode(templateContent, true));
@@ -130,10 +124,7 @@ export class JositForElement extends HTMLElement {
 
     for (const value of this.#items) {
       // Optimize key lookup by caching the property check
-      const key =
-        keyProperty && hasProperty(value, keyProperty)
-          ? value[keyProperty]
-          : index;
+      const key = keyProperty && hasProperty(value, keyProperty) ? value[keyProperty] : index;
 
       let scope = leftoverScopes.get(key);
 
@@ -180,9 +171,6 @@ function isIterable<T = unknown>(obj: any): obj is Iterable<T> {
   return obj != null && typeof obj[Symbol.iterator] === "function";
 }
 
-function hasProperty(
-  item: unknown,
-  key: string,
-): item is Record<string, unknown> {
+function hasProperty(item: unknown, key: string): item is Record<string, unknown> {
   return Object.prototype.hasOwnProperty.call(item, key);
 }

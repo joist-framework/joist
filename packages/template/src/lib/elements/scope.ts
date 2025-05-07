@@ -1,7 +1,5 @@
-import { attr } from "../../attr.js";
-import { element } from "../../element.js";
-import { listen } from "../../listen.js";
-import { css, html } from "../../tags.js";
+import { attr, element, css, html, listen } from "@joist/element";
+
 import type { JoistValueEvent } from "../events.js";
 
 declare global {
@@ -35,11 +33,7 @@ export class JoistScopeElement extends HTMLElement {
     }
   }
 
-  attributeChangedCallback(
-    _: string,
-    oldValue: string,
-    newValue: string,
-  ): void {
+  attributeChangedCallback(_: string, oldValue: string, newValue: string): void {
     this.#binding?.update({ oldValue, newValue });
   }
 }

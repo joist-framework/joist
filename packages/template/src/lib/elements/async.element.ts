@@ -1,9 +1,6 @@
-import { attr } from "../../attr.js";
-import { element } from "../../element.js";
-import { queryAll } from "../../query-all.js";
-import { css, html } from "../../tags.js";
-import { bind } from "../bind.js";
+import { attr, element, queryAll, css, html } from "@joist/element";
 
+import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 

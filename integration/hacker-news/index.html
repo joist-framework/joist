@@ -1,78 +1,79 @@
 <!doctype html>
 
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
-  <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="dns-prefetch" href="https://hacker-news.firebaseio.com" />
 
-  <link rel="dns-prefetch" href="https://hacker-news.firebaseio.com" />
-
-  <script type="importmap">
-    {
-      "imports": {
-        "@joist/di": "/node_modules/@joist/di/target/lib.js",
-        "@joist/di/": "/node_modules/@joist/di/target/lib/",
-        "@joist/element": "/node_modules/@joist/element/target/lib.js",
-        "@joist/element/": "/node_modules/@joist/element/target/lib/",
-        "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
-        "@joist/observable/": "/node_modules/@joist/observable/target/lib/",
-        "tslib": "/node_modules/tslib/tslib.es6.js"
+    <script type="importmap">
+      {
+        "imports": {
+          "@joist/di": "/node_modules/@joist/di/target/lib.js",
+          "@joist/di/": "/node_modules/@joist/di/target/lib/",
+          "@joist/element": "/node_modules/@joist/element/target/lib.js",
+          "@joist/element/": "/node_modules/@joist/element/target/lib/",
+          "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
+          "@joist/observable/": "/node_modules/@joist/observable/target/lib/",
+          "@joist/template": "/node_modules/@joist/template/target/lib.js",
+          "@joist/template/": "/node_modules/@joist/template/target/lib/",
+          "tslib": "/node_modules/tslib/tslib.es6.js"
+        }
       }
-    }
-  </script>
+    </script>
 
-  <title>Hacker News</title>
-</head>
+    <title>Hacker News</title>
+  </head>
 
-<body>
-  <style>
-    body {
-      background-color: rgb(246, 246, 239);
-      padding: 0;
-      margin: 0;
-    }
+  <body>
+    <style>
+      body {
+        background-color: rgb(246, 246, 239);
+        padding: 0;
+        margin: 0;
+      }
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      line-height: 1.4em;
-    }
+      * {
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+          "Open Sans", "Helvetica Neue", sans-serif;
+        line-height: 1.4em;
+      }
 
-    :not(:defined) {
-      visibility: hidden;
-    }
+      :not(:defined) {
+        visibility: hidden;
+      }
 
-    hn-loading {
-      margin: 2rem auto auto auto;
-    }
-  </style>
+      hn-loading {
+        margin: 2rem auto auto auto;
+      }
+    </style>
 
-  <hn-header>
-    <hn-header-link href="/new">new</hn-header-link>
-    <hn-header-link href="/new">past</hn-header-link>
-    <hn-header-link href="/new">comments</hn-header-link>
-    <hn-header-link href="/new">ask</hn-header-link>
-    <hn-header-link href="/new">show</hn-header-link>
-    <hn-header-link href="/new">jobs</hn-header-link>
-    <hn-header-link href="/new">submit</hn-header-link>
-  </hn-header>
+    <hn-header>
+      <hn-header-link href="/new">new</hn-header-link>
+      <hn-header-link href="/new">past</hn-header-link>
+      <hn-header-link href="/new">comments</hn-header-link>
+      <hn-header-link href="/new">ask</hn-header-link>
+      <hn-header-link href="/new">show</hn-header-link>
+      <hn-header-link href="/new">jobs</hn-header-link>
+      <hn-header-link href="/new">submit</hn-header-link>
+    </hn-header>
 
-  <hn-news-feed></hn-news-feed>
+    <hn-news-feed></hn-news-feed>
 
-  <script type="module" src="./target/components/header.js"></script>
-  <script type="module" src="./target/components/header-link.js"></script>
-  <script type="module" src="./target/components/news-feed.js"></script>
-  <script type="module" src="./target/components/news-card.js"></script>
-  <script type="module" src="./target/components/loading.js"></script>
+    <script type="module">
+      import "@joist/template/define.js";
+    </script>
 
-  <script type="module">
-    import "@joist/element/templating/define.js";
-  </script>
-</body>
-
+    <script type="module" src="./target/components/header.js"></script>
+    <script type="module" src="./target/components/header-link.js"></script>
+    <script type="module" src="./target/components/news-feed.js"></script>
+    <script type="module" src="./target/components/news-card.js"></script>
+    <script type="module" src="./target/components/loading.js"></script>
+  </body>
 </html>

@@ -1,6 +1,4 @@
-import { attr } from "../../attr.js";
-import { element } from "../../element.js";
-import { css, html } from "../../tags.js";
+import { attr, element, css, html } from "@joist/element";
 
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
@@ -11,9 +9,7 @@ export class JAttrToken extends JToken {
 
   constructor(attr: Attr) {
     if (!attr.name.startsWith("$")) {
-      throw new Error(
-        `Invalid attribute token: ${attr.name}, should start with $`,
-      );
+      throw new Error(`Invalid attribute token: ${attr.name}, should start with $`);
     }
 
     super(attr.value);

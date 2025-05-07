@@ -1,7 +1,4 @@
-import { attr } from "../../attr.js";
-import { element } from "../../element.js";
-import { queryAll } from "../../query-all.js";
-import { css, html } from "../../tags.js";
+import { attr, element, queryAll, css, html } from "@joist/element";
 
 import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
@@ -34,13 +31,8 @@ export class JoistIfElement extends HTMLElement {
       throw new Error("j-if can only have two template elements (if and else)");
     }
 
-    if (
-      templates.length === 2 &&
-      !templates.some((t) => t.hasAttribute("else"))
-    ) {
-      throw new Error(
-        "When using two templates, one must have the else attribute",
-      );
+    if (templates.length === 2 && !templates.some((t) => t.hasAttribute("else"))) {
+      throw new Error("When using two templates, one must have the else attribute");
     }
 
     if (templates.length === 2 && templates[0].hasAttribute("else")) {

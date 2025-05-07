@@ -1,16 +1,15 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
-  <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter</title>
 
-  <title>Counter</title>
-
-  <script type="importmap">
+    <script type="importmap">
       {
         "imports": {
           "@joist/di": "/node_modules/@joist/di/target/lib.js",
@@ -19,29 +18,30 @@
           "@joist/element/": "/node_modules/@joist/element/target/lib/",
           "@joist/observable": "/node_modules/@joist/observable/target/lib.js",
           "@joist/observable/": "/node_modules/@joist/observable/target/lib/",
+          "@joist/template": "/node_modules/@joist/template/target/lib.js",
+          "@joist/template/": "/node_modules/@joist/template/target/lib/",
           "tslib": "/node_modules/tslib/tslib.es6.js"
         }
       }
     </script>
-</head>
+  </head>
 
-<body>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-        Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      line-height: 1.4em;
-    }
-  </style>
+  <body>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+          "Open Sans", "Helvetica Neue", sans-serif;
+        line-height: 1.4em;
+      }
+    </style>
 
-  <joist-counter></joist-counter>
+    <joist-counter></joist-counter>
 
-  <script type="module">
-    import "./target/counter.js";
-
-    import "@joist/element/templating/define.js";
-  </script>
-</body>
-
+    <script type="module">
+      import "@joist/template/define.js";
+      import "./target/counter.js";
+    </script>
+  </body>
 </html>
