@@ -1,6 +1,6 @@
 import { inject, injectable } from "@joist/di";
 import { css, element, html } from "@joist/element";
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 
 import { TodoService } from "../services/todo.service.js";
 

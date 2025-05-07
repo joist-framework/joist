@@ -1,5 +1,5 @@
 import { attr, css, element, html, listen } from "@joist/element";
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 
 import type { Todo, TodoStatus } from "../services/todo.service.js";
 

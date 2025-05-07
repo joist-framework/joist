@@ -1,5 +1,5 @@
 {
-  "name": "@joist/template",
+  "name": "@joist/templating",
   "version": "4.2.3-next.5",
   "type": "module",
   "main": "./target/lib.js",

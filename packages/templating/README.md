@@ -9,7 +9,7 @@ The Joist templating system provides a powerful and flexible way to handle data 
 The `bind` decorator enables reactive data binding for web component properties. It integrates with Joist's observable system to automatically track and propagate changes.
 
 ```typescript
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 
 class MyElement extends HTMLElement {
   @bind()
@@ -211,7 +211,7 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
 Here's a complete todo application in a single component:
 
 ```typescript
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 import { element, html, css, listen, query } from "@joist/element";
 
 interface Todo {

@@ -1,5 +1,5 @@
 import { css, element, html, listen } from "@joist/element";
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 
 @element({
   tagName: "joist-counter",

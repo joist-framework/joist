@@ -25,7 +25,8 @@
       "dependencies": [
         "../../packages/element:build",
         "../../packages/di:build",
-        "../../packages/observable:build"
+        "../../packages/observable:build",
+        "../../packages/templating:build"
       ]
     }
   }

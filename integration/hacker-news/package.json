@@ -25,19 +25,32 @@
     },
     "test": {
       "command": "wtr --config wtr.config.mjs",
-      "files": ["wtr.config.mjs", "target/**"],
+      "files": [
+        "wtr.config.mjs",
+        "target/**"
+      ],
       "output": [],
-      "dependencies": ["build"]
+      "dependencies": [
+        "build"
+      ]
     },
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
-      "files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
-      "output": ["target/**", "tsconfig.tsbuildinfo"],
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ],
       "dependencies": [
         "../../packages/element:build",
         "../../packages/di:build",
-        "../../packages/observable:build"
+        "../../packages/observable:build",
+        "../../packages/templating:build"
       ]
     }
   }

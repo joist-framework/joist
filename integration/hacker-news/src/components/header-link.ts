@@ -1,5 +1,5 @@
 import { attr, css, element, html } from "@joist/element";
-import { bind } from "@joist/template";
+import { bind } from "@joist/templating";
 
 @element({
   tagName: "hn-header-link",

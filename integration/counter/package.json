@@ -38,7 +38,7 @@
         "../../packages/element:build",
         "../../packages/di:build",
         "../../packages/observable:build",
-        "../../packages/template:build"
+        "../../packages/templating:build"
       ]
     }
   }
