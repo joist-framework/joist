@@ -137,15 +137,15 @@
       app.attach(document.body);
     </script>
 
-    <script type="module" src="./target/ctx/storage.ctx.js"></script>
-    <script type="module" src="./target/elements/todo-card.element.js"></script>
-    <script type="module" src="./target/elements/todo-form.element.js"></script>
-    <script type="module" src="./target/elements/todo-list-footer.element.js"></script>
-    <script type="module" src="./target/elements/todo-list.element.js"></script>
-    <script type="module" src="./target/elements/todo-logger.element.js"></script>
-
     <script type="module">
       import "@joist/templating/define.js";
+
+      import "./target/ctx/storage.ctx.js";
+      import "./target/elements/todo-card.element.js";
+      import "./target/elements/todo-form.element.js";
+      import "./target/elements/todo-list-footer.element.js";
+      import "./target/elements/todo-list.element.js";
+      import "./target/elements/todo-logger.element.js";
     </script>
   </body>
 </html>
