@@ -13,9 +13,6 @@
     "src",
     "target"
   ],
-  "sideEffects": [
-    "**/define.js"
-  ],
   "description": "Intelligently apply styles to WebComponents",
   "repository": {
     "type": "git",
