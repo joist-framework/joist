@@ -1,6 +1,6 @@
 {
   "name": "@joist/element",
-  "version": "4.2.3-next.5",
+  "version": "4.2.3-next.6",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -9,14 +9,24 @@
     "./*": "./target/lib/*",
     "./package.json": "./package.json"
   },
-  "files": ["src", "target"],
-  "sideEffects": ["**/define.js"],
+  "files": [
+    "src",
+    "target"
+  ],
+  "sideEffects": [
+    "**/define.js"
+  ],
   "description": "Intelligently apply styles to WebComponents",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joist-framework/joist.git"
   },
-  "keywords": ["TypeScript", "WebComponents", "CSS", "ShadowDOM"],
+  "keywords": [
+    "TypeScript",
+    "WebComponents",
+    "CSS",
+    "ShadowDOM"
+  ],
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
@@ -33,14 +43,26 @@
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
-      "files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
-      "output": ["target/**", "tsconfig.tsbuildinfo"]
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
     },
     "test": {
       "command": "wtr --config wtr.config.mjs",
-      "files": ["vitest.config.js", "target/**"],
+      "files": [
+        "vitest.config.js",
+        "target/**"
+      ],
       "output": [],
-      "dependencies": ["build"]
+      "dependencies": [
+        "build"
+      ]
     }
   }
 }

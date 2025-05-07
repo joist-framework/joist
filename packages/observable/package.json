@@ -1,6 +1,6 @@
 {
   "name": "@joist/observable",
-  "version": "4.2.3-next.5",
+  "version": "4.2.3-next.6",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -9,14 +9,22 @@
     "./*": "./target/lib/*",
     "./package.json": "./package.json"
   },
-  "files": ["src", "target"],
+  "files": [
+    "src",
+    "target"
+  ],
   "sideEffects": false,
   "description": "Monitor and respond to object changes",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deebloo/joist.git"
   },
-  "keywords": ["TypeScript", "Observable", "WebComponents", "Reactive"],
+  "keywords": [
+    "TypeScript",
+    "Observable",
+    "WebComponents",
+    "Reactive"
+  ],
   "author": "deebloo",
   "license": "MIT",
   "bugs": {
@@ -33,14 +41,26 @@
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
-      "files": ["src/**", "tsconfig.json", "../../tsconfig.json"],
-      "output": ["target/**", "tsconfig.tsbuildinfo"]
+      "files": [
+        "src/**",
+        "tsconfig.json",
+        "../../tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ]
     },
     "test": {
       "command": "wtr --config wtr.config.mjs",
-      "files": ["wtr.config.mjs", "target/**"],
+      "files": [
+        "wtr.config.mjs",
+        "target/**"
+      ],
       "output": [],
-      "dependencies": ["build"]
+      "dependencies": [
+        "build"
+      ]
     }
   }
 }

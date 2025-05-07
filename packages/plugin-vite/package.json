@@ -1,6 +1,6 @@
 {
   "name": "@joist/plugin-vite",
-  "version": "4.2.3-next.5",
+  "version": "4.2.3-next.6",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
@@ -8,7 +8,10 @@
     ".": "./target/lib.js",
     "./package.json": "./package.json"
   },
-  "files": ["src", "target"],
+  "files": [
+    "src",
+    "target"
+  ],
   "sideEffects": false,
   "description": "server side render shadow dom (Declarative Shadow DOM)",
   "repository": {
@@ -31,15 +34,27 @@
     "build": {
       "command": "tsc --build --pretty",
       "clean": "if-file-deleted",
-      "files": ["src/**", "tsconfig.json"],
-      "output": ["target/**", "tsconfig.tsbuildinfo"],
-      "dependencies": ["../ssr:build"]
+      "files": [
+        "src/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "target/**",
+        "tsconfig.tsbuildinfo"
+      ],
+      "dependencies": [
+        "../ssr:build"
+      ]
     },
     "test": {
       "command": "mocha target/**/*.test.js",
-      "files": ["target/**"],
+      "files": [
+        "target/**"
+      ],
       "output": [],
-      "dependencies": ["build"]
+      "dependencies": [
+        "build"
+      ]
     }
   },
   "devDependencies": {
