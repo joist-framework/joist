@@ -47,11 +47,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
           }
         }
 
-        attributeChangedCallback(
-          name: string,
-          oldValue: string,
-          newValue: string,
-        ) {
+        attributeChangedCallback(name: string, oldValue: string, newValue: string) {
           const attr = meta.attrs.get(name);
           const cbs = meta.attrChanges.get(name);
 
@@ -129,10 +125,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
   };
 }
 
-function reflectAttributeValues<T extends HTMLElement>(
-  el: T,
-  attrs: AttrMetadata,
-) {
+function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadata) {
   for (const [attrName, { getPropValue, reflect }] of attrs) {
     if (reflect) {
       const value = getPropValue.call(el);

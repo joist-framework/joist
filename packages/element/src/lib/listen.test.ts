@@ -102,3 +102,37 @@ describe("@listen()", () => {
     el.remove();
   });
 });
+
+it("should remove event listeners during cleanup", () => {
+  let clickCount = 0;
+
+  @element({
+    tagName: "listener-cleanup",
+    shadowDom: [],
+  })
+  class MyElement extends HTMLElement {
+    @listen("click")
+    onClick1() {
+      clickCount++;
+    }
+
+    @listen("click")
+    onClick2() {
+      clickCount++;
+    }
+  }
+
+  const el = new MyElement();
+  document.body.append(el);
+
+  // First click should increment counter
+  el.shadowRoot?.dispatchEvent(new Event("click"));
+  assert.equal(clickCount, 2);
+
+  // Remove element which should cleanup listeners
+  el.remove();
+
+  // Second click after removal should not increment counter
+  el.shadowRoot?.dispatchEvent(new Event("click"));
+  assert.equal(clickCount, 2);
+});
