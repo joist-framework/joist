@@ -82,22 +82,19 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
 
         connectedCallback() {
-          if (this.#abortController) {
-            this.#abortController.abort();
-            this.#abortController = null;
-          }
+          if (!this.#abortController) {
+            this.#abortController = new AbortController();
 
-          this.#abortController = new AbortController();
+            for (const { event, cb, selector } of meta.listeners) {
+              const root = selector(this);
 
-          for (const { event, cb, selector } of meta.listeners) {
-            const root = selector(this);
-
-            if (root) {
-              root.addEventListener(event, cb.bind(this), {
-                signal: this.#abortController.signal,
-              });
-            } else {
-              throw new Error(`could not add listener to ${root}`);
+              if (root) {
+                root.addEventListener(event, cb.bind(this), {
+                  signal: this.#abortController.signal,
+                });
+              } else {
+                throw new Error(`could not add listener to ${root}`);
+              }
             }
           }
 

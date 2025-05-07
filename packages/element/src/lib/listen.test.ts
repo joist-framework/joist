@@ -136,3 +136,44 @@ it("should remove event listeners during cleanup", () => {
   el.shadowRoot?.dispatchEvent(new Event("click"));
   assert.equal(clickCount, 2);
 });
+
+it("should not add event listeners multiple times when element is moved", () => {
+  let clickCount = 0;
+
+  @element({
+    tagName: "listener-move",
+    shadowDom: [],
+  })
+  class MyElement extends HTMLElement {
+    @listen("click")
+    onClick() {
+      clickCount++;
+    }
+  }
+
+  const el = new MyElement();
+  const container1 = document.createElement("div");
+  const container2 = document.createElement("div");
+
+  document.body.append(container1);
+  document.body.append(container2);
+
+  // Add to first container
+  container1.append(el);
+
+  // Click should increment once
+  el.shadowRoot?.dispatchEvent(new Event("click"));
+  assert.equal(clickCount, 1);
+
+  // Move to second container
+  container2.append(el);
+
+  // Click should still only increment once
+  el.shadowRoot?.dispatchEvent(new Event("click"));
+  assert.equal(clickCount, 2);
+
+  // Cleanup
+  el.remove();
+  container1.remove();
+  container2.remove();
+});
