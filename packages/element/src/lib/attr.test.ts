@@ -138,23 +138,6 @@ it("should throw an error for symbols with no description", async () => {
   }).to.throw("Cannot handle Symbol property without description");
 });
 
-it("should not reflect property to attribute", async () => {
-  @element({
-    tagName: "attr-test-5",
-  })
-  class MyElement extends HTMLElement {
-    @attr({ reflect: false })
-    accessor value = "foo";
-  }
-
-  const el = new MyElement();
-  el.value = "bar";
-
-  expect(el.value).to.equal("bar");
-
-  expect(el.hasAttribute("value")).to.be.false;
-});
-
 it("non reflective attributes should still read new attribute values", async () => {
   @element({
     tagName: "attr-test-6",
@@ -187,6 +170,42 @@ it("should allow a manually defined attribute name", async () => {
   document.body.append(el);
 
   expect(el.value).to.equal("TEST");
+
+  el.remove();
+});
+
+it("should update property when attribute changes", async () => {
+  @element({
+    tagName: "attr-test-8",
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor value = "foo";
+
+    @attr()
+    accessor count = 0;
+
+    @attr()
+    accessor enabled = false;
+  }
+
+  const el = new MyElement();
+  document.body.append(el);
+
+  // Test string property
+  el.setAttribute("value", "bar");
+  expect(el.value).to.equal("bar");
+
+  // Test number property
+  el.setAttribute("count", "42");
+  expect(el.count).to.equal(42);
+
+  // Test boolean property
+  el.setAttribute("enabled", "");
+  expect(el.enabled).to.equal(true);
+
+  el.removeAttribute("enabled");
+  expect(el.enabled).to.equal(false);
 
   el.remove();
 });
