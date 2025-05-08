@@ -34,31 +34,39 @@ it("should write default value to attribute", async () => {
   el.remove();
 });
 
-// TODO: Figure out test
-// it('should register attributes', async () => {
-//   @element({
-//     tagName: 'element-2'
-//   })
-//   class MyElement extends HTMLElement {
-//     @attr()
-//     accessor value1 = 'hello'; // no attribute
+it("should register attributes", async () => {
+  const observedAttrs: string[] = [];
 
-//     @attr()
-//     accessor value2 = 0; // number
+  @element({
+    tagName: "element-2",
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor value1 = "hello";
 
-//     @attr()
-//     accessor value3 = true; // boolean
+    @attr()
+    accessor value2 = 0;
 
-//     @attr({ observed: false }) // should be filtered out
-//     accessor value4 = 'hello world';
-//   }
+    @attr()
+    accessor value3 = true;
 
-//   expect(Reflect.get(MyElement, 'observedAttributes')).to.deep.equal([
-//     'value1',
-//     'value2',
-//     'value3'
-//   ]);
-// });
+    @attr({ observed: false })
+    accessor value4 = "hello world";
+
+    attributeChangedCallback(name: string) {
+      observedAttrs.push(name);
+    }
+  }
+
+  const el = new MyElement();
+
+  el.setAttribute("value1", "foo");
+  el.setAttribute("value2", "1");
+  el.setAttribute("value3", "false");
+  el.setAttribute("value4", "bar");
+
+  expect(observedAttrs).to.deep.equal(["value1", "value2", "value3"]);
+});
 
 it("should attach shadow root when the shadow property exists", async () => {
   @element({

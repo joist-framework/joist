@@ -55,9 +55,13 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             if (oldValue !== newValue) {
               const ogValue = attr.getPropValue.call(this);
 
-              if (newValue === "") {
+              if (typeof ogValue === "boolean") {
                 // treat as boolean
-                attr.setPropValue.call(this, true);
+                if (newValue === "") {
+                  attr.setPropValue.call(this, true);
+                } else if (newValue === "false") {
+                  attr.setPropValue.call(this, false);
+                }
               } else if (typeof ogValue === "number") {
                 // treat as number
                 attr.setPropValue.call(this, Number(newValue));
