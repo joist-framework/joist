@@ -245,40 +245,22 @@ it("should execute callbacks when condition returns empty object", () => {
   });
 });
 
-// it("should handle dynamic conditions in lifecycle callbacks", () => {
-//   const i = new Injector();
-//   let shouldExecute = false;
+it("should provide type safety for instance properties", () => {
+  const i = new Injector();
 
-//   @injectable()
-//   class MyService {
-//     res = {
-//       onCreated: 0,
-//       onInjected: 0,
-//     };
+  @injectable()
+  class MyService {
+    count = 0;
+    name = "test";
 
-//     @created(() => ({ enabled: shouldExecute }))
-//     onCreated() {
-//       this.res.onCreated++;
-//     }
+    @created<MyService>((instance) => {
+      return { enabled: instance.count > 0 && instance.name === "test" };
+    })
+    onCreated() {
+      this.count++;
+    }
+  }
 
-//     @injected(() => ({ enabled: shouldExecute }))
-//     onInjected() {
-//       this.res.onInjected++;
-//     }
-//   }
-
-//   // First injection with shouldExecute = false
-//   const service1 = i.inject(MyService);
-//   assert.deepEqual(service1.res, {
-//     onCreated: 0,
-//     onInjected: 0,
-//   });
-
-//   // Second injection with shouldExecute = true
-//   shouldExecute = true;
-//   const service2 = i.inject(MyService);
-//   assert.deepEqual(service2.res, {
-//     onCreated: 1,
-//     onInjected: 1,
-//   });
-// });
+  const service = i.inject(MyService);
+  assert.equal(service.count, 0); // Not called because count is 0
+});

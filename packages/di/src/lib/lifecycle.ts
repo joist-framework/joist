@@ -6,7 +6,7 @@ import type {
   LifecycleMethod,
 } from "./metadata.js";
 
-export function injected(condition?: LifecycleCondition) {
+export function injected<T extends object>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
     ctx: ClassMethodDecoratorContext,
@@ -20,7 +20,7 @@ export function injected(condition?: LifecycleCondition) {
   };
 }
 
-export function created(condition?: LifecycleCondition) {
+export function created<T extends object>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
     ctx: ClassMethodDecoratorContext,
@@ -34,11 +34,15 @@ export function created(condition?: LifecycleCondition) {
   };
 }
 
-export function callLifecycle(instance: object, i: Injector, methods?: LifecycleMethod[]): void {
+export function callLifecycle<T extends object>(
+  instance: T,
+  i: Injector,
+  methods?: LifecycleMethod<T>[],
+): void {
   if (methods) {
     for (const { callback, condition } of methods) {
       if (condition) {
-        const result = condition();
+        const result = condition(instance);
         if (result.enabled === false) {
           continue;
         }
