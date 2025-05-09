@@ -128,3 +128,157 @@ it("should call onInject and on init when injected from another service", () => 
     onInjected: 2,
   });
 });
+
+it("should respect enabled=false condition in lifecycle callbacks", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: false }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: false }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 0,
+    onInjected: 0,
+  });
+});
+
+it("should respect enabled=true condition in lifecycle callbacks", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: true }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: true }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+it("should execute callbacks when condition returns undefined enabled", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: undefined }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: undefined }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+it("should execute callbacks when condition returns empty object", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({}))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({}))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+// it("should handle dynamic conditions in lifecycle callbacks", () => {
+//   const i = new Injector();
+//   let shouldExecute = false;
+
+//   @injectable()
+//   class MyService {
+//     res = {
+//       onCreated: 0,
+//       onInjected: 0,
+//     };
+
+//     @created(() => ({ enabled: shouldExecute }))
+//     onCreated() {
+//       this.res.onCreated++;
+//     }
+
+//     @injected(() => ({ enabled: shouldExecute }))
+//     onInjected() {
+//       this.res.onInjected++;
+//     }
+//   }
+
+//   // First injection with shouldExecute = false
+//   const service1 = i.inject(MyService);
+//   assert.deepEqual(service1.res, {
+//     onCreated: 0,
+//     onInjected: 0,
+//   });
+
+//   // Second injection with shouldExecute = true
+//   shouldExecute = true;
+//   const service2 = i.inject(MyService);
+//   assert.deepEqual(service2.res, {
+//     onCreated: 1,
+//     onInjected: 1,
+//   });
+// });
