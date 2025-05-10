@@ -10,11 +10,12 @@ This toolkit is here to help provide just the functionality you need and nothing
 
 ## Packages
 
-| Package                                  | Description                              |
-| ---------------------------------------- | ---------------------------------------- |
-| [@joist/di](packages/di)                 | Small and Efficient dependency Injection |
-| [@joist/element](packages/element)       | utilities for custom elements            |
-| [@joist/observable](packages/observable) | Observe changes to class properties      |
+| Package                                  | Description                                   |
+| ---------------------------------------- | --------------------------------------------- |
+| [@joist/di](packages/di)                 | Small and Efficient dependency Injection      |
+| [@joist/element](packages/element)       | utilities for custom elements                 |
+| [@joist/observable](packages/observable) | Observe changes to class properties           |
+| [@joist/templating](packages/templating) | Use custom elements to display dynamic values |
 
 **Sponsored by:**
 
