@@ -301,9 +301,13 @@ class MyService {
     // This will execute because enabled is true
   }
 
-  @injected(() => ({ enabled: false }))
+  @injected(() => {
+    return {
+      enabled: process.env.NODE_ENV === "development",
+    };
+  })
   onInjected() {
-    // This will not execute because enabled is false
+    // will only execute when NODE_ENV is development
   }
 }
 ```
