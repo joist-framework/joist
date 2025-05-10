@@ -4,7 +4,8 @@ import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { created, injected } from "./lifecycle.js";
-import { readInjector } from "./metadata.js";
+import { LifecycleCallback, readInjector } from "./metadata.js";
+import { StaticToken } from "./provider.js";
 
 it("should call onInit and onInject when a service is first created", () => {
   const i = new Injector();
@@ -245,17 +246,26 @@ it("should execute callbacks when condition returns empty object", () => {
   });
 });
 
-it("should provide type safety for instance properties", () => {
+
+it("should pass the injector to the condition", () => {
+  const IS_PROD = new StaticToken("isProd", () => false);
+
   const i = new Injector();
+
+  function isProd() {
+    return (val: LifecycleCallback, ctx: ClassMethodDecoratorContext) => {
+      created((i) => {
+        const enabled = i.inject(IS_PROD);
+        return { enabled };
+      })(val, ctx);
+    };
+  }
 
   @injectable()
   class MyService {
     count = 0;
-    name = "test";
 
-    @created<MyService>((instance) => {
-      return { enabled: instance.count > 0 && instance.name === "test" };
-    })
+    @isProd()
     onCreated() {
       this.count++;
     }

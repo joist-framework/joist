@@ -292,16 +292,16 @@ class MyService {
 
 ### Conditional Lifecycle Hooks
 
-You can control when lifecycle callbacks are executed by providing a condition function:
+You can control when lifecycle callbacks are executed by providing a condition function. The condition function receives the current injector:
 
 ```ts
 class MyService {
-  @created(() => ({ enabled: true }))
+  @created((injector) => ({ enabled: true }))
   onCreated() {
     // This will execute because enabled is true
   }
 
-  @injected(() => {
+  @injected((injector) => {
     return {
       enabled: process.env.NODE_ENV === "development",
     };
@@ -318,12 +318,27 @@ The condition function can return an object with an `enabled` property that dete
 - `{ enabled: false }` - The callback will not execute
 - `{}` - The callback will execute (default behavior)
 
+You can use the injector to access other services or check the injector's configuration:
+
+```ts
+class MyService {
+  @created((injector) => {
+    const config = injector.inject(ConfigService);
+    return { enabled: config.featureEnabled };
+  })
+  onCreated() {
+    // Only executes if feature is enabled in config
+  }
+}
+```
+
 Lifecycle conditions are useful when you need to:
 
 - Execute callbacks only in specific environments
-- Control callback execution based on instance state
+- Control callback execution based on injector state
 - Implement feature flags for lifecycle hooks
 - Conditionally initialize services based on configuration
+- Make decisions based on other services in the injector
 
 ## Hierarchical Injectors
 
