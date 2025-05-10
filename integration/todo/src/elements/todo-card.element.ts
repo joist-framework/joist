@@ -1,7 +1,7 @@
 import { attr, css, element, html, listen } from "@joist/element";
 import { bind } from "@joist/templating";
 
-import type { Todo, TodoStatus } from "../services/todo.service.js";
+import type { TodoStatus } from "../services/todo.service.js";
 
 @element({
   tagName: "todo-card",
@@ -81,13 +81,4 @@ export class TodoCardElement extends HTMLElement {
       showStar: this.status === "complete",
     };
   }
-}
-
-export function createTodoCard(todo: Todo) {
-  const card = new TodoCardElement();
-  card.id = todo.id;
-  card.innerHTML = todo.name;
-  card.status = todo.status;
-
-  return card;
 }
