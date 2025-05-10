@@ -13,7 +13,7 @@ import { bind } from "@joist/templating";
 
 class MyElement extends HTMLElement {
   @bind()
-  myProperty: string;
+  accessor myProperty: string;
 }
 ```
 
