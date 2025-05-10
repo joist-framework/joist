@@ -5,16 +5,16 @@ import type { InjectionToken } from "./provider.js";
 
 export type LifecycleCallback = (i: Injector) => void;
 
-export type LifecycleCondition<T extends object> = (instance: T) => { enabled?: boolean };
+export type LifecycleCondition = (injector: Injector) => { enabled?: boolean };
 
-export interface LifecycleMethod<T extends object> {
+export interface LifecycleMethod {
   callback: LifecycleCallback;
-  condition?: LifecycleCondition<T>;
+  condition?: LifecycleCondition;
 }
 
 export interface InjectableMetadata {
-  onCreated?: LifecycleMethod<any>[];
-  onInjected?: LifecycleMethod<any>[];
+  onCreated?: LifecycleMethod[];
+  onInjected?: LifecycleMethod[];
 }
 
 export function readMetadata<T>(target: InjectionToken<T>): InjectableMetadata | null {
