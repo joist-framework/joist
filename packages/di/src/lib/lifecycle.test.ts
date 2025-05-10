@@ -128,3 +128,139 @@ it("should call onInject and on init when injected from another service", () => 
     onInjected: 2,
   });
 });
+
+it("should respect enabled=false condition in lifecycle callbacks", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: false }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: false }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 0,
+    onInjected: 0,
+  });
+});
+
+it("should respect enabled=true condition in lifecycle callbacks", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: true }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: true }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+it("should execute callbacks when condition returns undefined enabled", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({ enabled: undefined }))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({ enabled: undefined }))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+it("should execute callbacks when condition returns empty object", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    res = {
+      onCreated: 0,
+      onInjected: 0,
+    };
+
+    @created(() => ({}))
+    onCreated() {
+      this.res.onCreated++;
+    }
+
+    @injected(() => ({}))
+    onInjected() {
+      this.res.onInjected++;
+    }
+  }
+
+  const service = i.inject(MyService);
+
+  assert.deepEqual(service.res, {
+    onCreated: 1,
+    onInjected: 1,
+  });
+});
+
+it("should provide type safety for instance properties", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    count = 0;
+    name = "test";
+
+    @created<MyService>((instance) => {
+      return { enabled: instance.count > 0 && instance.name === "test" };
+    })
+    onCreated() {
+      this.count++;
+    }
+  }
+
+  const service = i.inject(MyService);
+  assert.equal(service.count, 0); // Not called because count is 0
+});

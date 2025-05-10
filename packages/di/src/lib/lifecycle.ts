@@ -1,36 +1,53 @@
 import type { Injector } from "./injector.js";
-import type { InjectableMetadata, LifecycleCallback } from "./metadata.js";
+import type {
+  InjectableMetadata,
+  LifecycleCallback,
+  LifecycleCondition,
+  LifecycleMethod,
+} from "./metadata.js";
 
-export function injected() {
+export function injected<T extends object>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
     ctx: ClassMethodDecoratorContext,
   ): void {
     const metadata: InjectableMetadata = ctx.metadata;
     metadata.onInjected ??= [];
-    metadata.onInjected.push(val);
+    metadata.onInjected.push({
+      callback: val,
+      condition,
+    });
   };
 }
 
-export function created() {
+export function created<T extends object>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
     ctx: ClassMethodDecoratorContext,
   ): void {
     const metadata: InjectableMetadata = ctx.metadata;
     metadata.onCreated ??= [];
-    metadata.onCreated.push(val);
+    metadata.onCreated.push({
+      callback: val,
+      condition,
+    });
   };
 }
 
-export function callLifecycle(
-  instance: object,
+export function callLifecycle<T extends object>(
+  instance: T,
   i: Injector,
-  methods?: LifecycleCallback[],
+  methods?: LifecycleMethod<T>[],
 ): void {
   if (methods) {
-    for (const cb of methods) {
-      cb.call(instance, i);
+    for (const { callback, condition } of methods) {
+      if (condition) {
+        const result = condition(instance);
+        if (result.enabled === false) {
+          continue;
+        }
+      }
+      callback.call(instance, i);
     }
   }
 }

@@ -38,6 +38,7 @@ npm i @joist/di
 ## Injectors
 
 Injectors are the core of the dependency injection system. They:
+
 - Create and manage service instances
 - Handle dependency resolution
 - Maintain a hierarchy of injectors
@@ -103,7 +104,7 @@ class ApiService {
 
   getData() {
     return this.#http()
-      .fetch('/api/v1/users')
+      .fetch("/api/v1/users")
       .then((res) => res.json());
   }
 }
@@ -111,22 +112,22 @@ class ApiService {
 
 ```ts
 // services.test.ts
-test('should return json', async () => {
+test("should return json", async () => {
   class MockHttpService extends HttpService {
     async fetch() {
-      return Response.json({ fname: 'Danny', lname: 'Blue' });
+      return Response.json({ fname: "Danny", lname: "Blue" });
     }
   }
 
   const app = new Injector({
-    providers: [[HttpService, { use: MockHttpService }]]
+    providers: [[HttpService, { use: MockHttpService }]],
   });
   const api = app.inject(ApiService);
 
   const res = await api.getData();
 
-  assert.equals(res.fname, 'Danny');
-  assert.equals(res.lname, 'Blue');
+  assert.equals(res.fname, "Danny");
+  assert.equals(res.lname, "Blue");
 });
 ```
 
@@ -148,7 +149,7 @@ class ConsoleLogger implements Logger {
 }
 
 @injectable({
-  providers: [[Logger, { use: ConsoleLogger }]]
+  providers: [[Logger, { use: ConsoleLogger }]],
 })
 class MyService {}
 ```
@@ -168,13 +169,13 @@ const app = new Injector([
     factory() {
       const params = new URLSearchParams(window.location.search);
 
-      if (params.has('debug')) {
+      if (params.has("debug")) {
         return console;
       }
 
       return new Logger(); // noop logger
-    }
-  }
+    },
+  },
 ]);
 ```
 
@@ -204,9 +205,9 @@ const app = new Injector([
       factory(i) {
         const logger = i.inject(Logger);
         return new Feature(logger);
-      }
-    }
-  ]
+      },
+    },
+  ],
 ]);
 ```
 
@@ -216,15 +217,15 @@ In most cases, a token is any constructable class. There are cases where you mig
 
 ```ts
 // Token that resolves to a string
-const URL_TOKEN = new StaticToken<string>('app_url');
+const URL_TOKEN = new StaticToken<string>("app_url");
 
 const app = new Injector([
   [
     URL_TOKEN,
     {
-      factory: () => '/my-app-url/'
-    }
-  ]
+      factory: () => "/my-app-url/",
+    },
+  ],
 ]);
 ```
 
@@ -233,7 +234,7 @@ const app = new Injector([
 A static token can be provided a default factory function to use on creation.
 
 ```ts
-const URL_TOKEN = new StaticToken('app_url', () => '/default-url/');
+const URL_TOKEN = new StaticToken("app_url", () => "/default-url/");
 ```
 
 ### Async Values
@@ -242,7 +243,7 @@ Static tokens can also leverage promises for cases when you need to asynchronous
 
 ```ts
 // StaticToken<Promise<string>>
-const URL_TOKEN = new StaticToken('app_url', async () => '/default-url/');
+const URL_TOKEN = new StaticToken("app_url", async () => "/default-url/");
 
 const app = new Injector();
 
@@ -252,8 +253,8 @@ const url: string = await app.inject(URL_TOKEN);
 This allows you to dynamically import services:
 
 ```ts
-const HttpService = new StaticToken('HTTP_SERVICE', () => {
-  return import('./http.service.js').then((m) => new m.HttpService());
+const HttpService = new StaticToken("HTTP_SERVICE", () => {
+  return import("./http.service.js").then((m) => new m.HttpService());
 });
 
 class HackerNewsService {
@@ -262,9 +263,9 @@ class HackerNewsService {
   async getData() {
     const http = await this.#http();
 
-    const url = new URL('https://hacker-news.firebaseio.com/v0/beststories.json');
-    url.searchParams.set('limitToFirst', count.toString());
-    url.searchParams.set('orderBy', '"$key"');
+    const url = new URL("https://hacker-news.firebaseio.com/v0/beststories.json");
+    url.searchParams.set("limitToFirst", count.toString());
+    url.searchParams.set("orderBy", '"$key"');
 
     return http.fetchJson<string[]>(url);
   }
@@ -288,6 +289,41 @@ class MyService {
   }
 }
 ```
+
+### Conditional Lifecycle Hooks
+
+You can control when lifecycle callbacks are executed by providing a condition function:
+
+```ts
+class MyService {
+  @created(() => ({ enabled: true }))
+  onCreated() {
+    // This will execute because enabled is true
+  }
+
+  @injected(() => {
+    return {
+      enabled: process.env.NODE_ENV === "development",
+    };
+  })
+  onInjected() {
+    // will only execute when NODE_ENV is development
+  }
+}
+```
+
+The condition function can return an object with an `enabled` property that determines whether the callback should execute:
+
+- `{ enabled: true }` - The callback will execute
+- `{ enabled: false }` - The callback will not execute
+- `{}` - The callback will execute (default behavior)
+
+Lifecycle conditions are useful when you need to:
+
+- Execute callbacks only in specific environments
+- Control callback execution based on instance state
+- Implement feature flags for lifecycle hooks
+- Conditionally initialize services based on configuration
 
 ## Hierarchical Injectors
 
@@ -331,8 +367,8 @@ const app = new DOMInjector();
 app.attach(document.body); // Anything rendered in the body will have access to this injector.
 
 class Colors {
-  primary = 'red';
-  secondary = 'green';
+  primary = "red";
+  secondary = "green";
 }
 
 @injectable()
@@ -345,12 +381,12 @@ class MyElement extends HTMLElement {
   }
 }
 
-customElements.define('my-element', MyElement);
+customElements.define("my-element", MyElement);
 ```
 
 ### Context Elements
 
-Context elements are where Hierarchical Injectors can really shine as they allow you to define React/Preact-esque "context" elements. 
+Context elements are where Hierarchical Injectors can really shine as they allow you to define React/Preact-esque "context" elements.
 Since custom elements are treated the same as any other class, they can define providers for their local scope. The `provideSelfAs` property will provide the current class for the tokens given.
 This also makes it easy to use attributes to define values for the service.
 
@@ -361,16 +397,16 @@ class ColorCtx {
 }
 
 @injectable({
-  name: 'color-ctx',
-  provideSelfAs: [ColorCtx]
+  name: "color-ctx",
+  provideSelfAs: [ColorCtx],
 })
 class ColorCtx extends HTMLElement implements ColorCtx {
   get primary() {
-    return this.getAttribute("primary") ?? "red"
+    return this.getAttribute("primary") ?? "red";
   }
 
   get secondary() {
-    return this.getAttribute("secondary") ?? "green"
+    return this.getAttribute("secondary") ?? "green";
   }
 }
 
@@ -385,8 +421,8 @@ class MyElement extends HTMLElement {
 }
 
 // Note: To use parent providers, the parent elements need to be defined first!
-customElements.define('color-ctx', ColorCtx);
-customElements.define('my-element', MyElement);
+customElements.define("color-ctx", ColorCtx);
+customElements.define("my-element", MyElement);
 ```
 
 ```html
