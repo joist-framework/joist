@@ -6,10 +6,12 @@ import { callLifecycle } from "../lifecycle.js";
 import type { InjectableMetadata } from "../metadata.js";
 import type { ConstructableToken } from "../provider.js";
 
+export type InjectableEl = HTMLElement & { [INJECTOR]: Injector };
+
 export function injectableEl<
-  T extends ConstructableToken<HTMLElement & { [INJECTOR]: Injector }>,
+  T extends ConstructableToken<InjectableEl>,
 >(Base: T, ctx: ClassDecoratorContext): T {
-  const metadata: InjectableMetadata = ctx.metadata;
+  const metadata: InjectableMetadata<InjectableEl> = ctx.metadata;
 
   const def = {
     [Base.name]: class extends Base {
