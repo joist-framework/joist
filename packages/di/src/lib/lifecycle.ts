@@ -6,12 +6,12 @@ import type {
   LifecycleMethod,
 } from "./metadata.js";
 
-export function injected(condition?: LifecycleCondition) {
+export function injected<T>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
-    ctx: ClassMethodDecoratorContext,
+    ctx: ClassMethodDecoratorContext<T>,
   ): void {
-    const metadata: InjectableMetadata = ctx.metadata;
+    const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.onInjected ??= [];
     metadata.onInjected.push({
       callback: val,
@@ -20,12 +20,12 @@ export function injected(condition?: LifecycleCondition) {
   };
 }
 
-export function created(condition?: LifecycleCondition) {
+export function created<T>(condition?: LifecycleCondition<T>) {
   return function onInjectDecorator(
     val: LifecycleCallback,
-    ctx: ClassMethodDecoratorContext,
+    ctx: ClassMethodDecoratorContext<T>,
   ): void {
-    const metadata: InjectableMetadata = ctx.metadata;
+    const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.onCreated ??= [];
     metadata.onCreated.push({
       callback: val,
@@ -36,18 +36,18 @@ export function created(condition?: LifecycleCondition) {
 
 export function callLifecycle(
   instance: object,
-  i: Injector,
-  methods?: LifecycleMethod[],
+  injector: Injector,
+  methods?: LifecycleMethod<any>[],
 ): void {
   if (methods) {
     for (const { callback, condition } of methods) {
       if (condition) {
-        const result = condition(i);
+        const result = condition({ injector, instance });
         if (result.enabled === false) {
           continue;
         }
       }
-      callback.call(instance, i);
+      callback.call(instance, injector);
     }
   }
 }

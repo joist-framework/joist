@@ -254,8 +254,8 @@ it("should pass the injector to the condition", () => {
 
   function isProd() {
     return (val: LifecycleCallback, ctx: ClassMethodDecoratorContext) => {
-      created((i) => {
-        const enabled = i.inject(IS_PROD);
+      created(({ injector }) => {
+        const enabled = injector.inject(IS_PROD);
         return { enabled };
       })(val, ctx);
     };
@@ -273,4 +273,22 @@ it("should pass the injector to the condition", () => {
 
   const service = i.inject(MyService);
   assert.equal(service.count, 0); // Not called because count is 0
+});
+
+it("should pass the instance to the condition", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    enabled = false;
+    count = 0;
+
+    @created(({ instance }) => ({ enabled: instance.enabled }))
+    onCreated() {
+      this.count++;
+    }
+  }
+
+  const service = i.inject(MyService);
+  assert.equal(service.count, 0); // not called because instance.enabled is false
 });
