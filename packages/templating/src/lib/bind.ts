@@ -1,11 +1,11 @@
 import { instanceMetadataStore, observe } from "@joist/observable";
 
-export function bind() {
-  return function bindDecorator<This extends HTMLElement, Value>(
+export function bind<This extends HTMLElement, Value>(mapper?: (instance: This) => Value) {
+  return function bindDecorator(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
-    const internalObserve = observe()(base, ctx);
+    const internalObserve = observe(mapper)(base, ctx);
 
     return {
       init(value) {
@@ -29,7 +29,7 @@ export function bind() {
         });
 
         if (internalObserve.init) {
-          return internalObserve.init.call(this, value);
+          return internalObserve.init.call(this, value) as Value;
         }
 
         return value;

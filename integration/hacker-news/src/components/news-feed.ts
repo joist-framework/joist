@@ -53,7 +53,9 @@ export class HnNewsFeed extends HTMLElement {
   @bind()
   accessor stories: HnItem[] = [];
 
-  @bind()
+  @bind((i) => {
+    return i.stories.length <= 0;
+  })
   accessor isLoading = true;
 
   @injected()
@@ -61,7 +63,5 @@ export class HnNewsFeed extends HTMLElement {
     const hn = this.#hn();
 
     this.stories = await hn.getTopStories();
-
-    this.isLoading = false;
   }
 }
