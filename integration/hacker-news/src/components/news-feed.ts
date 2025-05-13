@@ -61,7 +61,6 @@ export class HnNewsFeed extends HTMLElement {
     const hn = this.#hn();
 
     this.stories = await hn.getTopStories();
-
     this.isLoading = false;
   }
 }

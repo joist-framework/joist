@@ -1,17 +1,19 @@
-import {
-  type EffectFn,
-  instanceMetadataStore,
-  observableMetadataStore,
-} from "./metadata.js";
+import { type EffectFn, instanceMetadataStore, observableMetadataStore } from "./metadata.js";
 
 const INIT_VALUE = Symbol("init");
 
-export function observe() {
-  return function observeDecorator<This extends object, Value>(
+export function observe<This extends object, Value>(mapper?: (instance: This) => Value) {
+  return function observeDecorato(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
     const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
+
+    observableMeta.effects.add(function (this: This) {
+      if (mapper) {
+        ctx.access.set(this, mapper(this));
+      }
+    });
 
     return {
       init(value) {
@@ -28,6 +30,10 @@ export function observe() {
           return val;
         }
         // END
+
+        if (mapper) {
+          return mapper(this);
+        }
 
         return value;
       },

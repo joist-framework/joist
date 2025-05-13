@@ -101,3 +101,56 @@ it("should upgrade custom elements", () => {
     customElements.define("observable-1", Counter);
   });
 });
+
+describe("computed decorator", () => {
+  it("should compute values based on other properties", async () => {
+    class TestClass {
+      @observe()
+      accessor firstName = "John";
+
+      @observe()
+      accessor lastName = "Doe";
+
+      @observe((i) => `${i.firstName} ${i.lastName}`)
+      accessor fullName = "";
+    }
+
+    const instance = new TestClass();
+    assert.equal(instance.fullName, "John Doe");
+
+    // Update dependencies
+    instance.firstName = "Jane";
+
+    await Promise.resolve();
+
+    assert.equal(instance.fullName, "Jane Doe");
+  });
+
+  it("should handle multiple computed properties", async () => {
+    class TestClass {
+      @observe()
+      accessor x = 2;
+
+      @observe()
+      accessor y = 3;
+
+      @observe((i) => i.x + i.y)
+      accessor sum = 0;
+
+      @observe((i) => i.x * i.y)
+      accessor product = 0;
+    }
+
+    const instance = new TestClass();
+    assert.equal(instance.sum, 5);
+    assert.equal(instance.product, 6);
+
+    // Update dependencies
+    instance.x = 4;
+
+    await Promise.resolve();
+
+    assert.equal(instance.sum, 7);
+    assert.equal(instance.product, 12);
+  });
+});
