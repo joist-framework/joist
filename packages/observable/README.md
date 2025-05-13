@@ -29,3 +29,31 @@ const state = new AppState();
 state.todos = [...state.todos, 'Build Shit'];
 state.userName = 'Danny Blue'
 ```
+
+## Computed Properties
+
+The `@observe()` decorator can also be used to create computed properties that automatically update when their dependencies change. This is done by passing a mapper function to the decorator:
+
+```TS
+import { observe } from '@joist/observable';
+
+class UserProfile {
+  @observe()
+  accessor firstName = "John";
+
+  @observe()
+  accessor lastName = "Doe";
+
+  @observe((i) => `${i.firstName} ${i.lastName}`)
+  accessor fullName = "";
+}
+
+const profile = new UserProfile();
+console.log(profile.fullName); // "John Doe"
+
+// When dependencies change, computed properties update automatically
+profile.firstName = "Jane";
+console.log(profile.fullName); // "Jane Doe"
+```
+
+The mapper function receives the instance as its parameter and should return the computed value. The computed property will automatically update whenever any of its dependencies (properties accessed within the mapper function) change.
