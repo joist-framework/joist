@@ -41,6 +41,10 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
         return base.get.call(this);
       },
       set(newValue: Value) {
+        if (mapper) {
+          throw new Error("Cannot set value of computed property");
+        }
+
         const oldValue = base.get.call(this);
         const instanceMeta = instanceMetadataStore.read<This>(this);
 

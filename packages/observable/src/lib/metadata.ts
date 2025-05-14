@@ -36,10 +36,7 @@ export class ObservableMetadata<T> {
   effects: Set<EffectFn<T>> = new Set();
 }
 
-export class ObservableMetadataStore extends WeakMap<
-  object,
-  ObservableMetadata<unknown>
-> {
+export class ObservableMetadataStore extends WeakMap<object, ObservableMetadata<unknown>> {
   read<T extends object>(key: object): ObservableMetadata<T> {
     let data = this.get(key);
 
@@ -56,5 +53,4 @@ export class ObservableMetadataStore extends WeakMap<
 export const instanceMetadataStore: ObservableInstanceMetaDataStore =
   new ObservableInstanceMetaDataStore();
 
-export const observableMetadataStore: ObservableMetadataStore =
-  new ObservableMetadataStore();
+export const observableMetadataStore: ObservableMetadataStore = new ObservableMetadataStore();

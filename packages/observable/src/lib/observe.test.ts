@@ -153,4 +153,19 @@ describe("computed decorator", () => {
     assert.equal(instance.sum, 7);
     assert.equal(instance.product, 12);
   });
+
+  it("should throw when trying to set a computed property", () => {
+    class TestClass {
+      @observe()
+      accessor x = 1;
+
+      @observe((i) => i.x * 2)
+      accessor double = 0;
+    }
+
+    const instance = new TestClass();
+    assert.throws(() => {
+      instance.double = 10;
+    }, /Cannot set value of computed property/);
+  });
 });
