@@ -9,7 +9,7 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
   ): ClassAccessorDecoratorResult<This, Value> {
     const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
 
-    observableMeta.effects.add(function (this: This) {
+    observableMeta.effects.add(function mapperFn(this: This) {
       if (mapper) {
         ctx.access.set(this, mapper(this));
       }
@@ -31,11 +31,14 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
         }
         // END
 
+        return value;
+      },
+      get() {
         if (mapper) {
           return mapper(this);
         }
 
-        return value;
+        return base.get.call(this);
       },
       set(newValue: Value) {
         const oldValue = base.get.call(this);

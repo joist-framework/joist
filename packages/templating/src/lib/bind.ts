@@ -34,6 +34,7 @@ export function bind<This extends HTMLElement, Value>(mapper?: (instance: This) 
 
         return value;
       },
+      get: internalObserve.get,
       set: internalObserve.set,
     };
   };

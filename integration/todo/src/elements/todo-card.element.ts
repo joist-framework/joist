@@ -1,5 +1,6 @@
 import { attr, css, element, html, listen } from "@joist/element";
 import { bind } from "@joist/templating";
+import { observe } from "@joist/observable";
 
 import type { TodoStatus } from "../services/todo.service.js";
 
@@ -57,9 +58,13 @@ import type { TodoStatus } from "../services/todo.service.js";
 })
 export class TodoCardElement extends HTMLElement {
   @attr()
+  @observe()
   accessor status: TodoStatus = "active";
 
-  @bind()
+  @bind(({ status }) => ({
+    value: status === "active" ? "complete" : "active",
+    showStar: status === "complete",
+  }))
   accessor actionState = {
     value: "active",
     showStar: false,
@@ -73,12 +78,5 @@ export class TodoCardElement extends HTMLElement {
   @listen("click", "#remove")
   onRemove() {
     this.dispatchEvent(new Event("remove", { bubbles: true }));
-  }
-
-  attributeChangedCallback() {
-    this.actionState = {
-      value: this.status === "active" ? "complete" : "active",
-      showStar: this.status === "complete",
-    };
   }
 }
