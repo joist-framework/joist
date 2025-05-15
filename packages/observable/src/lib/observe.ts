@@ -9,11 +9,11 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
   ): ClassAccessorDecoratorResult<This, Value> {
     const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
 
-    observableMeta.effects.add(function mapperFn(this: This) {
-      if (mapper) {
-        base.set.call(this, mapper(this));
-      }
-    });
+    if (mapper) {
+      observableMeta.effects.add(function mapperFn(this: This) {
+        ctx.access.set(this, mapper(this));
+      });
+    }
 
     return {
       init(value) {
@@ -42,17 +42,11 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
 
             return mapper(this);
           }
-
-          return mapper(this);
         }
 
         return base.get.call(this);
       },
       set(newValue: Value) {
-        if (mapper) {
-          throw new Error("Cannot set value of computed property");
-        }
-
         const oldValue = base.get.call(this);
         const instanceMeta = instanceMetadataStore.read<This>(this);
 
