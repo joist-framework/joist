@@ -8,7 +8,7 @@ export interface AttrOpts {
 
 export function attr(opts?: AttrOpts) {
   return function attrDecorator<This extends HTMLElement>(
-    { get, set }: ClassAccessorDecoratorTarget<This, unknown>,
+    base: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>,
   ): ClassAccessorDecoratorResult<This, any> {
     const attrName = opts?.name ?? parseAttrName(ctx.name);
@@ -19,11 +19,29 @@ export function attr(opts?: AttrOpts) {
       propName: ctx.name,
       observe: opts?.observed ?? true,
       reflect,
-      getPropValue: get,
-      setPropValue: set,
+      access: base,
     });
 
     return {
+      get() {
+        const ogValue = base.get.call(this);
+
+        if (typeof ogValue === "boolean") {
+          return this.hasAttribute(attrName);
+        }
+
+        const attrValue = this.getAttribute(attrName);
+
+        if (attrValue === null) {
+          return ogValue;
+        }
+
+        if (typeof ogValue === "number") {
+          return Number(attrValue);
+        }
+
+        return attrValue;
+      },
       set(value: unknown) {
         if (reflect) {
           if (value === true) {
@@ -43,7 +61,7 @@ export function attr(opts?: AttrOpts) {
           }
         }
 
-        set.call(this, value);
+        base.set.call(this, value);
       },
     };
   };

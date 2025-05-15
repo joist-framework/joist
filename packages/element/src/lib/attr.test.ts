@@ -30,6 +30,8 @@ it("should read and parse the correct values", () => {
 
   const el = document.querySelector("attr-test-1") as MyElement;
 
+  console.log("##### START", el);
+
   expect(el.value1).to.equal(100);
   expect(el.value2).to.equal(2);
   expect(el.value3).to.equal(true);

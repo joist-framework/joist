@@ -4,8 +4,10 @@ export interface AttrDef {
   propName: string | symbol;
   observe: boolean;
   reflect: boolean;
-  getPropValue: () => unknown;
-  setPropValue: (value: unknown) => void;
+  access: {
+    get: () => unknown;
+    set: (value: unknown) => void;
+  };
 }
 
 export type ListenerSelector<T> = (el: T) => EventTarget | null;
@@ -16,11 +18,7 @@ export interface Listener<T> {
   selector: ListenerSelector<T>;
 }
 
-export type AttrChangedCallback = (
-  name: string,
-  oldValue: string,
-  newValue: string,
-) => void;
+export type AttrChangedCallback = (name: string, oldValue: string, newValue: string) => void;
 
 export class AttrMetadata extends Map<string, AttrDef> {}
 export class AttrChangeMetadata extends Map<string, Set<AttrChangedCallback>> {}

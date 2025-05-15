@@ -25,7 +25,15 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
     const def = {
       [Base.name]: class extends Base {
-        static observedAttributes: string[] = Array.from(meta.attrs.keys());
+        static observedAttributes: string[] = [];
+
+        static {
+          for (const [key, value] of meta.attrs) {
+            if (value.observe) {
+              this.observedAttributes.push(key);
+            }
+          }
+        }
 
         #abortController: AbortController | null = null;
 
@@ -52,31 +60,14 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
           const cbs = meta.attrChanges.get(name);
 
           if (attr) {
-            if (oldValue !== newValue) {
-              const ogValue = attr.getPropValue.call(this);
-
-              if (typeof ogValue === "boolean") {
-                // treat as boolean
-                attr.setPropValue.call(this, newValue !== null);
-              } else if (typeof ogValue === "number") {
-                // treat as number
-                attr.setPropValue.call(this, Number(newValue));
-              } else {
-                // treat as string
-                attr.setPropValue.call(this, newValue);
-              }
-            }
-
             if (cbs) {
               for (const cb of cbs) {
                 cb.call(this, name, oldValue, newValue);
               }
             }
 
-            if (attr.observe) {
-              if (super.attributeChangedCallback) {
-                super.attributeChangedCallback(name, oldValue, newValue);
-              }
+            if (super.attributeChangedCallback) {
+              super.attributeChangedCallback(name, oldValue, newValue);
             }
           }
         }
@@ -123,9 +114,9 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 }
 
 function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadata) {
-  for (const [attrName, { getPropValue, reflect }] of attrs) {
+  for (const [attrName, { access, reflect }] of attrs) {
     if (reflect) {
-      const value = getPropValue.call(el);
+      const value = access.get.call(el);
 
       // reflect values back to attributes
       if (value !== null && value !== undefined && value !== "") {
@@ -136,7 +127,8 @@ function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadat
               el.setAttribute(attrName, "");
             }
           }
-        } else {
+        } else if (!el.hasAttribute(attrName)) {
+          // only set parent attribute if it doesn't exist
           // set key/value attribute
           const strValue = String(value);
 
