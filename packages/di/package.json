@@ -1,6 +1,6 @@
 {
   "name": "@joist/di",
-  "version": "4.2.3-next.16",
+  "version": "4.2.3-next.17",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
