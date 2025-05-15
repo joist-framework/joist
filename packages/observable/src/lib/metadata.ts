@@ -13,6 +13,7 @@ export class ObservableInstanceMetadata<T> {
   scheduler: Promise<void> | null = null;
   changes: Changes<T> = new Changes();
   bindings: Set<(changes: Changes<T>) => void> = new Set();
+  initialized: Set<string | symbol> = new Set();
 }
 
 export class ObservableInstanceMetaDataStore extends WeakMap<

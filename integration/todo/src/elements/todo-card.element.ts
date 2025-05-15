@@ -57,10 +57,6 @@ import type { TodoStatus } from "../services/todo.service.js";
   ],
 })
 export class TodoCardElement extends HTMLElement {
-  @attr()
-  @observe()
-  accessor status: TodoStatus = "active";
-
   @bind(({ status }) => ({
     value: status === "active" ? "complete" : "active",
     showStar: status === "complete",
@@ -69,6 +65,10 @@ export class TodoCardElement extends HTMLElement {
     value: "active",
     showStar: false,
   };
+
+  @attr()
+  @observe()
+  accessor status: TodoStatus = "active";
 
   @listen("click", "#complete")
   onClick() {

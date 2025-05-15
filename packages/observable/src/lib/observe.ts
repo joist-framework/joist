@@ -11,7 +11,7 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
 
     observableMeta.effects.add(function mapperFn(this: This) {
       if (mapper) {
-        ctx.access.set(this, mapper(this));
+        base.set.call(this, mapper(this));
       }
     });
 
@@ -35,6 +35,14 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
       },
       get() {
         if (mapper) {
+          const instanceMeta = instanceMetadataStore.read<This>(this);
+
+          if (!instanceMeta.initialized.has(ctx.name)) {
+            instanceMeta.initialized.add(ctx.name);
+
+            return mapper(this);
+          }
+
           return mapper(this);
         }
 

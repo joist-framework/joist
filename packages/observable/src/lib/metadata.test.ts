@@ -10,6 +10,7 @@ it("should return default metadata", () => {
     changes: new Changes(),
     scheduler: null,
     bindings: new Set<() => void>(),
+    initialized: new Set<string | symbol>(),
   });
 });
 
