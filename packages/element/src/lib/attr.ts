@@ -23,6 +23,23 @@ export function attr<This extends HTMLElement>(opts?: AttrOpts) {
     });
 
     return {
+      init(value: unknown) {
+        if (typeof value === "boolean") {
+          return value;
+        }
+
+        const attrValue = this.getAttribute(attrName);
+
+        if (attrValue === null) {
+          return value;
+        }
+
+        if (typeof value === "number") {
+          return Number(attrValue);
+        }
+
+        return attrValue;
+      },
       set(value: unknown) {
         if (reflect) {
           if (value === true) {
