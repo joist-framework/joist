@@ -1,6 +1,6 @@
 import { attr, css, element, html, listen } from "@joist/element";
 import { bind } from "@joist/templating";
-import { observe } from "@joist/observable";
+import { effect, observe } from "@joist/observable";
 
 import type { TodoStatus } from "../services/todo.service.js";
 
@@ -69,6 +69,11 @@ export class TodoCardElement extends HTMLElement {
     value: "active",
     showStar: false,
   };
+
+  @effect()
+  onStatusChange() {
+    console.log("STATUS CHANGE", this.status);
+  }
 
   @listen("click", "#complete")
   onClick() {

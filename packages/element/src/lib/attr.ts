@@ -22,6 +22,14 @@ export function attr(opts?: AttrOpts) {
       access: base,
     });
 
+    ctx.addInitializer(function () {
+      const mutation = new MutationObserver(() => {
+        base.set.call(this, ctx.access.get(this));
+      });
+
+      mutation.observe(this, { attributeFilter: [attrName] });
+    });
+
     return {
       get() {
         const ogValue = base.get.call(this);
