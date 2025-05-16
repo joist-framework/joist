@@ -1,4 +1,5 @@
-import { expect } from "chai";
+import { expect, assert } from "chai";
+import { effect, observe } from "@joist/observable";
 
 import { attr } from "./attr.js";
 import { element } from "./element.js";
@@ -29,8 +30,6 @@ it("should read and parse the correct values", () => {
   document.body.append(container);
 
   const el = document.querySelector("attr-test-1") as MyElement;
-
-  console.log("##### START", el);
 
   expect(el.value1).to.equal(100);
   expect(el.value2).to.equal(2);
@@ -208,6 +207,37 @@ it("should update property when attribute changes", async () => {
 
   el.removeAttribute("enabled");
   expect(el.enabled).to.equal(false);
+
+  el.remove();
+});
+
+it("setters should be called when attributes change", async () => {
+  let callCount = 0;
+
+  @element({
+    tagName: "attr-test-9",
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    @observe()
+    accessor value = "foo";
+
+    @effect()
+    onValueChange() {
+      callCount++;
+    }
+  }
+
+  const el = new MyElement();
+  document.body.append(el);
+
+  el.setAttribute("value", "bar");
+
+  // needs to wait for the mutation observer to run
+  await Promise.resolve();
+  await Promise.resolve();
+
+  assert.equal(callCount, 1);
 
   el.remove();
 });
