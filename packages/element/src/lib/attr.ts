@@ -23,25 +23,6 @@ export function attr<This extends HTMLElement>(opts?: AttrOpts) {
     });
 
     return {
-      get() {
-        const ogValue = base.get.call(this);
-
-        if (typeof ogValue === "boolean") {
-          return this.hasAttribute(attrName);
-        }
-
-        const attrValue = this.getAttribute(attrName);
-
-        if (attrValue === null) {
-          return ogValue;
-        }
-
-        if (typeof ogValue === "number") {
-          return Number(attrValue);
-        }
-
-        return attrValue;
-      },
       set(value: unknown) {
         if (reflect) {
           if (value === true) {

@@ -54,7 +54,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
           if (attr) {
             if (oldValue !== newValue) {
               const sourceValue = attr.access.get.call(this);
-              let value: string | number | boolean;
+              let value: string | number | boolean = newValue;
 
               if (typeof sourceValue === "boolean") {
                 // treat as boolean
@@ -62,9 +62,6 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
               } else if (typeof sourceValue === "number") {
                 // treat as number
                 value = Number(newValue);
-              } else {
-                // treat as string
-                value = newValue;
               }
 
               attr.access.set.call(this, value);
