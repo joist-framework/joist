@@ -25,15 +25,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
     const def = {
       [Base.name]: class extends Base {
-        static observedAttributes: string[] = [];
-
-        static {
-          for (const [key, value] of meta.attrs) {
-            if (value.observe) {
-              this.observedAttributes.push(key);
-            }
-          }
-        }
+        static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
         #abortController: AbortController | null = null;
 
@@ -60,14 +52,34 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
           const cbs = meta.attrChanges.get(name);
 
           if (attr) {
+            if (oldValue !== newValue) {
+              const sourceValue = attr.access.get.call(this);
+              let value: string | number | boolean;
+
+              if (typeof sourceValue === "boolean") {
+                // treat as boolean
+                value = newValue !== null;
+              } else if (typeof sourceValue === "number") {
+                // treat as number
+                value = Number(newValue);
+              } else {
+                // treat as string
+                value = newValue;
+              }
+
+              attr.access.set.call(this, value);
+            }
+
             if (cbs) {
               for (const cb of cbs) {
                 cb.call(this, name, oldValue, newValue);
               }
             }
 
-            if (super.attributeChangedCallback) {
-              super.attributeChangedCallback(name, oldValue, newValue);
+            if (attr.observe) {
+              if (super.attributeChangedCallback) {
+                super.attributeChangedCallback(name, oldValue, newValue);
+              }
             }
           }
         }

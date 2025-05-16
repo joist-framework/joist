@@ -6,8 +6,8 @@ export interface AttrOpts {
   reflect?: boolean;
 }
 
-export function attr(opts?: AttrOpts) {
-  return function attrDecorator<This extends HTMLElement>(
+export function attr<This extends HTMLElement>(opts?: AttrOpts) {
+  return function attrDecorator(
     base: ClassAccessorDecoratorTarget<This, unknown>,
     ctx: ClassAccessorDecoratorContext<This>,
   ): ClassAccessorDecoratorResult<This, any> {
@@ -20,14 +20,6 @@ export function attr(opts?: AttrOpts) {
       observe: opts?.observed ?? true,
       reflect,
       access: base,
-    });
-
-    ctx.addInitializer(function () {
-      const mutation = new MutationObserver(() => {
-        base.set.call(this, ctx.access.get(this));
-      });
-
-      mutation.observe(this, { attributeFilter: [attrName] });
     });
 
     return {
