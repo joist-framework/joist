@@ -13,7 +13,7 @@ import { bind } from "@joist/templating";
         display: block;
       }
 
-      j-value {
+      j-val {
         width: 4rem;
         display: inline-block;
         text-align: center;
@@ -31,7 +31,7 @@ import { bind } from "@joist/templating";
     `,
     html`
       <button id="dec">-</button>
-      <j-value bind="count.value"></j-value>
+      <j-val bind="count.value"></j-val>
       <button id="inc">+</button>
     `,
   ],

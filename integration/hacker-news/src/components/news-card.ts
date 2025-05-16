@@ -1,6 +1,5 @@
 import { attr, css, element, html } from "@joist/element";
 import { bind } from "@joist/templating";
-import { type Changes, effect } from "@joist/observable";
 
 @element({
   tagName: "hn-news-card",
@@ -33,39 +32,39 @@ import { type Changes, effect } from "@joist/observable";
     `,
     html`
       <div id="number">
-        <j-value bind="number"></j-value>
+        <j-val bind="number"></j-val>
       </div>
 
       <div>
         <div class="title-box">
-          <j-props $href:href>
+          <j-bind props="href:href">
             <a id="title" target="_blank">
               <slot></slot>
             </a>
-          </j-props>
+          </j-bind>
 
           <j-if bind="href">
             <template>
-              <j-props $href:href>
-                <a target="_blank"> (<j-value bind="host"></j-value>) </a>
-              </j-props>
+              <j-bind props="href:href">
+                <a target="_blank"> (<j-val bind="host"></j-val>) </a>
+              </j-bind>
             </template>
           </j-if>
         </div>
 
         <div class="details">
           <div class="detils-section">
-            <j-value bind="points"></j-value>
+            <j-val bind="points"></j-val>
             points
           </div>
 
           <div class="detils-section">
             by
-            <j-value bind="author"></j-value>
+            <j-val bind="author"></j-val>
           </div>
 
           <div class="detils-section">
-            <j-value bind="comments"></j-value>
+            <j-val bind="comments"></j-val>
             comments
           </div>
         </div>
@@ -94,13 +93,12 @@ export class HnNewsCard extends HTMLElement {
   @bind()
   accessor author = "";
 
-  @bind()
-  accessor host = "";
-
-  @effect()
-  onPropChange(changes: Changes<this>) {
-    if (changes.has("href")) {
-      this.host = new URL(this.href).hostname;
+  @bind((i) => {
+    try {
+      return new URL(i.href).hostname;
+    } catch (e) {
+      return "";
     }
-  }
+  })
+  accessor host = "";
 }

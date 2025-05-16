@@ -12,7 +12,7 @@ it("should render content when the bind value is truthy", () => {
         e.update({ oldValue: null, newValue: "Hello World" });
       }}
     >
-      <j-value bind="test"></j-value>
+      <j-val bind="test"></j-val>
     </div>
   `);
 

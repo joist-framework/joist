@@ -60,7 +60,6 @@
         "vitest.config.js",
         "target/**"
       ],
-      "output": [],
       "dependencies": [
         "build"
       ]

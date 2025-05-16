@@ -34,6 +34,7 @@
         "./packages/element:test",
         "./packages/observable:test",
         "./packages/ssr:test",
+        "./packages/templating:test",
         "./integration/hacker-news:test"
       ]
     }

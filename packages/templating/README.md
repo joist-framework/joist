@@ -94,29 +94,69 @@ Common use cases:
 - Authentication states
 - Loading states
 
-### Property Binding (`j-props`)
+### Property Binding (`j-bind`)
 
 Binds values to element properties and attributes. The prefix determines the binding type:
 
-- `$.` prefix: Binds to element properties
-- `$` prefix: Binds to element attributes
+- `$bind.` prefix: Binds to element properties
+- `$bind` prefix: Binds to element attributes
+
+#### Binding Syntax
+
+The binding syntax follows the format `target:source` where:
+
+- `target` is the property/attribute name to bind to
+- `source` is the value to bind from
 
 ```html
-<j-props>
-  <!-- Bind to boolean properties -->
-  <input type="checkbox" $.checked="isComplete">
+<!-- Bind href attribute to href value -->
+<j-bind $bind="href:href">
+  <a>Link</a>
+</j-bind>
 
-  <!-- Bind to form input values -->
-  <input type="text" $.value="userName">
+<!-- Bind target property to nested value -->
+<j-bind $.bind="target:some.value">
+  <a>Link</a>
+</j-bind>
 
-  <!-- Bind to custom element properties -->
-  <my-element $.data="complexObject">
+<!-- Multiple bindings -->
+<j-bind $.bind="selectionStart:foo, selectionEnd:foo">
+  <input value="1234567890" />
+</j-bind>
+```
 
-  <!-- Bind to attributes -->
-  <div $class="dynamicClass">
-  <img $src="imageUrl">
-  <input $placeholder="placeholderText">
-</j-props>
+#### Targeting Specific Elements
+
+You can target a specific child element using the `target` attribute:
+
+```html
+<j-bind $bind="href:href" target="#test">
+  <a>Default</a>
+  <a id="test">Target</a>
+</j-bind>
+```
+
+#### Boolean Attributes
+
+Boolean attributes are handled specially:
+
+- `true` values set the attribute
+- `false` values remove the attribute
+
+```html
+<j-bind $bind="disabled:isDisabled">
+  <button>Click me</button>
+</j-bind>
+```
+
+#### Nested Property Access
+
+You can access nested properties using dot notation:
+
+```html
+<j-bind $.bind="target:target.value">
+  <a>Link</a>
+</j-bind>
 ```
 
 ### List Rendering (`j-for`)
@@ -126,23 +166,23 @@ Renders lists of items with support for keyed updates:
 ```html
 <j-for bind="todos" key="id">
   <template>
-    <j-props>
+    <j-bind>
       <div
         class="todo-item"
         $.dataset.id="each.value.id"
         $.dataset.completed="each.value.completed"
       >
-        <j-props>
+        <j-bind>
           <input type="checkbox" $.checked="each.value.completed" />
-        </j-props>
+        </j-bind>
 
-        <j-value bind="each.value.text"></j-value>
+        <j-val bind="each.value.text"></j-val>
 
-        <j-props>
+        <j-bind>
           <button $.disabled="!each.value.text">×</button>
-        </j-props>
+        </j-bind>
       </div>
-    </j-props>
+    </j-bind>
   </template>
 </j-for>
 ```
@@ -153,12 +193,12 @@ The `j-for` element provides context variables:
 - `each.index`: The zero-based index of the current item
 - `each.position`: The one-based position of the current item
 
-### Value Display (`j-value`)
+### Value Display (`j-val`)
 
 Displays a bound value as text content:
 
 ```html
-<j-value bind="user.name"></j-value> <j-value bind="formattedPrice"></j-value>
+<j-val bind="user.name"></j-val> <j-val bind="formattedPrice"></j-val>
 ```
 
 ### Async State Handling (`j-async`)
@@ -187,11 +227,11 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
   <template loading>Loading...</template>
 
   <template success>
-    <div>Welcome, <j-value bind="state.data.name"></j-value>!</div>
+    <div>Welcome, <j-val bind="state.data.name"></j-val>!</div>
   </template>
 
   <template error>
-    <div>Error: <j-value bind="state.error"></j-value></div>
+    <div>Error: <j-val bind="state.error"></j-val></div>
   </template>
 </j-async>
 ```
@@ -252,14 +292,14 @@ interface Todo {
 
       <j-for id="todos" bind="todos" key="id">
         <template>
-          <j-props class="todo-item">
-            <j-value class="todo-text" bind="each.value.text"></j-value>
+          <j-bind class="todo-item">
+            <j-val class="todo-text" bind="each.value.text"></j-val>
             <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
-          </j-props>
+          </j-bind>
         </template>
       </j-for>
 
-      <j-value bind="todos.length"></j-value> remaining
+      <j-val bind="todos.length"></j-val> remaining
     `,
   ],
 })

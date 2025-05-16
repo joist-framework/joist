@@ -69,7 +69,7 @@ class PluralRules extends Intl.PluralRules {}
       }
     `,
     html`
-      <div id="footer"><j-value bind="totalActive"></j-value> left</div>
+      <div id="footer"><j-val bind="totalActive"></j-val> left</div>
 
       <div id="decoration"></div>
     `,

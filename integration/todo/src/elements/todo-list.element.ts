@@ -19,11 +19,11 @@ import { TodoCardElement } from "./todo-card.element.js";
     html`
       <j-for bind="todos" key="id">
         <template>
-          <j-props>
-            <todo-card $.id="each.value.id" $status="each.value.status">
-              <j-value bind="each.value.name"></j-value>
+          <j-bind props="id:each.value.id, status:each.value.status">
+            <todo-card>
+              <j-val bind="each.value.name"></j-val>
             </todo-card>
-          </j-props>
+          </j-bind>
         </template>
       </j-for>
     `,

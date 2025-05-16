@@ -26,11 +26,11 @@ import { bind } from "@joist/templating";
       }
     `,
     html`
-      <j-props #href:href>
+      <j-bind props="href:href">
         <a>
           <slot></slot>
         </a>
-      </j-props>
+      </j-bind>
     `,
   ],
 })

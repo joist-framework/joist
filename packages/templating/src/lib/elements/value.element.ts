@@ -4,12 +4,12 @@ import { JToken } from "../token.js";
 
 declare global {
   interface HTMLElementTagNameMap {
-    "j-value": JoistValueElement;
+    "j-val": JoistValueElement;
   }
 }
 
 @element({
-  tagName: "j-value",
+  tagName: "j-val",
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })

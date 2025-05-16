@@ -69,13 +69,17 @@
 
     <j-for id="todos" bind="todos" key="id">
       <template>
-        <j-props class="todo-item" $.dataset.completed="each.value.completed">
-          <j-props>
-            <input type="checkbox" $.id="each.value.id" $.checked="each.value.completed" />
-            <j-value class="todo-text" bind="each.value.text"></j-value>
-            <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
-          </j-props>
-        </j-props>
+        <j-bind class="todo-item" props="id:each.value.id, checked:each.value.completed">
+          <input type="checkbox" />
+        </j-bind>
+
+        <j-bind class="todo-item" props="checked:each.value.completed">
+          <j-value class="todo-text" bind="each.value.text"></j-value>
+        </j-bind>
+
+        <j-bind class="todo-item" props="id:each.value.id">
+          <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
+        </j-bind>
       </template>
     </j-for>
 

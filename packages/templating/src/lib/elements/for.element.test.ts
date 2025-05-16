@@ -23,7 +23,7 @@ it("should iterate over an iterable", () => {
         <j-for bind="items" key="id">
           <template>
             <li>
-              <j-value bind="each.value.label"></j-value>
+              <j-val bind="each.value.label"></j-val>
             </li>
           </template>
         </j-for>
@@ -94,13 +94,13 @@ it("should update when items are added or removed", () => {
     >
       <j-for bind="items" key="id">
         <template>
-          <j-value bind="each.value.text"></j-value>
+          <j-val bind="each.value.text"></j-val>
         </template>
       </j-for>
     </div>
   `);
 
-  const items = element.querySelectorAll("j-value");
+  const items = element.querySelectorAll("j-val");
   assert.equal(items.length, 2);
   assert.equal(items[0].textContent?.trim(), "First");
   assert.equal(items[1].textContent?.trim(), "Third");
@@ -118,9 +118,8 @@ it("should provide index and position information", () => {
     >
       <j-for bind="items">
         <template>
-          <j-value bind="each.value"></j-value>
-          (index: <j-value bind="each.index"></j-value>,
-          position: <j-value bind="each.position"></j-value>)
+          <j-val bind="each.value"></j-val>
+          (index: <j-val bind="each.index"></j-val>, position: <j-val bind="each.position"></j-val>)
         </template>
       </j-for>
     </div>
@@ -160,7 +159,7 @@ it("should provide index and position information", () => {
 //           <div class="group">
 //             <j-for bind="each.value.items">
 //               <template>
-//                 <j-value class="child" bind="each.value"></j-value>
+//                 <j-val class="child" bind="each.value"></j-val>
 //               </template>
 //             </j-for>
 //           </div>
@@ -207,13 +206,13 @@ it("should maintain DOM order when items are reordered", () => {
     >
       <j-for bind="items" key="id">
         <template>
-          <j-value bind="each.value.text"></j-value>
+          <j-val bind="each.value.text"></j-val>
         </template>
       </j-for>
     </div>
   `);
 
-  const items = element.querySelectorAll("j-value");
+  const items = element.querySelectorAll("j-val");
   assert.equal(items.length, 3);
   assert.equal(items[0].textContent?.trim(), "Third");
   assert.equal(items[1].textContent?.trim(), "First");

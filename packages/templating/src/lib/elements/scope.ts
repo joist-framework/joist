@@ -9,7 +9,7 @@ declare global {
 }
 
 @element({
-  tagName: "j-value",
+  tagName: "j-val",
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })

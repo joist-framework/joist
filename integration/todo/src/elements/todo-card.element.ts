@@ -51,7 +51,7 @@ import type { TodoStatus } from "../services/todo.service.js";
       <button id="remove">remove</button>
 
       <button id="complete">
-        <j-value bind="actionState.value"></j-value>
+        <j-val bind="actionState.value"></j-val>
       </button>
     `,
   ],
