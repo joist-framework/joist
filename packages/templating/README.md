@@ -2,6 +2,13 @@
 
 The Joist templating system provides a powerful and flexible way to handle data binding and templating in web components. This documentation covers the core components and their usage.
 
+## Table of Contents
+
+- [Core Components](#core-components)
+- [Built-in Template Elements](#built-in-template-elements)
+- [Complete Example](#complete-example)
+- [Troubleshooting](#troubleshooting)
+
 ## Core Components
 
 ### Bind Decorator (`bind.ts`)
@@ -19,42 +26,71 @@ class MyElement extends HTMLElement {
 
 The decorator:
 
-- Creates a two-way binding between component properties and templates
+- Creates a one-way binding between component properties and templates
 - Automatically handles value propagation through the `joist::value` event
 - Integrates with Joist's observable system for efficient change detection
+- Supports computed properties
+
+```typescript
+class MyElement extends HTMLElement {
+  @observe()
+  assessor value = "Hello World";
+
+  @bind((instance) => instance.value.toUpperCase())
+  accessor formattedValue = "";
+}
+```
 
 ### Token System (`token.ts`)
 
 The `JToken` class handles parsing and evaluation of binding expressions. It supports:
 
+NOTE: Most of the time you will not be using this yourself.
+
 - Simple property bindings: `propertyName`
 - Nested property access: `user.profile.name`
 - Negation operator: `!isVisible`
+- Array access: `items.0.name`
 
 Example usage:
 
 ```typescript
 const token = new JToken("user.name");
 const value = token.readTokenValueFrom(context);
+
+// With negation
+const negatedToken = new JToken("!isVisible");
+const isHidden = negatedToken.readTokenValueFrom(context);
 ```
-
-### Events (`events.ts`)
-
-The system uses custom events for value propagation:
-
-- `JoistValueEvent`: A custom event that handles value updates in the templating system
-- Bubbles through the DOM tree
-- Carries both the token and update mechanism
 
 ## Built-in Template Elements
 
 Joist provides several built-in template elements for common templating needs:
+
+### Value Display (`j-val`)
+
+Displays a bound value as text content:
+
+```html
+<!-- Basic usage -->
+<j-val bind="user.name"></j-val>
+
+<!-- With formatting -->
+<j-val bind="formattedPrice"></j-val>
+
+<!-- With nested properties -->
+<j-val bind="user.profile.address.city"></j-val>
+
+<!-- With array access -->
+<j-val bind="items[0].name"></j-val>
+```
 
 ### Conditional Rendering (`j-if`)
 
 Conditionally renders content based on a boolean expression:
 
 ```html
+<!-- Basic usage -->
 <j-if bind="isVisible">
   <template>
     <div>This content is only shown when isVisible is true</div>
@@ -86,20 +122,12 @@ The `j-if` element supports:
 - Optional `else` template for fallback content
 - Automatic cleanup of removed content
 
-Common use cases:
-
-- Toggling visibility of UI elements
-- Conditional form fields
-- Feature flags
-- Authentication states
-- Loading states
-
 ### Property Binding (`j-bind`)
 
-Binds values to element properties and attributes. The prefix determines the binding type:
+Binds values to element properties and attributes. By default it will bind values to the first child element of `j-bind`
 
-- `$bind.` prefix: Binds to element properties
-- `$bind` prefix: Binds to element attributes
+- `props` Binds to element properties
+- `attrs` prefix: Binds to element attributes
 
 #### Binding Syntax
 
@@ -109,19 +137,24 @@ The binding syntax follows the format `target:source` where:
 - `source` is the value to bind from
 
 ```html
-<!-- Bind href attribute to href value -->
-<j-bind $bind="href:href">
+<!-- Basic attribute binding -->
+<j-bind attrs="href:href">
   <a>Link</a>
 </j-bind>
 
-<!-- Bind target property to nested value -->
-<j-bind $.bind="target:some.value">
+<!-- Property binding -->
+<j-bind props="target:some.value">
   <a>Link</a>
 </j-bind>
 
 <!-- Multiple bindings -->
-<j-bind $.bind="selectionStart:foo, selectionEnd:foo">
+<j-bind props="selectionStart:foo, selectionEnd:foo">
   <input value="1234567890" />
+</j-bind>
+
+<!-- Style binding -->
+<j-bind props="style.color:color, style.backgroundColor:bgColor">
+  <div>Styled content</div>
 </j-bind>
 ```
 
@@ -130,7 +163,7 @@ The binding syntax follows the format `target:source` where:
 You can target a specific child element using the `target` attribute:
 
 ```html
-<j-bind $bind="href:href" target="#test">
+<j-bind attrs="href:href" target="#test">
   <a>Default</a>
   <a id="test">Target</a>
 </j-bind>
@@ -144,18 +177,8 @@ Boolean attributes are handled specially:
 - `false` values remove the attribute
 
 ```html
-<j-bind $bind="disabled:isDisabled">
+<j-bind attrs="disabled:isDisabled">
   <button>Click me</button>
-</j-bind>
-```
-
-#### Nested Property Access
-
-You can access nested properties using dot notation:
-
-```html
-<j-bind $.bind="target:target.value">
-  <a>Link</a>
 </j-bind>
 ```
 
@@ -164,25 +187,26 @@ You can access nested properties using dot notation:
 Renders lists of items with support for keyed updates:
 
 ```html
+<!-- Basic list rendering -->
 <j-for bind="todos" key="id">
   <template>
-    <j-bind>
-      <div
-        class="todo-item"
-        $.dataset.id="each.value.id"
-        $.dataset.completed="each.value.completed"
-      >
-        <j-bind>
-          <input type="checkbox" $.checked="each.value.completed" />
-        </j-bind>
+    <div class="todo-item">
+      <j-val bind="each.value.text"></j-val>
+    </div>
+  </template>
+</j-for>
 
-        <j-val bind="each.value.text"></j-val>
+<!-- With complex item structure -->
+<j-for bind="users" key="id">
+  <template>
+    <div class="user-card">
+      <j-bind>
+        <img props="src:each.value.avatar" />
+      </j-bind>
 
-        <j-bind>
-          <button $.disabled="!each.value.text">×</button>
-        </j-bind>
-      </div>
-    </j-bind>
+      <h3><j-val bind="each.value.name"></j-val></h3>
+      <p><j-val bind="each.value.bio"></j-val></p>
+    </div>
   </template>
 </j-for>
 ```
@@ -193,17 +217,9 @@ The `j-for` element provides context variables:
 - `each.index`: The zero-based index of the current item
 - `each.position`: The one-based position of the current item
 
-### Value Display (`j-val`)
-
-Displays a bound value as text content:
-
-```html
-<j-val bind="user.name"></j-val> <j-val bind="formattedPrice"></j-val>
-```
-
 ### Async State Handling (`j-async`)
 
-Handles asynchronous operations and state management with loading, success, and error states. The element accepts either a Promise or an AsyncState object:
+Handles asynchronous operations and state management with loading, success, and error states:
 
 ```typescript
 // AsyncState type
@@ -223,6 +239,7 @@ accessor userPromise = fetch('/api/user').then(r => r.json());
 ```
 
 ```html
+<!-- Basic async handling -->
 <j-async bind="userPromise">
   <template loading>Loading...</template>
 
@@ -240,8 +257,52 @@ The `j-async` element supports:
 
 - Promise handling with automatic state transitions
 - Loading, success, and error templates
-- Automatic cleanup on disconnection
 - State object with typed data and error fields
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Binding Not Updating**
+
+   - Check if the property is decorated with `@bind()`
+   - Verify the binding expression is correct
+   - Ensure the property is being updated correctly
+
+2. **List Rendering Issues**
+
+   - Verify the `key` attribute is unique and stable
+   - Check if the list items are properly structured
+   - Ensure the binding expression matches the data structure
+
+3. **Async State Problems**
+   - Verify the Promise is properly resolved/rejected
+   - Check if all required templates are present
+   - Ensure error handling is implemented
+
+## Manual Value Handling
+
+You can manually handle value requests and updates by listening for the `joist::value` event. This is useful when you need more control over the binding process or want to implement custom binding logic:
+
+```typescript
+class MyElement extends HTMLElement {
+  connectedCallback() {
+    // Listen for value requests
+    this.addEventListener("joist::value", (e) => {
+      const token = e.token;
+
+      // Handle the value request
+      if (token.bindTo === "myValue") {
+        // Update the value
+        e.update({
+          oldValue: this.myValue,
+          newValue: this.myValue,
+        });
+      }
+    });
+  }
+}
+```
 
 ## Complete Example
 
@@ -252,7 +313,7 @@ import { bind } from "@joist/templating";
 import { element, html, css, listen, query } from "@joist/element";
 
 interface Todo {
-  id: number;
+  id: string;
   text: string;
 }
 
@@ -270,6 +331,7 @@ interface Todo {
         gap: 1rem;
       }
       .todo-item {
+        align-items: center;
         display: flex;
         gap: 0.5rem;
         margin: 0.5rem 0;
@@ -292,10 +354,13 @@ interface Todo {
 
       <j-for id="todos" bind="todos" key="id">
         <template>
-          <j-bind class="todo-item">
+          <div class="todo-item">
             <j-val class="todo-text" bind="each.value.text"></j-val>
-            <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
-          </j-bind>
+
+            <j-bind attrs="data-id:each.value.id">
+              <button>×</button>
+            </j-bind>
+          </div>
         </template>
       </j-for>
 
@@ -316,7 +381,7 @@ export class TodoList extends HTMLElement {
 
     const input = this.#input();
 
-    this.todos = [...this.todos, { id: this.#nextId++, text: input.value.trim() }];
+    this.todos = [...this.todos, { id: String(this.#nextId++), text: input.value.trim() }];
 
     input.value = "";
   }
@@ -324,87 +389,10 @@ export class TodoList extends HTMLElement {
   @listen("click", "#todos")
   onDelete(e: Event) {
     if (e.target instanceof HTMLButtonElement) {
-      const id = Number(e.target.id);
+      const id = Number(e.target.dataset.id);
 
       this.todos = this.todos.filter((todo) => todo.id !== id);
     }
   }
 }
 ```
-
-## Usage
-
-1. Use the `@bind()` decorator on properties you want to make bindable
-2. Properties will automatically integrate with the templating system
-3. Changes are propagated through the component tree using the custom event system
-
-## Integration with Observable
-
-The templating system is built on top of Joist's observable system (`@joist/observable`), providing:
-
-- Automatic change detection
-- Efficient updates
-- Integration with the component lifecycle
-
-## Best Practices
-
-1. Use the `@bind()` decorator only on properties that need reactivity
-2. Keep binding expressions simple and avoid deep nesting
-3. Consider performance implications when binding to frequently changing values
-4. Always use a `key` attribute with `j-for` when items can be reordered
-5. Place template content directly inside `j-if` and `j-for` elements
-
-## Manual Value Handling
-
-You can manually handle value requests and updates by listening for the `joist::value` event. This is useful when you need more control over the binding process or want to implement custom binding logic:
-
-```typescript
-import { JoistValueEvent } from "@joist/templating";
-
-class MyElement extends HTMLElement {
-  connectedCallback() {
-    // Listen for value requests
-    this.addEventListener("joist::value", (e: JoistValueEvent) => {
-      const token = e.token;
-
-      // Handle the value request
-      if (token.bindTo === "myValue") {
-        // Update the value
-        e.update({
-          oldValue: this.myValue,
-          newValue: this.myValue,
-        });
-      }
-    });
-  }
-}
-```
-
-Example with async value handling:
-
-```typescript
-import { JoistValueEvent } from "@joist/templating";
-
-class MyElement extends HTMLElement {
-  connectedCallback() {
-    this.addEventListener("joist::value", (e: JoistValueEvent) => {
-      const token = e.token;
-
-      if (token.bindTo === "userData") {
-        e.update({
-          oldValue: this.userData,
-          newValue: data,
-        });
-      }
-    });
-  }
-}
-```
-
-Common use cases for manual value handling:
-
-- Custom data transformation before binding
-- Async data loading and caching
-- Complex state management
-- Integration with external data sources
-- Custom validation or error handling

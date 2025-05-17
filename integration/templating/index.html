@@ -44,6 +44,7 @@
         display: flex;
         gap: 0.5rem;
         margin: 0.5rem 0;
+        align-items: center;
       }
 
       .todo-text {
@@ -69,33 +70,21 @@
 
     <j-for id="todos" bind="todos" key="id">
       <template>
-        <j-bind class="todo-item" props="id:each.value.id, checked:each.value.completed">
-          <input type="checkbox" />
-        </j-bind>
+        <div class="todo-item">
+          <j-bind class="todo-item" attrs="data-id:each.value.id">
+            <button>x</button>
+          </j-bind>
 
-        <j-bind class="todo-item" props="checked:each.value.completed">
-          <j-value class="todo-text" bind="each.value.text"></j-value>
-        </j-bind>
-
-        <j-bind class="todo-item" props="id:each.value.id">
-          <button $.id="each.value.id" $.disabled="!each.value.text">×</button>
-        </j-bind>
+          <j-val class="todo-text" bind="each.value.text"></j-val>
+        </div>
       </template>
     </j-for>
 
-    <j-if bind="stats.remaining">
-      <template> <j-value bind="stats.remaining"></j-value> remaining </template>
-    </j-if>
+    <j-val bind="todos.length"></j-val> remaining
 
     <script type="module">
       const model = new Proxy(
-        {
-          bindings: {},
-          stats: {
-            remaining: 0,
-          },
-          todos: [],
-        },
+        { bindings: {}, todos: [] },
         {
           get(target, prop) {
             return target[prop];
@@ -137,18 +126,19 @@
 
       let nextId = 1;
 
-      listContainer.addEventListener("click", () => {});
+      listContainer.addEventListener("click", (e) => {
+        model.todos = model.todos.filter((todo) => todo.id !== e.target.dataset.id);
+      });
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        model.todos = [...model.todos, { id: nextId, text: input.value.trim(), completed: false }];
+        model.todos = [
+          ...model.todos,
+          { id: String(nextId), text: input.value.trim(), completed: false },
+        ];
 
         nextId++;
-
-        model.stats = {
-          remaining: model.stats.remaining + 1,
-        };
 
         input.value = "";
       });
