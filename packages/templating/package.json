@@ -1,6 +1,6 @@
 {
   "name": "@joist/templating",
-  "version": "4.2.4-next.0",
+  "version": "4.2.4-next.1",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
