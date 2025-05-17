@@ -84,3 +84,22 @@ it("should be case sensitive", () => {
   assert.equal(input?.selectionStart, 8);
   assert.equal(input?.selectionEnd, 8);
 });
+
+it("should default to the mapTo value if bindTo is not provided", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: 8 });
+      }}
+    >
+      <j-bind props="selectionStart, selectionEnd">
+        <input value="1234567890" />
+      </j-bind>
+    </div>
+  `);
+
+  const input = element.querySelector("input");
+
+  assert.equal(input?.selectionStart, 8);
+  assert.equal(input?.selectionEnd, 8);
+});

@@ -10,11 +10,7 @@ export class JAttrToken extends JToken {
   constructor(binding: string) {
     const [mapTo, bindTo] = binding.split(":");
 
-    if (!mapTo) {
-      throw new Error(`Invalid binding: ${binding}, should be in the format of "bindTo:mapTo"`);
-    }
-
-    super(bindTo);
+    super(bindTo ?? mapTo);
 
     this.mapTo = mapTo;
   }
