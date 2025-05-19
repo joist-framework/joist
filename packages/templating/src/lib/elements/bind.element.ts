@@ -4,6 +4,12 @@ import { attr, element, css, html } from "@joist/element";
 import { JToken } from "../token.js";
 import { JoistValueEvent } from "../events.js";
 
+declare global {
+  interface HTMLElementTagNameMap {
+    "j-bind": JoistBindElement;
+  }
+}
+
 export class JAttrToken extends JToken {
   mapTo: string;
 
@@ -21,7 +27,7 @@ export class JAttrToken extends JToken {
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })
-export class JoistIfElement extends HTMLElement {
+export class JoistBindElement extends HTMLElement {
   @attr()
   accessor props = "";
 
