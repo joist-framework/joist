@@ -59,11 +59,22 @@ export class JoistAsyncElement extends HTMLElement {
         if (newValue !== oldValue) {
           if (newValue instanceof Promise) {
             this.#handlePromise(newValue);
+          } else if (this.#isAsyncState(newValue)) {
+            this.#handleState(newValue);
           } else {
             console.warn("j-async bind value must be a Promise or AsyncState");
           }
         }
       }),
+    );
+  }
+
+  #isAsyncState(value: unknown): value is AsyncState {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "status" in value &&
+      (value.status === "loading" || value.status === "error" || value.status === "success")
     );
   }
 
