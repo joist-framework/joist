@@ -93,12 +93,14 @@ export class HnNewsCard extends HTMLElement {
   @bind()
   accessor author = "";
 
-  @bind((i) => {
-    try {
-      return new URL(i.href).hostname;
-    } catch (e) {
-      return "";
-    }
+  @bind({
+    compute(i) {
+      try {
+        return new URL(i.href).hostname;
+      } catch (e) {
+        return "";
+      }
+    },
   })
   accessor host = "";
 }

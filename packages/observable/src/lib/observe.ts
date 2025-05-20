@@ -2,16 +2,22 @@ import { type EffectFn, instanceMetadataStore, observableMetadataStore } from ".
 
 const INIT_VALUE = Symbol("init");
 
-export function observe<This extends object, Value>(mapper?: (instance: This) => Value) {
+export interface ObserveOpts<This, Value> {
+  compute?: (instance: This) => Value;
+}
+
+export function observe<This extends object, Value>(opts: ObserveOpts<This, Value> = {}) {
   return function observeDecorato(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
     const observableMeta = observableMetadataStore.read<This>(ctx.metadata);
 
-    if (mapper) {
+    const compute = opts.compute;
+
+    if (compute) {
       observableMeta.effects.add(function mapperFn(this: This) {
-        ctx.access.set(this, mapper(this));
+        ctx.access.set(this, compute(this));
       });
     }
 
@@ -34,13 +40,13 @@ export function observe<This extends object, Value>(mapper?: (instance: This) =>
         return value;
       },
       get() {
-        if (mapper) {
+        if (compute) {
           const instanceMeta = instanceMetadataStore.read<This>(this);
 
           if (!instanceMeta.initialized.has(ctx.name)) {
             instanceMeta.initialized.add(ctx.name);
 
-            return mapper(this);
+            return compute(this);
           }
         }
 

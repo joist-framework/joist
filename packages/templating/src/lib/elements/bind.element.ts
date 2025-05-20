@@ -1,6 +1,5 @@
 import { attr, element, css, html } from "@joist/element";
 
-// import { JoistValueEvent } from "../events.js";
 import { JToken } from "../token.js";
 import { JoistValueEvent } from "../events.js";
 
@@ -83,8 +82,8 @@ export class JoistBindElement extends HTMLElement {
 
   #dispatch(token: JToken, write: (value: unknown) => void) {
     this.dispatchEvent(
-      new JoistValueEvent(token, ({ newValue, oldValue }) => {
-        if (newValue === oldValue) {
+      new JoistValueEvent(token, ({ newValue, oldValue, alwaysUpdate }) => {
+        if (newValue === oldValue && !alwaysUpdate) {
           return;
         }
 

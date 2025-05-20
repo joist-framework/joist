@@ -1,11 +1,19 @@
-import { instanceMetadataStore, observe } from "@joist/observable";
+import { instanceMetadataStore, observe, ObserveOpts } from "@joist/observable";
 
-export function bind<This extends HTMLElement, Value>(mapper?: (instance: This) => Value) {
+export interface BindOpts<This, Value> extends ObserveOpts<This, Value> {
+  /**
+   * Trigger bindings on every change cycle, regardless of value,
+   * newValue and oldValue will be the same in that case
+   **/
+  alwaysUpdate?: boolean;
+}
+
+export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value> = {}) {
   return function bindDecorator(
     base: ClassAccessorDecoratorTarget<This, Value>,
     ctx: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> {
-    const internalObserve = observe(mapper)(base, ctx);
+    const internalObserve = observe(opts)(base, ctx);
 
     return {
       init(value) {
@@ -15,14 +23,26 @@ export function bind<This extends HTMLElement, Value>(mapper?: (instance: This) 
 
             e.stopPropagation();
 
-            e.update({ oldValue: null, newValue: ctx.access.get(this) });
+            e.update({
+              oldValue: null,
+              newValue: ctx.access.get(this),
+              alwaysUpdate: opts.alwaysUpdate,
+            });
 
             instanceMeta.bindings.add((changes) => {
               const key = ctx.name as keyof This;
-              const res = changes.get(key);
+              const change = changes.get(key);
 
-              if (res) {
-                e.update(res);
+              if (change) {
+                e.update({ ...change, alwaysUpdate: opts.alwaysUpdate });
+              } else if (opts.alwaysUpdate) {
+                const value = ctx.access.get(this);
+
+                e.update({
+                  oldValue: value,
+                  newValue: value,
+                  alwaysUpdate: opts.alwaysUpdate,
+                });
               }
             });
           }

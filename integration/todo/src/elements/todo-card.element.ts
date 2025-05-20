@@ -61,10 +61,14 @@ export class TodoCardElement extends HTMLElement {
   @observe()
   accessor status: TodoStatus = "active";
 
-  @bind(({ status }) => ({
-    value: status === "active" ? "complete" : "active",
-    showStar: status === "complete",
-  }))
+  @bind({
+    compute(i) {
+      return {
+        value: i.status === "active" ? "complete" : "active",
+        showStar: i.status === "complete",
+      };
+    },
+  })
   accessor actionState = {
     value: "active",
     showStar: false,

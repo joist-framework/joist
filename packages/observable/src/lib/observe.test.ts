@@ -111,7 +111,9 @@ describe("computed decorator", () => {
       @observe()
       accessor lastName = "Doe";
 
-      @observe((i) => `${i.firstName} ${i.lastName}`)
+      @observe({
+        compute: (i) => `${i.firstName} ${i.lastName}`,
+      })
       accessor fullName = "";
     }
 
@@ -134,10 +136,14 @@ describe("computed decorator", () => {
       @observe()
       accessor y = 3;
 
-      @observe((i) => i.x + i.y)
+      @observe({
+        compute: (i) => i.x + i.y,
+      })
       accessor sum = 0;
 
-      @observe((i) => i.x * i.y)
+      @observe({
+        compute: (i) => i.x * i.y,
+      })
       accessor product = 0;
     }
 
