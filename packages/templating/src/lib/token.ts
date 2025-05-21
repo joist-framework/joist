@@ -1,4 +1,4 @@
-type ComparisonOperator = "==" | ">" | "<";
+type ComparisonOperator = "==" | "!=" | ">" | "<";
 
 interface TokenParts {
   path: string[];
@@ -11,6 +11,7 @@ interface TokenParts {
  *
  * Supported operators:
  * - `==` : Equality comparison (e.g., "status==active")
+ * - `!=` : Inequality comparison (e.g., "status!=active")
  * - `>`  : Greater than comparison (e.g., "count>5")
  * - `<`  : Less than comparison (e.g., "count<10")
  *
@@ -21,6 +22,9 @@ interface TokenParts {
  *
  * // Equality comparison
  * new JToken("status == active").readTokenValueFrom({ status: "active" }) // true
+ *
+ * // Inequality comparison
+ * new JToken("status != active").readTokenValueFrom({ status: "inactive" }) // true
  *
  * // Greater than comparison
  * new JToken("count > 5").readTokenValueFrom({ count: 10 }) // true
@@ -46,6 +50,8 @@ export class JToken {
   path: string[] = [];
   /** The value to compare against for equality (==) */
   equalsValue: string | undefined;
+  /** The value to compare against for inequality (!=) */
+  notEqualsValue: string | undefined;
   /** The value to compare against for greater than (>) */
   gtValue: string | undefined;
   /** The value to compare against for less than (<) */
@@ -53,7 +59,7 @@ export class JToken {
 
   /**
    * Creates a new JToken instance.
-   * @param rawToken - The token string to parse. Can include operators (==, >, <) and negation (!)
+   * @param rawToken - The token string to parse. Can include operators (==, !=, >, <) and negation (!)
    */
   constructor(rawToken: string) {
     this.rawToken = rawToken;
@@ -68,6 +74,9 @@ export class JToken {
     switch (operator) {
       case "==":
         this.equalsValue = value;
+        break;
+      case "!=":
+        this.notEqualsValue = value;
         break;
       case ">":
         this.gtValue = value;
@@ -98,7 +107,7 @@ export class JToken {
    * @returns An object containing the path parts and any comparison operator/value
    */
   #parseToken(): TokenParts {
-    const operators: ComparisonOperator[] = ["==", ">", "<"];
+    const operators: ComparisonOperator[] = ["==", "!=", ">", "<"];
 
     for (const operator of operators) {
       if (this.rawToken.includes(operator)) {
@@ -146,11 +155,12 @@ export class JToken {
     if (this.equalsValue !== undefined) {
       return String(value) === this.equalsValue;
     }
-
+    if (this.notEqualsValue !== undefined) {
+      return String(value) !== this.notEqualsValue;
+    }
     if (this.gtValue !== undefined) {
       return Number(value) > Number(this.gtValue);
     }
-
     if (this.ltValue !== undefined) {
       return Number(value) < Number(this.ltValue);
     }

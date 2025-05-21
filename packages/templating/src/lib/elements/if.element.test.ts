@@ -200,3 +200,67 @@ it("should handle undefined values in comparisons", () => {
 
   assert.equal(element.textContent?.trim(), "");
 });
+
+it("should handle not equal comparison", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { status: "inactive" } });
+      }}
+    >
+      <j-if bind="example.status != active">
+        <template>Status is Not Active</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Status is Not Active");
+});
+
+it("should handle not equal comparison with matching value", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { status: "active" } });
+      }}
+    >
+      <j-if bind="example.status != active">
+        <template>Status is Not Active</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "");
+});
+
+it("should handle not equal comparison with string numbers", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { count: "10" } });
+      }}
+    >
+      <j-if bind="example.count != 5">
+        <template>Count is Not 5</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Count is Not 5");
+});
+
+it("should handle not equal comparison with undefined", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { status: undefined } });
+      }}
+    >
+      <j-if bind="example.status != active">
+        <template>Status is Not Active</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Status is Not Active");
+});

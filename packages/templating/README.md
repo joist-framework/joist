@@ -91,6 +91,12 @@ Conditionally renders content based on a boolean expression:
   </template>
 </j-if>
 
+<j-if bind="status != active">
+  <template>
+    <div>Status is not active</div>
+  </template>
+</j-if>
+
 <j-if bind="count > 5">
   <template>
     <div>Count is greater than 5</div>
@@ -127,6 +133,7 @@ The `j-if` element supports:
 - Negation operator (`!`) for inverse conditions
 - Comparison operators:
   - Equality (`==`): `status == active`
+  - Inequality (`!=`): `status != active`
   - Greater than (`>`): `count > 5`
   - Less than (`<`): `score < 100`
 - Nested property paths: `user.score > 100`
