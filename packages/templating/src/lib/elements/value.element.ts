@@ -22,13 +22,7 @@ export class JoistValueElement extends HTMLElement {
 
     this.dispatchEvent(
       new JoistValueEvent(token, (value) => {
-        let valueToWrite: string;
-
-        if (typeof value.newValue === "object" && value.newValue !== null) {
-          valueToWrite = String(token.readTokenValueFrom(value.newValue));
-        } else {
-          valueToWrite = String(value.newValue);
-        }
+        const valueToWrite = String(token.readTokenValueFrom(value.newValue));
 
         if (this.textContent !== valueToWrite) {
           this.textContent = valueToWrite;

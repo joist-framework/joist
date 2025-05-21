@@ -14,18 +14,20 @@ export class JToken {
     this.bindTo = this.bindTo.replaceAll("!", "");
   }
 
-  readTokenValueFrom<T = unknown>(obj: object): T {
-    let pointer: any = obj;
+  readTokenValueFrom<T = unknown>(value: unknown): T {
+    let pointer: any = value;
 
-    if (!this.path.length) {
-      return pointer;
-    }
+    if ((typeof value === "object" && value !== null) || typeof value === "string") {
+      if (!this.path.length) {
+        return pointer;
+      }
 
-    for (const part of this.path) {
-      pointer = pointer[part];
+      for (const part of this.path) {
+        pointer = pointer[part];
 
-      if (pointer === undefined) {
-        break;
+        if (pointer === undefined) {
+          break;
+        }
       }
     }
 

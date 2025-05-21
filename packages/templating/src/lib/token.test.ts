@@ -58,17 +58,11 @@ describe("JToken", () => {
       assert.deepEqual(value, { foo: 42 });
     });
 
-    it("should throw an error if the object is null or undefined", () => {
-      const token = new JToken("example.token");
-      assert.throws(
-        () => token.readTokenValueFrom<any>(null as any),
-        TypeError,
-      );
+    it("should parse values from strings", () => {
+      const token = new JToken("example.length");
+      const value = token.readTokenValueFrom("42");
 
-      assert.throws(
-        () => token.readTokenValueFrom<any>(undefined as any),
-        TypeError,
-      );
+      assert.equal(value, 2);
     });
   });
 });

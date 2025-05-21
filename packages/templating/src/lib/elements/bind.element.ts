@@ -87,11 +87,7 @@ export class JoistBindElement extends HTMLElement {
           return;
         }
 
-        let valueToWrite = newValue;
-
-        if (typeof newValue === "object" && newValue !== null) {
-          valueToWrite = token.readTokenValueFrom(newValue);
-        }
+        let valueToWrite = token.readTokenValueFrom(newValue);
 
         if (token.isNegated) {
           valueToWrite = !valueToWrite;
