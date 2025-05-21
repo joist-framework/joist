@@ -88,3 +88,115 @@ it("should switch between if and else templates", () => {
 
   assert.equal(element.textContent?.trim(), "If Content");
 });
+
+it("should handle equality comparison", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { status: "active" } });
+      }}
+    >
+      <j-if bind="example.status == active">
+        <template>Status is Active</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Status is Active");
+});
+
+it("should handle greater than comparison", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { count: 10 } });
+      }}
+    >
+      <j-if bind="example.count > 5">
+        <template>Count is Greater Than 5</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Count is Greater Than 5");
+});
+
+it("should handle less than comparison", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { score: 75 } });
+      }}
+    >
+      <j-if bind="example.score < 100">
+        <template>Score is Less Than 100</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Score is Less Than 100");
+});
+
+it("should handle nested path comparisons", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { user: { score: 150 } } });
+      }}
+    >
+      <j-if bind="example.user.score > 100">
+        <template>User Score is Above 100</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "User Score is Above 100");
+});
+
+it("should handle negated comparisons", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { status: "inactive" } });
+      }}
+    >
+      <j-if bind="!example.status == active">
+        <template>Status is Not Active</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "Status is Not Active");
+});
+
+it("should handle string number comparisons", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { count: "10" } });
+      }}
+    >
+      <j-if bind="example.count > 5">
+        <template>String Count is Greater Than 5</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "String Count is Greater Than 5");
+});
+
+it("should handle undefined values in comparisons", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: { count: undefined } });
+      }}
+    >
+      <j-if bind="example.count > 5">
+        <template>Count is Greater Than 5</template>
+      </j-if>
+    </div>
+  `);
+
+  assert.equal(element.textContent?.trim(), "");
+});

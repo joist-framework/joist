@@ -20,7 +20,7 @@ import { bind } from "@joist/templating";
 
 class MyElement extends HTMLElement {
   @bind()
-  accessor myProperty: string;
+  accessor myProperty = "";
 }
 ```
 
@@ -36,31 +36,11 @@ class MyElement extends HTMLElement {
   @observe()
   assessor value = "Hello World";
 
-  @bind((instance) => instance.value.toUpperCase())
+  @bind({
+    compute: (i) => i.value.toUpperCase()
+  })
   accessor formattedValue = "";
 }
-```
-
-### Token System (`token.ts`)
-
-The `JToken` class handles parsing and evaluation of binding expressions. It supports:
-
-NOTE: Most of the time you will not be using this yourself.
-
-- Simple property bindings: `propertyName`
-- Nested property access: `user.profile.name`
-- Negation operator: `!isVisible`
-- Array access: `items.0.name`
-
-Example usage:
-
-```typescript
-const token = new JToken("user.name");
-const value = token.readTokenValueFrom(context);
-
-// With negation
-const negatedToken = new JToken("!isVisible");
-const isHidden = negatedToken.readTokenValueFrom(context);
 ```
 
 ## Built-in Template Elements
@@ -82,7 +62,7 @@ Displays a bound value as text content:
 <j-val bind="user.profile.address.city"></j-val>
 
 <!-- With array access -->
-<j-val bind="items[0].name"></j-val>
+<j-val bind="items.0.name"></j-val>
 ```
 
 ### Conditional Rendering (`j-if`)
@@ -104,6 +84,32 @@ Conditionally renders content based on a boolean expression:
   </template>
 </j-if>
 
+<!-- With comparison operators -->
+<j-if bind="status == active">
+  <template>
+    <div>Status is active</div>
+  </template>
+</j-if>
+
+<j-if bind="count > 5">
+  <template>
+    <div>Count is greater than 5</div>
+  </template>
+</j-if>
+
+<j-if bind="score < 100">
+  <template>
+    <div>Score is less than 100</div>
+  </template>
+</j-if>
+
+<!-- With nested paths -->
+<j-if bind="user.score > 100">
+  <template>
+    <div>User's score is above 100</div>
+  </template>
+</j-if>
+
 <!-- With else template -->
 <j-if bind="isLoggedIn">
   <template>
@@ -119,6 +125,11 @@ The `j-if` element supports:
 
 - Boolean expressions for conditional rendering
 - Negation operator (`!`) for inverse conditions
+- Comparison operators:
+  - Equality (`==`): `status == active`
+  - Greater than (`>`): `count > 5`
+  - Less than (`<`): `score < 100`
+- Nested property paths: `user.score > 100`
 - Optional `else` template for fallback content
 - Automatic cleanup of removed content
 
@@ -266,133 +277,3 @@ The `j-async` element supports:
 1. **Binding Not Updating**
 
    - Check if the property is decorated with `@bind()`
-   - Verify the binding expression is correct
-   - Ensure the property is being updated correctly
-
-2. **List Rendering Issues**
-
-   - Verify the `key` attribute is unique and stable
-   - Check if the list items are properly structured
-   - Ensure the binding expression matches the data structure
-
-3. **Async State Problems**
-   - Verify the Promise is properly resolved/rejected
-   - Check if all required templates are present
-   - Ensure error handling is implemented
-
-## Manual Value Handling
-
-You can manually handle value requests and updates by listening for the `joist::value` event. This is useful when you need more control over the binding process or want to implement custom binding logic:
-
-```typescript
-class MyElement extends HTMLElement {
-  connectedCallback() {
-    // Listen for value requests
-    this.addEventListener("joist::value", (e) => {
-      const token = e.token;
-
-      // Handle the value request
-      if (token.bindTo === "myValue") {
-        // Update the value
-        e.update({
-          oldValue: this.myValue,
-          newValue: this.myValue,
-        });
-      }
-    });
-  }
-}
-```
-
-## Complete Example
-
-Here's a complete todo application in a single component:
-
-```typescript
-import { bind } from "@joist/templating";
-import { element, html, css, listen, query } from "@joist/element";
-
-interface Todo {
-  id: string;
-  text: string;
-}
-
-@element({
-  tagName: "todo-list",
-  shadowDom: [
-    css`
-      :host {
-        display: block;
-        max-width: 600px;
-        margin: 2rem auto;
-      }
-      .form {
-        display: flex;
-        gap: 1rem;
-      }
-      .todo-item {
-        align-items: center;
-        display: flex;
-        gap: 0.5rem;
-        margin: 0.5rem 0;
-      }
-      .todo-text {
-        flex: 1;
-      }
-    `,
-    html`
-      <form class="form">
-        <input type="text" placeholder="What needs to be done?" />
-        <button type="submit">Add</button>
-      </form>
-
-      <j-if bind="!todos.length">
-        <template>
-          <p>No todos yet!</p>
-        </template>
-      </j-if>
-
-      <j-for id="todos" bind="todos" key="id">
-        <template>
-          <div class="todo-item">
-            <j-val class="todo-text" bind="each.value.text"></j-val>
-
-            <j-bind attrs="data-id:each.value.id">
-              <button>×</button>
-            </j-bind>
-          </div>
-        </template>
-      </j-for>
-
-      <j-val bind="todos.length"></j-val> remaining
-    `,
-  ],
-})
-export class TodoList extends HTMLElement {
-  @bind()
-  accessor todos: Todo[] = [];
-
-  #nextId = 1;
-  #input = query("input");
-
-  @listen("submit", "form")
-  onSubmit(e: SubmitEvent) {
-    e.preventDefault();
-
-    const input = this.#input();
-
-    this.todos = [...this.todos, { id: String(this.#nextId++), text: input.value.trim() }];
-
-    input.value = "";
-  }
-
-  @listen("click", "#todos")
-  onDelete(e: Event) {
-    if (e.target instanceof HTMLButtonElement) {
-      const id = Number(e.target.dataset.id);
-
-      this.todos = this.todos.filter((todo) => todo.id !== id);
-    }
-  }
-}
-```

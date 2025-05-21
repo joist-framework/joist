@@ -33,6 +33,45 @@ describe("JToken", () => {
       const token = new JToken("!example.token");
       assert.equal(token.bindTo, "example");
     });
+
+    it("should parse equals operator value", () => {
+      const token = new JToken("example==value");
+      assert.equal(token.equalsValue, "value");
+    });
+
+    it("should handle equals operator with negation", () => {
+      const token = new JToken("!example == value");
+      assert.equal(token.equalsValue, "value");
+      assert.isTrue(token.isNegated);
+    });
+
+    it("should handle equals operator with nested paths", () => {
+      const token = new JToken("example.nested == value");
+      assert.equal(token.equalsValue, "value");
+      assert.deepEqual(token.path, ["nested"]);
+    });
+
+    it("should parse greater than operator value", () => {
+      const token = new JToken("example > 5");
+      assert.equal(token.gtValue, "5");
+    });
+
+    it("should parse less than operator value", () => {
+      const token = new JToken("example < 10");
+      assert.equal(token.ltValue, "10");
+    });
+
+    it("should handle greater than operator with negation", () => {
+      const token = new JToken("!example > 5");
+      assert.equal(token.gtValue, "5");
+      assert.isTrue(token.isNegated);
+    });
+
+    it("should handle less than operator with nested paths", () => {
+      const token = new JToken("example.count < 10");
+      assert.equal(token.ltValue, "10");
+      assert.deepEqual(token.path, ["count"]);
+    });
   });
 
   describe("readTokenValueFrom", () => {
@@ -63,6 +102,103 @@ describe("JToken", () => {
       const value = token.readTokenValueFrom("42");
 
       assert.equal(value, 2);
+    });
+
+    it("should return true when equals against primative", () => {
+      const token = new JToken("example == active");
+      const value = token.readTokenValueFrom<boolean>("active");
+      assert.isTrue(value);
+    });
+
+    it("should return true when equals comparison matches", () => {
+      const token = new JToken("example.status==active");
+      const obj = { status: "active" };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should return false when equals comparison does not match", () => {
+      const token = new JToken("example.status==active");
+      const obj = { status: "inactive" };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
+    });
+
+    it("should handle equals comparison with numbers", () => {
+      const token = new JToken("example.count == 5");
+      const obj = { count: 5 };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should handle equals comparison with nested paths", () => {
+      const token = new JToken("example.user.status == active");
+      const obj = { user: { status: "active" } };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should handle equals comparison with undefined values", () => {
+      const token = new JToken("example.status == active");
+      const obj = { status: undefined };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
+    });
+
+    it("should return true when greater than comparison matches", () => {
+      const token = new JToken("example.count > 5");
+      const obj = { count: 10 };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should return false when greater than comparison does not match", () => {
+      const token = new JToken("example.count > 5");
+      const obj = { count: 3 };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
+    });
+
+    it("should return true when less than comparison matches", () => {
+      const token = new JToken("example.count < 10");
+      const obj = { count: 5 };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should return false when less than comparison does not match", () => {
+      const token = new JToken("example.count < 10");
+      const obj = { count: 15 };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
+    });
+
+    it("should handle greater than comparison with string numbers", () => {
+      const token = new JToken("example.count > 5");
+      const obj = { count: "10" };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should handle less than comparison with string numbers", () => {
+      const token = new JToken("example.count < 10");
+      const obj = { count: "5" };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isTrue(value);
+    });
+
+    it("should handle greater than comparison with undefined values", () => {
+      const token = new JToken("example.count > 5");
+      const obj = { count: undefined };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
+    });
+
+    it("should handle less than comparison with undefined values", () => {
+      const token = new JToken("example.count < 10");
+      const obj = { count: undefined };
+      const value = token.readTokenValueFrom<boolean>(obj);
+      assert.isFalse(value);
     });
   });
 });
