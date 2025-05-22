@@ -1,6 +1,6 @@
 import { attr, element, css, html } from "@joist/element";
 
-import { JToken } from "../token.js";
+import { JExpression } from "../expression.js";
 import { JoistValueEvent } from "../events.js";
 
 declare global {
@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-export class JAttrToken extends JToken {
+export class JAttrToken extends JExpression {
   mapTo: string;
 
   constructor(binding: string) {
@@ -80,14 +80,14 @@ export class JoistBindElement extends HTMLElement {
       .filter((b) => b);
   }
 
-  #dispatch(token: JToken, write: (value: unknown) => void) {
+  #dispatch(token: JExpression, write: (value: unknown) => void) {
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue, alwaysUpdate }) => {
         if (newValue === oldValue && !alwaysUpdate) {
           return;
         }
 
-        let valueToWrite = token.readTokenValueFrom(newValue);
+        let valueToWrite = token.readBoundValueFrom(newValue);
 
         if (token.isNegated) {
           valueToWrite = !valueToWrite;

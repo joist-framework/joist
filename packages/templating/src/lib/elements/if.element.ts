@@ -1,7 +1,7 @@
 import { attr, element, queryAll, css, html } from "@joist/element";
 
 import { JoistValueEvent } from "../events.js";
-import { JToken } from "../token.js";
+import { JExpression } from "../expression.js";
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -43,12 +43,16 @@ export class JoistIfElement extends HTMLElement {
     // make sure there are no other nodes after the template
     this.#clean();
 
-    const token = new JToken(this.bind);
+    const token = new JExpression(this.bind);
+
+    // This makes sure the first change is always applied
+    let firstChange = true;
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
-        if (newValue !== oldValue) {
-          this.apply(token.readTokenValueFrom(newValue), token.isNegated);
+        if (firstChange || newValue !== oldValue) {
+          this.apply(token.readBoundValueFrom(newValue), token.isNegated);
+          firstChange = false;
         }
       }),
     );

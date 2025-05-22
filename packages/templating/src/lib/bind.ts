@@ -18,7 +18,7 @@ export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value
     return {
       init(value) {
         this.addEventListener("joist::value", (e) => {
-          if (e.token.bindTo === ctx.name) {
+          if (e.expression.bindTo === ctx.name) {
             const instanceMeta = instanceMetadataStore.read<This>(this);
 
             e.stopPropagation();

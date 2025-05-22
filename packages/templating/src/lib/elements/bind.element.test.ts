@@ -9,14 +9,14 @@ it("should pass props to child", () => {
   const element = fixtureSync(html`
     <div
       @joist::value=${(e: JoistValueEvent) => {
-        if (e.token.bindTo === "href") {
+        if (e.expression.bindTo === "href") {
           e.update({
             oldValue: null,
             newValue: "$foo",
           });
         }
 
-        if (e.token.bindTo === "target") {
+        if (e.expression.bindTo === "target") {
           e.update({
             oldValue: null,
             newValue: {

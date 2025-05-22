@@ -1,6 +1,6 @@
 import type { Change } from "@joist/observable";
 
-import type { JToken } from "./token.js";
+import type { JExpression } from "./expression.js";
 
 declare global {
   interface HTMLElementEventMap {
@@ -13,13 +13,13 @@ export interface BindChange<T> extends Change<T> {
 }
 
 export class JoistValueEvent extends Event {
-  readonly token: JToken;
+  readonly expression: JExpression;
   readonly update: (value: BindChange<unknown>) => void;
 
-  constructor(bindTo: JToken, update: (value: BindChange<unknown>) => void) {
+  constructor(expression: JExpression, update: (value: BindChange<unknown>) => void) {
     super("joist::value", { bubbles: true, composed: true });
 
-    this.token = bindTo;
+    this.expression = expression;
     this.update = update;
   }
 }

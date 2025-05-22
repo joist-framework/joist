@@ -2,7 +2,7 @@ import { attr, element, queryAll, css, html } from "@joist/element";
 
 import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
-import { JToken } from "../token.js";
+import { JExpression } from "../expression.js";
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -52,7 +52,7 @@ export class JoistAsyncElement extends HTMLElement {
       success: templates.find((t) => t.hasAttribute("success")),
     };
 
-    const token = new JToken(this.bind);
+    const token = new JExpression(this.bind);
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {

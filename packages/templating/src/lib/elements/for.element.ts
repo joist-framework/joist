@@ -2,7 +2,7 @@ import { attr, element, query, css, html } from "@joist/element";
 
 import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
-import { JToken } from "../token.js";
+import { JExpression } from "../expression.js";
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -31,7 +31,7 @@ export class JForScope<T = unknown> extends HTMLElement {
   };
 
   @attr()
-  accessor key = "";
+  accessor key: unknown;
 }
 
 @element({
@@ -64,7 +64,7 @@ export class JositForElement extends HTMLElement {
       currentScope = currentScope.nextElementSibling;
     }
 
-    const token = new JToken(this.bind);
+    const token = new JExpression(this.bind);
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue }) => {
@@ -98,11 +98,15 @@ export class JositForElement extends HTMLElement {
 
     let index = 0;
     for (const value of this.#items) {
-      const key = keyProperty && hasProperty(value, keyProperty) ? value[keyProperty] : index;
+      let key: unknown = index;
+
+      if (keyProperty && hasProperty(value, keyProperty)) {
+        key = value[keyProperty];
+      }
 
       const scope = new JForScope();
       scope.append(document.importNode(templateContent, true));
-      scope.key = String(key);
+      scope.key = key;
       scope.each = { position: index + 1, index, value };
 
       fragment.appendChild(scope);
@@ -118,13 +122,16 @@ export class JositForElement extends HTMLElement {
   updateItems(): void {
     const template = this.#template();
     const leftoverScopes = new Map<unknown, JForScope>(this.#scopes);
-    const keyProperty = this.key; // Cache the key property
+    const keyProperty = this.key;
 
     let index = 0;
 
     for (const value of this.#items) {
-      // Optimize key lookup by caching the property check
-      const key = keyProperty && hasProperty(value, keyProperty) ? value[keyProperty] : index;
+      let key: unknown = index;
+
+      if (keyProperty && hasProperty(value, keyProperty)) {
+        key = value[keyProperty];
+      }
 
       let scope = leftoverScopes.get(key);
 
@@ -138,7 +145,7 @@ export class JositForElement extends HTMLElement {
 
       // Only update if values have changed
       if (scope.key !== key || scope.each.value !== value) {
-        scope.key = String(key);
+        scope.key = key;
         scope.each = { position: index + 1, index, value };
       }
 

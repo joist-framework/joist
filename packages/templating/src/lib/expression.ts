@@ -7,7 +7,7 @@ interface TokenParts {
 }
 
 /**
- * JToken represents a token that can be used to extract and compare values from objects.
+ * JExpression represents a token that can be used to extract and compare values from objects.
  *
  * Supported operators:
  * - `==` : Equality comparison (e.g., "status==active")
@@ -18,28 +18,28 @@ interface TokenParts {
  * Examples:
  * ```typescript
  * // Basic path access
- * new JToken("user.name").readTokenValueFrom({ user: { name: "John" } }) // "John"
+ * new JExpression("user.name").readTokenValueFrom({ user: { name: "John" } }) // "John"
  *
  * // Equality comparison
- * new JToken("status == active").readTokenValueFrom({ status: "active" }) // true
+ * new JExpression("status == active").readTokenValueFrom({ status: "active" }) // true
  *
  * // Inequality comparison
- * new JToken("status != active").readTokenValueFrom({ status: "inactive" }) // true
+ * new JExpression("status != active").readTokenValueFrom({ status: "inactive" }) // true
  *
  * // Greater than comparison
- * new JToken("count > 5").readTokenValueFrom({ count: 10 }) // true
+ * new JExpression("count > 5").readTokenValueFrom({ count: 10 }) // true
  *
  * // Less than comparison
- * new JToken("count < 10").readTokenValueFrom({ count: 5 }) // true
+ * new JExpression("count < 10").readTokenValueFrom({ count: 5 }) // true
  *
  * // With negation
- * new JToken("!status == active").readTokenValueFrom({ status: "inactive" }) // true
+ * new JExpression("!status == active").readTokenValueFrom({ status: "inactive" }) // true
  *
  * // Nested paths
- * new JToken("user.score > 100").readTokenValueFrom({ user: { score: 150 } }) // true
+ * new JExpression("user.score > 100").readTokenValueFrom({ user: { score: 150 } }) // true
  * ```
  */
-export class JToken {
+export class JExpression {
   /** The raw token string as provided to the constructor */
   rawToken: string;
   /** Whether the token is negated (starts with '!') */
@@ -58,7 +58,7 @@ export class JToken {
   ltValue: string | undefined;
 
   /**
-   * Creates a new JToken instance.
+   * Creates a new JExpression instance.
    * @param rawToken - The token string to parse. Can include operators (==, !=, >, <) and negation (!)
    */
   constructor(rawToken: string) {
@@ -93,12 +93,13 @@ export class JToken {
    * @returns The value at the path, or the result of the comparison if an operator is present
    * @template T - The expected return type
    */
-  readTokenValueFrom<T = unknown>(value: unknown): T {
+  readBoundValueFrom<T = unknown>(value: unknown): T {
     if (typeof value !== "object" && typeof value !== "string") {
       return value as T;
     }
 
     const pathValue = this.#getValueAtPath(value);
+
     return this.#performComparison(pathValue) as T;
   }
 
@@ -131,11 +132,16 @@ export class JToken {
    * @returns The value at the path, or undefined if the path doesn't exist
    */
   #getValueAtPath(value: unknown): unknown {
+    if (value === null || value === undefined) {
+      return value;
+    }
+
     if (!this.path.length) {
       return value;
     }
 
     let pointer: any = value;
+
     for (const part of this.path) {
       pointer = pointer?.[part];
       if (pointer === undefined) {
@@ -155,12 +161,15 @@ export class JToken {
     if (this.equalsValue !== undefined) {
       return String(value) === this.equalsValue;
     }
+
     if (this.notEqualsValue !== undefined) {
       return String(value) !== this.notEqualsValue;
     }
+
     if (this.gtValue !== undefined) {
       return Number(value) > Number(this.gtValue);
     }
+
     if (this.ltValue !== undefined) {
       return Number(value) < Number(this.ltValue);
     }

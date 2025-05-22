@@ -7,7 +7,6 @@ The Joist templating system provides a powerful and flexible way to handle data 
 - [Core Components](#core-components)
 - [Built-in Template Elements](#built-in-template-elements)
 - [Complete Example](#complete-example)
-- [Troubleshooting](#troubleshooting)
 
 ## Core Components
 
@@ -276,11 +275,3 @@ The `j-async` element supports:
 - Promise handling with automatic state transitions
 - Loading, success, and error templates
 - State object with typed data and error fields
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Binding Not Updating**
-
-   - Check if the property is decorated with `@bind()`

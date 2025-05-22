@@ -24,7 +24,7 @@ export class JoistScopeElement extends HTMLElement {
 
   @listen("joist::value")
   onJoistValueFound(e: JoistValueEvent): void {
-    if (e.token.bindTo === this.name) {
+    if (e.expression.bindTo === this.name) {
       e.stopPropagation();
 
       this.#binding = e;

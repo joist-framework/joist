@@ -1,6 +1,6 @@
 import { attr, element, css, html } from "@joist/element";
 import { JoistValueEvent } from "../events.js";
-import { JToken } from "../token.js";
+import { JExpression } from "../expression.js";
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -18,13 +18,17 @@ export class JoistValueElement extends HTMLElement {
   accessor bind = "";
 
   connectedCallback(): void {
-    const token = new JToken(this.bind);
+    const token = new JExpression(this.bind);
 
     this.dispatchEvent(
       new JoistValueEvent(token, (value) => {
-        const valueToWrite = String(token.readTokenValueFrom(value.newValue));
+        const valueToWrite = String(token.readBoundValueFrom(value.newValue));
 
-        if (this.textContent !== valueToWrite) {
+        if (
+          valueToWrite !== null &&
+          valueToWrite !== undefined &&
+          this.textContent !== valueToWrite
+        ) {
           this.textContent = valueToWrite;
         }
       }),
