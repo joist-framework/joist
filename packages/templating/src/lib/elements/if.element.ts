@@ -45,14 +45,10 @@ export class JoistIfElement extends HTMLElement {
 
     const token = new JExpression(this.bind);
 
-    // This makes sure the first change is always applied
-    let firstChange = true;
-
     this.dispatchEvent(
-      new JoistValueEvent(token, ({ newValue, oldValue }) => {
+      new JoistValueEvent(token, ({ newValue, oldValue, firstChange }) => {
         if (firstChange || newValue !== oldValue) {
           this.apply(token.readBoundValueFrom(newValue), token.isNegated);
-          firstChange = false;
         }
       }),
     );

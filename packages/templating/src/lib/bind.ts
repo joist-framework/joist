@@ -27,14 +27,16 @@ export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value
               oldValue: null,
               newValue: ctx.access.get(this),
               alwaysUpdate: opts.alwaysUpdate,
+              firstChange: true,
             });
 
+            const name = ctx.name as keyof This;
+
             instanceMeta.bindings.add((changes) => {
-              const key = ctx.name as keyof This;
-              const change = changes.get(key);
+              const change = changes.get(name);
 
               if (change) {
-                e.update({ ...change, alwaysUpdate: opts.alwaysUpdate });
+                e.update({ ...change, alwaysUpdate: opts.alwaysUpdate, firstChange: false });
               } else if (opts.alwaysUpdate) {
                 const value = ctx.access.get(this);
 
@@ -42,6 +44,7 @@ export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value
                   oldValue: value,
                   newValue: value,
                   alwaysUpdate: opts.alwaysUpdate,
+                  firstChange: false,
                 });
               }
             });

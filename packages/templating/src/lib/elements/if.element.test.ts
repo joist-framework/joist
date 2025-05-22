@@ -286,7 +286,7 @@ it("should handle a first change even if the value is the same", () => {
   const element = fixtureSync(html`
     <div
       @joist::value=${(e: JoistValueEvent) => {
-        e.update({ oldValue: null, newValue: null });
+        e.update({ oldValue: null, newValue: null, firstChange: true });
       }}
     >
       <j-if bind="example.length">

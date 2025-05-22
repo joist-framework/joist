@@ -10,6 +10,7 @@ declare global {
 
 export interface BindChange<T> extends Change<T> {
   alwaysUpdate?: boolean;
+  firstChange?: boolean;
 }
 
 export class JoistValueEvent extends Event {
