@@ -93,7 +93,7 @@ export class JExpression {
    * @returns The value at the path, or the result of the comparison if an operator is present
    * @template T - The expected return type
    */
-  readBoundValueFrom<T = unknown>(value: unknown): T {
+  evaluate<T = unknown>(value: unknown): T {
     if (typeof value !== "object" && typeof value !== "string") {
       return value as T;
     }

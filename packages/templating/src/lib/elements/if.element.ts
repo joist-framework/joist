@@ -48,7 +48,7 @@ export class JoistIfElement extends HTMLElement {
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue, firstChange }) => {
         if (firstChange || newValue !== oldValue) {
-          this.apply(token.readBoundValueFrom(newValue), token.isNegated);
+          this.apply(token.evaluate(newValue), token.isNegated);
         }
       }),
     );

@@ -78,126 +78,126 @@ describe("JExpression", () => {
     it("should read the value from a nested object", () => {
       const token = new JExpression("example.token.part");
       const obj = { token: { part: 42 } };
-      const value = token.readBoundValueFrom<number>(obj);
+      const value = token.evaluate<number>(obj);
       assert.equal(value, 42);
     });
 
     it("should return undefined if the path does not exist", () => {
       const token = new JExpression("example.nonexistent.path");
       const obj = { token: { part: 42 } };
-      const value = token.readBoundValueFrom(obj);
+      const value = token.evaluate(obj);
       assert.isUndefined(value);
     });
 
     it("should handle empty paths gracefully", () => {
       const token = new JExpression("example");
       const obj = { foo: 42 };
-      const value = token.readBoundValueFrom(obj);
+      const value = token.evaluate(obj);
 
       assert.deepEqual(value, { foo: 42 });
     });
 
     it("should parse values from strings", () => {
       const token = new JExpression("example.length");
-      const value = token.readBoundValueFrom("42");
+      const value = token.evaluate("42");
 
       assert.equal(value, 2);
     });
 
     it("should return true when equals against primative", () => {
       const token = new JExpression("example == active");
-      const value = token.readBoundValueFrom<boolean>("active");
+      const value = token.evaluate<boolean>("active");
       assert.isTrue(value);
     });
 
     it("should return true when equals comparison matches", () => {
       const token = new JExpression("example.status==active");
       const obj = { status: "active" };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should return false when equals comparison does not match", () => {
       const token = new JExpression("example.status==active");
       const obj = { status: "inactive" };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
 
     it("should handle equals comparison with numbers", () => {
       const token = new JExpression("example.count == 5");
       const obj = { count: 5 };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should handle equals comparison with nested paths", () => {
       const token = new JExpression("example.user.status == active");
       const obj = { user: { status: "active" } };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should handle equals comparison with undefined values", () => {
       const token = new JExpression("example.status == active");
       const obj = { status: undefined };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
 
     it("should return true when greater than comparison matches", () => {
       const token = new JExpression("example.count > 5");
       const obj = { count: 10 };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should return false when greater than comparison does not match", () => {
       const token = new JExpression("example.count > 5");
       const obj = { count: 3 };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
 
     it("should return true when less than comparison matches", () => {
       const token = new JExpression("example.count < 10");
       const obj = { count: 5 };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should return false when less than comparison does not match", () => {
       const token = new JExpression("example.count < 10");
       const obj = { count: 15 };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
 
     it("should handle greater than comparison with string numbers", () => {
       const token = new JExpression("example.count > 5");
       const obj = { count: "10" };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should handle less than comparison with string numbers", () => {
       const token = new JExpression("example.count < 10");
       const obj = { count: "5" };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isTrue(value);
     });
 
     it("should handle greater than comparison with undefined values", () => {
       const token = new JExpression("example.count > 5");
       const obj = { count: undefined };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
 
     it("should handle less than comparison with undefined values", () => {
       const token = new JExpression("example.count < 10");
       const obj = { count: undefined };
-      const value = token.readBoundValueFrom<boolean>(obj);
+      const value = token.evaluate<boolean>(obj);
       assert.isFalse(value);
     });
   });
