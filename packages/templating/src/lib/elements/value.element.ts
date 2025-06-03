@@ -22,14 +22,14 @@ export class JoistValueElement extends HTMLElement {
 
     this.dispatchEvent(
       new JoistValueEvent(token, (value) => {
-        const valueToWrite = String(token.evaluate(value.newValue));
+        const valueToWrite = token.evaluate(value.newValue);
 
         if (
           valueToWrite !== null &&
           valueToWrite !== undefined &&
           this.textContent !== valueToWrite
         ) {
-          this.textContent = valueToWrite;
+          this.textContent = String(valueToWrite);
         }
       }),
     );
