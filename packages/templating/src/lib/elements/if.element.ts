@@ -20,6 +20,8 @@ export class JoistIfElement extends HTMLElement {
 
   #templates = queryAll<HTMLTemplateElement>("template", this);
 
+  #shouldShowIf: boolean | null = null;
+
   connectedCallback(): void {
     const templates = Array.from(this.#templates());
 
@@ -55,12 +57,19 @@ export class JoistIfElement extends HTMLElement {
   }
 
   apply(value: unknown, isNegative: boolean): void {
+    const shouldShowIf = isNegative ? !value : !!value;
+
+    if (shouldShowIf === this.#shouldShowIf) {
+      return;
+    }
+
+    this.#shouldShowIf = shouldShowIf;
+
     this.#clean();
 
     const templates = this.#templates();
 
-    const shouldShowIf = isNegative ? !value : value;
-    const templateToUse = shouldShowIf ? templates[0] : templates[1];
+    const templateToUse = this.#shouldShowIf ? templates[0] : templates[1];
 
     if (templateToUse) {
       const content = document.importNode(templateToUse.content, true);
