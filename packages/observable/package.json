@@ -1,6 +1,6 @@
 {
   "name": "@joist/observable",
-  "version": "4.2.4-next.9",
+  "version": "4.2.4-next.10",
   "type": "module",
   "main": "./target/lib.js",
   "module": "./target/lib.js",
