@@ -103,3 +103,21 @@ it("should default to the mapTo value if bindTo is not provided", () => {
   assert.equal(input?.selectionStart, 8);
   assert.equal(input?.selectionEnd, 8);
 });
+
+it("should write not update if the calculated value is the same as the old value", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: { foo: "bar" }, newValue: { foo: "bar" } });
+      }}
+    >
+      <j-bind props="value:data.foo">
+        <input />
+      </j-bind>
+    </div>
+  `);
+
+  const input = element.querySelector("input");
+
+  assert.equal(input?.value, "");
+});
