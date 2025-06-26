@@ -8,9 +8,10 @@ import type { ConstructableToken } from "../provider.js";
 
 export type InjectableEl = HTMLElement & { [INJECTOR]: Injector };
 
-export function injectableEl<
-  T extends ConstructableToken<InjectableEl>,
->(Base: T, ctx: ClassDecoratorContext): T {
+export function injectableEl<T extends ConstructableToken<InjectableEl>>(
+  Base: T,
+  ctx: ClassDecoratorContext,
+): T {
   const metadata: InjectableMetadata<InjectableEl> = ctx.metadata;
 
   const def = {
@@ -32,6 +33,8 @@ export function injectableEl<
       }
 
       connectedCallback() {
+        console.log("TEST----");
+
         this.dispatchEvent(
           new ContextRequestEvent(INJECTOR_CTX, (ctx) => {
             this[INJECTOR].parent = ctx;
