@@ -6,14 +6,14 @@ import { INJECTOR, Injector } from "../injector.js";
  * Special Injector that allows you to register an injector with a particular DOM element.
  */
 export class DOMInjector extends Injector {
-  #element: HTMLElement | null = null;
+  #element: Document | HTMLElement | null = null;
   #controller: AbortController | null = null;
 
   get isAttached(): boolean {
     return this.#element !== null && this.#controller !== null;
   }
 
-  attach(element: HTMLElement): void {
+  attach(element: Document | HTMLElement): void {
     if (this.isAttached) {
       throw new Error(
         `This DOMInjector is already attached to ${this.#element}. Detach first before attaching again`,
@@ -27,7 +27,9 @@ export class DOMInjector extends Injector {
 
     this.#element.addEventListener(
       "context-request",
-      (e: ContextRequestEvent<UnknownContext>) => {
+      (event) => {
+        const e = event as ContextRequestEvent<UnknownContext>;
+
         if (e.context === INJECTOR_CTX) {
           if (e.target !== element) {
             e.stopPropagation();
