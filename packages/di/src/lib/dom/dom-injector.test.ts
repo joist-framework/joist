@@ -1,12 +1,10 @@
 import { assert } from "chai";
 
 import { INJECTOR_CTX } from "../context/injector.js";
-import {
-  ContextRequestEvent,
-  type UnknownContext,
-} from "../context/protocol.js";
+import { ContextRequestEvent, type UnknownContext } from "../context/protocol.js";
 import { Injector } from "../injector.js";
 import { DOMInjector } from "./dom-injector.js";
+import { readInjector } from "../metadata.js";
 
 it("should respond to elements looking for an injector", () => {
   const injector = new DOMInjector();
@@ -59,4 +57,15 @@ it("should throw an error if attempting to attach an already attached DOMInjecto
   assert.throw(() => {
     injector.attach(el);
   });
+});
+
+it("should correctly add injector to the target element", () => {
+  const injector = new DOMInjector();
+
+  injector.attach(document.body);
+
+  assert.instanceOf(readInjector(document.body), DOMInjector);
+  assert.equal(readInjector(document.body), injector);
+
+  injector.detach();
 });

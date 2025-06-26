@@ -1,9 +1,6 @@
 import { INJECTOR_CTX } from "../context/injector.js";
-import {
-  ContextRequestEvent,
-  type UnknownContext,
-} from "../context/protocol.js";
-import { Injector } from "../injector.js";
+import { ContextRequestEvent, type UnknownContext } from "../context/protocol.js";
+import { INJECTOR, Injector } from "../injector.js";
 
 /**
  * Special Injector that allows you to register an injector with a particular DOM element.
@@ -25,6 +22,8 @@ export class DOMInjector extends Injector {
 
     this.#element = element;
     this.#controller = new AbortController();
+
+    Reflect.set(element, INJECTOR, this);
 
     this.#element.addEventListener(
       "context-request",
