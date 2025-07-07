@@ -3,7 +3,7 @@ import type { ShadowResult } from "./result.js";
 
 export interface ElementOpts {
   tagName?: string;
-  dependsOn?: string[];
+  dependsOn?: string[] | (() => Promise<void>);
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -20,7 +20,11 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       if (opts?.tagName) {
         if (!customElements.get(opts.tagName)) {
           if (opts.dependsOn) {
-            await Promise.all(opts.dependsOn.map((d) => customElements.whenDefined(d)));
+            if (typeof opts.dependsOn === "function") {
+              await opts.dependsOn();
+            } else {
+              await Promise.all(opts.dependsOn.map((d) => customElements.whenDefined(d)));
+            }
 
             customElements.define(opts.tagName, this);
           } else {

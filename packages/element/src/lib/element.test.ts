@@ -144,3 +144,26 @@ it("should wait to register itself until all elements it depends on are also reg
 
   assert.equal(customElements.get("element-6"), MyElement6);
 });
+
+it("should wait to register itself until the custom dependsOn function runs", async () => {
+  let resolver: Function;
+
+  @element({
+    tagName: "element-9",
+    dependsOn() {
+      return new Promise((resolve) => {
+        resolver = resolve;
+      });
+    },
+  })
+  // @ts-ignore
+  class MyElement extends HTMLElement {}
+
+  assert.isUndefined(customElements.get("element-9"));
+
+  resolver!();
+
+  await Promise.resolve();
+
+  assert.equal(customElements.get("element-9"), MyElement);
+});

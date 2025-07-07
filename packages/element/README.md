@@ -44,6 +44,21 @@ If your custom elements needs to wait to be registed until other elements have b
 export class MyElement extends HTMLElement {}
 ```
 
+If there are more complicated needs or if the logic needs to be more dynamic, `dependsOn` can be an async function. The element would be registered when the Promise resolves. Below is an example that would be the equivalent to the previous example.
+
+```ts
+@element({
+  tagName: "my-element",
+  dependsOn() {
+    return Promise.all([
+      customeElement.whenDefined("element-2"),
+      customeElement.whenDefined("element-7"),
+    ]);
+  },
+})
+export class MyElement extends HTMLElement {}
+```
+
 ## Attributes
 
 Attributes can be managed using the `@attr` decorator. This decorator will read attribute values and and write properties back to attributes;
