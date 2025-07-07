@@ -4,12 +4,16 @@ Utilities for building web compnennts. Especially targeted at
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Custom Element](#custom-element)
-- [Attributes](#attributes)
-- [Styles](#styles)
-- [Listeners](#listeners)
-- [Queries](#queries)
+- [Element](#element)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Custom Element](#custom-element)
+    - [Dependencies](#dependencies)
+  - [Attributes](#attributes)
+  - [HTML and CSS](#html-and-css)
+  - [Listeners](#listeners)
+  - [Query](#query)
+  - [QueryAll](#queryall)
 
 ## Installation
 
@@ -23,7 +27,19 @@ To define a custom element decorate your custom element class and add a tagName
 
 ```ts
 @element({
-  tagName: 'my-element'
+  tagName: "my-element",
+})
+export class MyElement extends HTMLElement {}
+```
+
+### Dependencies
+
+If your custom elements needs to wait to be registed until other elements have been registered.
+
+```ts
+@element({
+  tagName: "my-element",
+  dependsOn: ["element-2", "element-7"],
 })
 export class MyElement extends HTMLElement {}
 ```
@@ -34,31 +50,31 @@ Attributes can be managed using the `@attr` decorator. This decorator will read 
 
 ```ts
 @element({
-  tagName: 'my-element'
+  tagName: "my-element",
 })
 export class MyElement extends HTMLElement {
   @attr()
-  accessor greeting = 'Hello World';
+  accessor greeting = "Hello World";
 }
 ```
 
 ## HTML and CSS
 
 HTML templates can be applied by passing the result of the `html` tag to the shaodw list.
-CSS can be applied by passing the result of the `css` tag to the shadow list. 
+CSS can be applied by passing the result of the `css` tag to the shadow list.
 Any new tagged template literal that returns a `ShadowResult` can be used.
 
 ```ts
 @element({
-  tagName: 'my-element',
+  tagName: "my-element",
   shadowDom: [
     css`
       h1 {
         color: red;
       }
     `,
-    html`<h1>Hello World</h1>`
-  ]
+    html`<h1>Hello World</h1>`,
+  ],
 })
 export class MyElement extends HTMLElement {}
 ```
@@ -69,26 +85,26 @@ The `@listen` decorator allows you to easy setup event listeners. By default the
 
 ```ts
 @element({
-  tagName: 'my-element',
-  shadowDom: []
+  tagName: "my-element",
+  shadowDom: [],
 })
 export class MyElement extends HTMLElement {
-  @listen('eventname')
+  @listen("eventname")
   onEventName1() {
     // all listener to the shadow root
   }
 
-  @listen('eventname', (host) => host)
+  @listen("eventname", (host) => host)
   onEventName2() {
     // all listener to the host element
   }
 
-  @listen('eventname', (host) => host.querySelector('button'))
+  @listen("eventname", (host) => host.querySelector("button"))
   onEventName3() {
     // add listener to a button found in the light dom
   }
 
-  @listen('eventname', '#test')
+  @listen("eventname", "#test")
   onEventName4() {
     // add listener to element with the id of "test" that is found in the shadow dom
   }
@@ -101,7 +117,7 @@ The `query` function will query for a particular element and allow you to easily
 
 ```ts
 @element({
-  tagName: 'my-element',
+  tagName: "my-element",
   shadowDom: [
     html`
       <label for="my-input">
@@ -109,18 +125,18 @@ The `query` function will query for a particular element and allow you to easily
       </label>
 
       <input id="my-input" />
-    `
-  ]
+    `,
+  ],
 })
 export class MyElement extends HTMLElement {
   @observe()
   accessor value: string;
 
-  #input = query('input');
+  #input = query("input");
 
   @effect()
   onChange() {
-    const input = this.#input({ value: this.value});
+    const input = this.#input({ value: this.value });
   }
 }
 ```
@@ -131,25 +147,25 @@ The `queryAll` function will get all elements that match the given query. A patc
 
 ```ts
 @element({
-  tagName: 'my-element',
+  tagName: "my-element",
   shadowDom: [
     html`
       <input id="first" />
       <input id="second" />
-    `
-  ]
+    `,
+  ],
 })
 export class MyElement extends HTMLElement {
   @observe()
   accessor value: string;
 
-  #inputs = queryAll('input');
+  #inputs = queryAll("input");
 
   @effect()
   onChange() {
     this.#input(() => {
-      return { value: this.value }
-    })
+      return { value: this.value };
+    });
   }
 }
 ```
