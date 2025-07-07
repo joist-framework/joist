@@ -3,6 +3,7 @@ import type { ShadowResult } from "./result.js";
 
 export interface ElementOpts {
   tagName?: string;
+  dependsOn?: string[];
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -15,10 +16,16 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
   return function elementDecorator(Base: T, ctx: ClassDecoratorContext<T>): T {
     const meta = metadataStore.read(ctx.metadata);
 
-    ctx.addInitializer(function () {
+    ctx.addInitializer(async function () {
       if (opts?.tagName) {
         if (!customElements.get(opts.tagName)) {
-          customElements.define(opts.tagName, this);
+          if (opts.dependsOn) {
+            await Promise.all(opts.dependsOn.map((d) => customElements.whenDefined(d)));
+
+            customElements.define(opts.tagName, this);
+          } else {
+            customElements.define(opts.tagName, this);
+          }
         }
       }
     });

@@ -123,3 +123,24 @@ it("should the correct shadow dom mode", async () => {
 
   assert.equal(el.shadowRoot, null);
 });
+
+it("should wait to register itself until all elements it depends on are also registered", async () => {
+  @element({
+    tagName: "element-6",
+    dependsOn: ["element-7", "element-8"],
+  })
+  // @ts-ignore
+  class MyElement6 extends HTMLElement {}
+
+  assert.isUndefined(customElements.get("element-6"));
+
+  customElements.define("element-7", class extends HTMLElement {});
+  customElements.define("element-8", class extends HTMLElement {});
+
+  await Promise.all([
+    customElements.whenDefined("element-7"),
+    customElements.whenDefined("element-8"),
+  ]);
+
+  assert.equal(customElements.get("element-6"), MyElement6);
+});
