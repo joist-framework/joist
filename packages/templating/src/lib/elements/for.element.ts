@@ -6,7 +6,7 @@ import { JExpression } from "../expression.js";
 
 declare global {
   interface HTMLElementTagNameMap {
-    "j-for": JositForElement;
+    "j-for": JoistForElement;
     "j-for-scope": JForScope;
   }
 }
@@ -19,8 +19,9 @@ export interface EachCtx<T> {
 
 @element({
   tagName: "j-for-scope",
+  dependsOn: ["j-for"],
   // prettier-ignore
-  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
+  shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
 })
 export class JForScope<T = unknown> extends HTMLElement {
   @bind()
@@ -39,7 +40,7 @@ export class JForScope<T = unknown> extends HTMLElement {
   // prettier-ignore
   shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
 })
-export class JositForElement extends HTMLElement {
+export class JoistForElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
