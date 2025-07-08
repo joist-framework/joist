@@ -4,13 +4,6 @@ import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "j-for": JoistForElement;
-    "j-for-scope": JForScope;
-  }
-}
-
 export interface EachCtx<T> {
   value: T | null;
   index: number | null;
@@ -18,8 +11,6 @@ export interface EachCtx<T> {
 }
 
 @element({
-  tagName: "j-for-scope",
-  dependsOn: ["j-for"],
   // prettier-ignore
   shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
 })
@@ -36,7 +27,6 @@ export class JForScope<T = unknown> extends HTMLElement {
 }
 
 @element({
-  tagName: "j-for",
   // prettier-ignore
   shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
 })

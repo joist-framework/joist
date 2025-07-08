@@ -4,12 +4,6 @@ import { bind } from "../bind.js";
 import { JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "j-async": JoistAsyncElement;
-  }
-}
-
 export type AsyncState<T = unknown, E = unknown> = {
   status: "loading" | "error" | "success";
   data?: T;
@@ -17,7 +11,6 @@ export type AsyncState<T = unknown, E = unknown> = {
 };
 
 @element({
-  tagName: "j-async",
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })

@@ -3,14 +3,7 @@ import { attr, element, queryAll, css, html } from "@joist/element";
 import { JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "j-if": JoistIfElement;
-  }
-}
-
 @element({
-  tagName: "j-if",
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })

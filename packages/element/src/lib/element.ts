@@ -1,9 +1,8 @@
+import { define, DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";
 import type { ShadowResult } from "./result.js";
 
-export interface ElementOpts {
-  tagName?: string;
-  dependsOn?: string[] | (() => Promise<void>);
+export interface ElementOpts extends Partial<DefineOpts> {
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -16,21 +15,9 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
   return function elementDecorator(Base: T, ctx: ClassDecoratorContext<T>): T {
     const meta = metadataStore.read(ctx.metadata);
 
-    ctx.addInitializer(async function () {
+    ctx.addInitializer(function () {
       if (opts?.tagName) {
-        if (!customElements.get(opts.tagName)) {
-          if (opts.dependsOn) {
-            if (typeof opts.dependsOn === "function") {
-              await opts.dependsOn();
-            } else {
-              await Promise.all(opts.dependsOn.map((d) => customElements.whenDefined(d)));
-            }
-
-            customElements.define(opts.tagName, this);
-          } else {
-            customElements.define(opts.tagName, this);
-          }
-        }
+        define({ tagName: opts.tagName, dependsOn: opts.dependsOn }, this);
       }
     });
 

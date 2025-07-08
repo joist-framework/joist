@@ -1,4 +1,4 @@
-import "./if.element.js";
+import "../define.js";
 
 import { fixtureSync, html } from "@open-wc/testing";
 import { assert } from "chai";

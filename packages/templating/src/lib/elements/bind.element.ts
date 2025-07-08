@@ -3,12 +3,6 @@ import { attr, element, css, html } from "@joist/element";
 import { JExpression } from "../expression.js";
 import { JoistValueEvent } from "../events.js";
 
-declare global {
-  interface HTMLElementTagNameMap {
-    "j-bind": JoistBindElement;
-  }
-}
-
 export class JAttrToken extends JExpression {
   mapTo: string;
 
@@ -22,7 +16,6 @@ export class JAttrToken extends JExpression {
 }
 
 @element({
-  tagName: "j-bind",
   // prettier-ignore
   shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
 })

@@ -1,5 +1,4 @@
-import "./for.element.js";
-import "./value.element.js";
+import "../define.js";
 
 import { fixtureSync, html } from "@open-wc/testing";
 import { assert } from "chai";
