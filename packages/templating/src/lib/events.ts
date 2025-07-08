@@ -3,7 +3,7 @@ import type { Change } from "@joist/observable";
 import type { JExpression } from "./expression.js";
 
 declare global {
-  interface HTMLElementEventMap {
+  interface ElementEventMap {
     "joist::value": JoistValueEvent;
   }
 }

@@ -1,7 +1,7 @@
 import { attr, element, query, css, html } from "@joist/element";
+import { Change, Changes, effect, observe } from "@joist/observable";
 
-import { bind } from "../bind.js";
-import { JoistValueEvent } from "../events.js";
+import { BindChange, JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
 export interface EachCtx<T> {
@@ -10,20 +10,59 @@ export interface EachCtx<T> {
   position: number | null;
 }
 
-@element({
-  // prettier-ignore
-  shadowDom: [css`:host{display:contents;}`, html`<slot></slot>`],
-})
-export class JForScope<T = unknown> extends HTMLElement {
-  @bind()
+export const EACH_SCOPE: symbol = Symbol("EACH_SCOPE");
+export const EACH_KEY: symbol = Symbol("EACH_KEY");
+
+class JoistForScopeContainer<T = unknown> {
+  host: Element;
+
+  get key(): string | null {
+    return this.host.getAttribute("key");
+  }
+
+  #callbacks: Array<(val: BindChange<EachCtx<T>>) => void> = [];
+
+  @observe()
   accessor each: EachCtx<T> = {
     value: null,
     index: null,
     position: null,
   };
 
-  @attr()
-  accessor key: unknown;
+  constructor(host: Element | null) {
+    if (host == null) {
+      throw new Error("JForScope required a host element");
+    }
+
+    this.host = host;
+
+    this.host.addEventListener("joist::value", (e) => {
+      if (e.expression.bindTo === "each") {
+        e.stopPropagation();
+
+        this.#callbacks.push(e.update);
+
+        e.update({
+          oldValue: null,
+          newValue: this.each,
+          firstChange: true,
+        });
+      }
+    });
+  }
+
+  @effect()
+  onChange(changes: Changes<this>): void {
+    const change = changes.get("each") as Change<EachCtx<T>>;
+
+    for (let cb of this.#callbacks) {
+      cb({
+        oldValue: change.oldValue,
+        newValue: change.newValue,
+        firstChange: false,
+      });
+    }
+  }
 }
 
 @element({
@@ -39,7 +78,7 @@ export class JoistForElement extends HTMLElement {
 
   #template = query("template", this);
   #items: Iterable<unknown> = [];
-  #scopes = new Map<unknown, JForScope>();
+  #scopes = new Map<unknown, JoistForScopeContainer>();
 
   connectedCallback(): void {
     const template = this.#template();
@@ -50,7 +89,7 @@ export class JoistForElement extends HTMLElement {
 
     // collect all scopes from the template to be matched against later
     let currentScope = template.nextElementSibling;
-    while (currentScope instanceof JForScope) {
+    while (currentScope instanceof JoistForScopeContainer) {
       this.#scopes.set(currentScope.key, currentScope);
       currentScope = currentScope.nextElementSibling;
     }
@@ -95,12 +134,13 @@ export class JoistForElement extends HTMLElement {
         key = value[keyProperty];
       }
 
-      const scope = new JForScope();
-      scope.append(document.importNode(templateContent, true));
-      scope.key = key;
+      const fragment = document.importNode(templateContent, true);
+      const scope = new JoistForScopeContainer(fragment.firstElementChild);
+
+      scope.host.setAttribute("key", String(key));
       scope.each = { position: index + 1, index, value };
 
-      fragment.appendChild(scope);
+      fragment.appendChild(scope.host);
       this.#scopes.set(key, scope);
       index++;
     }
@@ -112,7 +152,7 @@ export class JoistForElement extends HTMLElement {
   // to their correct positions based on the current iteration order
   updateItems(): void {
     const template = this.#template();
-    const leftoverScopes = new Map<unknown, JForScope>(this.#scopes);
+    const leftoverScopes = new Map<unknown, JoistForScopeContainer>(this.#scopes);
     const keyProperty = this.key;
 
     let index = 0;
@@ -127,8 +167,10 @@ export class JoistForElement extends HTMLElement {
       let scope = leftoverScopes.get(key);
 
       if (!scope) {
-        scope = new JForScope();
-        scope.append(document.importNode(template.content, true));
+        const fragment = document.importNode(template.content, true);
+
+        scope = new JoistForScopeContainer(fragment.firstElementChild);
+
         this.#scopes.set(key, scope);
       } else {
         leftoverScopes.delete(key); // Remove from map to track unused scopes
@@ -136,14 +178,14 @@ export class JoistForElement extends HTMLElement {
 
       // Only update if values have changed
       if (scope.key !== key || scope.each.value !== value) {
-        scope.key = key;
+        scope.host.setAttribute("key", String(key));
         scope.each = { position: index + 1, index, value };
       }
 
       const child = this.children[index + 1];
 
-      if (child !== scope) {
-        this.insertBefore(scope, child);
+      if (child !== scope.host) {
+        this.insertBefore(scope.host, child);
       }
 
       index++;
@@ -151,13 +193,13 @@ export class JoistForElement extends HTMLElement {
 
     // Remove unused scopes
     for (const scope of leftoverScopes.values()) {
-      scope.remove();
+      scope.host.remove();
     }
   }
 
   disconnectedCallback(): void {
     for (const scope of this.#scopes.values()) {
-      scope.remove();
+      scope.host.remove();
     }
 
     this.#scopes.clear();

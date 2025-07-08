@@ -117,14 +117,17 @@ it("should provide index and position information", () => {
     >
       <j-for bind="items">
         <template>
-          <j-val bind="each.value"></j-val>
-          (index: <j-val bind="each.index"></j-val>, position: <j-val bind="each.position"></j-val>)
+          <div class="item">
+            <j-val bind="each.value"></j-val>
+            (index: <j-val bind="each.index"></j-val>, position:
+            <j-val bind="each.position"></j-val>)
+          </div>
         </template>
       </j-for>
     </div>
   `);
 
-  const items = element.querySelectorAll("j-for-scope");
+  const items = element.querySelectorAll(".item");
   assert.equal(items.length, 3);
   assert.equal(
     items[0].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
@@ -170,12 +173,14 @@ it("should provide index and position information", () => {
 //   const groups = element.querySelectorAll(".group");
 //   assert.equal(groups.length, 2);
 
+//   console.log(groups);
+
 //   const items = element.querySelectorAll(".child");
 //   assert.equal(items.length, 4);
-//   assert.equal(items[0].textContent?.trim(), "A");
-//   assert.equal(items[1].textContent?.trim(), "B");
-//   assert.equal(items[2].textContent?.trim(), "C");
-//   assert.equal(items[3].textContent?.trim(), "D");
+//   // assert.equal(items[0].textContent?.trim(), "A");
+//   // assert.equal(items[1].textContent?.trim(), "B");
+//   // assert.equal(items[2].textContent?.trim(), "C");
+//   // assert.equal(items[3].textContent?.trim(), "D");
 // });
 
 it("should maintain DOM order when items are reordered", () => {
