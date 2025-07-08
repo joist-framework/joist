@@ -10,9 +10,6 @@ export interface EachCtx<T> {
   position: number | null;
 }
 
-export const EACH_SCOPE: symbol = Symbol("EACH_SCOPE");
-export const EACH_KEY: symbol = Symbol("EACH_KEY");
-
 class JoistForScopeContainer<T = unknown> {
   host: Element;
 
@@ -78,7 +75,7 @@ export class JoistForElement extends HTMLElement {
 
   #template = query("template", this);
   #items: Iterable<unknown> = [];
-  #scopes = new Map<unknown, JoistForScopeContainer>();
+  #scopes = new Map<string, JoistForScopeContainer>();
 
   connectedCallback(): void {
     const template = this.#template();
@@ -90,7 +87,7 @@ export class JoistForElement extends HTMLElement {
     // collect all scopes from the template to be matched against later
     let currentScope = template.nextElementSibling;
     while (currentScope instanceof JoistForScopeContainer) {
-      this.#scopes.set(currentScope.key, currentScope);
+      this.#scopes.set(String(currentScope.key), currentScope);
       currentScope = currentScope.nextElementSibling;
     }
 
@@ -141,7 +138,7 @@ export class JoistForElement extends HTMLElement {
       scope.each = { position: index + 1, index, value };
 
       fragment.appendChild(scope.host);
-      this.#scopes.set(key, scope);
+      this.#scopes.set(String(key), scope);
       index++;
     }
 
@@ -171,7 +168,7 @@ export class JoistForElement extends HTMLElement {
 
         scope = new JoistForScopeContainer(fragment.firstElementChild);
 
-        this.#scopes.set(key, scope);
+        this.#scopes.set(String(key), scope);
       } else {
         leftoverScopes.delete(key); // Remove from map to track unused scopes
       }
