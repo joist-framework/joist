@@ -48,10 +48,10 @@ it("should pass props to specified child", () => {
         });
       }}
     >
-      <j-bind attrs="href:href" target="#test">
-        <a>Default</a>
-        <a id="test">Target</a>
-      </j-bind>
+      <j-bind attrs="href:href" target="#test"></j-bind>
+
+      <a>Default</a>
+      <a id="test">Target</a>
     </div>
   `);
 

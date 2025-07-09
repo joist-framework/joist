@@ -33,26 +33,26 @@ export class JoistBindElement extends HTMLElement {
     const attrBindings = this.#parseBinding(this.attrs);
     const propBindings = this.#parseBinding(this.props);
 
-    let child = this.firstElementChild;
+    let children: Iterable<Element> = this.children;
+
+    const root = this.getRootNode() as Document | ShadowRoot;
 
     if (this.target) {
-      child = this.querySelector(this.target);
-    }
-
-    if (!child) {
-      throw new Error("j-bind must have a child element or defined target");
+      children = root.querySelectorAll(this.target);
     }
 
     for (const attrValue of attrBindings) {
       const token = new JAttrToken(attrValue);
 
       this.#dispatch(token, (value) => {
-        if (value === true) {
-          child.setAttribute(token.mapTo, "");
-        } else if (value === false) {
-          child.removeAttribute(token.mapTo);
-        } else {
-          child.setAttribute(token.mapTo, String(value));
+        for (const child of children) {
+          if (value === true) {
+            child.setAttribute(token.mapTo, "");
+          } else if (value === false) {
+            child.removeAttribute(token.mapTo);
+          } else {
+            child.setAttribute(token.mapTo, String(value));
+          }
         }
       });
     }
@@ -61,7 +61,9 @@ export class JoistBindElement extends HTMLElement {
       const token = new JAttrToken(propValue);
 
       this.#dispatch(token, (value) => {
-        Reflect.set(child, token.mapTo, value);
+        for (const child of children) {
+          Reflect.set(child, token.mapTo, value);
+        }
       });
     }
   }

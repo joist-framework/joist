@@ -37,11 +37,11 @@ import { bind } from "@joist/templating";
 
       <div>
         <div class="title-box">
-          <j-bind props="href:href">
-            <a id="title" target="_blank">
-              <slot></slot>
-            </a>
-          </j-bind>
+          <j-bind props="href:href" target="a"></j-bind>
+
+          <a id="title" target="_blank">
+            <slot></slot>
+          </a>
 
           <j-if bind="href">
             <template>

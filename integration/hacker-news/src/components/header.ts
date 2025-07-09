@@ -29,9 +29,8 @@ import { bind } from "@joist/templating";
       }
     `,
     html`
-      <j-bind props="src:img">
-        <img aria-hidden="true" height="20" width="20" />
-      </j-bind>
+      <j-bind props="src:img" target="img"></j-bind>
+      <img aria-hidden="true" height="20" width="20" />
 
       <h1>Hacker News</h1>
 

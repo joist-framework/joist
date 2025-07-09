@@ -1,18 +1,18 @@
-import { attr, element, queryAll, css, html } from "@joist/element";
+import { attr, element, queryAll, css } from "@joist/element";
 
 import { JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
 @element({
   // prettier-ignore
-  shadowDom: [css`:host{display: contents;}`, html`<slot></slot>`],
+  shadowDom: [css`:host{display: none;}`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
+  #endMarker = document.createComment("joist::endif");
   #templates = queryAll<HTMLTemplateElement>("template", this);
-
   #shouldShowIf: boolean | null = null;
 
   connectedCallback(): void {
@@ -34,6 +34,8 @@ export class JoistIfElement extends HTMLElement {
       // Swap templates to ensure if template is first
       [templates[0], templates[1]] = [templates[1], templates[0]];
     }
+
+    this.after(this.#endMarker);
 
     // make sure there are no other nodes after the template
     this.#clean();
@@ -67,13 +69,13 @@ export class JoistIfElement extends HTMLElement {
     if (templateToUse) {
       const content = document.importNode(templateToUse.content, true);
 
-      this.appendChild(content);
+      this.after(content);
     }
   }
 
   #clean(): void {
-    while (!(this.lastChild instanceof HTMLTemplateElement)) {
-      this.lastChild?.remove();
+    while (this.nextSibling !== this.#endMarker) {
+      this.nextSibling?.remove();
     }
   }
 

@@ -27,25 +27,27 @@ import { type HnItem, HnService } from "../services/hn.service.js";
             <hn-loading></hn-loading>
           </div>
         </template>
-      </j-if>
 
-      <j-for bind="stories" key="id">
-        <template>
-          <j-bind
-            props="
+        <template else>
+          <j-for bind="stories" key="id">
+            <template>
+              <j-bind
+                props="
               number:each.position, 
               author:each.value.by, 
               comments:each.value.descendants, 
               points:each.value.score, 
               href:each.value.url
             "
-          >
-            <hn-news-card>
-              <j-val bind="each.value.title"></j-val>
-            </hn-news-card>
-          </j-bind>
+              >
+                <hn-news-card>
+                  <j-val bind="each.value.title"></j-val>
+                </hn-news-card>
+              </j-bind>
+            </template>
+          </j-for>
         </template>
-      </j-for>
+      </j-if>
     `,
   ],
 })
