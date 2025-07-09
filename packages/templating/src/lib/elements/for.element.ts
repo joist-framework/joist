@@ -118,8 +118,6 @@ export class JoistForElement extends HTMLElement {
   // Updates the DOM by either inserting new scopes or moving existing ones
   // to their correct positions based on the current iteration order
   createFromEmpty(): void {
-    const template = this.#template();
-    const templateContent = template.content;
     const keyProperty = this.key;
     const fragment = document.createDocumentFragment();
 
@@ -131,14 +129,15 @@ export class JoistForElement extends HTMLElement {
         key = value[keyProperty];
       }
 
-      const fragment = document.importNode(templateContent, true);
-      const scope = new JoistForScopeContainer(fragment.firstElementChild);
+      const scope = this.#createScopeContainer();
 
       scope.host.setAttribute("key", String(key));
       scope.each = { position: index + 1, index, value };
 
       fragment.appendChild(scope.host);
+
       this.#scopes.set(String(key), scope);
+
       index++;
     }
 
@@ -148,7 +147,6 @@ export class JoistForElement extends HTMLElement {
   // Updates the DOM by either inserting new scopes or moving existing ones
   // to their correct positions based on the current iteration order
   updateItems(): void {
-    const template = this.#template();
     const leftoverScopes = new Map<unknown, JoistForScopeContainer>(this.#scopes);
     const keyProperty = this.key;
 
@@ -164,9 +162,7 @@ export class JoistForElement extends HTMLElement {
       let scope = leftoverScopes.get(key);
 
       if (!scope) {
-        const fragment = document.importNode(template.content, true);
-
-        scope = new JoistForScopeContainer(fragment.firstElementChild);
+        scope = scope = this.#createScopeContainer();
 
         this.#scopes.set(String(key), scope);
       } else {
@@ -201,6 +197,19 @@ export class JoistForElement extends HTMLElement {
 
     this.#scopes.clear();
     this.#items = [];
+  }
+
+  #createScopeContainer() {
+    const template = this.#template();
+    const content = template.content.firstElementChild;
+
+    if (content === null) {
+      throw new Error("template must contain a single parent element");
+    }
+
+    const fragment = document.importNode(content, true);
+
+    return new JoistForScopeContainer(fragment);
   }
 }
 
