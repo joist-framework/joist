@@ -18,6 +18,6 @@ it("FileSysTemplateLoader: should read from defined paths", async () => {
   const html = await loader.loadHTML("my-element");
   const css = await loader.loadCSS("my-element");
 
-  assert.equal(html?.trim(), "<h2>Hello World</h2>\n\n<slot></slot>");
-  assert.equal(css?.trim(), ":host {\n  display: flex;\n}");
+  assert.equal(html?.trim().replace(/\r\n/g, '\n'), "<h2>Hello World</h2>\n\n<slot></slot>");
+  assert.equal(css?.trim().replace(/\r\n/g, '\n'), ":host {\n  display: flex;\n}");
 });
