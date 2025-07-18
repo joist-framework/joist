@@ -73,11 +73,16 @@ export class JoistForElement extends HTMLElement {
   @attr()
   accessor key = "";
 
+  @attr({
+    name: "depends-on",
+  })
+  accessor dependsOn = "";
+
   #template = query("template", this);
   #items: Iterable<unknown> = [];
   #scopes = new Map<string, JoistForScopeContainer>();
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     const template = this.#template();
 
     if (this.firstElementChild !== template) {
@@ -89,6 +94,12 @@ export class JoistForElement extends HTMLElement {
     while (currentScope instanceof JoistForScopeContainer) {
       this.#scopes.set(String(currentScope.key), currentScope);
       currentScope = currentScope.nextElementSibling;
+    }
+
+    if (this.dependsOn) {
+      await Promise.all(
+        this.dependsOn.split(",").map((tag) => window.customElements.whenDefined(tag)),
+      );
     }
 
     const token = new JExpression(this.bind);

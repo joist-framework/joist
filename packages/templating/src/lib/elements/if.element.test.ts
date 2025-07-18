@@ -298,3 +298,37 @@ it("should handle a first change even if the value is the same", () => {
 
   assert.equal(element.textContent?.trim(), "Array has no length");
 });
+
+it("should wait for depends-on before dispatching events", async () => {
+  let eventDispatched = false;
+
+  customElements.define("dependency-1", class extends HTMLElement {});
+  customElements.define("dependency-2", class extends HTMLElement {});
+
+  fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        if (e.expression.bindTo === "test") {
+          eventDispatched = true;
+          e.update({ oldValue: null, newValue: true });
+        }
+      }}
+    >
+      <j-if bind="test" depends-on="dependency-1,dependency-2">
+        <template>Visible Content</template>
+      </j-if>
+    </div>
+  `);
+
+  // Initially, no event should be dispatched
+  assert.isFalse(eventDispatched);
+
+  // Wait for the custom elements to be defined
+  await Promise.all([
+    customElements.whenDefined("dependency-1"),
+    customElements.whenDefined("dependency-2"),
+  ]);
+
+  // Now the event should be dispatched
+  assert.isTrue(eventDispatched);
+});

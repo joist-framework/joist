@@ -56,7 +56,9 @@ export class JoistIfElement extends HTMLElement {
     }
 
     if (this.dependsOn) {
-      await Promise.all(this.dependsOn.split(","));
+      await Promise.all(
+        this.dependsOn.split(",").map((tag) => window.customElements.whenDefined(tag)),
+      );
     }
 
     this.dispatchEvent(
@@ -92,7 +94,7 @@ export class JoistIfElement extends HTMLElement {
 
   #clean(): void {
     while (!(this.#target.lastChild instanceof HTMLTemplateElement)) {
-      this.#target.lastChild?.remove();
+      this.lastChild?.remove();
     }
   }
 
