@@ -18,6 +18,11 @@ export class JoistAsyncElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
+  @attr({
+    name: "depends-on",
+  })
+  accessor dependsOn = "";
+
   @bind()
   accessor state: AsyncState | null = null;
 
@@ -33,7 +38,7 @@ export class JoistAsyncElement extends HTMLElement {
     success: undefined,
   };
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     this.#clean();
 
     // Cache all templates
@@ -44,6 +49,12 @@ export class JoistAsyncElement extends HTMLElement {
       error: templates.find((t) => t.hasAttribute("error")),
       success: templates.find((t) => t.hasAttribute("success")),
     };
+
+    if (this.dependsOn) {
+      await Promise.all(
+        this.dependsOn.split(",").map((tag) => window.customElements.whenDefined(tag)),
+      );
+    }
 
     const token = new JExpression(this.bind);
 
