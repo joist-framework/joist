@@ -5,17 +5,25 @@ import { JExpression } from "../expression.js";
 
 @element({
   // prettier-ignore
-  shadowDom: [css`:host{display: none;}`],
+  shadowDom: [css`:host{display: contents}`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  #endMarker = document.createComment("joist::endif");
+  @attr()
+  accessor target = "";
+
+  @attr({
+    name: "depends-on",
+  })
+  accessor dependsOn = "";
+
   #templates = queryAll<HTMLTemplateElement>("template", this);
   #shouldShowIf: boolean | null = null;
+  #target: Element = this;
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     const templates = Array.from(this.#templates());
 
     if (templates.length === 0) {
@@ -35,12 +43,21 @@ export class JoistIfElement extends HTMLElement {
       [templates[0], templates[1]] = [templates[1], templates[0]];
     }
 
-    this.after(this.#endMarker);
-
-    // make sure there are no other nodes after the template
-    this.#clean();
-
     const token = new JExpression(this.bind);
+
+    const root = this.getRootNode() as Document | ShadowRoot;
+
+    if (this.target) {
+      const result = root.querySelector(this.target);
+
+      if (result) {
+        this.#target = result;
+      }
+    }
+
+    if (this.dependsOn) {
+      await Promise.all(this.dependsOn.split(","));
+    }
 
     this.dispatchEvent(
       new JoistValueEvent(token, ({ newValue, oldValue, firstChange }) => {
@@ -69,13 +86,13 @@ export class JoistIfElement extends HTMLElement {
     if (templateToUse) {
       const content = document.importNode(templateToUse.content, true);
 
-      this.after(content);
+      this.#target.append(content);
     }
   }
 
   #clean(): void {
-    while (this.nextSibling !== this.#endMarker) {
-      this.nextSibling?.remove();
+    while (!(this.#target.lastChild instanceof HTMLTemplateElement)) {
+      this.#target.lastChild?.remove();
     }
   }
 
