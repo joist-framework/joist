@@ -173,3 +173,37 @@ it("should provide the same context in disconnectedCallback as connectedCallback
 
   app.detach();
 });
+
+it("should call disconnectedCallback when element is removed from DOM", async () => {
+  @injectable()
+  class TestElement extends HTMLElement {
+    connectedCalled = false;
+    disconnectedCalled = false;
+
+    connectedCallback(): void {
+      this.connectedCalled = true;
+    }
+
+    disconnectedCallback(): void {
+      this.disconnectedCalled = true;
+    }
+  }
+
+  customElements.define("test-disconnect", TestElement);
+
+  const el = new TestElement();
+
+  // Initially, neither callback should have been called
+  assert.isFalse(el.connectedCalled);
+  assert.isFalse(el.disconnectedCalled);
+
+  // Add to DOM - connectedCallback should be called
+  document.body.append(el);
+  assert.isTrue(el.connectedCalled);
+  assert.isFalse(el.disconnectedCalled);
+
+  // Remove from DOM - disconnectedCallback should be called
+  el.remove();
+  assert.isTrue(el.connectedCalled);
+  assert.isTrue(el.disconnectedCalled);
+});
