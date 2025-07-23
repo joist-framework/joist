@@ -167,3 +167,28 @@ it("should wait to register itself until the custom dependsOn function runs", as
 
   assert.equal(customElements.get("element-9"), MyElement);
 });
+
+it("should call disconnectedCallback when element is removed from DOM", async () => {
+  let disconnectedCalled = false;
+
+  @element({
+    tagName: "element-10",
+  })
+  class MyElement extends HTMLElement {
+    disconnectedCallback() {
+      disconnectedCalled = true;
+    }
+  }
+
+  const el = new MyElement();
+  document.body.append(el);
+
+  // Verify element is connected
+  expect(disconnectedCalled).to.be.false;
+
+  // Remove element from DOM
+  el.remove();
+
+  // Verify disconnectedCallback was called
+  expect(disconnectedCalled).to.be.true;
+});
