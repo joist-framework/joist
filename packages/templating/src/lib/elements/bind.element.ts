@@ -29,7 +29,12 @@ export class JoistBindElement extends HTMLElement {
   @attr()
   accessor target = "";
 
-  connectedCallback(): void {
+  @attr({
+    name: "depends-on",
+  })
+  accessor dependsOn = "";
+
+  async connectedCallback(): Promise<void> {
     const attrBindings = this.#parseBinding(this.attrs);
     const propBindings = this.#parseBinding(this.props);
 
@@ -39,6 +44,12 @@ export class JoistBindElement extends HTMLElement {
 
     if (this.target) {
       children = root.querySelectorAll(this.target);
+    }
+
+    if (this.dependsOn) {
+      await Promise.all(
+        this.dependsOn.split(",").map((tag) => window.customElements.whenDefined(tag)),
+      );
     }
 
     for (const attrValue of attrBindings) {
