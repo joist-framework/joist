@@ -207,3 +207,45 @@ it("should call disconnectedCallback when element is removed from DOM", async ()
   assert.isTrue(el.connectedCalled);
   assert.isTrue(el.disconnectedCalled);
 });
+
+it("should call disconnectedCallback when element is removed from DOM", async () => {
+  const calls: string[] = [];
+
+  @injectable()
+  class TestElement1 extends HTMLElement {
+    connectedCallback(): void {
+      calls.push("1-connected");
+    }
+
+    disconnectedCallback(): void {
+      calls.push("1-disconnected");
+    }
+  }
+
+  @injectable()
+  class TestElement2 extends HTMLElement {
+    connectedCallback(): void {
+      calls.push("2-connected");
+    }
+
+    disconnectedCallback(): void {
+      calls.push("2-disconnected");
+    }
+  }
+
+  customElements.define("test-disconnect-2", TestElement1);
+  customElements.define("test-disconnect-3", TestElement2);
+
+  const el1 = new TestElement1();
+  const el2 = new TestElement2();
+
+  assert.isEmpty(calls);
+
+  document.body.append(el1);
+
+  assert.deepEqual(calls, ["1-connected"]);
+
+  el1.replaceWith(el2);
+
+  assert.deepEqual(calls, ["1-connected", "1-disconnected", "2-connected"]);
+});
