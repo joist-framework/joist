@@ -208,7 +208,7 @@ it("should call disconnectedCallback when element is removed from DOM", async ()
   assert.isTrue(el.disconnectedCalled);
 });
 
-it("should call disconnectedCallback when element is removed from DOM", async () => {
+it("should call connected and disconnected callbacks when element is replaced", async () => {
   const calls: string[] = [];
 
   @injectable()
