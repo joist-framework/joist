@@ -164,18 +164,20 @@ class Logger {
 }
 
 const app = new Injector([
-  {
-    provide: Logger,
-    factory() {
-      const params = new URLSearchParams(window.location.search);
+  [
+    Logger,
+    {
+      factory() {
+        const params = new URLSearchParams(window.location.search);
 
-      if (params.has("debug")) {
-        return console;
-      }
+        if (params.has("debug")) {
+          return console;
+        }
 
-      return new Logger(); // noop logger
+        return new Logger(); // noop logger
+      },
     },
-  },
+  ],
 ]);
 ```
 

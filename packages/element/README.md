@@ -51,8 +51,8 @@ If there are more complicated needs or if the logic needs to be more dynamic, `d
   tagName: "my-element",
   dependsOn() {
     return Promise.all([
-      customeElement.whenDefined("element-2"),
-      customeElement.whenDefined("element-7"),
+      customElement.whenDefined("element-2"),
+      customElement.whenDefined("element-7"),
     ]);
   },
 })
