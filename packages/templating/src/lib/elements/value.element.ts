@@ -11,8 +11,19 @@ export class JoistValueElement extends HTMLElement {
   @attr()
   accessor bind = "";
 
-  connectedCallback(): void {
+  @attr({
+    name: "depends-on",
+  })
+  accessor dependsOn = "";
+
+  async connectedCallback(): Promise<void> {
     const token = new JExpression(this.bind);
+
+    if (this.dependsOn) {
+      await Promise.all(
+        this.dependsOn.split(",").map((tag) => window.customElements.whenDefined(tag)),
+      );
+    }
 
     this.dispatchEvent(
       new JoistValueEvent(token, (value) => {
