@@ -1,11 +1,11 @@
-import { attr, element, queryAll, css } from "@joist/element";
+import { attr, element, queryAll, css, html } from "@joist/element";
 
 import { JoistValueEvent } from "../events.js";
 import { JExpression } from "../expression.js";
 
 @element({
   // prettier-ignore
-  shadowDom: [css`:host{display: contents}`],
+  shadowDom: [css`:host{display: contents}`, html`<slot></slot>`],
 })
 export class JoistIfElement extends HTMLElement {
   @attr()
@@ -93,8 +93,8 @@ export class JoistIfElement extends HTMLElement {
   }
 
   #clean(): void {
-    while (!(this.#target.lastChild instanceof HTMLTemplateElement)) {
-      this.lastChild?.remove();
+    while (this.#target.lastChild && !(this.#target.lastChild instanceof HTMLTemplateElement)) {
+      this.#target.lastChild.remove();
     }
   }
 

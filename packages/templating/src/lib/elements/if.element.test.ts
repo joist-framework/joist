@@ -299,6 +299,26 @@ it("should handle a first change even if the value is the same", () => {
   assert.equal(element.textContent?.trim(), "Array has no length");
 });
 
+it("should render in target container", () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: true });
+      }}
+    >
+      <j-if bind="test" target="#container">
+        <template>Visible Content</template>
+      </j-if>
+
+      <div id="container"></div>
+    </div>
+  `);
+
+  const container = element.querySelector("#container");
+
+  assert.equal(container?.textContent?.trim(), "Visible Content");
+});
+
 it("should wait for depends-on before dispatching events", async () => {
   let eventDispatched = false;
 
