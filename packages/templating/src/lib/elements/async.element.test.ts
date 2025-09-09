@@ -178,3 +178,39 @@ it("should handle AsyncState transitions", () => {
     }, 150);
   });
 });
+
+it("should wait for depends-on before dispatching events", async () => {
+  let eventDispatched = false;
+
+  customElements.define("dependency-1", class extends HTMLElement {});
+  customElements.define("dependency-2", class extends HTMLElement {});
+
+  fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        if (e.expression.bindTo === "test") {
+          eventDispatched = true;
+          e.update({ oldValue: null, newValue: Promise.resolve("data") });
+        }
+      }}
+    >
+      <j-async bind="test" depends-on="dependency-1,dependency-2">
+        <template loading>Loading...</template>
+        <template success>Success!</template>
+        <template error>Error!</template>
+      </j-async>
+    </div>
+  `);
+
+  // Initially, no event should be dispatched
+  assert.isFalse(eventDispatched);
+
+  // Wait for the custom elements to be defined
+  await Promise.all([
+    customElements.whenDefined("dependency-1"),
+    customElements.whenDefined("dependency-2"),
+  ]);
+
+  // Now the event should be dispatched
+  assert.isTrue(eventDispatched);
+});
