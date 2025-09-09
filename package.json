@@ -55,6 +55,9 @@
     "typescript": "^5.7.3",
     "wireit": "^0.14.0"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.50.0"
+  },
   "lint-staged": {
     "*.{js,css,md,html}": "prettier --write"
   }
