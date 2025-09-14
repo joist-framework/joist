@@ -13,7 +13,7 @@
   "scripts": {
     "test": "wireit",
     "build": "wireit",
-    "prepare": "husky && husky install"
+    "prepare": "husky"
   },
   "wireit": {
     "build": {
@@ -47,7 +47,7 @@
     "@web/test-runner": "^0.20.0",
     "browser-sync": "^3.0.3",
     "chai": "^6.0.0",
-    "husky": "^9.0.11",
+    "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
     "mocha": "^11.0.0",
     "prettier": "^3.5.3",
