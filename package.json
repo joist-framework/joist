@@ -56,7 +56,7 @@
     "wireit": "^0.14.0"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.50.1"
+    "@rollup/rollup-linux-x64-gnu": "4.52.2"
   },
   "lint-staged": {
     "*.{js,css,md,html}": "prettier --write"
