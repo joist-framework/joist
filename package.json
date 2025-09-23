@@ -45,7 +45,6 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.6",
     "@web/test-runner": "^0.20.0",
-    "@web/test-runner-puppeteer": "^0.18.0",
     "browser-sync": "^3.0.3",
     "chai": "^6.0.0",
     "husky": "^9.1.7",

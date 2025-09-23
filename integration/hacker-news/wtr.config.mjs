@@ -1,15 +1,7 @@
-import { puppeteerLauncher } from "@web/test-runner-puppeteer";
-
 export default {
   rootDir: "../../",
   nodeResolve: {
     exportConditions: ["production"],
   },
-  files: "target/**/*.test.js",
-  browsers: [
-    puppeteerLauncher({
-      headless: true,
-      args: ["--no-sandbox"],
-    }),
-  ],
+  files: "target/**/*.test.js"
 };
