@@ -158,3 +158,21 @@ it("should wait for depends-on before dispatching events", async () => {
   // Now the event should be dispatched
   assert.isTrue(eventDispatched);
 });
+
+it("should bind to a nested prop like style", async () => {
+  const element = fixtureSync(html`
+    <div
+      @joist::value=${(e: JoistValueEvent) => {
+        e.update({ oldValue: null, newValue: "red" });
+      }}
+    >
+      <j-bind props="style.color:color">
+        <input value="1234567890" />
+      </j-bind>
+    </div>
+  `);
+
+  const input = element.querySelector("input");
+
+  assert.equal(input?.style.color, "red");
+});
