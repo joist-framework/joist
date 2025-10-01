@@ -73,7 +73,25 @@ export class JoistBindElement extends HTMLElement {
 
       this.#dispatch(token, (value) => {
         for (const child of children) {
-          Reflect.set(child, token.mapTo, value);
+          const mapToParts = token.mapTo.split(".");
+
+          if (mapToParts.length > 1) {
+            const finalPart = mapToParts.pop() as string;
+
+            let pointer: any = child;
+
+            for (const part of mapToParts) {
+              pointer = pointer?.[part];
+
+              if (pointer === undefined) {
+                break;
+              }
+            }
+
+            Reflect.set(pointer, finalPart, value);
+          } else {
+            Reflect.set(child, token.mapTo, value);
+          }
         }
       });
     }
