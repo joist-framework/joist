@@ -244,7 +244,7 @@ it("should respect skipParent option when injecting", () => {
   assert.equal(child.inject(Service).value, "parent");
 
   // With skipParent, should get child's instance
-  assert.equal(child.inject(Service, { skipParent: true }).value, "child");
+  assert.equal(child.inject(Service, { ignoreParent: true }).value, "child");
 });
 
 it("should handle skipParent with static tokens", () => {
@@ -260,7 +260,7 @@ it("should handle skipParent with static tokens", () => {
   assert.equal(child.inject(TOKEN), "parent-value");
 
   // With skipParent, should get child's value
-  assert.equal(child.inject(TOKEN, { skipParent: true }), "child-value");
+  assert.equal(child.inject(TOKEN, { ignoreParent: true }), "child-value");
 });
 
 it("should handle StaticToken with null/undefined factory", () => {
@@ -277,4 +277,14 @@ it("should handle StaticToken factory throwing errors", () => {
   const injector = new Injector();
 
   assert.throws(() => injector.inject(TOKEN), "Factory error");
+});
+
+it("should create a non singleton instance", () => {
+  class A {}
+
+  const app = new Injector();
+
+  assert(app.inject(A) instanceof A);
+
+  assert.notEqual(app.inject(A, { singleton: false }), app.inject(A, { singleton: false }));
 });
