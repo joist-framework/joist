@@ -49,7 +49,7 @@ export class Injector {
   }
 
   injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
-    collection.push(this.inject<T>(token, { skipParent: true }));
+    collection.push(this.inject<T>(token, { ignoreParent: true }));
 
     if (this.parent) {
       return this.parent.injectAll<T>(token, collection);
@@ -59,9 +59,9 @@ export class Injector {
   }
 
   // resolves and retuns and instance of the requested service
-  inject<T>(token: InjectionToken<T>, opts?: { skipParent: boolean }): T {
+  inject<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean; singleton?: boolean }): T {
     // check for a local instance
-    if (this.#instances.has(token)) {
+    if (opts?.singleton !== false && this.#instances.has(token)) {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
@@ -75,24 +75,23 @@ export class Injector {
     }
 
     const provider = this.providers.get(token);
+    const createOpts = { singleton: opts?.singleton !== false };
 
     // check for a provider definition
     if (provider) {
       if ("use" in provider) {
-        return this.#createAndCache<T>(token, () => new provider.use());
+        return this.#createAndCache<T>(token, () => new provider.use(), createOpts);
       }
 
       if ("factory" in provider) {
-        return this.#createAndCache<T>(token, provider.factory);
+        return this.#createAndCache<T>(token, provider.factory, createOpts);
       }
 
-      throw new Error(
-        `Provider for ${token.name} found but is missing either 'use' or 'factory'`,
-      );
+      throw new Error(`Provider for ${token.name} found but is missing either 'use' or 'factory'`);
     }
 
     // check for a parent and attempt to get there
-    if (this.parent && !opts?.skipParent) {
+    if (this.parent && opts?.ignoreParent !== true) {
       return this.parent.inject(token);
     }
 
@@ -101,20 +100,26 @@ export class Injector {
         throw new Error(`Provider not found for "${token.name}"`);
       }
 
-      return this.#createAndCache(token, token.factory);
+      return this.#createAndCache(token, token.factory, createOpts);
     }
 
-    return this.#createAndCache(token, () => new token());
+    return this.#createAndCache(token, () => new token(), createOpts);
   }
 
   clear(): void {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T>(token: InjectionToken<T>, factory: ProviderFactory<T>): T {
+  #createAndCache<T>(
+    token: InjectionToken<T>,
+    factory: ProviderFactory<T>,
+    opts: { singleton: boolean },
+  ): T {
     const instance = factory(this);
 
-    this.#instances.set(token, instance);
+    if (opts.singleton !== false) {
+      this.#instances.set(token, instance);
+    }
 
     /**
      * Only values that are objects are able to have associated injectors
