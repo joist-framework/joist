@@ -7,7 +7,10 @@ export type Injected<T> = () => T;
 /**
  * Injects a service into an `injectable` class.
  */
-export function inject<T>(token: InjectionToken<T>, opts?: { singleton: boolean }): Injected<T> {
+export function inject<T>(
+  token: InjectionToken<T>,
+  opts?: { singleton?: boolean; ignoreParent?: boolean },
+): Injected<T> {
   return internalInject((i) => i.inject(token, opts));
 }
 
