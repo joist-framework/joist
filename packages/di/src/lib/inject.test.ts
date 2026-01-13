@@ -99,7 +99,7 @@ it("should use the calling injector as parent", () => {
   assert.strictEqual(parent.inject(BarService).foo().value, "100");
 });
 
-it("should all you to inject all", () => {
+it("should allow you to inject all", () => {
   const TOKEN = new StaticToken("test", () => "Hello World");
 
   @injectable()
@@ -108,4 +108,17 @@ it("should all you to inject all", () => {
   }
 
   assert.deepEqual(new HelloWorld().hello(), ["Hello World"]);
+});
+
+it("should create non-singleton instances", () => {
+  @injectable()
+  class Hello {}
+
+  @injectable()
+  class HelloWorld {
+    hello = inject(Hello, { singleton: false });
+  }
+
+  const instance = new HelloWorld();
+  assert.notEqual(instance.hello(), instance.hello());
 });

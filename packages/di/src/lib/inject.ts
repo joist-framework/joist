@@ -7,15 +7,18 @@ export type Injected<T> = () => T;
 /**
  * Injects a service into an `injectable` class.
  */
-export function inject<T>(token: InjectionToken<T>): Injected<T> {
-  return internalInject((i) => i.inject(token));
+export function inject<T>(token: InjectionToken<T>, opts?: { singleton: boolean }): Injected<T> {
+  return internalInject((i) => i.inject(token, opts));
 }
 
 /**
  * Finds and injects ALL instances of a service from the current points up.
  */
-export function injectAll<T>(token: InjectionToken<T>): Injected<T[]> {
-  return internalInject((i) => i.injectAll(token));
+export function injectAll<T>(
+  token: InjectionToken<T>,
+  opts?: { singleton: boolean },
+): Injected<T[]> {
+  return internalInject((i) => i.injectAll(token, opts));
 }
 
 function internalInject<T extends object, R>(cb: (i: Injector) => R) {

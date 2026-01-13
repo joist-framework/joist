@@ -48,11 +48,15 @@ export class Injector {
     this.providers = new ProviderMap(opts?.providers);
   }
 
-  injectAll<T>(token: InjectionToken<T>, collection: T[] = []): T[] {
-    collection.push(this.inject<T>(token, { ignoreParent: true }));
+  injectAll<T>(
+    token: InjectionToken<T>,
+    opts?: { ignoreParent?: boolean; singleton?: boolean },
+    collection: T[] = [],
+  ): T[] {
+    collection.push(this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }));
 
     if (this.parent) {
-      return this.parent.injectAll<T>(token, collection);
+      return this.parent.injectAll<T>(token, opts, collection);
     }
 
     return collection;
