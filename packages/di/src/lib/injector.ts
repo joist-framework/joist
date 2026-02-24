@@ -44,6 +44,7 @@ export class Injector {
   providers: ProviderMap;
 
   constructor(opts?: InjectorOpts) {
+    this.name = opts?.name;
     this.parent = opts?.parent;
     this.providers = new ProviderMap(opts?.providers);
   }
@@ -96,7 +97,7 @@ export class Injector {
 
     // check for a parent and attempt to get there
     if (this.parent && opts?.ignoreParent !== true) {
-      return this.parent.inject(token);
+      return this.parent.inject(token, opts);
     }
 
     if (token instanceof StaticToken) {

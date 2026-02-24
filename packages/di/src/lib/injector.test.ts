@@ -288,3 +288,21 @@ it("should create a non singleton instance", () => {
 
   assert.notEqual(app.inject(A, { singleton: false }), app.inject(A, { singleton: false }));
 });
+
+it("should forward singleton option to parent injector", () => {
+  class Service {}
+
+  const parent = new Injector();
+  const child = new Injector({ parent });
+
+  const a = child.inject(Service, { singleton: false });
+  const b = child.inject(Service, { singleton: false });
+
+  assert.notEqual(a, b);
+});
+
+it("should assign injector name from options", () => {
+  const app = new Injector({ name: "app" });
+
+  assert.equal(app.name, "app");
+});
