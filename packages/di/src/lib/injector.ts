@@ -14,6 +14,11 @@ export interface InjectorOpts {
   parent?: Injector;
 }
 
+export interface InjectOpts {
+  ignoreParent?: boolean;
+  singleton?: boolean;
+}
+
 export const INJECTOR: unique symbol = Symbol("JOIST_INJECTOR");
 
 export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
@@ -49,12 +54,17 @@ export class Injector {
     this.providers = new ProviderMap(opts?.providers);
   }
 
-  injectAll<T>(
-    token: InjectionToken<T>,
-    opts?: { ignoreParent?: boolean; singleton?: boolean },
+  injectAll<T, Args extends any[] = any[]>(
+    token: InjectionToken<T, Args>,
+    opts?: InjectOpts,
     collection: T[] = [],
   ): T[] {
-    collection.push(this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }));
+    collection.push(
+      this.inject<T, Args>(token, [] as unknown as Args, {
+        ignoreParent: true,
+        singleton: opts?.singleton,
+      }),
+    );
 
     if (this.parent) {
       return this.parent.injectAll<T>(token, opts, collection);
@@ -64,9 +74,16 @@ export class Injector {
   }
 
   // resolves and retuns and instance of the requested service
-  inject<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean; singleton?: boolean }): T {
+  inject<T, Args extends any[] = any[]>(
+    token: InjectionToken<T, Args>,
+    args: Args = [] as unknown as Args,
+    opts?: InjectOpts,
+  ): T {
+    const runtimeArgs = args;
+    const injectOpts = opts;
+
     // check for a local instance
-    if (opts?.singleton !== false && this.#instances.has(token)) {
+    if (injectOpts?.singleton !== false && this.#instances.has(token)) {
       const instance = this.#instances.get(token);
 
       const metadata = readMetadata<T>(token);
@@ -80,24 +97,24 @@ export class Injector {
     }
 
     const provider = this.providers.get(token);
-    const createOpts = { singleton: opts?.singleton !== false };
+    const createOpts = { singleton: injectOpts?.singleton !== false };
 
     // check for a provider definition
     if (provider) {
       if ("use" in provider) {
-        return this.#createAndCache<T>(token, () => new provider.use(), createOpts);
+        return this.#createAndCache<T>(token, () => new provider.use(...runtimeArgs), createOpts);
       }
 
       if ("factory" in provider) {
-        return this.#createAndCache<T>(token, provider.factory, createOpts);
+        return this.#createAndCache<T, Args>(token, provider.factory, createOpts, ...runtimeArgs);
       }
 
       throw new Error(`Provider for ${token.name} found but is missing either 'use' or 'factory'`);
     }
 
     // check for a parent and attempt to get there
-    if (this.parent && opts?.ignoreParent !== true) {
-      return this.parent.inject(token, opts);
+    if (this.parent && injectOpts?.ignoreParent !== true) {
+      return this.parent.inject(token, runtimeArgs, injectOpts);
     }
 
     if (token instanceof StaticToken) {
@@ -105,22 +122,23 @@ export class Injector {
         throw new Error(`Provider not found for "${token.name}"`);
       }
 
-      return this.#createAndCache(token, token.factory, createOpts);
+      return this.#createAndCache(token, token.factory, createOpts, ...runtimeArgs);
     }
 
-    return this.#createAndCache(token, () => new token(), createOpts);
+    return this.#createAndCache(token, () => new token(...runtimeArgs), createOpts);
   }
 
   clear(): void {
     this.#instances = new WeakMap();
   }
 
-  #createAndCache<T>(
-    token: InjectionToken<T>,
-    factory: ProviderFactory<T>,
+  #createAndCache<T, Args extends any[] = any[]>(
+    token: InjectionToken<T, Args>,
+    factory: ProviderFactory<T, Args>,
     opts: { singleton: boolean },
+    ...args: Args
   ): T {
-    const instance = factory(this);
+    const instance = factory(this, ...args);
 
     if (opts.singleton !== false) {
       this.#instances.set(token, instance);

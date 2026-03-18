@@ -244,7 +244,7 @@ it("should respect skipParent option when injecting", () => {
   assert.equal(child.inject(Service).value, "parent");
 
   // With skipParent, should get child's instance
-  assert.equal(child.inject(Service, { ignoreParent: true }).value, "child");
+  assert.equal(child.inject(Service, [], { ignoreParent: true }).value, "child");
 });
 
 it("should handle skipParent with static tokens", () => {
@@ -260,7 +260,7 @@ it("should handle skipParent with static tokens", () => {
   assert.equal(child.inject(TOKEN), "parent-value");
 
   // With skipParent, should get child's value
-  assert.equal(child.inject(TOKEN, { ignoreParent: true }), "child-value");
+  assert.equal(child.inject(TOKEN, [], { ignoreParent: true }), "child-value");
 });
 
 it("should handle StaticToken with null/undefined factory", () => {
@@ -286,7 +286,7 @@ it("should create a non singleton instance", () => {
 
   assert(app.inject(A) instanceof A);
 
-  assert.notEqual(app.inject(A, { singleton: false }), app.inject(A, { singleton: false }));
+  assert.notEqual(app.inject(A, [], { singleton: false }), app.inject(A, [], { singleton: false }));
 });
 
 it("should forward singleton option to parent injector", () => {
@@ -295,8 +295,8 @@ it("should forward singleton option to parent injector", () => {
   const parent = new Injector();
   const child = new Injector({ parent });
 
-  const a = child.inject(Service, { singleton: false });
-  const b = child.inject(Service, { singleton: false });
+  const a = child.inject(Service, [], { singleton: false });
+  const b = child.inject(Service, [], { singleton: false });
 
   assert.notEqual(a, b);
 });
@@ -305,4 +305,47 @@ it("should assign injector name from options", () => {
   const app = new Injector({ name: "app" });
 
   assert.equal(app.name, "app");
+});
+
+it("should pass runtime args to class constructor", () => {
+  class Greeter {
+    greeting: string;
+
+    constructor(greeting: string) {
+      this.greeting = greeting;
+    }
+  }
+
+  const app = new Injector();
+
+  const instance = app.inject(Greeter, ["hello"], { singleton: false });
+
+  assert.equal(instance.greeting, "hello");
+});
+
+it("should pass runtime args to provider factory", () => {
+  class Greeter {
+    greeting: string;
+
+    constructor(greeting: string) {
+      this.greeting = greeting;
+    }
+  }
+
+  const app = new Injector({
+    providers: [
+      [
+        Greeter,
+        {
+          factory(_, greeting: string) {
+            return new Greeter(greeting);
+          },
+        },
+      ],
+    ],
+  });
+
+  const instance = app.inject(Greeter, ["hi"], { singleton: false });
+
+  assert.equal(instance.greeting, "hi");
 });

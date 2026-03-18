@@ -66,6 +66,21 @@ const bar = app.inject(Counter);
 console.log(foo === bar); // true
 ```
 
+`Injector.inject()` also supports forwarding runtime arguments into the service constructor (or provider factory):
+
+```ts
+class Formatter {
+  prefix: string;
+
+  constructor(prefix: string) {
+    this.prefix = prefix;
+  }
+}
+
+const app = new Injector();
+const fmt = app.inject(Formatter, ["[app]"], { singleton: false });
+```
+
 ## Injectable Services
 
 Singleton services are great, but the real benefit can be seen when passing instances of one service to another. Services are injected into other services using the `inject()` function. In order to use `inject()`, classes must be decorated with `@injectable`.
@@ -80,6 +95,23 @@ class App {
   update(val: number) {
     const instance = this.#counter();
     instance.inc(val);
+  }
+}
+```
+
+The callback returned by `inject()` accepts the same runtime arguments:
+
+```ts
+class MessageService {
+  constructor(public value: string) {}
+}
+
+@injectable()
+class App {
+  #message = inject(MessageService, { singleton: false });
+
+  update() {
+    return this.#message("hello").value;
   }
 }
 ```

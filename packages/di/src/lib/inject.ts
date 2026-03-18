@@ -1,17 +1,18 @@
 import type { Injector } from "./injector.js";
+import type { InjectOpts } from "./injector.js";
 import { readInjector } from "./metadata.js";
 import type { InjectionToken } from "./provider.js";
 
-export type Injected<T> = () => T;
+export type Injected<T, Args extends any[] = []> = (...args: Args) => T;
 
 /**
  * Injects a service into an `injectable` class.
  */
-export function inject<T>(
-  token: InjectionToken<T>,
-  opts?: { singleton?: boolean; ignoreParent?: boolean },
-): Injected<T> {
-  return internalInject((i) => i.inject(token, opts));
+export function inject<T, Args extends any[] = any[]>(
+  token: InjectionToken<T, Args>,
+  opts?: InjectOpts,
+): Injected<T, Args> {
+  return internalInject((i, ...args: Args) => i.inject(token, args, opts));
 }
 
 /**
@@ -24,8 +25,10 @@ export function injectAll<T>(
   return internalInject((i) => i.injectAll(token, opts));
 }
 
-function internalInject<T extends object, R>(cb: (i: Injector) => R) {
-  return function (this: T) {
+function internalInject<T extends object, R, Args extends any[] = any[]>(
+  cb: (i: Injector, ...args: Args) => R,
+) {
+  return function (this: T, ...args: Args) {
     const injector = readInjector(this);
 
     if (injector === null) {
@@ -34,6 +37,6 @@ function internalInject<T extends object, R>(cb: (i: Injector) => R) {
       );
     }
 
-    return cb(injector);
+    return cb(injector, ...args);
   };
 }

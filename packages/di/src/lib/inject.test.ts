@@ -122,3 +122,23 @@ it("should create non-singleton instances", () => {
   const instance = new HelloWorld();
   assert.notEqual(instance.hello(), instance.hello());
 });
+
+it("should pass runtime args from inject callback", () => {
+  class MessageService {
+    value: string;
+
+    constructor(value: string) {
+      this.value = value;
+    }
+  }
+
+  @injectable()
+  class HelloWorld {
+    message = inject(MessageService, { singleton: false });
+  }
+
+  const instance = new HelloWorld();
+
+  assert.equal(instance.message("hello").value, "hello");
+  assert.equal(instance.message("world").value, "world");
+});
