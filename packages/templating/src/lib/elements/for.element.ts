@@ -1,7 +1,9 @@
 import { attr, element, query, css, html } from "@joist/element";
-import { Change, Changes, effect, observe } from "@joist/observable";
+import { effect, observe } from "@joist/observable";
+import type { Change, Changes } from "@joist/observable";
 
-import { BindChange, JoistValueEvent } from "../events.js";
+import { JoistValueEvent } from "../events.js";
+import type { BindChange } from "../events.js";
 import { JExpression } from "../expression.js";
 
 export interface EachCtx<T> {
@@ -186,7 +188,7 @@ export class JoistForElement extends HTMLElement {
         scope.each = { position: index + 1, index, value };
       }
 
-      const child = this.children[index + 1];
+      const child = this.children[index + 1] ?? null;
 
       if (child !== scope.host) {
         this.insertBefore(scope.host, child);

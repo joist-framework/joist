@@ -57,8 +57,8 @@ it("should pass props to specified child", () => {
 
   const anchor = element.querySelectorAll("a");
 
-  assert.equal(anchor[0].getAttribute("href"), null);
-  assert.equal(anchor[1].getAttribute("href"), "#foo");
+  assert.equal(anchor[0]!.getAttribute("href"), null);
+  assert.equal(anchor[1]!.getAttribute("href"), "#foo");
 });
 
 it("should be case sensitive", () => {

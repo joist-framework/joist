@@ -4,7 +4,8 @@ import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { created, injected } from "./lifecycle.js";
-import { LifecycleCallback, readInjector } from "./metadata.js";
+import { readInjector } from "./metadata.js";
+import type { LifecycleCallback } from "./metadata.js";
 import { StaticToken } from "./provider.js";
 
 it("should call onInit and onInject when a service is first created", () => {
@@ -59,10 +60,10 @@ it("should pass the injector to all lifecycle callbacks", () => {
   const service = i.inject(MyService);
   const injector = readInjector(service);
 
-  assert.equal(service.res[0], injector);
-  assert.equal(service.res[0].parent, i);
-  assert.equal(service.res[1], injector);
-  assert.equal(service.res[1].parent, i);
+  assert.equal(service.res[0]!, injector);
+  assert.equal(service.res[0]!.parent, i);
+  assert.equal(service.res[1]!, injector);
+  assert.equal(service.res[1]!.parent, i);
 });
 
 it("should call onInject any time a service is returned", () => {
@@ -245,7 +246,6 @@ it("should execute callbacks when condition returns empty object", () => {
     onInjected: 1,
   });
 });
-
 
 it("should pass the injector to the condition", () => {
   const IS_PROD = new StaticToken("isProd", () => false);

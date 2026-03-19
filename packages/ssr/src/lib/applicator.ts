@@ -24,8 +24,7 @@ export class Applicator {
   }
 
   async build($: CheerioAPI, elements: string[]): Promise<string> {
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
+    for (const element of elements) {
       const node = $(element);
 
       if (node.length) {
@@ -33,10 +32,7 @@ export class Applicator {
 
         if (!elementTemplate) {
           const template = await this.#buildTemplate(element);
-          elementTemplate = await this.build(
-            load(template, null, false),
-            elements,
-          );
+          elementTemplate = await this.build(load(template, null, false), elements);
 
           await this.#templateCache.set(element, elementTemplate);
         }

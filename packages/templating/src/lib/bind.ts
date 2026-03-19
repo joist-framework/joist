@@ -1,4 +1,5 @@
-import { instanceMetadataStore, observe, ObserveOpts } from "@joist/observable";
+import { instanceMetadataStore, observe } from "@joist/observable";
+import type { ObserveOpts } from "@joist/observable";
 
 export interface BindOpts<This, Value> extends ObserveOpts<This, Value> {
   /**
@@ -15,7 +16,7 @@ export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value
   ): ClassAccessorDecoratorResult<This, Value> {
     const internalObserve = observe(opts)(base, ctx);
 
-    return {
+    const accessorResult: ClassAccessorDecoratorResult<This, Value> = {
       init(value) {
         this.addEventListener("joist::value", (e) => {
           if (e.expression.bindTo === ctx.name) {
@@ -57,8 +58,16 @@ export function bind<This extends HTMLElement, Value>(opts: BindOpts<This, Value
 
         return value;
       },
-      get: internalObserve.get,
-      set: internalObserve.set,
     };
+
+    if (internalObserve.get) {
+      accessorResult.get = internalObserve.get;
+    }
+
+    if (internalObserve.set) {
+      accessorResult.set = internalObserve.set;
+    }
+
+    return accessorResult;
   };
 }

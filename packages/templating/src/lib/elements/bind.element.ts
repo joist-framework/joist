@@ -8,10 +8,12 @@ export class JAttrToken extends JExpression {
 
   constructor(binding: string) {
     const [mapTo, bindTo] = binding.split(":");
+    const source = bindTo ?? mapTo ?? "";
+    const target = mapTo ?? bindTo ?? "";
 
-    super(bindTo ?? mapTo);
+    super(source);
 
-    this.mapTo = mapTo;
+    this.mapTo = target;
   }
 }
 

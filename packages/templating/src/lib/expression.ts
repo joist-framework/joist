@@ -2,8 +2,8 @@ type ComparisonOperator = "==" | "!=" | ">" | "<";
 
 interface TokenParts {
   path: string[];
-  value?: string;
-  operator?: ComparisonOperator;
+  value?: string | undefined;
+  operator?: ComparisonOperator | undefined;
 }
 
 /**
@@ -113,8 +113,9 @@ export class JExpression {
     for (const operator of operators) {
       if (this.rawToken.includes(operator)) {
         const [tokenPart, value] = this.rawToken.split(operator).map((part) => part.trim());
+
         return {
-          path: tokenPart.split("."),
+          path: tokenPart?.split(".") ?? [],
           value,
           operator,
         };

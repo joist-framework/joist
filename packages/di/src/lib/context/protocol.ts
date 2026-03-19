@@ -53,7 +53,7 @@ export type ContextCallback<ValueType> = (value: ValueType, unsubscribe?: () => 
 export class ContextRequestEvent<T extends UnknownContext> extends Event {
   context: T;
   callback: ContextCallback<ContextType<T>>;
-  subscribe?: boolean;
+  subscribe?: boolean | undefined;
 
   public constructor(context: T, callback: ContextCallback<ContextType<T>>, subscribe?: boolean) {
     super("context-request", { bubbles: true, composed: true });

@@ -13,10 +13,7 @@ export function injected<T>(condition?: LifecycleCondition<T>) {
   ): void {
     const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.onInjected ??= [];
-    metadata.onInjected.push({
-      callback: val,
-      condition,
-    });
+    metadata.onInjected.push({ callback: val, condition });
   };
 }
 
@@ -27,10 +24,7 @@ export function created<T>(condition?: LifecycleCondition<T>) {
   ): void {
     const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.onCreated ??= [];
-    metadata.onCreated.push({
-      callback: val,
-      condition,
-    });
+    metadata.onCreated.push({ callback: val, condition });
   };
 }
 
@@ -47,7 +41,7 @@ export function callLifecycle(
           continue;
         }
       }
-      callback.call(instance, injector);
+      callback?.call(instance, injector);
     }
   }
 }
