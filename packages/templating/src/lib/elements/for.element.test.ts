@@ -33,8 +33,8 @@ it("should iterate over an iterable", () => {
   const listItems = element.querySelectorAll("li");
 
   assert.equal(listItems.length, 2);
-  assert.equal(listItems[0].textContent?.trim(), "Hello");
-  assert.equal(listItems[1].textContent?.trim(), "World");
+  assert.equal(listItems[0]!.textContent?.trim(), "Hello");
+  assert.equal(listItems[1]!.textContent?.trim(), "World");
 });
 
 it("should handle empty arrays", () => {
@@ -101,8 +101,8 @@ it("should update when items are added or removed", () => {
 
   const items = element.querySelectorAll("j-val");
   assert.equal(items.length, 2);
-  assert.equal(items[0].textContent?.trim(), "First");
-  assert.equal(items[1].textContent?.trim(), "Third");
+  assert.equal(items[0]!.textContent?.trim(), "First");
+  assert.equal(items[1]!.textContent?.trim(), "Third");
 });
 
 it("should provide index and position information", () => {
@@ -130,15 +130,15 @@ it("should provide index and position information", () => {
   const items = element.querySelectorAll(".item");
   assert.equal(items.length, 3);
   assert.equal(
-    items[0].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    items[0]!.textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
     "A(index:0,position:1)",
   );
   assert.equal(
-    items[1].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    items[1]!.textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
     "B(index:1,position:2)",
   );
   assert.equal(
-    items[2].textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
+    items[2]!.textContent?.trim().replaceAll("\n", "").replaceAll(" ", ""),
     "C(index:2,position:3)",
   );
 });
@@ -218,9 +218,9 @@ it("should maintain DOM order when items are reordered", () => {
 
   const items = element.querySelectorAll("j-val");
   assert.equal(items.length, 3);
-  assert.equal(items[0].textContent?.trim(), "Third");
-  assert.equal(items[1].textContent?.trim(), "First");
-  assert.equal(items[2].textContent?.trim(), "Second");
+  assert.equal(items[0]!.textContent?.trim(), "Third");
+  assert.equal(items[1]!.textContent?.trim(), "First");
+  assert.equal(items[2]!.textContent?.trim(), "Second");
 });
 
 it("should wait for depends-on before dispatching events", async () => {

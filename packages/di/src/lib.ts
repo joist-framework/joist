@@ -1,11 +1,11 @@
 export { Injector } from "./lib/injector.js";
 export {
-  Provider,
-  ConstructableToken,
+  type Provider,
+  type ConstructableToken,
   StaticToken,
-  InjectionToken,
+  type InjectionToken,
 } from "./lib/provider.js";
 export { injectable } from "./lib/injectable.js";
-export { inject, injectAll, Injected } from "./lib/inject.js";
+export { inject, injectAll, type Injected } from "./lib/inject.js";
 export { injected, created } from "./lib/lifecycle.js";
 export { DOMInjector } from "./lib/dom/dom-injector.js";

@@ -1,4 +1,5 @@
-import { define, DefineOpts } from "./define.js";
+import { define } from "./define.js";
+import type { DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";
 import type { ShadowResult } from "./result.js";
 
@@ -116,7 +117,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       },
     };
 
-    return def[Base.name];
+    return def[Base.name] as T;
   };
 }
 

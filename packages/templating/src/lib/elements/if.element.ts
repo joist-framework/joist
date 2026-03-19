@@ -38,9 +38,11 @@ export class JoistIfElement extends HTMLElement {
       throw new Error("When using two templates, one must have the else attribute");
     }
 
-    if (templates.length === 2 && templates[0].hasAttribute("else")) {
+    if (templates.length === 2 && templates[0]!.hasAttribute("else")) {
       // Swap templates to ensure if template is first
-      [templates[0], templates[1]] = [templates[1], templates[0]];
+      const first = templates[0]!;
+      templates[0] = templates[1]!;
+      templates[1] = first;
     }
 
     const token = new JExpression(this.bind);

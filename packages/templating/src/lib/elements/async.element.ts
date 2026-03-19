@@ -29,9 +29,9 @@ export class JoistAsyncElement extends HTMLElement {
   #templates = queryAll<HTMLTemplateElement>("template", this);
   #currentNodes: Node[] = [];
   #cachedTemplates: {
-    loading?: HTMLTemplateElement;
-    error?: HTMLTemplateElement;
-    success?: HTMLTemplateElement;
+    loading: HTMLTemplateElement | undefined;
+    error: HTMLTemplateElement | undefined;
+    success: HTMLTemplateElement | undefined;
   } = {
     loading: undefined,
     error: undefined,
@@ -95,7 +95,7 @@ export class JoistAsyncElement extends HTMLElement {
   #handleState(state: AsyncState): void {
     this.#clean();
 
-    let template: HTMLTemplateElement | undefined = undefined;
+    let template: HTMLTemplateElement | undefined;
 
     this.state = state;
 

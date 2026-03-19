@@ -59,5 +59,5 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
     },
   };
 
-  return def[Base.name];
+  return def[Base.name] as T;
 }

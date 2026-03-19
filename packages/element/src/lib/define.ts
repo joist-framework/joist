@@ -1,6 +1,6 @@
 export interface DefineOpts {
   tagName: string;
-  dependsOn?: string[] | (() => Promise<void>);
+  dependsOn?: string[] | (() => Promise<void>) | undefined;
 }
 
 export async function define(opts: DefineOpts, element: CustomElementConstructor): Promise<void> {

@@ -39,8 +39,8 @@ export class Injector {
   // keep track of instances. One Token can have one instance
   #instances = new WeakMap<InjectionToken<any>, any>();
 
-  name?: string;
-  parent?: Injector;
+  name?: string | undefined;
+  parent?: Injector | undefined;
   providers: ProviderMap;
 
   constructor(opts?: InjectorOpts) {
@@ -64,7 +64,10 @@ export class Injector {
   }
 
   // resolves and retuns and instance of the requested service
-  inject<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean; singleton?: boolean }): T {
+  inject<T>(
+    token: InjectionToken<T>,
+    opts?: { ignoreParent?: boolean | undefined; singleton?: boolean | undefined },
+  ): T {
     // check for a local instance
     if (opts?.singleton !== false && this.#instances.has(token)) {
       const instance = this.#instances.get(token);

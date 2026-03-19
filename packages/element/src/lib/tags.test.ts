@@ -36,40 +36,50 @@ describe("tags", () => {
 
   describe("css", () => {
     it("should create a CSSResult instance", () => {
-      const result = css`div { color: red; }`;
+      const result = css`
+        div {
+          color: red;
+        }
+      `;
       assert.instanceOf(result, CSSResult);
     });
 
     it("should create a stylesheet with correct content", () => {
-      const result = css`div { color: red; }`;
+      const result = css`
+        div {
+          color: red;
+        }
+      `;
 
       const element = document.createElement("div");
       const shadow = element.attachShadow({ mode: "open" });
       result.apply(element);
 
       assert.equal(shadow.adoptedStyleSheets.length, 1);
-      assert.equal(
-        shadow.adoptedStyleSheets[0].cssRules[0].cssText,
-        "div { color: red; }",
-      );
+      assert.equal(shadow.adoptedStyleSheets[0]!.cssRules[0]!.cssText, "div { color: red; }");
     });
 
     it("should apply CSS to shadow root", () => {
       const element = document.createElement("div");
       const shadow = element.attachShadow({ mode: "open" });
-      const result = css`div { color: red; }`;
+      const result = css`
+        div {
+          color: red;
+        }
+      `;
       result.apply(element);
 
       assert.equal(shadow.adoptedStyleSheets.length, 1);
-      assert.equal(
-        shadow.adoptedStyleSheets[0].cssRules[0].cssText,
-        "div { color: red; }",
-      );
+      assert.equal(shadow.adoptedStyleSheets[0]!.cssRules[0]!.cssText, "div { color: red; }");
     });
 
     it("should not apply CSS if no shadow root", () => {
       const element = document.createElement("div");
-      const result = css`div { color: red; }`;
+      const result = css`
+        div {
+          color: red;
+        }
+      `;
       result.apply(element);
 
       assert.equal(element.shadowRoot, null);
@@ -79,21 +89,23 @@ describe("tags", () => {
       const element = document.createElement("div");
       const shadow = element.attachShadow({ mode: "open" });
 
-      const sheet1 = css`div { color: red; }`;
-      const sheet2 = css`span { color: blue; }`;
+      const sheet1 = css`
+        div {
+          color: red;
+        }
+      `;
+      const sheet2 = css`
+        span {
+          color: blue;
+        }
+      `;
 
       sheet1.apply(element);
       sheet2.apply(element);
 
       assert.equal(shadow.adoptedStyleSheets.length, 2);
-      assert.equal(
-        shadow.adoptedStyleSheets[0].cssRules[0].cssText,
-        "div { color: red; }",
-      );
-      assert.equal(
-        shadow.adoptedStyleSheets[1].cssRules[0].cssText,
-        "span { color: blue; }",
-      );
+      assert.equal(shadow.adoptedStyleSheets[0]!.cssRules[0]!.cssText, "div { color: red; }");
+      assert.equal(shadow.adoptedStyleSheets[1]!.cssRules[0]!.cssText, "span { color: blue; }");
     });
   });
 });

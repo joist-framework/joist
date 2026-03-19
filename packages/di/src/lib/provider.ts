@@ -4,7 +4,7 @@ export type ProviderFactory<T> = (injector: Injector) => T;
 
 export class StaticToken<T> {
   #name: string;
-  #factory?: ProviderFactory<T>;
+  #factory?: ProviderFactory<T> | undefined;
 
   [Symbol.metadata] = null;
 

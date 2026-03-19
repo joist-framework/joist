@@ -1,10 +1,7 @@
 import { injectableEl } from "./dom/injectable-el.js";
+import type { InjectableEl } from "./dom/injectable-el.js";
 import { INJECTOR, Injector } from "./injector.js";
-import type {
-  ConstructableToken,
-  InjectionToken,
-  Provider,
-} from "./provider.js";
+import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
   name?: string;
@@ -41,18 +38,19 @@ export function injectable(opts?: InjectableOpts) {
       },
     };
 
+    const injectableBase = def[Base.name];
+
+    if (!injectableBase) {
+      throw new Error(`Failed to create injectable class for ${Base.name}`);
+    }
+
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
     if ("HTMLElement" in globalThis) {
-      if (
-        Object.prototype.isPrototypeOf.call(
-          HTMLElement.prototype,
-          Base.prototype,
-        )
-      ) {
-        return injectableEl(def[Base.name], ctx);
+      if (Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype)) {
+        return injectableEl(injectableBase, ctx);
       }
     }
 
-    return def[Base.name];
+    return injectableBase;
   };
 }
