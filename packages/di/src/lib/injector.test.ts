@@ -306,3 +306,45 @@ it("should assign injector name from options", () => {
 
   assert.equal(app.name, "app");
 });
+
+it("should create a new instance each time with injectOnce", () => {
+  class Service {}
+
+  const app = new Injector();
+
+  const first = app.injectOnce(Service);
+  const second = app.injectOnce(Service);
+
+  assert(first instanceof Service);
+  assert(second instanceof Service);
+  assert.notEqual(first, second);
+});
+
+it("should respect ignoreParent option in injectOnce", () => {
+  class Service {
+    value = "child";
+  }
+
+  const parent = new Injector({
+    providers: [
+      [
+        Service,
+        {
+          use: class extends Service {
+            value = "parent";
+          },
+        },
+      ],
+    ],
+  });
+
+  const child = new Injector({ parent });
+
+  // Without ignoreParent, should create new instance from parent's provider
+  const parentInstance = child.injectOnce(Service);
+  assert.equal(parentInstance.value, "parent");
+
+  // With ignoreParent, should create new instance from child's provider
+  const childInstance = child.injectOnce(Service, { ignoreParent: true });
+  assert.equal(childInstance.value, "child");
+});

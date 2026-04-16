@@ -63,6 +63,10 @@ export class Injector {
     return collection;
   }
 
+  injectOnce<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean }): T {
+    return this.inject<T>(token, { ignoreParent: opts?.ignoreParent, singleton: false });
+  }
+
   // resolves and retuns and instance of the requested service
   inject<T>(
     token: InjectionToken<T>,
