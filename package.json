@@ -52,7 +52,7 @@
     "mocha": "^11.0.0",
     "prettier": "^3.5.3",
     "tslib": "2.8.1",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "wireit": "^0.14.0"
   },
   "lint-staged": {
