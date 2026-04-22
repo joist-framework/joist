@@ -76,7 +76,7 @@ export class Injector {
 
     if (metadata?.service === false && opts?.singleton !== false) {
       throw new Error(
-        `Token ${token instanceof StaticToken ? token.name : token.name} is marked as non-service and cannot be injected as a singleton. Please set singleton to false in the inject options.`,
+        `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
       );
     }
 

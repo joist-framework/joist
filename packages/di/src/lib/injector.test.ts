@@ -357,7 +357,7 @@ it("should throw when a non-service token is injected as a singleton", () => {
 
   assert.throws(
     () => app.inject(NonService),
-    `Token NonService is marked as non-service and cannot be injected as a singleton. Please set singleton to false in the inject options.`,
+    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
   );
 });
 
