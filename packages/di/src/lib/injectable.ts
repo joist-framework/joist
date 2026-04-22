@@ -1,12 +1,13 @@
 import { injectableEl } from "./dom/injectable-el.js";
-import type { InjectableEl } from "./dom/injectable-el.js";
 import { INJECTOR, Injector } from "./injector.js";
+import { type InjectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
   name?: string;
   providers?: Iterable<Provider<any>>;
   provideSelfAs?: InjectionToken<any>[];
+  service?: boolean;
 }
 
 export function injectable(opts?: InjectableOpts) {
@@ -14,6 +15,9 @@ export function injectable(opts?: InjectableOpts) {
     Base: T,
     ctx: ClassDecoratorContext,
   ): T {
+    const metadata: InjectableMetadata<T> = ctx.metadata;
+    metadata.service = opts?.service;
+
     const def = {
       [Base.name]: class extends Base {
         [INJECTOR]: Injector;
