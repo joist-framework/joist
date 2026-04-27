@@ -15,6 +15,7 @@ export interface LifecycleMethod<T> {
 }
 
 export interface InjectableMetadata<T> {
+  service?: boolean | undefined;
   onCreated?: LifecycleMethod<T>[] | undefined;
   onInjected?: LifecycleMethod<T>[] | undefined;
 }

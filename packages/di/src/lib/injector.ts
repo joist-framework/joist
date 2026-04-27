@@ -72,11 +72,18 @@ export class Injector {
     token: InjectionToken<T>,
     opts?: { ignoreParent?: boolean | undefined; singleton?: boolean | undefined },
   ): T {
+    const metadata = readMetadata<T>(token);
+
+    if (metadata?.service === false && opts?.singleton !== false) {
+      throw new Error(
+        `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
+      );
+    }
+
     // check for a local instance
     if (opts?.singleton !== false && this.#instances.has(token)) {
       const instance = this.#instances.get(token);
 
-      const metadata = readMetadata<T>(token);
       const injector = readInjector(instance);
 
       if (metadata) {

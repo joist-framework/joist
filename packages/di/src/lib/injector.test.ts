@@ -348,3 +348,40 @@ it("should respect ignoreParent option in injectOnce", () => {
   const childInstance = child.injectOnce(Service, { ignoreParent: true });
   assert.equal(childInstance.value, "child");
 });
+
+it("should throw when a non-service token is injected as a singleton", () => {
+  @injectable({ service: false })
+  class NonService {}
+
+  const app = new Injector();
+
+  assert.throws(
+    () => app.inject(NonService),
+    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
+  );
+});
+
+it("should allow a non-service token to be injected with singleton: false", () => {
+  @injectable({ service: false })
+  class NonService {}
+
+  const app = new Injector();
+
+  const instance = app.inject(NonService, { singleton: false });
+
+  assert(instance instanceof NonService);
+});
+
+it("should allow multiple non-singleton instances of a non-service token", () => {
+  @injectable({ service: false })
+  class NonService {}
+
+  const app = new Injector();
+
+  const a = app.inject(NonService, { singleton: false });
+  const b = app.inject(NonService, { singleton: false });
+
+  assert(a instanceof NonService);
+  assert(b instanceof NonService);
+  assert.notEqual(a, b);
+});
