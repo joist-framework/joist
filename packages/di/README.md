@@ -19,15 +19,26 @@ Allows you to inject services into other class instances (including custom eleme
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Injectors](#injectors)
-- [Services](#services)
-- [Injectable Services](#injectable-services)
-- [Defining Providers](#defining-providers)
-- [StaticTokens](#statictokens)
-- [LifeCycle](#lifecycle)
-- [Hierarchical Injectors](#hierarchical-injectors)
-- [Custom Elements](#custom-elements)
+- [Di](#di)
+  - [Benefits](#benefits)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Injectors](#injectors)
+  - [Services](#services)
+  - [Injectable Services](#injectable-services)
+  - [Defining Providers](#defining-providers)
+    - [Service Level Providers](#service-level-providers)
+    - [Factories](#factories)
+    - [Values](#values)
+    - [Accessing the Injector in Factories](#accessing-the-injector-in-factories)
+  - [StaticTokens](#statictokens)
+    - [Default Values](#default-values)
+    - [Async Values](#async-values)
+  - [LifeCycle](#lifecycle)
+    - [Conditional Lifecycle Hooks](#conditional-lifecycle-hooks)
+  - [Hierarchical Injectors](#hierarchical-injectors)
+  - [Custom Elements](#custom-elements)
+    - [Context Elements](#context-elements)
 
 ## Installation
 
@@ -179,6 +190,30 @@ const app = new Injector([
     },
   ],
 ]);
+```
+
+### Values
+
+When you already have an instance you want to provide directly — without any construction logic — use the `value` provider. This is useful for providing primitives or pre-built objects without needing a factory or subclass.
+
+```ts
+const existingLogger = new Logger();
+
+const app = new Injector({
+  providers: [[Logger, { value: existingLogger }]],
+});
+
+assert(app.inject(Logger) === existingLogger); // true
+```
+
+This also works with `StaticToken` for injecting configuration values:
+
+```ts
+const API_URL = new StaticToken<string>("api_url");
+
+const app = new Injector({
+  providers: [[API_URL, { value: "https://api.example.com" }]],
+});
 ```
 
 ### Accessing the Injector in Factories
