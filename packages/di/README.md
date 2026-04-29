@@ -6,28 +6,35 @@ Allows you to inject services into other class instances (including custom eleme
 
 ## Benefits
 
-- 🚀 **Simple API**: Minimal boilerplate with intuitive decorators and injection
-- 💪 **Type Safety**: Full TypeScript support with proper type inference
-- 🌳 **Hierarchical DI**: Create scoped injectors with parent-child relationships
-- ⚡️ **Lazy Loading**: Services are only instantiated when needed
-- 🧪 **Testing Friendly**: Easy mocking with provider overrides
-- 🧩 **Web Component Support**: Built-in integration with custom elements
-- 🔄 **Context Pattern**: React-like context for web components
-- 🔌 **Lifecycle Hooks**: Fine-grained control over service initialization
-- ⏱️ **Async Support**: Handle asynchronous service creation
-- 📦 **Zero Dependencies**: Lightweight with no external dependencies
+- **Simple API**: Minimal boilerplate with intuitive decorators and injection
+- **Lazy Loading**: Services are only instantiated when needed
+- **Web Component Support**: Built-in integration with custom elements
+- **Async Support**: Handle asynchronous service creation
+- **Zero Dependencies**: Lightweight with no external dependencies
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Injectors](#injectors)
-- [Services](#services)
-- [Injectable Services](#injectable-services)
-- [Defining Providers](#defining-providers)
-- [StaticTokens](#statictokens)
-- [LifeCycle](#lifecycle)
-- [Hierarchical Injectors](#hierarchical-injectors)
-- [Custom Elements](#custom-elements)
+- [Di](#di)
+  - [Benefits](#benefits)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Injectors](#injectors)
+  - [Services](#services)
+  - [Injectable Services](#injectable-services)
+    - [Non-Singleton Injectables](#non-singleton-injectables)
+  - [Defining Providers](#defining-providers)
+    - [Service Level Providers](#service-level-providers)
+    - [Factories](#factories)
+    - [Values](#values)
+    - [Accessing the Injector in Factories](#accessing-the-injector-in-factories)
+  - [StaticTokens](#statictokens)
+    - [Default Values](#default-values)
+    - [Async Values](#async-values)
+  - [LifeCycle](#lifecycle)
+    - [Conditional Lifecycle Hooks](#conditional-lifecycle-hooks)
+  - [Hierarchical Injectors](#hierarchical-injectors)
+  - [Custom Elements](#custom-elements)
+    - [Context Elements](#context-elements)
 
 ## Installation
 
@@ -82,6 +89,30 @@ class App {
     instance.inc(val);
   }
 }
+```
+
+### Non-Singleton Injectables
+
+By default, `@injectable()` classes are treated as singletons — the same instance is returned every time they are injected. If you need a new instance each time, mark the class with `service: false`.
+
+A class decorated with `service: false` **cannot** be injected with `inject()` or `Injector.inject()` (which cache instances). Use `Injector.injectOnce()` instead, which always creates a fresh instance.
+
+```ts
+@injectable({ service: false })
+class RequestContext {
+  timestamp = Date.now();
+}
+
+const app = new Injector();
+
+// Creates a new instance every time
+const ctx1 = app.injectOnce(RequestContext);
+const ctx2 = app.injectOnce(RequestContext);
+
+console.log(ctx1 === ctx2); // false
+
+// This throws — non-services cannot be cached as singletons
+app.inject(RequestContext); // Error: Token RequestContext is marked as non-service...
 ```
 
 ## Defining Providers
@@ -179,6 +210,30 @@ const app = new Injector([
     },
   ],
 ]);
+```
+
+### Values
+
+When you already have an instance you want to provide directly — without any construction logic — use the `value` provider. This is useful for providing primitives or pre-built objects without needing a factory or subclass.
+
+```ts
+const existingLogger = new Logger();
+
+const app = new Injector({
+  providers: [[Logger, { value: existingLogger }]],
+});
+
+assert(app.inject(Logger) === existingLogger); // true
+```
+
+This also works with `StaticToken` for injecting configuration values:
+
+```ts
+const API_URL = new StaticToken<string>("api_url");
+
+const app = new Injector({
+  providers: [[API_URL, { value: "https://api.example.com" }]],
+});
 ```
 
 ### Accessing the Injector in Factories

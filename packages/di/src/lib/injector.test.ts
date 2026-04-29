@@ -116,7 +116,45 @@ it("should use a factory if provided", () => {
   assert.equal(injector.inject(Service).hello(), "world");
 });
 
-it("should throw an error if provider is missing both factory and use", () => {
+it("should use a value if provided", () => {
+  class Service {
+    hello() {
+      return "world";
+    }
+  }
+
+  const instance = new Service();
+
+  const injector = new Injector({
+    providers: [[Service, { value: instance }]],
+  });
+
+  assert.equal(injector.inject(Service), instance);
+});
+
+it("should return the same value instance on repeated injection", () => {
+  class Service {}
+
+  const instance = new Service();
+
+  const injector = new Injector({
+    providers: [[Service, { value: instance }]],
+  });
+
+  assert.equal(injector.inject(Service), injector.inject(Service));
+});
+
+it("should use a value for a StaticToken", () => {
+  const TOKEN = new StaticToken<string>("test");
+
+  const injector = new Injector({
+    providers: [[TOKEN, { value: "hello" }]],
+  });
+
+  assert.equal(injector.inject(TOKEN), "hello");
+});
+
+it("should throw an error if provider is missing use, factory, and value", () => {
   class Service {
     hello() {
       return "world";
@@ -129,7 +167,7 @@ it("should throw an error if provider is missing both factory and use", () => {
 
   assert.throws(
     () => injector.inject(Service),
-    "Provider for Service found but is missing either 'use' or 'factory'",
+    "Provider for Service found but is missing either 'use', 'factory', or 'value'",
   );
 });
 

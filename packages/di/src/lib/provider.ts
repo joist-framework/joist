@@ -34,6 +34,9 @@ export type ProviderDef<T> =
     }
   | {
       factory: ProviderFactory<T>;
+    }
+  | {
+      value: T;
     };
 
 export type Provider<T> = [InjectionToken<T>, ProviderDef<T>];
