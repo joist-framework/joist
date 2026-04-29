@@ -6,16 +6,11 @@ Allows you to inject services into other class instances (including custom eleme
 
 ## Benefits
 
-- 🚀 **Simple API**: Minimal boilerplate with intuitive decorators and injection
-- 💪 **Type Safety**: Full TypeScript support with proper type inference
-- 🌳 **Hierarchical DI**: Create scoped injectors with parent-child relationships
-- ⚡️ **Lazy Loading**: Services are only instantiated when needed
-- 🧪 **Testing Friendly**: Easy mocking with provider overrides
-- 🧩 **Web Component Support**: Built-in integration with custom elements
-- 🔄 **Context Pattern**: React-like context for web components
-- 🔌 **Lifecycle Hooks**: Fine-grained control over service initialization
-- ⏱️ **Async Support**: Handle asynchronous service creation
-- 📦 **Zero Dependencies**: Lightweight with no external dependencies
+- **Simple API**: Minimal boilerplate with intuitive decorators and injection
+- **Lazy Loading**: Services are only instantiated when needed
+- **Web Component Support**: Built-in integration with custom elements
+- **Async Support**: Handle asynchronous service creation
+- **Zero Dependencies**: Lightweight with no external dependencies
 
 ## Table of Contents
 
