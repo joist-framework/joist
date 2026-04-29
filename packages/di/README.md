@@ -21,6 +21,7 @@ Allows you to inject services into other class instances (including custom eleme
   - [Injectors](#injectors)
   - [Services](#services)
   - [Injectable Services](#injectable-services)
+    - [Non-Singleton Injectables](#non-singleton-injectables)
   - [Defining Providers](#defining-providers)
     - [Service Level Providers](#service-level-providers)
     - [Factories](#factories)
@@ -88,6 +89,30 @@ class App {
     instance.inc(val);
   }
 }
+```
+
+### Non-Singleton Injectables
+
+By default, `@injectable()` classes are treated as singletons — the same instance is returned every time they are injected. If you need a new instance each time, mark the class with `service: false`.
+
+A class decorated with `service: false` **cannot** be injected with `inject()` or `Injector.inject()` (which cache instances). Use `Injector.injectOnce()` instead, which always creates a fresh instance.
+
+```ts
+@injectable({ service: false })
+class RequestContext {
+  timestamp = Date.now();
+}
+
+const app = new Injector();
+
+// Creates a new instance every time
+const ctx1 = app.injectOnce(RequestContext);
+const ctx2 = app.injectOnce(RequestContext);
+
+console.log(ctx1 === ctx2); // false
+
+// This throws — non-services cannot be cached as singletons
+app.inject(RequestContext); // Error: Token RequestContext is marked as non-service...
 ```
 
 ## Defining Providers
