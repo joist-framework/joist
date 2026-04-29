@@ -154,7 +154,7 @@ it("should use a value for a StaticToken", () => {
   assert.equal(injector.inject(TOKEN), "hello");
 });
 
-it("should throw an error if provider is missing both factory and use", () => {
+it("should throw an error if provider is missing use, factory, and value", () => {
   class Service {
     hello() {
       return "world";
