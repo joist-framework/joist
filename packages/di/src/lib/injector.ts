@@ -106,7 +106,13 @@ export class Injector {
         return this.#createAndCache<T>(token, provider.factory, createOpts);
       }
 
-      throw new Error(`Provider for ${token.name} found but is missing either 'use' or 'factory'`);
+      if ("value" in provider) {
+        return this.#createAndCache<T>(token, () => provider.value, createOpts);
+      }
+
+      throw new Error(
+        `Provider for ${token.name} found but is missing either 'use', 'factory', or 'value'`,
+      );
     }
 
     // check for a parent and attempt to get there
