@@ -9,9 +9,23 @@ export type Injected<T> = () => T;
  */
 export function inject<T>(
   token: InjectionToken<T>,
-  opts?: { singleton?: boolean; ignoreParent?: boolean },
+  opts?: { ignoreParent?: boolean },
 ): Injected<T> {
-  return internalInject((i) => i.inject(token, opts));
+  let instance: T | null = null;
+  let parent: Injector | undefined = undefined;
+
+  return internalInject((i) => {
+    if (instance === null) {
+      instance = i.inject(token, opts);
+      parent = i.parent;
+    } else if (i.parent !== parent) {
+      // If the parent injector has changed, we need to re-inject to get the correct instance.
+      instance = i.inject(token, opts);
+      parent = i.parent;
+    }
+
+    return instance;
+  });
 }
 
 /**
