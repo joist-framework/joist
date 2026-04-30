@@ -95,7 +95,7 @@ class App {
 
 By default, `@injectable()` classes are treated as singletons — the same instance is returned every time they are injected. If you need a new instance each time, mark the class with `service: false`.
 
-A class decorated with `service: false` **cannot** be injected with `inject()` or `Injector.inject()` (which cache instances). Use `Injector.injectOnce()` instead, which always creates a fresh instance.
+A class decorated with `service: false` **cannot** be injected with `inject()` or `Injector.inject()` (which cache instances). Use `Injector.create()` instead, which always creates a fresh instance.
 
 ```ts
 @injectable({ service: false })
@@ -106,8 +106,8 @@ class RequestContext {
 const app = new Injector();
 
 // Creates a new instance every time
-const ctx1 = app.injectOnce(RequestContext);
-const ctx2 = app.injectOnce(RequestContext);
+const ctx1 = app.create(RequestContext);
+const ctx2 = app.create(RequestContext);
 
 console.log(ctx1 === ctx2); // false
 

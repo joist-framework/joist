@@ -63,7 +63,7 @@ export class Injector {
     return collection;
   }
 
-  injectOnce<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean }): T {
+  create<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean }): T {
     return this.inject<T>(token, { ignoreParent: opts?.ignoreParent, singleton: false });
   }
 
@@ -76,7 +76,7 @@ export class Injector {
 
     if (metadata?.service === false && opts?.singleton !== false) {
       throw new Error(
-        `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
+        `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use create.`,
       );
     }
 

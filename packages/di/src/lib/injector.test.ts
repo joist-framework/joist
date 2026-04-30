@@ -345,20 +345,20 @@ it("should assign injector name from options", () => {
   assert.equal(app.name, "app");
 });
 
-it("should create a new instance each time with injectOnce", () => {
+it("should create a new instance each time with create", () => {
   class Service {}
 
   const app = new Injector();
 
-  const first = app.injectOnce(Service);
-  const second = app.injectOnce(Service);
+  const first = app.create(Service);
+  const second = app.create(Service);
 
   assert(first instanceof Service);
   assert(second instanceof Service);
   assert.notEqual(first, second);
 });
 
-it("should respect ignoreParent option in injectOnce", () => {
+it("should respect ignoreParent option in create", () => {
   class Service {
     value = "child";
   }
@@ -379,11 +379,11 @@ it("should respect ignoreParent option in injectOnce", () => {
   const child = new Injector({ parent });
 
   // Without ignoreParent, should create new instance from parent's provider
-  const parentInstance = child.injectOnce(Service);
+  const parentInstance = child.create(Service);
   assert.equal(parentInstance.value, "parent");
 
   // With ignoreParent, should create new instance from child's provider
-  const childInstance = child.injectOnce(Service, { ignoreParent: true });
+  const childInstance = child.create(Service, { ignoreParent: true });
   assert.equal(childInstance.value, "child");
 });
 
@@ -395,7 +395,7 @@ it("should throw when a non-service token is injected as a singleton", () => {
 
   assert.throws(
     () => app.inject(NonService),
-    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use injectOnce.`,
+    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use create.`,
   );
 });
 

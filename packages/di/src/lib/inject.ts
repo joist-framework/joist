@@ -15,6 +15,17 @@ export function inject<T>(
 }
 
 /**
+ * Creates a new instance of a service each time it is called, bypassing the singleton cache.
+ * Use this for classes decorated with `@injectable({ service: false })`.
+ */
+export function create<T>(
+  token: InjectionToken<T>,
+  opts?: { ignoreParent?: boolean },
+): Injected<T> {
+  return internalInject((i) => i.create(token, opts));
+}
+
+/**
  * Finds and injects ALL instances of a service from the current points up.
  */
 export function injectAll<T>(
