@@ -27,6 +27,8 @@ export function injectable(opts?: InjectableOpts) {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
+          // injectable classes should not be instantiated direction.
+          // HTMLElements MUST be instantiated by the browser.
           if (args[0] !== INJECTABLE && !isHTMLELementBase) {
             throw new Error(
               `The constructor of an injectable class cannot be called directly. Please use the injector to create an instance of ${Base.name}.`,
