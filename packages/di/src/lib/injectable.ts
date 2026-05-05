@@ -1,5 +1,5 @@
 import { injectableEl } from "./dom/injectable-el.js";
-import { INJECTOR, Injector } from "./injector.js";
+import { INJECTABLE, INJECTOR, Injector } from "./injector.js";
 import { type InjectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
@@ -18,11 +18,21 @@ export function injectable(opts?: InjectableOpts) {
     const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.service = opts?.service;
 
+    const isHTMLELementBase =
+      "HTMLElement" in globalThis &&
+      Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype);
+
     const def = {
       [Base.name]: class extends Base {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
+          if (args[0] !== INJECTABLE && !isHTMLELementBase) {
+            throw new Error(
+              `The constructor of an injectable class cannot be called directly. Please use the injector to create an instance of ${Base.name}.`,
+            );
+          }
+
           super(...args);
 
           this[INJECTOR] = new Injector(opts);
@@ -49,10 +59,9 @@ export function injectable(opts?: InjectableOpts) {
     }
 
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
-    if ("HTMLElement" in globalThis) {
-      if (Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype)) {
-        return injectableEl(injectableBase, ctx);
-      }
+
+    if (isHTMLELementBase) {
+      return injectableEl(injectableBase, ctx);
     }
 
     return injectableBase;

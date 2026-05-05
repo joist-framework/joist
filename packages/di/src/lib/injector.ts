@@ -15,6 +15,7 @@ export interface InjectorOpts {
 }
 
 export const INJECTOR: unique symbol = Symbol("JOIST_INJECTOR");
+export const INJECTABLE: unique symbol = Symbol("INJECTABLE");
 
 export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
 
@@ -99,7 +100,7 @@ export class Injector {
     // check for a provider definition
     if (provider) {
       if ("use" in provider) {
-        return this.#createAndCache<T>(token, () => new provider.use(), createOpts);
+        return this.#createAndCache<T>(token, () => new provider.use(INJECTABLE), createOpts);
       }
 
       if ("factory" in provider) {
@@ -128,7 +129,7 @@ export class Injector {
       return this.#createAndCache(token, token.factory, createOpts);
     }
 
-    return this.#createAndCache(token, () => new token(), createOpts);
+    return this.#createAndCache(token, () => new token(INJECTABLE), createOpts);
   }
 
   clear(): void {

@@ -18,21 +18,20 @@ it("should locally override a provider", () => {
     foo = inject(Foo);
   }
 
-  const el = new MyService();
+  const injector = new Injector();
+  const instance = injector.inject(MyService);
 
-  assert.instanceOf(el.foo(), Bar);
+  assert.instanceOf(instance.foo(), Bar);
 });
 
 it("should define an injector for a service instance", () => {
   @injectable()
-  class MyService {
-    constructor(public arg = "a") {}
-  }
+  class MyService {}
 
-  const instance = new MyService("b");
+  const injector = new Injector();
+  const instance = injector.inject(MyService);
 
-  assert.ok(readInjector(instance));
-  assert.ok(instance.arg === "b");
+  assert.instanceOf(readInjector(instance), Injector);
 });
 
 it("should inject the current service injectable instance", () => {
@@ -64,7 +63,8 @@ it("should provide itself for spefified tokens", () => {
     value = inject(TOKEN);
   }
 
-  const service = new MyService();
+  const injector = new Injector();
+  const service = injector.inject(MyService);
 
   assert.equal(service.value(), service);
 });
