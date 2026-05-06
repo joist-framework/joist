@@ -1,6 +1,7 @@
+import { INJECTOR } from "../../internal/symbols.js";
 import { INJECTOR_CTX } from "../context/injector.js";
 import { ContextRequestEvent, type UnknownContext } from "../context/protocol.js";
-import { INJECTOR, Injector } from "../injector.js";
+import { Injector } from "../injector.js";
 
 /**
  * Special Injector that allows you to register an injector with a particular DOM element.

@@ -1,3 +1,4 @@
+import { INJECTABLE } from "../internal/symbols.js";
 import { callLifecycle } from "./lifecycle.js";
 import { readInjector, readMetadata } from "./metadata.js";
 import {
@@ -13,9 +14,6 @@ export interface InjectorOpts {
   providers?: Iterable<Provider<any>>;
   parent?: Injector;
 }
-
-export const INJECTOR: unique symbol = Symbol("JOIST_INJECTOR");
-export const INJECTABLE: unique symbol = Symbol("INJECTABLE");
 
 export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
 

@@ -1,5 +1,6 @@
+import { INJECTABLE, INJECTOR } from "../internal/symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
-import { INJECTABLE, INJECTOR, Injector } from "./injector.js";
+import { Injector } from "./injector.js";
 import { type InjectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
