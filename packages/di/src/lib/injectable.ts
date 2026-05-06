@@ -28,7 +28,7 @@ export function injectable(opts?: InjectableOpts) {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
-          // injectable classes should not be instantiated direction.
+          // injectable classes should not be instantiated directly.
           // HTMLElements MUST be instantiated by the browser.
           if (args[0] !== INJECTABLE && !isHTMLELementBase) {
             throw new Error(
