@@ -1,4 +1,4 @@
-export { Injector } from "./lib/injector.js";
+export { Injector, type InjectorOpts } from "./lib/injector.js";
 export {
   type Provider,
   type ConstructableToken,
