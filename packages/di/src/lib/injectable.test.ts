@@ -18,21 +18,20 @@ it("should locally override a provider", () => {
     foo = inject(Foo);
   }
 
-  const el = new MyService();
+  const injector = new Injector();
+  const instance = injector.inject(MyService);
 
-  assert.instanceOf(el.foo(), Bar);
+  assert.instanceOf(instance.foo(), Bar);
 });
 
 it("should define an injector for a service instance", () => {
   @injectable()
-  class MyService {
-    constructor(public arg = "a") {}
-  }
+  class MyService {}
 
-  const instance = new MyService("b");
+  const injector = new Injector();
+  const instance = injector.inject(MyService);
 
-  assert.ok(readInjector(instance));
-  assert.ok(instance.arg === "b");
+  assert.instanceOf(readInjector(instance), Injector);
 });
 
 it("should inject the current service injectable instance", () => {
@@ -64,7 +63,45 @@ it("should provide itself for spefified tokens", () => {
     value = inject(TOKEN);
   }
 
-  const service = new MyService();
+  const injector = new Injector();
+  const service = injector.inject(MyService);
 
   assert.equal(service.value(), service);
+});
+
+it("shoud throw error if attempting to to manually construct an injectable class", () => {
+  @injectable()
+  class MyService {}
+
+  assert.throws(() => {
+    new MyService();
+  }, /Cannot construct an instance of MyService directly. Use the injector instead./);
+});
+
+it("shoud throw error if attempting to to manually construct an injectable class extended from a base one", () => {
+  @injectable()
+  class MyService {}
+
+  class MyExtendedService extends MyService {}
+
+  assert.throws(() => {
+    new MyExtendedService();
+  }, /Cannot construct an instance of MyService directly. Use the injector instead./);
+});
+
+it("should not pass the sentinal to the decorated class", () => {
+  const receivedArgs: unknown[][] = [];
+
+  @injectable()
+  class MyService {
+    constructor(...args: unknown[]) {
+      receivedArgs.push(args);
+    }
+  }
+
+  const injector = new Injector();
+
+  injector.inject(MyService);
+
+  assert.deepEqual(receivedArgs, [[]]);
 });

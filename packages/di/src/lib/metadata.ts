@@ -1,6 +1,7 @@
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
-import { INJECTOR, type Injector } from "./injector.js";
+import { INJECTOR } from "../internal/symbols.js";
+import { type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
 
 export type LifecycleCallback = (i: Injector) => void;

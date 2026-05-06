@@ -70,7 +70,10 @@ it("should inject a static token", () => {
     hello = inject(TOKEN);
   }
 
-  assert.strictEqual(new HelloWorld().hello(), "Hello World");
+  const injector = new Injector();
+  const instance = injector.inject(HelloWorld);
+
+  assert.strictEqual(instance.hello(), "Hello World");
 });
 
 it("should use the calling injector as parent", () => {
@@ -107,7 +110,10 @@ it("should allow you to inject all", () => {
     hello = injectAll(TOKEN);
   }
 
-  assert.deepEqual(new HelloWorld().hello(), ["Hello World"]);
+  const injector = new Injector();
+  const instance = injector.inject(HelloWorld);
+
+  assert.deepEqual(instance.hello(), ["Hello World", "Hello World"]);
 });
 
 it("should create non-singleton instances", () => {
@@ -119,6 +125,8 @@ it("should create non-singleton instances", () => {
     hello = inject(Hello, { singleton: false });
   }
 
-  const instance = new HelloWorld();
+  const injector = new Injector();
+  const instance = injector.inject(HelloWorld);
+
   assert.notEqual(instance.hello(), instance.hello());
 });

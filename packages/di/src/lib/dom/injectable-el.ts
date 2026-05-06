@@ -1,6 +1,6 @@
+import { INJECTOR } from "../../internal/symbols.js";
 import { INJECTOR_CTX } from "../context/injector.js";
 import { ContextRequestEvent } from "../context/protocol.js";
-import { INJECTOR } from "../injector.js";
 import type { Injector } from "../injector.js";
 import { callLifecycle } from "../lifecycle.js";
 import type { InjectableMetadata } from "../metadata.js";

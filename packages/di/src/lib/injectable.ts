@@ -1,5 +1,6 @@
+import { SENTINAL, INJECTOR } from "../internal/symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
-import { INJECTOR, Injector } from "./injector.js";
+import { Injector } from "./injector.js";
 import { type InjectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
@@ -18,12 +19,30 @@ export function injectable(opts?: InjectableOpts) {
     const metadata: InjectableMetadata<T> = ctx.metadata;
     metadata.service = opts?.service;
 
+    const isHTMLELementBase =
+      "HTMLElement" in globalThis &&
+      Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype);
+
     const def = {
       [Base.name]: class extends Base {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
-          super(...args);
+          const potentialSentinal = args.at(-1);
+
+          // injectable classes should not be instantiated directly.
+          // A sentinal value is passed as the last argument when the injector creates an instance of this class.
+          // If the sentinal value is not present, then we know this class is being instantiated directly and we can throw an error.
+          // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
+          if (potentialSentinal !== SENTINAL && !isHTMLELementBase) {
+            throw new Error(
+              `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
+            );
+          }
+
+          const finalArgs = args.slice(0, -1); // remove sentinal from arguments list before passing to the decorated class
+
+          super(...finalArgs);
 
           this[INJECTOR] = new Injector(opts);
 
@@ -49,10 +68,9 @@ export function injectable(opts?: InjectableOpts) {
     }
 
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
-    if ("HTMLElement" in globalThis) {
-      if (Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype)) {
-        return injectableEl(injectableBase, ctx);
-      }
+
+    if (isHTMLELementBase) {
+      return injectableEl(injectableBase, ctx);
     }
 
     return injectableBase;
