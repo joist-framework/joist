@@ -1,4 +1,4 @@
-import { INJECTABLE, INJECTOR } from "../internal/symbols.js";
+import { SENTINAL, INJECTOR } from "../internal/symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
 import { type InjectableMetadata } from "./metadata.js";
@@ -28,15 +28,19 @@ export function injectable(opts?: InjectableOpts) {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
+          const potentialSentinal = args.at(-1);
+
           // injectable classes should not be instantiated directly.
-          // HTMLElements MUST be instantiated by the browser.
-          if (args[0] !== INJECTABLE && !isHTMLELementBase) {
+          // A sentinal value is passed as the last argument when the injector creates an instance of this class.
+          // If the sentinal value is not present, then we know this class is being instantiated directly and we can throw an error.
+          // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
+          if (potentialSentinal !== SENTINAL && !isHTMLELementBase) {
             throw new Error(
               `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
             );
           }
 
-          super(...args);
+          super(...args.slice(0, -1));
 
           this[INJECTOR] = new Injector(opts);
 

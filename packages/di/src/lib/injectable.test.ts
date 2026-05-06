@@ -88,3 +88,20 @@ it("shoud throw error if attempting to to manually construct an injectable class
     new MyExtendedService();
   }, /Cannot construct an instance of MyService directly. Use the injector instead./);
 });
+
+it("should not pass the sentinal to the decorated class", () => {
+  const receivedArgs: unknown[][] = [];
+
+  @injectable()
+  class MyService {
+    constructor(...args: unknown[]) {
+      receivedArgs.push(args);
+    }
+  }
+
+  const injector = new Injector();
+
+  injector.inject(MyService);
+
+  assert.deepEqual(receivedArgs, [[]]);
+});

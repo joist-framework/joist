@@ -1,4 +1,4 @@
-import { INJECTABLE } from "../internal/symbols.js";
+import { SENTINAL } from "../internal/symbols.js";
 import { callLifecycle } from "./lifecycle.js";
 import { readInjector, readMetadata } from "./metadata.js";
 import {
@@ -102,7 +102,7 @@ export class Injector {
 
         return this.#createAndCache<T>(
           token,
-          () => (useMetadata ? new provider.use(INJECTABLE) : new provider.use()),
+          () => (useMetadata ? new provider.use(SENTINAL) : new provider.use()),
           createOpts,
         );
       }
@@ -135,7 +135,7 @@ export class Injector {
 
     return this.#createAndCache(
       token,
-      () => (metadata ? new token(INJECTABLE) : new token()),
+      () => (metadata ? new token(SENTINAL) : new token()),
       createOpts,
     );
   }
