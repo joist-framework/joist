@@ -40,7 +40,9 @@ export function injectable(opts?: InjectableOpts) {
             );
           }
 
-          super(...args.slice(0, -1));
+          const finalArgs = args.slice(0, -1); // remove sentinal from arguments list before passing to the decorated class
+
+          super(...finalArgs);
 
           this[INJECTOR] = new Injector(opts);
 
