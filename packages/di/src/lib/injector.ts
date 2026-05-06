@@ -98,7 +98,13 @@ export class Injector {
     // check for a provider definition
     if (provider) {
       if ("use" in provider) {
-        return this.#createAndCache<T>(token, () => new provider.use(INJECTABLE), createOpts);
+        const useMetadata = readMetadata<T>(provider.use);
+
+        return this.#createAndCache<T>(
+          token,
+          () => (useMetadata ? new provider.use(INJECTABLE) : new provider.use()),
+          createOpts,
+        );
       }
 
       if ("factory" in provider) {
