@@ -1,6 +1,6 @@
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
-import { INJECTOR } from "../internal/symbols.js";
+import { INJECTOR } from "./symbols.js";
 import { type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
 

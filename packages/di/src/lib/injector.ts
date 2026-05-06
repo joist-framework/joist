@@ -1,4 +1,4 @@
-import { SENTINAL } from "../internal/symbols.js";
+import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
 import { readInjector, readMetadata } from "./metadata.js";
 import {

@@ -1,4 +1,4 @@
-import { SENTINAL, INJECTOR } from "../internal/symbols.js";
+import { SENTINAL, INJECTOR } from "./symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
 import { type InjectableMetadata } from "./metadata.js";

@@ -6,7 +6,6 @@
   "module": "./target/lib.js",
   "exports": {
     ".": "./target/lib.js",
-    "./*": "./target/lib/*",
     "./package.json": "./package.json"
   },
   "files": [

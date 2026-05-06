@@ -1,4 +1,4 @@
-import { INJECTOR } from "../../internal/symbols.js";
+import { INJECTOR } from "../symbols.js";
 import { INJECTOR_CTX } from "../context/injector.js";
 import { ContextRequestEvent, type UnknownContext } from "../context/protocol.js";
 import { Injector } from "../injector.js";
