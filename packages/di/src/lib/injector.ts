@@ -133,7 +133,11 @@ export class Injector {
       return this.#createAndCache(token, token.factory, createOpts);
     }
 
-    return this.#createAndCache(token, () => new token(INJECTABLE), createOpts);
+    return this.#createAndCache(
+      token,
+      () => (metadata ? new token(INJECTABLE) : new token()),
+      createOpts,
+    );
   }
 
   clear(): void {
