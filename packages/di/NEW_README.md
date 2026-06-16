@@ -47,7 +47,7 @@ npm i @joist/di
 Here's a simple example to get you started:
 
 ```ts
-import { Injector, injectable, inject } from '@joist/di';
+import { Injector, injectable, inject } from "@joist/di";
 
 // Define a service
 class Logger {
@@ -74,7 +74,7 @@ const app = new Injector();
 const userService = app.inject(UserService);
 
 // Use the service
-userService.createUser('John');
+userService.createUser("John");
 ```
 
 ## Core Concepts
@@ -82,6 +82,7 @@ userService.createUser('John');
 ### Injectors
 
 Injectors are the core of the dependency injection system. They:
+
 - Create and manage service instances
 - Handle dependency resolution
 - Maintain a hierarchy of injectors
@@ -139,29 +140,34 @@ class UserService {
 Providers define how services are created. There are several types of providers:
 
 1. **Class Providers**: The simplest form, just a class
+
 ```ts
 const app = new Injector();
 app.inject(MyService); // Uses MyService class directly
 ```
 
 2. **Factory Providers**: Custom creation logic
+
 ```ts
 const app = new Injector({
-  providers: [[
-    Logger,
-    {
-      factory: (injector) => new CustomLogger(injector)
-    }
-  ]]
+  providers: [
+    [
+      Logger,
+      {
+        factory: (injector) => new CustomLogger(injector),
+      },
+    ],
+  ],
 });
 ```
 
 3. **Static Tokens**: For non-class values
+
 ```ts
-const API_URL = new StaticToken<string>('api_url', () => 'https://api.example.com');
+const API_URL = new StaticToken<string>("api_url", () => "https://api.example.com");
 
 const app = new Injector({
-  providers: [[API_URL, { factory: () => 'https://api.example.com' }]]
+  providers: [[API_URL, { factory: () => "https://api.example.com" }]],
 });
 ```
 
@@ -175,13 +181,19 @@ class MyService {
   @created()
   onCreated(injector: Injector) {
     // Called when the service is first created
-    console.log('Service created');
+    console.log("Service created");
   }
 
   @injected()
   onInjected(injector: Injector) {
     // Called every time the service is injected
-    console.log('Service injected');
+    console.log("Service injected");
+  }
+
+  @destroyed()
+  onDestroyed(injector: Injector) {
+    // Called when the injector is cleared (e.g. for cleanup)
+    console.log("Service destroyed");
   }
 }
 ```
@@ -213,11 +225,11 @@ class MyElement extends HTMLElement {
   #logger = inject(Logger);
 
   connectedCallback() {
-    this.#logger().log('Element connected');
+    this.#logger().log("Element connected");
   }
 }
 
-customElements.define('my-element', MyElement);
+customElements.define("my-element", MyElement);
 ```
 
 ### Async Services
@@ -225,8 +237,8 @@ customElements.define('my-element', MyElement);
 Services can be asynchronous:
 
 ```ts
-const DataService = new StaticToken('data', async () => {
-  const response = await fetch('/api/data');
+const DataService = new StaticToken("data", async () => {
+  const response = await fetch("/api/data");
   return response.json();
 });
 
@@ -248,21 +260,21 @@ Easy mocking and testing support:
 ```ts
 class MockLogger extends Logger {
   logs: string[] = [];
-  
+
   log(message: string) {
     this.logs.push(message);
   }
 }
 
 const testInjector = new Injector({
-  providers: [[Logger, { use: MockLogger }]]
+  providers: [[Logger, { use: MockLogger }]],
 });
 
 const service = testInjector.inject(UserService);
-service.createUser('Test User');
+service.createUser("Test User");
 
 const logger = testInjector.inject(Logger);
-assert(logger.logs.includes('Creating user: Test User'));
+assert(logger.logs.includes("Creating user: Test User"));
 ```
 
 ## API Reference
@@ -272,6 +284,7 @@ assert(logger.logs.includes('Creating user: Test User'));
 - `@injectable(options?: InjectableOptions)`: Marks a class as injectable
 - `@created()`: Lifecycle hook called when service is created
 - `@injected()`: Lifecycle hook called when service is injected
+- `@destroyed()`: Lifecycle hook called when service is destroyed (when the injector is cleared)
 
 ### Classes
 
@@ -308,6 +321,7 @@ assert(logger.logs.includes('Creating user: Test User'));
 Common errors and how to handle them:
 
 1. **Constructor Injection**
+
 ```ts
 // ❌ Wrong
 class MyService {

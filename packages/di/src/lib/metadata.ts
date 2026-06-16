@@ -33,6 +33,7 @@ export interface InjectableMetadata<T> {
   service?: boolean | undefined;
   onCreated?: LifecycleMethod<T>[] | undefined;
   onInjected?: LifecycleMethod<T>[] | undefined;
+  onDestroyed?: LifecycleMethod<T>[] | undefined;
 }
 
 export function readMetadata<T>(target: InjectionToken<T>): InjectableMetadata<T> | null {

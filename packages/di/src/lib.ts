@@ -7,5 +7,5 @@ export {
 } from "./lib/provider.js";
 export { injectable } from "./lib/injectable.js";
 export { inject, create, injectAll, type Injected } from "./lib/inject.js";
-export { injected, created } from "./lib/lifecycle.js";
+export { injected, created, destroyed } from "./lib/lifecycle.js";
 export { DOMInjector } from "./lib/dom/dom-injector.js";

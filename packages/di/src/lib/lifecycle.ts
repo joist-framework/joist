@@ -28,6 +28,17 @@ export function created<T>(condition?: LifecycleCondition<T>) {
   };
 }
 
+export function destroyed<T>(condition?: LifecycleCondition<T>) {
+  return function onDestroyDecorator(
+    val: LifecycleCallback,
+    ctx: ClassMethodDecoratorContext<T>,
+  ): void {
+    const metadata: InjectableMetadata<T> = ctx.metadata;
+    metadata.onDestroyed ??= [];
+    metadata.onDestroyed.push({ callback: val, condition });
+  };
+}
+
 export function callLifecycle(
   instance: object,
   injector: Injector,
