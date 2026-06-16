@@ -14,7 +14,7 @@ export function isCreationContext(value: unknown): value is CreationContext {
     typeof value === "object" &&
     value !== null &&
     "sentinel" in value &&
-    (value as Record<string, unknown>).sentinel === SENTINAL
+    value.sentinel === SENTINAL
   );
 }
 
