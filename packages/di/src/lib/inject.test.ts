@@ -105,7 +105,9 @@ it("should use the calling injector as parent", () => {
 it("should allow you to inject all", () => {
   const TOKEN = new StaticToken("test", () => "Hello World");
 
-  @injectable()
+  @injectable({
+    providers: [[TOKEN, { factory: () => "Override World" }]],
+  })
   class HelloWorld {
     hello = injectAll(TOKEN);
   }
@@ -113,7 +115,7 @@ it("should allow you to inject all", () => {
   const injector = new Injector();
   const instance = injector.inject(HelloWorld);
 
-  assert.deepEqual(instance.hello(), ["Hello World", "Hello World"]);
+  assert.deepEqual(instance.hello(), ["Override World", "Hello World"]);
 });
 
 it("should create non-singleton instances", () => {

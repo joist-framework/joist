@@ -10,9 +10,9 @@ import {
 } from "./provider.js";
 
 export interface InjectorOpts {
-  name?: string;
-  providers?: Iterable<Provider<any>>;
-  parent?: Injector;
+  name?: string | undefined;
+  providers?: Iterable<Provider<any>> | undefined;
+  parent?: Injector | undefined;
 }
 
 export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
@@ -46,6 +46,7 @@ export class Injector {
     this.name = opts?.name;
     this.parent = opts?.parent;
     this.providers = new ProviderMap(opts?.providers);
+    this.providers.set(Injector, { factory: () => this });
   }
 
   injectAll<T>(
@@ -102,7 +103,10 @@ export class Injector {
 
         return this.#createAndCache<T>(
           token,
-          () => (useMetadata ? new provider.use(SENTINAL) : new provider.use()),
+          (i) =>
+            useMetadata
+              ? new provider.use({ sentinel: SENTINAL, injector: i })
+              : new provider.use(),
           createOpts,
         );
       }
@@ -135,7 +139,7 @@ export class Injector {
 
     return this.#createAndCache(
       token,
-      () => (metadata ? new token(SENTINAL) : new token()),
+      (i) => (metadata ? new token({ sentinel: SENTINAL, injector: i }) : new token()),
       createOpts,
     );
   }

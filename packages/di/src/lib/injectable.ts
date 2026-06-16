@@ -1,7 +1,7 @@
-import { SENTINAL, INJECTOR } from "./symbols.js";
+import { INJECTOR } from "./symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
-import { type InjectableMetadata } from "./metadata.js";
+import { type InjectableMetadata, isCreationContext } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
@@ -28,34 +28,43 @@ export function injectable(opts?: InjectableOpts) {
         [INJECTOR]: Injector;
 
         constructor(...args: any[]) {
-          const potentialSentinal = args.at(-1);
+          const creationContext = args.at(-1);
+          const isFromInjector = isCreationContext(creationContext);
 
           // injectable classes should not be instantiated directly.
-          // A sentinal value is passed as the last argument when the injector creates an instance of this class.
-          // If the sentinal value is not present, then we know this class is being instantiated directly and we can throw an error.
+          // A creation context containing the sentinel is passed as the last argument when the injector creates an instance of this class.
+          // If the sentinel is not present, then we know this class is being instantiated directly and we can throw an error.
           // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
-          if (potentialSentinal !== SENTINAL && !isHTMLELementBase) {
+          if (!isFromInjector && !isHTMLELementBase) {
             throw new Error(
               `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
             );
           }
 
-          const finalArgs = args.slice(0, -1); // remove sentinal from arguments list before passing to the decorated class
+          const finalArgs = isFromInjector ? args.slice(0, -1) : args;
 
           super(...finalArgs);
 
-          this[INJECTOR] = new Injector(opts);
+          const parentInjector = isFromInjector ? creationContext.injector : undefined;
 
-          this[INJECTOR].providers.set(Injector, {
-            factory: () => this[INJECTOR],
-          });
+          // Allocate an injector ONLY if this service defines its own local overrides/providers or self provisions
+          if (opts?.providers || opts?.provideSelfAs) {
+            this[INJECTOR] = new Injector({
+              name: opts.name,
+              providers: opts.providers,
+              parent: parentInjector,
+            });
 
-          if (opts?.provideSelfAs) {
-            for (const token of opts.provideSelfAs) {
-              this[INJECTOR].providers.set(token, {
-                factory: () => this,
-              });
+            if (opts.provideSelfAs) {
+              for (const token of opts.provideSelfAs) {
+                this[INJECTOR].providers.set(token, {
+                  factory: () => this,
+                });
+              }
             }
+          } else {
+            // Share the parent injector directly, or fallback to a new injector
+            this[INJECTOR] = parentInjector || new Injector(opts);
           }
         }
       },
