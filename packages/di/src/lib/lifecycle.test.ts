@@ -61,9 +61,29 @@ it("should pass the injector to all lifecycle callbacks", () => {
   const injector = readInjector(service);
 
   assert.equal(service.res[0]!, injector);
-  assert.equal(service.res[0]!.parent, i);
+  assert.equal(service.res[0]!, i); // Optimized: shares root injector directly
   assert.equal(service.res[1]!, injector);
-  assert.equal(service.res[1]!.parent, i);
+  assert.equal(service.res[1]!, i);
+
+  // Test with providers (unoptimized scope)
+  @injectable({
+    name: "MyScopedService",
+    providers: [],
+  })
+  class MyScopedService {
+    res: Injector[] = [];
+
+    @created()
+    onCreated(i: Injector) {
+      this.res.push(i);
+    }
+  }
+
+  const scopedService = i.inject(MyScopedService);
+  const scopedInjector = readInjector(scopedService);
+
+  assert.equal(scopedService.res[0]!, scopedInjector);
+  assert.equal(scopedService.res[0]!.parent, i); // Unoptimized: creates child injector
 });
 
 it("should call onInject any time a service is returned", () => {

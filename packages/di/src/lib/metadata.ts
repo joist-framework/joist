@@ -1,8 +1,22 @@
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
-import { INJECTOR } from "./symbols.js";
+import { INJECTOR, SENTINAL } from "./symbols.js";
 import { type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
+
+export interface CreationContext {
+  sentinel: typeof SENTINAL;
+  injector: Injector;
+}
+
+export function isCreationContext(value: unknown): value is CreationContext {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "sentinel" in value &&
+    value.sentinel === SENTINAL
+  );
+}
 
 export type LifecycleCallback = (i: Injector) => void;
 

@@ -10,9 +10,9 @@ import {
 } from "./provider.js";
 
 export interface InjectorOpts {
-  name?: string;
-  providers?: Iterable<Provider<any>>;
-  parent?: Injector;
+  name?: string | undefined;
+  providers?: Iterable<Provider<any>> | undefined;
+  parent?: Injector | undefined;
 }
 
 export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
@@ -20,19 +20,22 @@ export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
 /**
  * Injectors create and store instances of services.
  * A service is any constructable class.
- * When calling Injector.get, the injector will resolve as following.
+ * When calling Injector.inject, the injector will resolve as follows:
  *
  * 1. Do I have a cached instance locally?
  * 2. Do I have a local provider definition for the token?
- * 3. Do I have a parent? Check parent for 1 and 2
- * 5. All clear, go ahead and construct and cache the requested service
+ * 3. Do I have a parent? Check parent recursively for cached instances or providers.
+ * 4. All clear, go ahead and construct and cache the requested service.
  * ```
  * RootInjector |--> InjectorA |--> InjectorB
  *                             |--> InjectorC
  *                             |--> InjectorD |--> InjectorE
  * ```
- * in the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
- * If Inject B then requests the same token, it will recieve the same cached instance from RootInjector.
+ * In the above tree, if InjectorE requests a service, it will navigate up to the RootInjector and cache.
+ * If InjectorB then requests the same token, it will receive the same cached instance from RootInjector.
+ *
+ * Note: To optimize memory, classes decorated with `@injectable` share their parent injector
+ * directly unless they declare local provider overrides or self-provisions.
  */
 export class Injector {
   // keep track of instances. One Token can have one instance
@@ -46,6 +49,7 @@ export class Injector {
     this.name = opts?.name;
     this.parent = opts?.parent;
     this.providers = new ProviderMap(opts?.providers);
+    this.providers.set(Injector, { factory: () => this });
   }
 
   injectAll<T>(
@@ -102,7 +106,10 @@ export class Injector {
 
         return this.#createAndCache<T>(
           token,
-          () => (useMetadata ? new provider.use(SENTINAL) : new provider.use()),
+          (i) =>
+            useMetadata
+              ? new provider.use({ sentinel: SENTINAL, injector: i })
+              : new provider.use(),
           createOpts,
         );
       }
@@ -135,7 +142,7 @@ export class Injector {
 
     return this.#createAndCache(
       token,
-      () => (metadata ? new token(SENTINAL) : new token()),
+      (i) => (metadata ? new token({ sentinel: SENTINAL, injector: i }) : new token()),
       createOpts,
     );
   }
