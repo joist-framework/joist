@@ -164,7 +164,7 @@ test("should return json", async () => {
 
 ### Service Level Providers
 
-Under the hood, each service decorated with `@injectable()` creates its own injector. This means that it is possible to define providers from that level down.
+Under the hood, a service decorated with `@injectable()` will create its own injector if it defines local `providers` or `provideSelfAs` in its options. This means that it is possible to define providers from that level down, while keeping the injector hierarchy flat and memory-efficient for services that do not require scoped overrides.
 
 The example below will use this particular instance of `Logger` as well as any other services injected into this service.
 
