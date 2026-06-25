@@ -3,7 +3,7 @@ import { assert } from "chai";
 import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
-import { created, injected } from "./lifecycle.js";
+import { created, injected, destroyed } from "./lifecycle.js";
 import { readInjector } from "./metadata.js";
 import type { LifecycleCallback } from "./metadata.js";
 import { StaticToken } from "./provider.js";
@@ -311,4 +311,66 @@ it("should pass the instance to the condition", () => {
 
   const service = i.inject(MyService);
   assert.equal(service.count, 0); // not called because instance.enabled is false
+});
+
+it("should call onDestroyed when the injector is cleared", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    destroyedCount = 0;
+
+    @destroyed()
+    onDestroy() {
+      this.destroyedCount++;
+    }
+  }
+
+  const service = i.inject(MyService);
+  assert.equal(service.destroyedCount, 0);
+
+  i.clear();
+  assert.equal(service.destroyedCount, 1);
+});
+
+it("should pass the injector to the onDestroyed callback", () => {
+  const i = new Injector();
+  let passedInjector: Injector | null = null;
+
+  @injectable()
+  class MyService {
+    @destroyed()
+    onDestroy(inj: Injector) {
+      passedInjector = inj;
+    }
+  }
+
+  i.inject(MyService);
+  i.clear();
+
+  assert.strictEqual(passedInjector, i);
+});
+
+it("should respect conditions on the @destroyed hook", () => {
+  const i = new Injector();
+
+  @injectable()
+  class MyService {
+    destroyedCount = 0;
+    shouldDestroy = false;
+
+    @destroyed(({ instance }) => ({ enabled: instance.shouldDestroy }))
+    onDestroy() {
+      this.destroyedCount++;
+    }
+  }
+
+  const service = i.inject(MyService);
+  i.clear();
+  assert.equal(service.destroyedCount, 0); // shouldDestroy was false
+
+  const service2 = i.inject(MyService);
+  service2.shouldDestroy = true;
+  i.clear();
+  assert.equal(service2.destroyedCount, 1); // shouldDestroy was true
 });

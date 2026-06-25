@@ -344,6 +344,11 @@ class MyService {
   onInjected() {
     // Called every time a service is returned, whether it is from cache or not
   }
+
+  @destroyed()
+  onDestroyed() {
+    // Called when the injector is cleared
+  }
 }
 ```
 

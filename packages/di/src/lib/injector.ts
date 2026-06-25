@@ -39,7 +39,7 @@ export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
  */
 export class Injector {
   // keep track of instances. One Token can have one instance
-  #instances = new WeakMap<InjectionToken<any>, any>();
+  #instances = new Map<InjectionToken<any>, any>();
 
   name?: string | undefined;
   parent?: Injector | undefined;
@@ -148,7 +148,15 @@ export class Injector {
   }
 
   clear(): void {
-    this.#instances = new WeakMap();
+    for (const [token, instance] of this.#instances.entries()) {
+      const metadata = readMetadata(token);
+
+      if (metadata) {
+        callLifecycle(instance ?? this, this, metadata.onDestroyed);
+      }
+    }
+
+    this.#instances.clear();
   }
 
   #createAndCache<T>(
