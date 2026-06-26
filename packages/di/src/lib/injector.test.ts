@@ -3,7 +3,7 @@ import { assert } from "chai";
 import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
-import { StaticToken } from "./provider.js";
+import { StaticToken, type Provider } from "./provider.js";
 
 it("should create a new instance of a single provider", () => {
   class A {}
@@ -161,13 +161,12 @@ it("should throw an error if provider is missing use, factory, and value", () =>
     }
   }
 
-  const injector = new Injector({
-    providers: [[Service, {} as any]],
-  });
-
   assert.throws(
-    () => injector.inject(Service),
-    "Provider for Service found but is missing either 'use', 'factory', or 'value'",
+    () =>
+      new Injector({
+        providers: [[Service, {} as any]],
+      }),
+    "Provider for Service is missing 'use', 'factory', or 'value'",
   );
 });
 
@@ -256,6 +255,69 @@ it("should allow you to get ALL available instances in a particular injector cha
   const res = injector.injectAll(TOKEN);
 
   assert.deepEqual(res, ["first", "second", "third", "fourth"]);
+});
+
+it("should allow getting multiple providers for the same token on the same injector", () => {
+  const TOKEN = new StaticToken<string>("TOKEN");
+
+  const injector = new Injector({
+    providers: [
+      [TOKEN, { factory: () => "first" }],
+      [TOKEN, { factory: () => "second" }],
+      [TOKEN, { factory: () => "third" }],
+      [TOKEN, { factory: () => "fourth" }],
+    ],
+  });
+
+  const res = injector.injectAll(TOKEN);
+
+  assert.deepEqual(res, ["first", "second", "third", "fourth"]);
+});
+
+// Including this test because it highlights a strange behavior, I think it's the least surprising though.
+// It's a direct consequence of the expectation that an override will not remove the original from the tree,
+// but just order it later.
+it("should inject the default factory for tokens when using multiple providers", () => {
+  const TOKEN = new StaticToken<string>("TOKEN", () => "default");
+
+  const injector = new Injector({
+    providers: [
+      [TOKEN, { factory: () => "first" }],
+      [TOKEN, { factory: () => "second" }],
+      [TOKEN, { factory: () => "third" }],
+      [TOKEN, { factory: () => "fourth" }],
+    ],
+  });
+
+  const res = injector.injectAll(TOKEN);
+
+  assert.deepEqual(res, [
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "default",
+    "default",
+    "default",
+    "default",
+  ]);
+});
+
+// This test documents a difference from `inject`. When using `injectAll`, if you allow inserting providers to the injector on creation,
+// it gets very confusing *which* injectors to insert the provider on. Just the parent? All injectors? Just the child? We sidestep this
+// by explicitly only taking provided injectors when injecting all.
+it("should include not default injector for injectAll when no other injectors found", () => {
+  class A {}
+
+  @injectable()
+  class MyService {
+    a = inject(A);
+  }
+
+  const app = new Injector();
+  const instances = app.injectAll(MyService);
+
+  assert(instances.length === 0);
 });
 
 it("should respect skipParent option when injecting", () => {
