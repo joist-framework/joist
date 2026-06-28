@@ -1,21 +1,13 @@
-import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
-import { readInjector, readMetadata } from "./metadata.js";
-import {
-  type InjectionToken,
-  type Provider,
-  type ProviderDef,
-  type ProviderFactory,
-  StaticToken,
-} from "./provider.js";
+import { readMetadata } from "./metadata.js";
+import type { InjectionToken, Provider } from "./provider.js";
+import { EntryFilter, InjectorCache, InjectorCacheEntry } from "./injector-cache.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
   providers?: Iterable<Provider<any>> | undefined;
   parent?: Injector | undefined;
 }
-
-export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
 
 /**
  * Injectors create and store instances of services.
@@ -39,41 +31,65 @@ export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
  */
 export class Injector {
   // keep track of instances. One Token can have one instance
-  #instances = new WeakMap<InjectionToken<any>, any>();
+  protected _cache = new InjectorCache(this);
 
   name?: string | undefined;
   parent?: Injector | undefined;
-  providers: ProviderMap;
 
   constructor(opts?: InjectorOpts) {
     this.name = opts?.name;
     this.parent = opts?.parent;
-    this.providers = new ProviderMap(opts?.providers);
-    this.providers.set(Injector, { factory: () => this });
+    for (const provider of opts?.providers ?? []) {
+      this._cache.add(provider);
+    }
   }
 
   injectAll<T>(
     token: InjectionToken<T>,
-    opts?: { ignoreParent?: boolean; singleton?: boolean },
-    collection: T[] = [],
+    opts?: {
+      ignoreParent?: boolean | undefined;
+      ignoreSelf?: boolean | undefined;
+      singleton?: boolean | undefined;
+    },
   ): T[] {
-    collection.push(this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }));
+    const metadata = readMetadata<T>(token);
 
-    if (this.parent) {
-      return this.parent.injectAll<T>(token, opts, collection);
+    if (metadata?.service === false && opts?.singleton !== false) {
+      throw new Error(
+        `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use create.`,
+      );
     }
 
-    return collection;
+    const ret: T[] = [];
+
+    // Check for providers or instantiated instances
+    const providerIter = this.#iter(token, opts);
+    let next = providerIter.next();
+    while (!next.done) {
+      ret.push(next.value.getOrInstantiate(opts));
+      next = providerIter.next();
+    }
+
+    if (metadata) {
+      for (const instance of ret) {
+        callLifecycle(instance ?? this, this, metadata.onInjected);
+      }
+    }
+    return ret;
   }
 
   create<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean }): T {
     return this.inject<T>(token, { ignoreParent: opts?.ignoreParent, singleton: false });
   }
 
-  // resolves and retuns and instance of the requested service
+  // resolves and returns and instance of the requested service
   inject<T>(
     token: InjectionToken<T>,
-    opts?: { ignoreParent?: boolean | undefined; singleton?: boolean | undefined },
+    opts?: {
+      ignoreParent?: boolean | undefined;
+      ignoreSelf?: boolean | undefined;
+      singleton?: boolean | undefined;
+    },
   ): T {
     const metadata = readMetadata<T>(token);
 
@@ -83,116 +99,95 @@ export class Injector {
       );
     }
 
-    // check for a local instance
-    if (opts?.singleton !== false && this.#instances.has(token)) {
-      const instance = this.#instances.get(token);
-
-      const injector = readInjector(instance);
-
-      if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
-      }
-
-      return instance;
+    let instance: T;
+    // Check for providers or instantiated instances
+    const firstInstanceOrProvider = this.#iter(token, opts).next();
+    if (!firstInstanceOrProvider.done) {
+      instance = firstInstanceOrProvider.value.getOrInstantiate(opts);
+    } else {
+      // Otherwise add to top of tree
+      instance = firstInstanceOrProvider.value._cache.addToken(token).getOrInstantiate(opts);
     }
 
-    const provider = this.providers.get(token);
-    const createOpts = { singleton: opts?.singleton !== false };
-
-    // check for a provider definition
-    if (provider) {
-      if ("use" in provider) {
-        const useMetadata = readMetadata<T>(provider.use);
-
-        return this.#createAndCache<T>(
-          token,
-          (i) =>
-            useMetadata
-              ? new provider.use({ sentinel: SENTINAL, injector: i })
-              : new provider.use(),
-          createOpts,
-        );
-      }
-
-      if ("factory" in provider) {
-        return this.#createAndCache<T>(token, provider.factory, createOpts);
-      }
-
-      if ("value" in provider) {
-        return this.#createAndCache<T>(token, () => provider.value, createOpts);
-      }
-
-      throw new Error(
-        `Provider for ${token.name} found but is missing either 'use', 'factory', or 'value'`,
-      );
+    if (metadata) {
+      callLifecycle(instance ?? this, this, metadata.onInjected);
     }
-
-    // check for a parent and attempt to get there
-    if (this.parent && opts?.ignoreParent !== true) {
-      return this.parent.inject(token, opts);
-    }
-
-    if (token instanceof StaticToken) {
-      if (!token.factory) {
-        throw new Error(`Provider not found for "${token.name}"`);
-      }
-
-      return this.#createAndCache(token, token.factory, createOpts);
-    }
-
-    return this.#createAndCache(
-      token,
-      (i) => (metadata ? new token({ sentinel: SENTINAL, injector: i }) : new token()),
-      createOpts,
-    );
+    return instance;
   }
 
   clear(): void {
-    this.#instances = new WeakMap();
+    this._cache.clear();
   }
 
-  #createAndCache<T>(
+  /**
+   * Adds a token to the injector
+   */
+  add<T>(token: InjectionToken<T>): void;
+  /**
+   * Adds a value to the injector
+   */
+  add<T>(token: InjectionToken<T>, value: T): void;
+  /**
+   * Adds a provider to the injector
+   */
+  add<T>(provider: Provider<T>): void;
+  /**
+   * Adds a token or provider to the injector
+   */
+  add<T>(tokenOrProvider: Provider<T> | InjectionToken<T>, value?: T): void {
+    this._cache.add(tokenOrProvider, value);
+  }
+
+  /**
+   *
+   * @param token Injection token to iterate through
+   * @param opts.ignoreParent Skip checking any parents
+   * @param opts.ignoreSelf Skip checking self
+   * @yields {@link InjectorCacheEntry<T>} while iterating
+   * @returns `{done: true, value: Injector}` where `value` is the last {@link injector} visited when done iterating
+   */
+  *#iter<T>(
     token: InjectionToken<T>,
-    factory: ProviderFactory<T>,
-    opts: { singleton: boolean },
-  ): T {
-    const instance = factory(this);
-
-    if (opts.singleton !== false) {
-      this.#instances.set(token, instance);
+    opts?: { ignoreParent?: boolean | undefined; ignoreSelf?: boolean | undefined },
+  ): Generator<InjectorCacheEntry<T>, Injector> {
+    const providerTreeIter = iterInjectorTree(this, opts);
+    let next = providerTreeIter.next();
+    while (next.done !== true) {
+      const row = next.value._cache.get(token);
+      if (row !== undefined) {
+        for (const provider of row) {
+          yield provider;
+        }
+      }
+      next = providerTreeIter.next();
     }
-
-    /**
-     * Only values that are objects are able to have associated injectors
-     */
-    const injector = readInjector(instance);
-
-    if (!injector) {
-      return instance;
-    }
-
-    if (injector !== this) {
-      /**
-       * set the this injector instance as a parent.
-       * This should ONLY happen in the injector is not self. This would cause an infinite loop.
-       * this means that each calling injector will be the parent of what it creates.
-       * this allows the created service to navigate up it's chain to find a root
-       */
-      injector.parent = this;
-    }
-
-    /**
-     * the onInject and onInit lifecycle hook should be called after the parent is defined.
-     * this ensures that services are initialized when the chain is settled
-     * this is required since the parent is set after the instance is constructed
-     */
-    const metadata = readMetadata<T>(token);
-
-    if (metadata) {
-      callLifecycle(instance ?? this, injector, metadata.onCreated);
-      callLifecycle(instance ?? this, injector, metadata.onInjected);
-    }
-
-    return instance;
+    return next.value;
   }
+}
+
+function* iterInjectorTree(
+  injector: Injector,
+  opts?: { ignoreParent?: boolean | undefined; ignoreSelf?: boolean | undefined },
+) {
+  // Ignore self + parent = ignore all, immediately return
+  if (opts?.ignoreSelf === true && opts.ignoreParent === true) {
+    return injector;
+  }
+  // if ignore self, skip ahead, if there's no parent, return
+  if (opts?.ignoreSelf === true) {
+    if (injector.parent == undefined) {
+      return injector;
+    }
+    injector = injector.parent;
+  }
+  yield injector;
+  if (opts?.ignoreParent === true) {
+    return injector;
+  }
+  while (injector.parent !== undefined) {
+    injector = injector.parent;
+    yield injector;
+  }
+  // allow last injector to be retrievable after iterating
+  return injector;
 }

@@ -57,9 +57,7 @@ export function injectable(opts?: InjectableOpts) {
 
             if (opts.provideSelfAs) {
               for (const token of opts.provideSelfAs) {
-                this[INJECTOR].providers.set(token, {
-                  factory: () => this,
-                });
+                this[INJECTOR].add(token, this);
               }
             }
           } else {
