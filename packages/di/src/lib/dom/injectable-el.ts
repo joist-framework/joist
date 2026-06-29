@@ -34,8 +34,8 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
 
       connectedCallback() {
         this.dispatchEvent(
-          new ContextRequestEvent(INJECTOR_CTX, (ctx) => {
-            this[INJECTOR].parent = ctx;
+          new ContextRequestEvent(INJECTOR_CTX, (injector) => {
+            this[INJECTOR] = injector;
           }),
         );
 
