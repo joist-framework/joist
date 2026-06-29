@@ -102,7 +102,7 @@ it("should use the calling injector as parent", () => {
   assert.strictEqual(parent.inject(BarService).foo().value, "100");
 });
 
-it("should allow you to inject all", () => {
+it("should allow you to inject all defined providers", () => {
   const defaultVal = { message: "Hello World" };
   const overrideVal = { message: "Override World" };
 
@@ -119,8 +119,8 @@ it("should allow you to inject all", () => {
   const instance = injector.inject(HelloWorld);
 
   const res = instance.hello();
+  assert.equal(res.length, 1);
   assert.strictEqual(res[0], overrideVal);
-  assert.strictEqual(res[1], defaultVal);
 });
 
 it("should create non-singleton instances", () => {

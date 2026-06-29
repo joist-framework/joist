@@ -54,17 +54,15 @@ export class Injector {
 
   injectAll<T>(
     token: InjectionToken<T>,
-    opts?: { ignoreParent?: boolean; singleton?: boolean },
+    opts?: { singleton?: boolean },
     collection: T[] = [],
   ): T[] {
     const providers = this.providers.get(token);
 
-    if (providers.length > 0) {
-      for (const provider of providers) {
-        collection.push(this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }));
-      }
-    } else {
-      collection.push(this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }));
+    for (const provider of providers) {
+      collection.push(
+        this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }),
+      );
     }
 
     if (this.parent) {

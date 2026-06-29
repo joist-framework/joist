@@ -549,4 +549,48 @@ describe("Injector", () => {
     assert.strictEqual(res[1], res2[1]);
     assert.strictEqual(res[2], res2[2]);
   });
+
+  it("should not crash when injectAll is called on a StaticToken with no local providers but parent providers exist", () => {
+    const TOKEN = new StaticToken<{ value: string }>("no-local-parent-exists-test");
+    const parent = new Injector({
+      providers: [[TOKEN, { factory: () => ({ value: "parent" }) }]],
+    });
+    const child = new Injector({
+      parent,
+    });
+
+    const res = child.injectAll(TOKEN);
+    assert.deepEqual(res, [{ value: "parent" }]);
+  });
+
+  it("should return an empty array when calling injectAll on an injectable class with no explicit providers, and not pollute the child injector", () => {
+    @injectable()
+    class TestService {
+      static count = 0;
+      id = ++TestService.count;
+    }
+
+    const parent = new Injector();
+    const child = new Injector({ parent });
+
+    // 1. Resolve on child (should delegate and cache on parent)
+    const firstInject = child.inject(TestService);
+
+    // 2. Call injectAll (should return [] because there are no explicit providers, and not create a child instance)
+    const injectAllRes = child.injectAll(TestService);
+    assert.deepEqual(injectAllRes, []);
+
+    // 3. Resolve subsequent inject (should still be parent instance)
+    const secondInject = child.inject(TestService);
+    assert.strictEqual(secondInject, firstInject);
+  });
+
+  it("should safely return an empty array when calling injectAll on a StaticToken with no providers", () => {
+    const TOKEN = new StaticToken<{ value: string }>("optional-extension-token");
+    const parent = new Injector();
+    const child = new Injector({ parent });
+
+    const res = child.injectAll(TOKEN);
+    assert.deepEqual(res, []);
+  });
 });
