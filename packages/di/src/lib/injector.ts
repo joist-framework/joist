@@ -15,7 +15,36 @@ export interface InjectorOpts {
   parent?: Injector | undefined;
 }
 
-export class ProviderMap extends Map<InjectionToken<any>, ProviderDef<any>> {}
+export class ProviderMap {
+  #store: Map<InjectionToken<any>, ProviderDef<any>[]> = new Map();
+
+  constructor(entries?: Iterable<Provider<any>> | undefined | null) {
+    if (entries) {
+      for (const [key, value] of entries) {
+        const providers = this.get(key);
+        providers.push(value);
+      }
+    }
+  }
+
+  set(key: InjectionToken<any>, value: ProviderDef<any>): this {
+    const providers = this.get(key);
+    providers.push(value);
+
+    return this;
+  }
+
+  get(key: InjectionToken<any>): ProviderDef<any>[] {
+    let providers = this.#store.get(key);
+
+    if (!providers) {
+      providers = [];
+      this.#store.set(key, providers);
+    }
+
+    return providers;
+  }
+}
 
 /**
  * Injectors create and store instances of services.
@@ -96,7 +125,7 @@ export class Injector {
       return instance;
     }
 
-    const provider = this.providers.get(token);
+    const [provider] = this.providers.get(token);
     const createOpts = { singleton: opts?.singleton !== false };
 
     // check for a provider definition
