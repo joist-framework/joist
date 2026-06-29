@@ -2,6 +2,7 @@ import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
 import { readInjector, readMetadata } from "./metadata.js";
 import {
+  type ConstructableToken,
   type InjectionToken,
   type Provider,
   type ProviderDef,
@@ -60,14 +61,10 @@ export class Injector {
 
     if (providers.length > 0) {
       for (const provider of providers) {
-        collection.push(
-          this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }),
-        );
+        collection.push(this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }));
       }
     } else {
-      collection.push(
-        this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }),
-      );
+      collection.push(this.inject<T>(token, { ignoreParent: true, singleton: opts?.singleton }));
     }
 
     if (this.parent) {
@@ -94,8 +91,7 @@ export class Injector {
       );
     }
 
-    const providers = this.providers.get(token);
-    const provider = providers[0];
+    const [provider] = this.providers.get(token);
 
     // check for a provider definition
     if (provider) {
@@ -104,15 +100,7 @@ export class Injector {
 
     // check for a local instance (when no provider definition is present)
     if (opts?.singleton !== false && this.#instances.has(token)) {
-      const instance = this.#instances.get(token);
-
-      const injector = readInjector(instance);
-
-      if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
-      }
-
-      return instance;
+      return this.#getCachedInstance<T>(token, metadata);
     }
 
     // check for a parent and attempt to get there
@@ -130,12 +118,7 @@ export class Injector {
       return this.#createAndCache(token, token.factory, createOpts, token);
     }
 
-    return this.#createAndCache(
-      token,
-      (i) => (metadata ? new token({ sentinel: SENTINAL, injector: i }) : new token()),
-      createOpts,
-      token,
-    );
+    return this.#createAndCache(token, this.#construct(token, metadata), createOpts, token);
   }
 
   clear(): void {
@@ -150,15 +133,7 @@ export class Injector {
     const metadata = readMetadata<T>(token);
 
     if (opts?.singleton !== false && this.#instances.has(provider)) {
-      const instance = this.#instances.get(provider);
-
-      const injector = readInjector(instance);
-
-      if (metadata) {
-        callLifecycle(instance, injector ?? this, metadata.onInjected);
-      }
-
-      return instance;
+      return this.#getCachedInstance<T>(provider, metadata);
     }
 
     const createOpts = { singleton: opts?.singleton !== false };
@@ -168,10 +143,7 @@ export class Injector {
 
       return this.#createAndCache<T>(
         provider,
-        (i) =>
-          useMetadata
-            ? new provider.use({ sentinel: SENTINAL, injector: i })
-            : new provider.use(),
+        this.#construct(provider.use, useMetadata),
         createOpts,
         token,
       );
@@ -234,5 +206,27 @@ export class Injector {
     }
 
     return instance;
+  }
+
+  #getCachedInstance<T>(
+    cacheKey: InjectionToken<T> | ProviderDef<T>,
+    metadata: ReturnType<typeof readMetadata<T>>,
+  ): T {
+    const instance = this.#instances.get(cacheKey);
+
+    const injector = readInjector(instance);
+
+    if (metadata) {
+      callLifecycle(instance, injector ?? this, metadata.onInjected);
+    }
+
+    return instance;
+  }
+
+  #construct<T>(
+    ctor: ConstructableToken<T>,
+    metadata: ReturnType<typeof readMetadata<T>>,
+  ): ProviderFactory<T> {
+    return (injector) => (metadata ? new ctor({ sentinel: SENTINAL, injector }) : new ctor());
   }
 }

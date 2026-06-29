@@ -5,503 +5,527 @@ import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
 
-it("should create a new instance of a single provider", () => {
-  class A {}
+describe("Injector", () => {
+  it("should create a new instance of a single provider", () => {
+    class A {}
 
-  const app = new Injector();
+    const app = new Injector();
 
-  assert(app.inject(A) instanceof A);
+    assert(app.inject(A) instanceof A);
 
-  assert.equal(app.inject(A), app.inject(A));
-});
-
-it("should inject providers in the correct order", () => {
-  class A {}
-  class B {}
-
-  @injectable()
-  class MyService {
-    a = inject(A);
-    b = inject(B);
-  }
-
-  const app = new Injector();
-  const instance = app.inject(MyService);
-
-  assert(instance.a() instanceof A);
-  assert(instance.b() instanceof B);
-});
-
-it("should create a new instance of a provider that has a full dep tree", () => {
-  class A {}
-
-  @injectable()
-  class B {
-    a = inject(A);
-  }
-
-  @injectable()
-  class C {
-    b = inject(B);
-  }
-
-  @injectable()
-  class D {
-    c = inject(C);
-  }
-
-  @injectable()
-  class E {
-    d = inject(D);
-  }
-
-  const app = new Injector();
-  const instance = app.inject(E);
-
-  assert(instance.d().c().b().a() instanceof A);
-});
-
-it("should override a provider if explicitly instructed", () => {
-  class A {}
-
-  @injectable()
-  class B {
-    a = inject(A);
-  }
-
-  class AltA extends A {}
-  const app = new Injector({
-    providers: [[A, { use: AltA }]],
+    assert.equal(app.inject(A), app.inject(A));
   });
 
-  assert(app.inject(B).a() instanceof AltA);
-});
+  it("should inject providers in the correct order", () => {
+    class A {}
+    class B {}
 
-it("should return an existing instance from a parent injector", () => {
-  class A {}
-
-  const parent = new Injector();
-
-  const app = new Injector({
-    parent,
-  });
-
-  assert.equal(parent.inject(A), app.inject(A));
-});
-
-it("should use a factory if provided", () => {
-  class Service {
-    hello() {
-      return "world";
+    @injectable()
+    class MyService {
+      a = inject(A);
+      b = inject(B);
     }
-  }
 
-  const injector = new Injector({
-    providers: [
-      [
-        Service,
-        {
-          factory() {
-            return {
-              hello() {
-                return "world";
-              },
-            };
+    const app = new Injector();
+    const instance = app.inject(MyService);
+
+    assert(instance.a() instanceof A);
+    assert(instance.b() instanceof B);
+  });
+
+  it("should create a new instance of a provider that has a full dep tree", () => {
+    class A {}
+
+    @injectable()
+    class B {
+      a = inject(A);
+    }
+
+    @injectable()
+    class C {
+      b = inject(B);
+    }
+
+    @injectable()
+    class D {
+      c = inject(C);
+    }
+
+    @injectable()
+    class E {
+      d = inject(D);
+    }
+
+    const app = new Injector();
+    const instance = app.inject(E);
+
+    assert(instance.d().c().b().a() instanceof A);
+  });
+
+  it("should override a provider if explicitly instructed", () => {
+    class A {}
+
+    @injectable()
+    class B {
+      a = inject(A);
+    }
+
+    class AltA extends A {}
+    const app = new Injector({
+      providers: [[A, { use: AltA }]],
+    });
+
+    assert(app.inject(B).a() instanceof AltA);
+  });
+
+  it("should return an existing instance from a parent injector", () => {
+    class A {}
+
+    const parent = new Injector();
+
+    const app = new Injector({
+      parent,
+    });
+
+    assert.equal(parent.inject(A), app.inject(A));
+  });
+
+  it("should use a factory if provided", () => {
+    class Service {
+      hello() {
+        return "world";
+      }
+    }
+
+    const injector = new Injector({
+      providers: [
+        [
+          Service,
+          {
+            factory() {
+              return {
+                hello() {
+                  return "world";
+                },
+              };
+            },
           },
-        },
+        ],
       ],
-    ],
+    });
+
+    assert.equal(injector.inject(Service).hello(), "world");
   });
 
-  assert.equal(injector.inject(Service).hello(), "world");
-});
-
-it("should use a value if provided", () => {
-  class Service {
-    hello() {
-      return "world";
+  it("should use a value if provided", () => {
+    class Service {
+      hello() {
+        return "world";
+      }
     }
-  }
 
-  const instance = new Service();
+    const instance = new Service();
 
-  const injector = new Injector({
-    providers: [[Service, { value: instance }]],
+    const injector = new Injector({
+      providers: [[Service, { value: instance }]],
+    });
+
+    assert.equal(injector.inject(Service), instance);
   });
 
-  assert.equal(injector.inject(Service), instance);
-});
+  it("should return the same value instance on repeated injection", () => {
+    class Service {}
 
-it("should return the same value instance on repeated injection", () => {
-  class Service {}
+    const instance = new Service();
 
-  const instance = new Service();
+    const injector = new Injector({
+      providers: [[Service, { value: instance }]],
+    });
 
-  const injector = new Injector({
-    providers: [[Service, { value: instance }]],
+    assert.equal(injector.inject(Service), injector.inject(Service));
   });
 
-  assert.equal(injector.inject(Service), injector.inject(Service));
-});
+  it("should use a value for a StaticToken", () => {
+    const TOKEN = new StaticToken<string>("test");
 
-it("should use a value for a StaticToken", () => {
-  const TOKEN = new StaticToken<string>("test");
+    const injector = new Injector({
+      providers: [[TOKEN, { value: "hello" }]],
+    });
 
-  const injector = new Injector({
-    providers: [[TOKEN, { value: "hello" }]],
+    assert.equal(injector.inject(TOKEN), "hello");
   });
 
-  assert.equal(injector.inject(TOKEN), "hello");
-});
-
-it("should throw an error if provider is missing use, factory, and value", () => {
-  class Service {
-    hello() {
-      return "world";
+  it("should throw an error if provider is missing use, factory, and value", () => {
+    class Service {
+      hello() {
+        return "world";
+      }
     }
-  }
 
-  const injector = new Injector({
-    providers: [[Service, {} as any]],
+    const injector = new Injector({
+      providers: [[Service, {} as any]],
+    });
+
+    assert.throws(
+      () => injector.inject(Service),
+      "Provider for Service found but is missing either 'use', 'factory', or 'value'",
+    );
   });
 
-  assert.throws(
-    () => injector.inject(Service),
-    "Provider for Service found but is missing either 'use', 'factory', or 'value'",
-  );
-});
-
-it("should pass factories and instance of the injector", async () => {
-  class Service {
-    hello() {
-      return "world";
+  it("should pass factories and instance of the injector", async () => {
+    class Service {
+      hello() {
+        return "world";
+      }
     }
-  }
 
-  let factoryInjector: Injector | null = null;
+    let factoryInjector: Injector | null = null;
 
-  const injector = new Injector({
-    providers: [
-      [
-        Service,
-        {
-          factory(i) {
-            factoryInjector = i;
+    const injector = new Injector({
+      providers: [
+        [
+          Service,
+          {
+            factory(i) {
+              factoryInjector = i;
+            },
           },
-        },
+        ],
       ],
-    ],
+    });
+
+    injector.inject(Service);
+
+    assert.equal(factoryInjector, injector);
   });
 
-  injector.inject(Service);
+  it("should create an instance from a StaticToken factory", () => {
+    const TOKEN = new StaticToken("test", () => "Hello World");
+    const injector = new Injector();
 
-  assert.equal(factoryInjector, injector);
-});
+    const res = injector.inject(TOKEN);
 
-it("should create an instance from a StaticToken factory", () => {
-  const TOKEN = new StaticToken("test", () => "Hello World");
-  const injector = new Injector();
+    assert.equal(res, "Hello World");
+  });
 
-  const res = injector.inject(TOKEN);
+  it("should create an instance from an async StaticToken factory", async () => {
+    const TOKEN = new StaticToken("test", async () => "Hello World");
+    const injector = new Injector();
 
-  assert.equal(res, "Hello World");
-});
+    const res = await injector.inject(TOKEN);
 
-it("should create an instance from an async StaticToken factory", async () => {
-  const TOKEN = new StaticToken("test", async () => "Hello World");
-  const injector = new Injector();
+    assert.equal(res, "Hello World");
+  });
 
-  const res = await injector.inject(TOKEN);
+  it("should allow static token to be overridden", () => {
+    const TOKEN = new StaticToken<string>("test");
 
-  assert.equal(res, "Hello World");
-});
-
-it("should allow static token to be overridden", () => {
-  const TOKEN = new StaticToken<string>("test");
-
-  const injector = new Injector({
-    providers: [
-      [
-        TOKEN,
-        {
-          factory() {
-            return "Hello World";
+    const injector = new Injector({
+      providers: [
+        [
+          TOKEN,
+          {
+            factory() {
+              return "Hello World";
+            },
           },
-        },
+        ],
       ],
-    ],
+    });
+
+    const res = injector.inject(TOKEN);
+
+    assert.equal(res, "Hello World");
   });
 
-  const res = injector.inject(TOKEN);
+  it("should allow you to get ALL available instances in a particular injector chain", () => {
+    const TOKEN = new StaticToken<string>("TOKEN");
 
-  assert.equal(res, "Hello World");
-});
-
-it("should allow you to get ALL available instances in a particular injector chain", () => {
-  const TOKEN = new StaticToken<string>("TOKEN");
-
-  const injector = new Injector({
-    providers: [[TOKEN, { factory: () => "first" }]],
-    parent: new Injector({
-      providers: [[TOKEN, { factory: () => "second" }]],
+    const injector = new Injector({
+      providers: [[TOKEN, { factory: () => "first" }]],
       parent: new Injector({
-        providers: [[TOKEN, { factory: () => "third" }]],
+        providers: [[TOKEN, { factory: () => "second" }]],
         parent: new Injector({
-          providers: [[TOKEN, { factory: () => "fourth" }]],
+          providers: [[TOKEN, { factory: () => "third" }]],
+          parent: new Injector({
+            providers: [[TOKEN, { factory: () => "fourth" }]],
+          }),
         }),
       }),
-    }),
+    });
+
+    const res = injector.injectAll(TOKEN);
+
+    assert.deepEqual(res, ["first", "second", "third", "fourth"]);
   });
 
-  const res = injector.injectAll(TOKEN);
+  it("should respect skipParent option when injecting", () => {
+    class Service {
+      value = "child";
+    }
 
-  assert.deepEqual(res, ["first", "second", "third", "fourth"]);
-});
-
-it("should respect skipParent option when injecting", () => {
-  class Service {
-    value = "child";
-  }
-
-  const parent = new Injector({
-    providers: [
-      [
-        Service,
-        {
-          use: class extends Service {
-            value = "parent";
+    const parent = new Injector({
+      providers: [
+        [
+          Service,
+          {
+            use: class extends Service {
+              value = "parent";
+            },
           },
-        },
+        ],
       ],
-    ],
+    });
+
+    const child = new Injector({ parent });
+
+    // Without skipParent, should get parent's instance
+    assert.equal(child.inject(Service).value, "parent");
+
+    // With skipParent, should get child's instance
+    assert.equal(child.inject(Service, { ignoreParent: true }).value, "child");
   });
 
-  const child = new Injector({ parent });
+  it("should handle skipParent with static tokens", () => {
+    const TOKEN = new StaticToken("test", () => "child-value");
 
-  // Without skipParent, should get parent's instance
-  assert.equal(child.inject(Service).value, "parent");
+    const parent = new Injector({
+      providers: [[TOKEN, { factory: () => "parent-value" }]],
+    });
 
-  // With skipParent, should get child's instance
-  assert.equal(child.inject(Service, { ignoreParent: true }).value, "child");
-});
+    const child = new Injector({ parent });
 
-it("should handle skipParent with static tokens", () => {
-  const TOKEN = new StaticToken("test", () => "child-value");
+    // Without skipParent, should get parent's value
+    assert.equal(child.inject(TOKEN), "parent-value");
 
-  const parent = new Injector({
-    providers: [[TOKEN, { factory: () => "parent-value" }]],
+    // With skipParent, should get child's value
+    assert.equal(child.inject(TOKEN, { ignoreParent: true }), "child-value");
   });
 
-  const child = new Injector({ parent });
+  it("should handle StaticToken with null/undefined factory", () => {
+    const TOKEN = new StaticToken<string | null>("test");
+    const injector = new Injector();
 
-  // Without skipParent, should get parent's value
-  assert.equal(child.inject(TOKEN), "parent-value");
-
-  // With skipParent, should get child's value
-  assert.equal(child.inject(TOKEN, { ignoreParent: true }), "child-value");
-});
-
-it("should handle StaticToken with null/undefined factory", () => {
-  const TOKEN = new StaticToken<string | null>("test");
-  const injector = new Injector();
-
-  assert.throws(() => injector.inject(TOKEN), 'Provider not found for "test"');
-});
-
-it("should handle StaticToken factory throwing errors", () => {
-  const TOKEN = new StaticToken<string>("test", () => {
-    throw new Error("Factory error");
+    assert.throws(() => injector.inject(TOKEN), 'Provider not found for "test"');
   });
-  const injector = new Injector();
 
-  assert.throws(() => injector.inject(TOKEN), "Factory error");
-});
+  it("should handle StaticToken factory throwing errors", () => {
+    const TOKEN = new StaticToken<string>("test", () => {
+      throw new Error("Factory error");
+    });
+    const injector = new Injector();
 
-it("should create a non singleton instance", () => {
-  class A {}
+    assert.throws(() => injector.inject(TOKEN), "Factory error");
+  });
 
-  const app = new Injector();
+  it("should create a non singleton instance", () => {
+    class A {}
 
-  assert(app.inject(A) instanceof A);
+    const app = new Injector();
 
-  assert.notEqual(app.inject(A, { singleton: false }), app.inject(A, { singleton: false }));
-});
+    assert(app.inject(A) instanceof A);
 
-it("should forward singleton option to parent injector", () => {
-  class Service {}
+    assert.notEqual(app.inject(A, { singleton: false }), app.inject(A, { singleton: false }));
+  });
 
-  const parent = new Injector();
-  const child = new Injector({ parent });
+  it("should forward singleton option to parent injector", () => {
+    class Service {}
 
-  const a = child.inject(Service, { singleton: false });
-  const b = child.inject(Service, { singleton: false });
+    const parent = new Injector();
+    const child = new Injector({ parent });
 
-  assert.notEqual(a, b);
-});
+    const a = child.inject(Service, { singleton: false });
+    const b = child.inject(Service, { singleton: false });
 
-it("should assign injector name from options", () => {
-  const app = new Injector({ name: "app" });
+    assert.notEqual(a, b);
+  });
 
-  assert.equal(app.name, "app");
-});
+  it("should assign injector name from options", () => {
+    const app = new Injector({ name: "app" });
 
-it("should create a new instance each time with create", () => {
-  class Service {}
+    assert.equal(app.name, "app");
+  });
 
-  const app = new Injector();
+  it("should create a new instance each time with create", () => {
+    class Service {}
 
-  const first = app.create(Service);
-  const second = app.create(Service);
+    const app = new Injector();
 
-  assert(first instanceof Service);
-  assert(second instanceof Service);
-  assert.notEqual(first, second);
-});
+    const first = app.create(Service);
+    const second = app.create(Service);
 
-it("should respect ignoreParent option in create", () => {
-  class Service {
-    value = "child";
-  }
+    assert(first instanceof Service);
+    assert(second instanceof Service);
+    assert.notEqual(first, second);
+  });
 
-  const parent = new Injector({
-    providers: [
-      [
-        Service,
-        {
-          use: class extends Service {
-            value = "parent";
+  it("should respect ignoreParent option in create", () => {
+    class Service {
+      value = "child";
+    }
+
+    const parent = new Injector({
+      providers: [
+        [
+          Service,
+          {
+            use: class extends Service {
+              value = "parent";
+            },
           },
-        },
+        ],
       ],
-    ],
+    });
+
+    const child = new Injector({ parent });
+
+    // Without ignoreParent, should create new instance from parent's provider
+    const parentInstance = child.create(Service);
+    assert.equal(parentInstance.value, "parent");
+
+    // With ignoreParent, should create new instance from child's provider
+    const childInstance = child.create(Service, { ignoreParent: true });
+    assert.equal(childInstance.value, "child");
   });
 
-  const child = new Injector({ parent });
+  it("should throw when a non-service token is injected as a singleton", () => {
+    @injectable({ service: false })
+    class NonService {}
 
-  // Without ignoreParent, should create new instance from parent's provider
-  const parentInstance = child.create(Service);
-  assert.equal(parentInstance.value, "parent");
+    const app = new Injector();
 
-  // With ignoreParent, should create new instance from child's provider
-  const childInstance = child.create(Service, { ignoreParent: true });
-  assert.equal(childInstance.value, "child");
-});
-
-it("should throw when a non-service token is injected as a singleton", () => {
-  @injectable({ service: false })
-  class NonService {}
-
-  const app = new Injector();
-
-  assert.throws(
-    () => app.inject(NonService),
-    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use create.`,
-  );
-});
-
-it("should allow a non-service token to be injected with singleton: false", () => {
-  @injectable({ service: false })
-  class NonService {}
-
-  const app = new Injector();
-
-  const instance = app.inject(NonService, { singleton: false });
-
-  assert(instance instanceof NonService);
-});
-
-it("should allow multiple non-singleton instances of a non-service token", () => {
-  @injectable({ service: false })
-  class NonService {}
-
-  const app = new Injector();
-
-  const a = app.inject(NonService, { singleton: false });
-  const b = app.inject(NonService, { singleton: false });
-
-  assert(a instanceof NonService);
-  assert(b instanceof NonService);
-  assert.notEqual(a, b);
-});
-
-it("should maintain separate cached instances for each unique ProviderDef under the same token", () => {
-  const TOKEN = new StaticToken<string>("multi-test");
-
-  const provider1 = { factory: () => "first-instance" };
-  const provider2 = { factory: () => "second-instance" };
-
-  const injector = new Injector({
-    providers: [
-      [TOKEN, provider1],
-      [TOKEN, provider2],
-    ],
+    assert.throws(
+      () => app.inject(NonService),
+      `Token NonService is marked as non-service and cannot be injected as a singleton. Please use create.`,
+    );
   });
 
-  // inject should return the first provider's instance by default
-  const res1 = injector.inject(TOKEN);
-  assert.equal(res1, "first-instance");
+  it("should allow a non-service token to be injected with singleton: false", () => {
+    @injectable({ service: false })
+    class NonService {}
 
-  // injectAll should retrieve instances for both provider definitions
-  const all = injector.injectAll(TOKEN);
-  assert.deepEqual(all, ["first-instance", "second-instance"]);
+    const app = new Injector();
 
-  // Subsequent call to inject/injectAll should return the same cached instances
-  assert.equal(injector.inject(TOKEN), "first-instance");
-  assert.deepEqual(injector.injectAll(TOKEN), ["first-instance", "second-instance"]);
-});
+    const instance = app.inject(NonService, { singleton: false });
 
-it("should clear cached instances of provider definitions when clear is called", () => {
-  const TOKEN = new StaticToken<{ name: string }>("clear-test");
-
-  const provider1 = { factory: () => ({ name: "first" }) };
-  const provider2 = { factory: () => ({ name: "second" }) };
-
-  const injector = new Injector({
-    providers: [
-      [TOKEN, provider1],
-      [TOKEN, provider2],
-    ],
+    assert(instance instanceof NonService);
   });
 
-  const [a1, a2] = injector.injectAll(TOKEN);
-  assert.equal(a1!.name, "first");
-  assert.equal(a2!.name, "second");
+  it("should allow multiple non-singleton instances of a non-service token", () => {
+    @injectable({ service: false })
+    class NonService {}
 
-  // Verify caching
-  const [b1, b2] = injector.injectAll(TOKEN);
-  assert.strictEqual(a1, b1);
-  assert.strictEqual(a2, b2);
+    const app = new Injector();
 
-  // Clear cache
-  injector.clear();
+    const a = app.inject(NonService, { singleton: false });
+    const b = app.inject(NonService, { singleton: false });
 
-  // New instances should be created
-  const [c1, c2] = injector.injectAll(TOKEN);
-  assert.notStrictEqual(a1, c1);
-  assert.notStrictEqual(a2, c2);
-  assert.equal(c1!.name, "first");
-  assert.equal(c2!.name, "second");
-});
-
-it("should handle mixed parent-child provider definitions correctly with injectAll", () => {
-  const TOKEN = new StaticToken<string>("mixed-test");
-
-  const childProvider1 = { factory: () => "child-1" };
-  const childProvider2 = { factory: () => "child-2" };
-  const parentProvider1 = { factory: () => "parent-1" };
-
-  const parent = new Injector({
-    providers: [[TOKEN, parentProvider1]],
+    assert(a instanceof NonService);
+    assert(b instanceof NonService);
+    assert.notEqual(a, b);
   });
 
-  const child = new Injector({
-    parent,
-    providers: [
-      [TOKEN, childProvider1],
-      [TOKEN, childProvider2],
-    ],
+  it("should maintain separate cached instances for each unique ProviderDef under the same token", () => {
+    const TOKEN = new StaticToken<string>("multi-test");
+
+    const provider1 = { factory: () => "first-instance" };
+    const provider2 = { factory: () => "second-instance" };
+
+    const injector = new Injector({
+      providers: [
+        [TOKEN, provider1],
+        [TOKEN, provider2],
+      ],
+    });
+
+    // inject should return the first provider's instance by default
+    const res1 = injector.inject(TOKEN);
+    assert.equal(res1, "first-instance");
+
+    // injectAll should retrieve instances for both provider definitions
+    const all = injector.injectAll(TOKEN);
+    assert.deepEqual(all, ["first-instance", "second-instance"]);
+
+    // Subsequent call to inject/injectAll should return the same cached instances
+    assert.equal(injector.inject(TOKEN), "first-instance");
+    assert.deepEqual(injector.injectAll(TOKEN), ["first-instance", "second-instance"]);
   });
 
-  const res = child.injectAll(TOKEN);
-  assert.deepEqual(res, ["child-1", "child-2", "parent-1"]);
+  it("should work with multiple value providers under the same token", () => {
+    const TOKEN = new StaticToken<string>("multi-value-test");
+
+    const provider1 = { value: "first-value" };
+    const provider2 = { value: "second-value" };
+
+    const injector = new Injector({
+      providers: [
+        [TOKEN, provider1],
+        [TOKEN, provider2],
+      ],
+    });
+
+    // inject should return the first provider's value by default
+    const res1 = injector.inject(TOKEN);
+    assert.equal(res1, "first-value");
+
+    // injectAll should retrieve values for both provider definitions
+    const all = injector.injectAll(TOKEN);
+    assert.deepEqual(all, ["first-value", "second-value"]);
+  });
+
+  it("should clear cached instances of provider definitions when clear is called", () => {
+    const TOKEN = new StaticToken<{ name: string }>("clear-test");
+
+    const provider1 = { factory: () => ({ name: "first" }) };
+    const provider2 = { factory: () => ({ name: "second" }) };
+
+    const injector = new Injector({
+      providers: [
+        [TOKEN, provider1],
+        [TOKEN, provider2],
+      ],
+    });
+
+    const [a1, a2] = injector.injectAll(TOKEN);
+    assert.equal(a1!.name, "first");
+    assert.equal(a2!.name, "second");
+
+    // Verify caching
+    const [b1, b2] = injector.injectAll(TOKEN);
+    assert.strictEqual(a1, b1);
+    assert.strictEqual(a2, b2);
+
+    // Clear cache
+    injector.clear();
+
+    // New instances should be created
+    const [c1, c2] = injector.injectAll(TOKEN);
+    assert.notStrictEqual(a1, c1);
+    assert.notStrictEqual(a2, c2);
+    assert.equal(c1!.name, "first");
+    assert.equal(c2!.name, "second");
+  });
+
+  it("should handle mixed parent-child provider definitions correctly with injectAll", () => {
+    const TOKEN = new StaticToken<string>("mixed-test");
+
+    const childProvider1 = { factory: () => "child-1" };
+    const childProvider2 = { factory: () => "child-2" };
+    const parentProvider1 = { factory: () => "parent-1" };
+
+    const parent = new Injector({
+      providers: [[TOKEN, parentProvider1]],
+    });
+
+    const child = new Injector({
+      parent,
+      providers: [
+        [TOKEN, childProvider1],
+        [TOKEN, childProvider2],
+      ],
+    });
+
+    const res = child.injectAll(TOKEN);
+    assert.deepEqual(res, ["child-1", "child-2", "parent-1"]);
+  });
 });
