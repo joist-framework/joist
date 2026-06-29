@@ -423,3 +423,85 @@ it("should allow multiple non-singleton instances of a non-service token", () =>
   assert(b instanceof NonService);
   assert.notEqual(a, b);
 });
+
+it("should maintain separate cached instances for each unique ProviderDef under the same token", () => {
+  const TOKEN = new StaticToken<string>("multi-test");
+
+  const provider1 = { factory: () => "first-instance" };
+  const provider2 = { factory: () => "second-instance" };
+
+  const injector = new Injector({
+    providers: [
+      [TOKEN, provider1],
+      [TOKEN, provider2],
+    ],
+  });
+
+  // inject should return the first provider's instance by default
+  const res1 = injector.inject(TOKEN);
+  assert.equal(res1, "first-instance");
+
+  // injectAll should retrieve instances for both provider definitions
+  const all = injector.injectAll(TOKEN);
+  assert.deepEqual(all, ["first-instance", "second-instance"]);
+
+  // Subsequent call to inject/injectAll should return the same cached instances
+  assert.equal(injector.inject(TOKEN), "first-instance");
+  assert.deepEqual(injector.injectAll(TOKEN), ["first-instance", "second-instance"]);
+});
+
+it("should clear cached instances of provider definitions when clear is called", () => {
+  const TOKEN = new StaticToken<{ name: string }>("clear-test");
+
+  const provider1 = { factory: () => ({ name: "first" }) };
+  const provider2 = { factory: () => ({ name: "second" }) };
+
+  const injector = new Injector({
+    providers: [
+      [TOKEN, provider1],
+      [TOKEN, provider2],
+    ],
+  });
+
+  const [a1, a2] = injector.injectAll(TOKEN);
+  assert.equal(a1!.name, "first");
+  assert.equal(a2!.name, "second");
+
+  // Verify caching
+  const [b1, b2] = injector.injectAll(TOKEN);
+  assert.strictEqual(a1, b1);
+  assert.strictEqual(a2, b2);
+
+  // Clear cache
+  injector.clear();
+
+  // New instances should be created
+  const [c1, c2] = injector.injectAll(TOKEN);
+  assert.notStrictEqual(a1, c1);
+  assert.notStrictEqual(a2, c2);
+  assert.equal(c1!.name, "first");
+  assert.equal(c2!.name, "second");
+});
+
+it("should handle mixed parent-child provider definitions correctly with injectAll", () => {
+  const TOKEN = new StaticToken<string>("mixed-test");
+
+  const childProvider1 = { factory: () => "child-1" };
+  const childProvider2 = { factory: () => "child-2" };
+  const parentProvider1 = { factory: () => "parent-1" };
+
+  const parent = new Injector({
+    providers: [[TOKEN, parentProvider1]],
+  });
+
+  const child = new Injector({
+    parent,
+    providers: [
+      [TOKEN, childProvider1],
+      [TOKEN, childProvider2],
+    ],
+  });
+
+  const res = child.injectAll(TOKEN);
+  assert.deepEqual(res, ["child-1", "child-2", "parent-1"]);
+});
