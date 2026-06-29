@@ -426,10 +426,10 @@ describe("Injector", () => {
   });
 
   it("should maintain separate cached instances for each unique ProviderDef under the same token", () => {
-    const TOKEN = new StaticToken<string>("multi-test");
+    const TOKEN = new StaticToken<{ name: string }>("multi-test");
 
-    const provider1 = { factory: () => "first-instance" };
-    const provider2 = { factory: () => "second-instance" };
+    const provider1 = { factory: () => ({ name: "first-instance" }) };
+    const provider2 = { factory: () => ({ name: "second-instance" }) };
 
     const injector = new Injector({
       providers: [
@@ -440,22 +440,32 @@ describe("Injector", () => {
 
     // inject should return the first provider's instance by default
     const res1 = injector.inject(TOKEN);
-    assert.equal(res1, "first-instance");
+    assert.deepEqual(res1, { name: "first-instance" });
 
     // injectAll should retrieve instances for both provider definitions
     const all = injector.injectAll(TOKEN);
-    assert.deepEqual(all, ["first-instance", "second-instance"]);
+    assert.deepEqual(all, [
+      { name: "first-instance" },
+      { name: "second-instance" },
+    ]);
 
     // Subsequent call to inject/injectAll should return the same cached instances
-    assert.equal(injector.inject(TOKEN), "first-instance");
-    assert.deepEqual(injector.injectAll(TOKEN), ["first-instance", "second-instance"]);
+    const res2 = injector.inject(TOKEN);
+    assert.strictEqual(res1, res2);
+
+    const all2 = injector.injectAll(TOKEN);
+    assert.strictEqual(all[0], all2[0]);
+    assert.strictEqual(all[1], all2[1]);
   });
 
   it("should work with multiple value providers under the same token", () => {
-    const TOKEN = new StaticToken<string>("multi-value-test");
+    const TOKEN = new StaticToken<{ value: string }>("multi-value-test");
 
-    const provider1 = { value: "first-value" };
-    const provider2 = { value: "second-value" };
+    const val1 = { value: "first-value" };
+    const val2 = { value: "second-value" };
+
+    const provider1 = { value: val1 };
+    const provider2 = { value: val2 };
 
     const injector = new Injector({
       providers: [
@@ -466,11 +476,12 @@ describe("Injector", () => {
 
     // inject should return the first provider's value by default
     const res1 = injector.inject(TOKEN);
-    assert.equal(res1, "first-value");
+    assert.strictEqual(res1, val1);
 
     // injectAll should retrieve values for both provider definitions
     const all = injector.injectAll(TOKEN);
-    assert.deepEqual(all, ["first-value", "second-value"]);
+    assert.strictEqual(all[0], val1);
+    assert.strictEqual(all[1], val2);
   });
 
   it("should clear cached instances of provider definitions when clear is called", () => {
@@ -507,11 +518,11 @@ describe("Injector", () => {
   });
 
   it("should handle mixed parent-child provider definitions correctly with injectAll", () => {
-    const TOKEN = new StaticToken<string>("mixed-test");
+    const TOKEN = new StaticToken<{ value: string }>("mixed-test");
 
-    const childProvider1 = { factory: () => "child-1" };
-    const childProvider2 = { factory: () => "child-2" };
-    const parentProvider1 = { factory: () => "parent-1" };
+    const childProvider1 = { factory: () => ({ value: "child-1" }) };
+    const childProvider2 = { factory: () => ({ value: "child-2" }) };
+    const parentProvider1 = { factory: () => ({ value: "parent-1" }) };
 
     const parent = new Injector({
       providers: [[TOKEN, parentProvider1]],
@@ -526,6 +537,16 @@ describe("Injector", () => {
     });
 
     const res = child.injectAll(TOKEN);
-    assert.deepEqual(res, ["child-1", "child-2", "parent-1"]);
+    assert.deepEqual(res, [
+      { value: "child-1" },
+      { value: "child-2" },
+      { value: "parent-1" },
+    ]);
+
+    // Check caching/reference identity
+    const res2 = child.injectAll(TOKEN);
+    assert.strictEqual(res[0], res2[0]);
+    assert.strictEqual(res[1], res2[1]);
+    assert.strictEqual(res[2], res2[2]);
   });
 });
