@@ -4,46 +4,15 @@ import { readInjector, readMetadata } from "./metadata.js";
 import {
   type InjectionToken,
   type Provider,
-  type ProviderDef,
   type ProviderFactory,
   StaticToken,
 } from "./provider.js";
+import { ProviderStore } from "./provider-store.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
   providers?: Iterable<Provider<any>> | undefined;
   parent?: Injector | undefined;
-}
-
-export class ProviderMap {
-  #store: Map<InjectionToken<any>, ProviderDef<any>[]> = new Map();
-
-  constructor(entries?: Iterable<Provider<any>> | undefined | null) {
-    if (entries) {
-      for (const [key, value] of entries) {
-        const providers = this.get(key);
-        providers.push(value);
-      }
-    }
-  }
-
-  set(key: InjectionToken<any>, value: ProviderDef<any>): this {
-    const providers = this.get(key);
-    providers.push(value);
-
-    return this;
-  }
-
-  get(key: InjectionToken<any>): ProviderDef<any>[] {
-    let providers = this.#store.get(key);
-
-    if (!providers) {
-      providers = [];
-      this.#store.set(key, providers);
-    }
-
-    return providers;
-  }
 }
 
 /**
@@ -72,12 +41,12 @@ export class Injector {
 
   name?: string | undefined;
   parent?: Injector | undefined;
-  providers: ProviderMap;
+  providers: ProviderStore;
 
   constructor(opts?: InjectorOpts) {
     this.name = opts?.name;
     this.parent = opts?.parent;
-    this.providers = new ProviderMap(opts?.providers);
+    this.providers = new ProviderStore(opts?.providers);
     this.providers.set(Injector, { factory: () => this });
   }
 
