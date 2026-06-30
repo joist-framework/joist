@@ -81,14 +81,14 @@ export class Injector {
   ): T {
     const metadata = readMetadata<T>(token);
 
+    if (opts?.singleton !== false && this.#instances.has(token)) {
+      return this.#getCachedInstance<T>(token, metadata);
+    }
+
     if (metadata?.service === false && opts?.singleton !== false) {
       throw new Error(
         `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use create.`,
       );
-    }
-
-    if (opts?.singleton !== false && this.#instances.has(token)) {
-      return this.#getCachedInstance<T>(token, metadata);
     }
 
     const [provider] = this.providers.get(token);
