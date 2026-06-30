@@ -55,6 +55,12 @@
     "typescript": "6.0.3",
     "wireit": "^0.14.0"
   },
+  "overrides": {
+    "mocha": {
+      "diff": "^8.0.3",
+      "serialize-javascript": "^7.0.5"
+    }
+  },
   "lint-staged": {
     "*.{js,css,md,html}": "prettier --write"
   }
