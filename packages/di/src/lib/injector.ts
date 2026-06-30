@@ -87,19 +87,16 @@ export class Injector {
       );
     }
 
-    const [provider] = this.providers.get(token);
-
-    // check for a provider definition
-    if (provider) {
-      return this.#resolveProvider<T>(token, provider, opts);
-    }
-
-    // check for a local instance (when no provider definition is present)
     if (opts?.singleton !== false && this.#instances.has(token)) {
       return this.#getCachedInstance<T>(token, metadata);
     }
 
-    // check for a parent and attempt to get there
+    const [provider] = this.providers.get(token);
+
+    if (provider) {
+      return this.#resolveProvider<T>(token, provider, opts);
+    }
+
     if (this.parent && opts?.ignoreParent !== true) {
       return this.parent.inject(token, opts);
     }
