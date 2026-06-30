@@ -256,7 +256,7 @@ describe("Injector", () => {
 
     const res = injector.injectAll(TOKEN);
 
-    assert.deepEqual(res, ["first", "second", "third", "fourth"]);
+    assert.deepEqual(res, ["fourth", "third", "second", "first"]);
   });
 
   it("should respect skipParent option when injecting", () => {
@@ -538,9 +538,9 @@ describe("Injector", () => {
 
     const res = child.injectAll(TOKEN);
     assert.deepEqual(res, [
+      { value: "parent-1" },
       { value: "child-1" },
       { value: "child-2" },
-      { value: "parent-1" },
     ]);
 
     // Check caching/reference identity

@@ -57,16 +57,14 @@ export class Injector {
     opts?: { singleton?: boolean },
     collection: T[] = [],
   ): T[] {
+    if (this.parent) {
+      this.parent.injectAll<T>(token, opts, collection);
+    }
+
     const providers = this.providers.get(token);
 
     for (const provider of providers) {
-      collection.push(
-        this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }),
-      );
-    }
-
-    if (this.parent) {
-      return this.parent.injectAll<T>(token, opts, collection);
+      collection.push(this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }));
     }
 
     return collection;
