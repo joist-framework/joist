@@ -75,4 +75,53 @@ describe("ProviderStore", () => {
     providers1.push({ value: "mutated" });
     assert.deepEqual(store.get(token), [{ value: "mutated" }]);
   });
+
+  it("should be able to be iterated directly", () => {
+    class ServiceA {}
+    const token1 = new StaticToken<string>("test1");
+
+    const entries: Provider<any>[] = [
+      [token1, { value: "hello" }],
+      [ServiceA, { use: ServiceA }],
+      [token1, { value: "hello-again" }],
+    ];
+
+    const store = new ProviderStore(entries);
+
+    const res = [];
+
+    for (const entry of store) {
+      res.push(entry);
+    }
+
+    assert.deepEqual(res, [
+      [token1, [{ value: "hello" }, { value: "hello-again" }]],
+      [ServiceA, [{ use: ServiceA }]],
+    ]);
+  });
+
+  it("should return an iterator that resolves each provide individually", () => {
+    class ServiceA {}
+    const token1 = new StaticToken<string>("test1");
+
+    const entries: Provider<any>[] = [
+      [token1, { value: "hello" }],
+      [ServiceA, { use: ServiceA }],
+      [token1, { value: "hello-again" }],
+    ];
+
+    const store = new ProviderStore(entries);
+
+    const res = [];
+
+    for (const entry of store.providers()) {
+      res.push(entry);
+    }
+
+    assert.deepEqual(res, [
+      [token1, { value: "hello" }],
+      [token1, { value: "hello-again" }],
+      [ServiceA, { use: ServiceA }],
+    ]);
+  });
 });

@@ -34,4 +34,18 @@ export class ProviderStore {
 
     return providers;
   }
+
+  *[Symbol.iterator]() {
+    for (const entry of this.#providers.entries()) {
+      yield entry;
+    }
+  }
+
+  *providers() {
+    for (const [token, providers] of this.#providers.entries()) {
+      for (const provider of providers) {
+        yield [token, provider];
+      }
+    }
+  }
 }
