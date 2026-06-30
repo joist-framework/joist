@@ -87,12 +87,7 @@ describe("ProviderStore", () => {
     ];
 
     const store = new ProviderStore(entries);
-
-    const res = [];
-
-    for (const entry of store) {
-      res.push(entry);
-    }
+    const res = [...store];
 
     assert.deepEqual(res, [
       [token1, [{ value: "hello" }, { value: "hello-again" }]],
@@ -111,12 +106,7 @@ describe("ProviderStore", () => {
     ];
 
     const store = new ProviderStore(entries);
-
-    const res = [];
-
-    for (const entry of store.providers()) {
-      res.push(entry);
-    }
+    const res = [...store.providers()];
 
     assert.deepEqual(res, [
       [token1, { value: "hello" }],
