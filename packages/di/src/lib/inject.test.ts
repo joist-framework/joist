@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-import { inject, injectAll } from "./inject.js";
+import { inject, injectAll, create } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
@@ -130,6 +130,21 @@ it("should create non-singleton instances", () => {
   @injectable()
   class HelloWorld {
     hello = inject(Hello, { singleton: false });
+  }
+
+  const injector = new Injector();
+  const instance = injector.inject(HelloWorld);
+
+  assert.notEqual(instance.hello(), instance.hello());
+});
+
+it("should create non-singleton instances using create helper", () => {
+  @injectable()
+  class Hello {}
+
+  @injectable()
+  class HelloWorld {
+    hello = create(Hello);
   }
 
   const injector = new Injector();

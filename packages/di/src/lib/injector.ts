@@ -74,7 +74,7 @@ export class Injector {
     return this.inject<T>(token, { ignoreParent: opts?.ignoreParent, singleton: false });
   }
 
-  // resolves and retuns and instance of the requested service
+  // resolves and returns an instance of the requested service
   inject<T>(
     token: InjectionToken<T>,
     opts?: { ignoreParent?: boolean | undefined; singleton?: boolean | undefined },
@@ -190,9 +190,9 @@ export class Injector {
     }
 
     /**
-     * the onInject and onInit lifecycle hook should be called after the parent is defined.
-     * this ensures that services are initialized when the chain is settled
-     * this is required since the parent is set after the instance is constructed
+     * The onInjected and onCreated lifecycle hooks should be called after the parent is defined.
+     * This ensures that services are initialized when the chain is settled.
+     * This is required since the parent is set after the instance is constructed.
      */
     const metadata = readMetadata<T>(token);
 
