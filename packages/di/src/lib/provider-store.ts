@@ -36,13 +36,13 @@ export class ProviderStore {
   }
 
   *[Symbol.iterator]() {
-    for (const entry of this.#providers.entries()) {
+    for (const entry of this.#providers) {
       yield entry;
     }
   }
 
   *providers() {
-    for (const [token, providers] of this.#providers.entries()) {
+    for (const [token, providers] of this.#providers) {
       for (const provider of providers) {
         yield [token, provider];
       }
