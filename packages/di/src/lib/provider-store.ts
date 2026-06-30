@@ -41,7 +41,7 @@ export class ProviderStore {
     }
   }
 
-  *providers() {
+  *providers(): Generator<[InjectionToken<any>, ProviderDef<any>], void, unknown> {
     for (const [token, providers] of this.#providers) {
       for (const provider of providers) {
         yield [token, provider];
