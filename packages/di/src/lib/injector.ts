@@ -52,22 +52,8 @@ export class Injector {
     this.providers.set(Injector, { factory: () => this });
   }
 
-  injectAll<T>(
-    token: InjectionToken<T>,
-    opts?: { singleton?: boolean },
-    collection: T[] = [],
-  ): T[] {
-    const providers = this.providers.get(token);
-
-    for (const provider of providers) {
-      collection.push(this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }));
-    }
-
-    if (this.parent) {
-      this.parent.injectAll<T>(token, opts, collection);
-    }
-
-    return collection;
+  injectAll<T>(token: InjectionToken<T>, opts?: { singleton?: boolean }): T[] {
+    return this.#injectAll(token, opts, []);
   }
 
   create<T>(token: InjectionToken<T>, opts?: { ignoreParent?: boolean }): T {
@@ -116,6 +102,24 @@ export class Injector {
 
   clear(): void {
     this.#instances = new WeakMap();
+  }
+
+  #injectAll<T>(
+    token: InjectionToken<T>,
+    opts?: { singleton?: boolean },
+    collection: T[] = [],
+  ): T[] {
+    const providers = this.providers.get(token);
+
+    for (const provider of providers) {
+      collection.push(this.#resolveProvider<T>(token, provider, { singleton: opts?.singleton }));
+    }
+
+    if (this.parent) {
+      this.parent.#injectAll<T>(token, opts, collection);
+    }
+
+    return collection;
   }
 
   #resolveProvider<T>(
