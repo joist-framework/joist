@@ -41,11 +41,17 @@ export function readMetadata<T>(target: InjectionToken<T>): InjectableMetadata<T
   return metadata;
 }
 
-export function readInjector<T>(target: T): Injector | null {
+function isInjectable(target: unknown): target is { [INJECTOR]: Injector } {
   if (typeof target === "object" && target !== null) {
-    if (INJECTOR in target) {
-      return target[INJECTOR] as Injector;
-    }
+    return INJECTOR in target;
+  }
+
+  return false;
+}
+
+export function readInjector<T>(target: T): Injector | null {
+  if (isInjectable(target)) {
+    return target[INJECTOR];
   }
 
   return null;

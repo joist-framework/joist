@@ -30,7 +30,7 @@ export function create<T>(
  */
 export function injectAll<T>(
   token: InjectionToken<T>,
-  opts?: { singleton: boolean },
+  opts?: { singleton?: boolean },
 ): Injected<T[]> {
   return internalInject((i) => i.injectAll(token, opts));
 }
