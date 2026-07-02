@@ -255,7 +255,7 @@ it("should allow you to get ALL available instances in a particular injector cha
 
   const res = injector.injectAll(TOKEN);
 
-  assert.deepEqual(res, ["fourth", "third", "second", "first"]);
+  assert.deepEqual(res, ["first", "second", "third", "fourth"]);
 });
 
 it("should respect skipParent option when injecting", () => {
@@ -533,7 +533,7 @@ it("should handle mixed parent-child provider definitions correctly with injectA
   });
 
   const res = child.injectAll(TOKEN);
-  assert.deepEqual(res, [{ value: "parent-1" }, { value: "child-1" }, { value: "child-2" }]);
+  assert.deepEqual(res, [{ value: "child-1" }, { value: "child-2" }, { value: "parent-1" }]);
 
   // Check caching/reference identity
   const res2 = child.injectAll(TOKEN);
