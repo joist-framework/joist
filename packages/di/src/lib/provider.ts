@@ -3,6 +3,10 @@ import type { Injector } from "./injector.js";
 export type ProviderFactory<T> = (injector: Injector) => T;
 
 export class StaticToken<T> {
+  static optional<T>(name: string): StaticToken<T | null> {
+    return new StaticToken<T | null>(name, () => null);
+  }
+
   #name: string;
   #factory?: ProviderFactory<T> | undefined;
 
