@@ -4,6 +4,7 @@ import { readInjector, readMetadata } from "./metadata.js";
 import {
   type ConstructableToken,
   type InjectionToken,
+  isStaticToken,
   type Provider,
   type ProviderDef,
   type ProviderFactory,
@@ -89,7 +90,7 @@ export class Injector {
 
     const createOpts = { singleton: opts?.singleton !== false };
 
-    if (token instanceof StaticToken) {
+    if (isStaticToken(token)) {
       if (!token.factory) {
         throw new Error(`Provider not found for "${token.name}"`);
       }
