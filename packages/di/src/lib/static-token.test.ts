@@ -22,14 +22,14 @@ describe("StaticToken", () => {
 
   describe("optional", () => {
     it("should create an optional StaticToken", () => {
-      const token = StaticToken.optional<string>("OPT_TOKEN");
+      const token = StaticToken.nullable<string>("OPT_TOKEN");
 
       assert.instanceOf(token, StaticToken);
       assert.equal(token.name, "OPT_TOKEN");
     });
 
     it("should have a default factory that returns null", () => {
-      const token = StaticToken.optional<string>("OPT_TOKEN");
+      const token = StaticToken.nullable<string>("OPT_TOKEN");
 
       assert.isNull(token.factory?.(new Injector()));
     });

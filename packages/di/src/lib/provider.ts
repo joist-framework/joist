@@ -9,7 +9,7 @@ export function isStaticToken(token: unknown): token is StaticToken<unknown> {
 }
 
 export class StaticToken<T> {
-  static optional<T>(name: string): StaticToken<T | null> {
+  static nullable<T>(name: string): StaticToken<T | null> {
     return new StaticToken<T | null>(name, () => null);
   }
 
