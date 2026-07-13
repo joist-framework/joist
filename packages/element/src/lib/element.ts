@@ -1,9 +1,10 @@
+import { injectable, type InjectableOpts } from "@joist/di";
 import { define } from "./define.js";
 import type { DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";
 import type { ShadowResult } from "./result.js";
 
-export interface ElementOpts extends Partial<DefineOpts> {
+export interface ElementOpts extends Partial<DefineOpts>, InjectableOpts {
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -22,102 +23,105 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
     });
 
-    const def = {
-      [Base.name]: class extends Base {
-        static observedAttributes: string[] = Array.from(meta.attrs.keys());
+    @injectable(opts)
+    class JoistHTMLElement extends Base {
+      static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
-        #abortController: AbortController | null = null;
+      static get name() {
+        return Base.name;
+      }
 
-        constructor(...args: any[]) {
-          super(...args);
+      #abortController: AbortController | null = null;
 
-          if (opts?.shadowDom) {
-            if (!this.shadowRoot) {
-              this.attachShadow(opts.shadowDomOpts ?? { mode: "open" });
-            }
+      constructor(...args: any[]) {
+        super(...args);
 
-            for (const res of opts.shadowDom) {
-              res.apply(this);
-            }
+        if (opts?.shadowDom) {
+          if (!this.shadowRoot) {
+            this.attachShadow(opts.shadowDomOpts ?? { mode: "open" });
           }
 
-          for (const cb of meta.onReady) {
-            cb.call(this);
-          }
-        }
-
-        attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-          const attr = meta.attrs.get(name);
-          const cbs = meta.attrChanges.get(name);
-
-          if (attr) {
-            if (oldValue !== newValue) {
-              const sourceValue = attr.access.get.call(this);
-              let value: string | number | boolean = newValue;
-
-              if (typeof sourceValue === "boolean") {
-                // treat as boolean
-                value = newValue !== null;
-              } else if (typeof sourceValue === "number") {
-                // treat as number
-                value = Number(newValue);
-              }
-
-              attr.access.set.call(this, value);
-            }
-
-            if (cbs) {
-              for (const cb of cbs) {
-                cb.call(this, name, oldValue, newValue);
-              }
-            }
-
-            if (attr.observe) {
-              if (super.attributeChangedCallback) {
-                super.attributeChangedCallback(name, oldValue, newValue);
-              }
-            }
+          for (const res of opts.shadowDom) {
+            res.apply(this);
           }
         }
 
-        connectedCallback() {
-          if (!this.#abortController) {
-            this.#abortController = new AbortController();
+        for (const cb of meta.onReady) {
+          cb.call(this);
+        }
+      }
 
-            for (const { event, cb, selector } of meta.listeners) {
-              const root = selector(this);
+      attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        const attr = meta.attrs.get(name);
+        const cbs = meta.attrChanges.get(name);
 
-              if (root) {
-                root.addEventListener(event, cb.bind(this), {
-                  signal: this.#abortController.signal,
-                });
-              } else {
-                throw new Error(`could not add listener to ${root}`);
-              }
+        if (attr) {
+          if (oldValue !== newValue) {
+            const sourceValue = attr.access.get.call(this);
+            let value: string | number | boolean = newValue;
+
+            if (typeof sourceValue === "boolean") {
+              // treat as boolean
+              value = newValue !== null;
+            } else if (typeof sourceValue === "number") {
+              // treat as number
+              value = Number(newValue);
+            }
+
+            attr.access.set.call(this, value);
+          }
+
+          if (cbs) {
+            for (const cb of cbs) {
+              cb.call(this, name, oldValue, newValue);
             }
           }
 
-          reflectAttributeValues(this, meta.attrs);
+          if (attr.observe) {
+            if (super.attributeChangedCallback) {
+              super.attributeChangedCallback(name, oldValue, newValue);
+            }
+          }
+        }
+      }
 
-          if (super.connectedCallback) {
-            super.connectedCallback();
+      connectedCallback() {
+        if (!this.#abortController) {
+          this.#abortController = new AbortController();
+
+          for (const { event, cb, selector } of meta.listeners) {
+            const root = selector(this);
+
+            if (root) {
+              root.addEventListener(event, cb.bind(this), {
+                signal: this.#abortController.signal,
+              });
+            } else {
+              throw new Error(`could not add listener to ${root}`);
+            }
           }
         }
 
-        disconnectedCallback(): void {
-          if (this.#abortController) {
-            this.#abortController.abort();
-            this.#abortController = null;
-          }
+        reflectAttributeValues(this, meta.attrs);
 
-          if (super.disconnectedCallback) {
-            super.disconnectedCallback();
-          }
+        if (super.connectedCallback) {
+          super.connectedCallback();
         }
-      },
-    };
+      }
 
-    return def[Base.name] as T;
+      disconnectedCallback(): void {
+        if (this.#abortController) {
+          this.#abortController.abort();
+          this.#abortController = null;
+        }
+
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
+        }
+      }
+    }
+
+    return JoistHTMLElement;
   };
 }
 
