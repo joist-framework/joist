@@ -1,9 +1,11 @@
+import { injectable, injected, type InjectableOpts } from "@joist/di";
+
 import { define } from "./define.js";
 import type { DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";
 import type { ShadowResult } from "./result.js";
 
-export interface ElementOpts extends Partial<DefineOpts> {
+export interface ElementOpts extends Partial<DefineOpts>, InjectableOpts {
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -22,102 +24,113 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
     });
 
-    const def = {
-      [Base.name]: class extends Base {
-        static observedAttributes: string[] = Array.from(meta.attrs.keys());
+    @injectable(opts)
+    class JoistHTMLElement extends Base {
+      static name = Base.name;
 
-        #abortController: AbortController | null = null;
+      static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
-        constructor(...args: any[]) {
-          super(...args);
+      #abortController: AbortController | null = null;
+      #injected = withProviders();
 
-          if (opts?.shadowDom) {
-            if (!this.shadowRoot) {
-              this.attachShadow(opts.shadowDomOpts ?? { mode: "open" });
-            }
+      constructor(...args: any[]) {
+        super(...args);
 
-            for (const res of opts.shadowDom) {
-              res.apply(this);
-            }
+        if (opts?.shadowDom) {
+          if (!this.shadowRoot) {
+            this.attachShadow(opts.shadowDomOpts ?? { mode: "open" });
           }
 
-          for (const cb of meta.onReady) {
-            cb.call(this);
+          for (const res of opts.shadowDom) {
+            res.apply(this);
           }
         }
 
-        attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-          const attr = meta.attrs.get(name);
-          const cbs = meta.attrChanges.get(name);
+        for (const cb of meta.onReady) {
+          cb.call(this);
+        }
+      }
 
-          if (attr) {
-            if (oldValue !== newValue) {
-              const sourceValue = attr.access.get.call(this);
-              let value: string | number | boolean = newValue;
+      async attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        const attr = meta.attrs.get(name);
+        const cbs = meta.attrChanges.get(name);
 
-              if (typeof sourceValue === "boolean") {
-                // treat as boolean
-                value = newValue !== null;
-              } else if (typeof sourceValue === "number") {
-                // treat as number
-                value = Number(newValue);
-              }
+        if (attr) {
+          if (oldValue !== newValue) {
+            const sourceValue = attr.access.get.call(this);
+            let value: string | number | boolean = newValue;
 
-              attr.access.set.call(this, value);
+            if (typeof sourceValue === "boolean") {
+              // treat as boolean
+              value = newValue !== null;
+            } else if (typeof sourceValue === "number") {
+              // treat as number
+              value = Number(newValue);
             }
 
-            if (cbs) {
-              for (const cb of cbs) {
-                cb.call(this, name, oldValue, newValue);
-              }
-            }
+            attr.access.set.call(this, value);
+          }
 
-            if (attr.observe) {
-              if (super.attributeChangedCallback) {
-                super.attributeChangedCallback(name, oldValue, newValue);
-              }
+          if (attr.observe) {
+            if (super.attributeChangedCallback) {
+              super.attributeChangedCallback(name, oldValue, newValue);
+            }
+          }
+
+          await this.#injected.promise;
+
+          if (cbs) {
+            for (const cb of cbs) {
+              cb.call(this, name, oldValue, newValue);
+            }
+          }
+        }
+      }
+
+      @injected()
+      __isInjected() {
+        this.#injected.resolve();
+      }
+
+      connectedCallback() {
+        if (!this.#abortController) {
+          this.#abortController = new AbortController();
+
+          for (const { event, cb, selector } of meta.listeners) {
+            const root = selector(this);
+
+            if (root) {
+              root.addEventListener(event, cb.bind(this), {
+                signal: this.#abortController.signal,
+              });
+            } else {
+              throw new Error(`could not add listener to ${root}`);
             }
           }
         }
 
-        connectedCallback() {
-          if (!this.#abortController) {
-            this.#abortController = new AbortController();
+        reflectAttributeValues(this, meta.attrs);
 
-            for (const { event, cb, selector } of meta.listeners) {
-              const root = selector(this);
+        if (super.connectedCallback) {
+          super.connectedCallback();
+        }
+      }
 
-              if (root) {
-                root.addEventListener(event, cb.bind(this), {
-                  signal: this.#abortController.signal,
-                });
-              } else {
-                throw new Error(`could not add listener to ${root}`);
-              }
-            }
-          }
+      disconnectedCallback(): void {
+        this.#injected = withProviders();
 
-          reflectAttributeValues(this, meta.attrs);
-
-          if (super.connectedCallback) {
-            super.connectedCallback();
-          }
+        if (this.#abortController) {
+          this.#abortController.abort();
+          this.#abortController = null;
         }
 
-        disconnectedCallback(): void {
-          if (this.#abortController) {
-            this.#abortController.abort();
-            this.#abortController = null;
-          }
-
-          if (super.disconnectedCallback) {
-            super.disconnectedCallback();
-          }
+        if (super.disconnectedCallback) {
+          super.disconnectedCallback();
         }
-      },
-    };
+      }
+    }
 
-    return def[Base.name] as T;
+    return JoistHTMLElement;
   };
 }
 
@@ -147,4 +160,24 @@ function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadat
       }
     }
   }
+}
+
+function withProviders<T = void>(): {
+  promise: Promise<T>;
+  resolve: (...args: any[]) => void;
+  reject: () => void;
+} {
+  let providerResolve: ((...args: any[]) => void) | null = null;
+  let providerReject: (() => void) | null = null;
+
+  const promise = new Promise<T>((resolve, reject) => {
+    providerResolve = resolve;
+    providerReject = reject;
+  });
+
+  if (providerReject === null || providerResolve === null) {
+    throw new Error(`Something has gone wrong when constructing the promise`);
+  }
+
+  return { promise, resolve: providerResolve, reject: providerReject };
 }

@@ -156,7 +156,6 @@ it("should wait to register itself until the custom dependsOn function runs", as
       });
     },
   })
-  // @ts-ignore
   class MyElement extends HTMLElement {}
 
   assert.isUndefined(customElements.get("element-9"));
