@@ -52,7 +52,10 @@ export function injectable(opts?: InjectableOpts) {
 
         // Allocate an injector ONLY if this service defines its own local overrides/providers or self provisions
         if (opts?.providers || opts?.provideSelfAs) {
-          this[INJECTOR] = new Injector(opts);
+          this[INJECTOR] = new Injector({
+            ...opts,
+            parent: parentInjector,
+          });
 
           if (opts.provideSelfAs) {
             for (const token of opts.provideSelfAs) {
