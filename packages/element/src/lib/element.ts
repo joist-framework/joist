@@ -1,4 +1,5 @@
 import { injectable, type InjectableOpts } from "@joist/di";
+
 import { define } from "./define.js";
 import type { DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";

@@ -14,50 +14,50 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
 ): T {
   const metadata: InjectableMetadata<InjectableEl> = ctx.metadata;
 
-  const def = {
-    [Base.name]: class extends Base {
-      constructor(..._: any[]) {
-        super();
+  return class extends Base {
+    static get name() {
+      return Base.name;
+    }
 
-        const injector = this[INJECTOR];
+    constructor(..._: any[]) {
+      super();
 
-        this.addEventListener("context-request", (e) => {
-          if (e.target !== this && e.context === INJECTOR_CTX) {
-            e.stopPropagation();
+      const injector = this[INJECTOR];
 
-            e.callback(injector);
-          }
-        });
+      this.addEventListener("context-request", (e) => {
+        if (e.target !== this && e.context === INJECTOR_CTX) {
+          e.stopPropagation();
 
-        callLifecycle(this, injector, metadata?.onCreated);
-      }
-
-      connectedCallback() {
-        this.dispatchEvent(
-          new ContextRequestEvent(INJECTOR_CTX, (injector) => {
-            this[INJECTOR] = injector;
-          }),
-        );
-
-        callLifecycle(this, this[INJECTOR], metadata?.onInjected);
-
-        if (super.connectedCallback) {
-          super.connectedCallback();
+          e.callback(injector);
         }
+      });
+
+      callLifecycle(this, injector, metadata?.onCreated);
+    }
+
+    connectedCallback() {
+      this.dispatchEvent(
+        new ContextRequestEvent(INJECTOR_CTX, (injector) => {
+          this[INJECTOR] = injector;
+        }),
+      );
+
+      callLifecycle(this, this[INJECTOR], metadata?.onInjected);
+
+      if (super.connectedCallback) {
+        super.connectedCallback();
+      }
+    }
+
+    disconnectedCallback() {
+      // super disconnect needs to be called first.
+      // If not the context could be different since the element will be removed from the injector chain.
+      // This leads to unexpected behaviors.
+      if (super.disconnectedCallback) {
+        super.disconnectedCallback();
       }
 
-      disconnectedCallback() {
-        // super disconnect needs to be called first.
-        // If not the context could be different since the element will be removed from the injector chain.
-        // This leads to unexpected behaviors.
-        if (super.disconnectedCallback) {
-          super.disconnectedCallback();
-        }
-
-        this[INJECTOR].parent = undefined;
-      }
-    },
+      this[INJECTOR].parent = undefined;
+    }
   };
-
-  return def[Base.name] as T;
 }
