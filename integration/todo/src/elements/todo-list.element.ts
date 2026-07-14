@@ -1,11 +1,10 @@
-import { inject, injectable } from "@joist/di";
+import { inject } from "@joist/di";
 import { css, element, html, listen } from "@joist/element";
 import { bind } from "@joist/templating";
 
 import { type Todo, TodoService } from "../services/todo.service.js";
 import { TodoCardElement } from "./todo-card.element.js";
 
-@injectable()
 @element({
   tagName: "todo-list",
   shadowDom: [
