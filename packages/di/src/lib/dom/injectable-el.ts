@@ -1,7 +1,7 @@
 import { INJECTOR } from "../symbols.js";
 import { INJECTOR_CTX } from "../context/injector.js";
 import { ContextRequestEvent } from "../context/protocol.js";
-import type { Injector } from "../injector.js";
+import { Injector } from "../injector.js";
 import { callLifecycle } from "../lifecycle.js";
 import type { InjectableMetadata } from "../metadata.js";
 import type { ConstructableToken } from "../provider.js";
@@ -24,15 +24,18 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
 
       const injector = this[INJECTOR];
 
+      if (!injector) {
+        this[INJECTOR] = new Injector();
+      }
+
+      callLifecycle(this, injector, metadata?.onCreated);
+
       this.addEventListener("context-request", (e) => {
         if (e.target !== this && e.context === INJECTOR_CTX) {
           e.stopPropagation();
-
           e.callback(injector);
         }
       });
-
-      callLifecycle(this, injector, metadata?.onCreated);
     }
 
     connectedCallback() {

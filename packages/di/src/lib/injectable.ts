@@ -28,7 +28,7 @@ export function injectable(opts?: InjectableOpts) {
         return Base.name;
       }
 
-      [INJECTOR]: Injector;
+      [INJECTOR]: Injector | undefined = undefined;
 
       constructor(...args: any[]) {
         const creationContext = args.at(-1);
@@ -63,8 +63,8 @@ export function injectable(opts?: InjectableOpts) {
             }
           }
         } else {
-          // Share the parent injector directly, or fallback to a new injector
-          this[INJECTOR] = parentInjector || new Injector(opts);
+          // Share the parent injector directly
+          this[INJECTOR] = parentInjector;
         }
       }
     }
