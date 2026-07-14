@@ -306,6 +306,8 @@ it("should handle StaticToken with null/undefined factory", () => {
   const injector = new Injector();
 
   assert.throws(() => injector.inject(TOKEN), 'Provider not found for "test"');
+  assert.throws(() => injector.inject(TOKEN, { optional: false }), 'Provider not found for "test"');
+  assert.equal(injector.inject(TOKEN, { optional: true }), null);
 });
 
 it("should handle StaticToken factory throwing errors", () => {
