@@ -1,6 +1,7 @@
 import type { Injector } from "./injector.js";
 import { readInjector } from "./metadata.js";
 import type { InjectionToken } from "./provider.js";
+import { NoInjectorError } from "./errors.js";
 
 export type Injected<T> = () => T;
 
@@ -40,7 +41,7 @@ function internalInject<T extends object, R>(cb: (i: Injector) => R) {
     const injector = readInjector(this);
 
     if (injector === null) {
-      throw new Error(
+      throw new NoInjectorError(
         `${this.constructor.name} is either not injectable or a service is being called in the constructor. \n Either add the @injectable() to your class or use the @injected callback method.`,
       );
     }

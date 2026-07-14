@@ -4,6 +4,11 @@ import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
+import {
+  InjectNonServiceError,
+  ProviderMissingOptionsError,
+  ProviderNotFoundError,
+} from "./errors.js";
 
 it("should create a new instance of a single provider", () => {
   class A {}
@@ -165,10 +170,7 @@ it("should throw an error if provider is missing use, factory, and value", () =>
     providers: [[Service, {} as any]],
   });
 
-  assert.throws(
-    () => injector.inject(Service),
-    "Provider for Service found but is missing either 'use', 'factory', or 'value'",
-  );
+  assert.throws(() => injector.inject(Service), ProviderMissingOptionsError);
 });
 
 it("should pass factories and instance of the injector", async () => {
@@ -305,7 +307,7 @@ it("should handle StaticToken with null/undefined factory", () => {
   const TOKEN = new StaticToken<string | null>("test");
   const injector = new Injector();
 
-  assert.throws(() => injector.inject(TOKEN), 'Provider not found for "test"');
+  assert.throws(() => injector.inject(TOKEN), ProviderNotFoundError);
 });
 
 it("should handle StaticToken factory throwing errors", () => {
@@ -393,10 +395,7 @@ it("should throw when a non-service token is injected as a singleton", () => {
 
   const app = new Injector();
 
-  assert.throws(
-    () => app.inject(NonService),
-    `Token NonService is marked as non-service and cannot be injected as a singleton. Please use create.`,
-  );
+  assert.throws(() => app.inject(NonService), InjectNonServiceError);
 });
 
 it("should allow a non-service token to be injected with singleton: false", () => {

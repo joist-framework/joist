@@ -8,6 +8,11 @@ import {
   type ProviderFactory,
   StaticToken,
 } from "./provider.js";
+import {
+  InjectNonServiceError,
+  ProviderMissingOptionsError,
+  ProviderNotFoundError,
+} from "./errors.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
@@ -78,7 +83,7 @@ export class Injector {
     const metadata = readMetadata<T>(token);
 
     if (metadata?.service === false && opts?.singleton !== false) {
-      throw new Error(
+      throw new InjectNonServiceError(
         `Token ${token.name} is marked as non-service and cannot be injected as a singleton. Please use create.`,
       );
     }
@@ -122,7 +127,7 @@ export class Injector {
         return this.#createAndCache<T>(token, () => provider.value, createOpts);
       }
 
-      throw new Error(
+      throw new ProviderMissingOptionsError(
         `Provider for ${token.name} found but is missing either 'use', 'factory', or 'value'`,
       );
     }
@@ -134,7 +139,7 @@ export class Injector {
 
     if (token instanceof StaticToken) {
       if (!token.factory) {
-        throw new Error(`Provider not found for "${token.name}"`);
+        throw new ProviderNotFoundError(`Provider not found for "${token.name}"`);
       }
 
       return this.#createAndCache(token, token.factory, createOpts);

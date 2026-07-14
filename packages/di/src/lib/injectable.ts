@@ -3,6 +3,7 @@ import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
 import { type InjectableMetadata, isCreationContext } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
+import { InjectableCreationFailedError, InstantiatedDirectlyError } from "./errors.js";
 
 export interface InjectableOpts {
   name?: string;
@@ -36,7 +37,7 @@ export function injectable(opts?: InjectableOpts) {
           // If the sentinel is not present, then we know this class is being instantiated directly and we can throw an error.
           // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
           if (!isFromInjector && !isHTMLELementBase) {
-            throw new Error(
+            throw new InstantiatedDirectlyError(
               `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
             );
           }
@@ -67,7 +68,7 @@ export function injectable(opts?: InjectableOpts) {
     const injectableBase = def[Base.name];
 
     if (!injectableBase) {
-      throw new Error(`Failed to create injectable class for ${Base.name}`);
+      throw new InjectableCreationFailedError(`Failed to create injectable class for ${Base.name}`);
     }
 
     // Only apply custom element bootstrap logic if the decorated class is an HTMLElement

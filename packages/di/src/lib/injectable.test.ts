@@ -5,6 +5,7 @@ import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { readInjector } from "./metadata.js";
 import { StaticToken } from "./provider.js";
+import { InstantiatedDirectlyError } from "./errors.js";
 
 it("should locally override a provider", () => {
   class Foo {}
@@ -75,7 +76,7 @@ it("shoud throw error if attempting to to manually construct an injectable class
 
   assert.throws(() => {
     new MyService();
-  }, /Cannot construct an instance of MyService directly. Use the injector instead./);
+  }, InstantiatedDirectlyError);
 });
 
 it("shoud throw error if attempting to to manually construct an injectable class extended from a base one", () => {
@@ -86,7 +87,7 @@ it("shoud throw error if attempting to to manually construct an injectable class
 
   assert.throws(() => {
     new MyExtendedService();
-  }, /Cannot construct an instance of MyService directly. Use the injector instead./);
+  }, InstantiatedDirectlyError);
 });
 
 it("should not pass the sentinal to the decorated class", () => {

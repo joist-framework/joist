@@ -4,26 +4,31 @@ import { inject, injectAll } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
+import { NoInjectorError, ProviderNotFoundError } from "./errors.js";
 
 it("should throw error if called in constructor", () => {
-  assert.throws(() => {
-    class FooService {
-      value = "1";
-    }
-
-    @injectable()
-    class BarService {
-      foo = inject(FooService);
-
-      constructor() {
-        this.foo();
+  assert.throws(
+    () => {
+      class FooService {
+        value = "1";
       }
-    }
 
-    const parent = new Injector();
+      @injectable()
+      class BarService {
+        foo = inject(FooService);
 
-    parent.inject(BarService);
-  }, "BarService is either not injectable or a service is being called in the constructor.");
+        constructor() {
+          this.foo();
+        }
+      }
+
+      const parent = new Injector();
+
+      parent.inject(BarService);
+    },
+    NoInjectorError,
+    /BarService/,
+  );
 });
 
 it("should throw error if static token is unavailable", () => {
@@ -33,7 +38,7 @@ it("should throw error if static token is unavailable", () => {
     const parent = new Injector();
 
     parent.inject(TOKEN);
-  }, 'Provider not found for "test"');
+  }, ProviderNotFoundError);
 });
 
 it("should use the calling injector as parent", () => {
