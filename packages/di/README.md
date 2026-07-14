@@ -29,6 +29,7 @@ Allows you to inject services into other class instances (including custom eleme
     - [Accessing the Injector in Factories](#accessing-the-injector-in-factories)
   - [StaticTokens](#statictokens)
     - [Default Values](#default-values)
+    - [Optional Injections](#optional-injections)
     - [Async Values](#async-values)
   - [LifeCycle](#lifecycle)
     - [Conditional Lifecycle Hooks](#conditional-lifecycle-hooks)
@@ -292,6 +293,26 @@ A static token can be provided a default factory function to use on creation.
 
 ```ts
 const URL_TOKEN = new StaticToken("app_url", () => "/default-url/");
+```
+
+### Optional Injections
+
+If a default value is missing and you try to inject the token, you will get an error:
+
+```ts
+const URL_TOKEN = new StaticToken<string>("app_url");
+const app = new Injector();
+// !!! Throws an error !!!
+const URL: string = app.inject(URL_TOKEN);
+```
+
+Sometimes, it is your intention to only inject something if it is available. In this case, you can pass the `optional` parameter to `inject`:
+
+```ts
+const URL_TOKEN = new StaticToken<string>("app_url");
+const app = new Injector();
+const URL: string | null = app.inject(URL_TOKEN, { optional: true });
+assert(URL === null);
 ```
 
 ### Async Values

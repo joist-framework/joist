@@ -70,11 +70,31 @@ export class Injector {
     return this.inject<T>(token, { ignoreParent: opts?.ignoreParent, singleton: false });
   }
 
-  // resolves and retuns and instance of the requested service
+  // resolves and returns and instance of the requested service
   inject<T>(
     token: InjectionToken<T>,
-    opts?: { ignoreParent?: boolean | undefined; singleton?: boolean | undefined },
-  ): T {
+    opts?: {
+      ignoreParent?: boolean | undefined;
+      singleton?: boolean | undefined;
+      optional?: false | undefined;
+    },
+  ): T;
+  inject<T>(
+    token: InjectionToken<T>,
+    opts?: {
+      ignoreParent?: boolean | undefined;
+      singleton?: boolean | undefined;
+      optional?: boolean | undefined;
+    },
+  ): T | null;
+  inject<T>(
+    token: InjectionToken<T>,
+    opts?: {
+      ignoreParent?: boolean | undefined;
+      singleton?: boolean | undefined;
+      optional?: boolean | undefined;
+    },
+  ): T | null {
     const metadata = readMetadata<T>(token);
 
     if (metadata?.service === false && opts?.singleton !== false) {
@@ -134,7 +154,11 @@ export class Injector {
 
     if (token instanceof StaticToken) {
       if (!token.factory) {
-        throw new Error(`Provider not found for "${token.name}"`);
+        if (opts?.optional === true) {
+          return null;
+        } else {
+          throw new Error(`Provider not found for "${token.name}"`);
+        }
       }
 
       return this.#createAndCache(token, token.factory, createOpts);
