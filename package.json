@@ -40,11 +40,11 @@
     }
   },
   "devDependencies": {
-    "@open-wc/testing": "^4.0.0",
+    "@open-wc/testing": "^5.0.0",
     "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.0.0",
-    "@web/test-runner": "^0.20.0",
+    "@web/test-runner": "^1.0.0",
     "browser-sync": "^3.0.3",
     "chai": "^6.0.0",
     "husky": "^9.1.7",
@@ -52,7 +52,7 @@
     "mocha": "^11.7.6",
     "prettier": "^3.5.3",
     "tslib": "2.8.1",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "wireit": "^0.14.0"
   },
   "overrides": {

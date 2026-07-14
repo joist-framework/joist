@@ -69,7 +69,7 @@ it("should provide itself for spefified tokens", () => {
   assert.equal(service.value(), service);
 });
 
-it("shoud throw error if attempting to to manually construct an injectable class", () => {
+it("should throw error if attempting to manually construct an injectable class", () => {
   @injectable()
   class MyService {}
 
@@ -78,7 +78,7 @@ it("shoud throw error if attempting to to manually construct an injectable class
   }, /Cannot construct an instance of MyService directly. Use the injector instead./);
 });
 
-it("shoud throw error if attempting to to manually construct an injectable class extended from a base one", () => {
+it("should throw error if attempting to manually construct an injectable class extended from a base one", () => {
   @injectable()
   class MyService {}
 

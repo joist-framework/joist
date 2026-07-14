@@ -1,14 +1,19 @@
 # Di
 
-Small and efficient dependency injection.
+Small and efficient dependency injection for TypeScript and JavaScript applications.
 
 Allows you to inject services into other class instances (including custom elements and Node.js).
 
 ## Benefits
 
 - **Simple API**: Minimal boilerplate with intuitive decorators and injection
+- **Type Safety**: Full TypeScript support with proper type inference
+- **Hierarchical DI**: Create scoped injectors with parent-child relationships
 - **Lazy Loading**: Services are only instantiated when needed
+- **Testing Friendly**: Easy mocking with provider overrides
 - **Web Component Support**: Built-in integration with custom elements
+- **Context Pattern**: React-like context for web components
+- **Lifecycle Hooks**: Fine-grained control over service initialization
 - **Async Support**: Handle asynchronous service creation
 - **Zero Dependencies**: Lightweight with no external dependencies
 
@@ -18,10 +23,12 @@ Allows you to inject services into other class instances (including custom eleme
   - [Benefits](#benefits)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Quick Start](#quick-start)
   - [Injectors](#injectors)
   - [Services](#services)
   - [Injectable Services](#injectable-services)
     - [Non-Singleton Injectables](#non-singleton-injectables)
+    - [Injecting Multiple Providers with injectAll()](#injecting-multiple-providers-with-injectall)
   - [Defining Providers](#defining-providers)
     - [Service Level Providers](#service-level-providers)
     - [Factories](#factories)
@@ -36,11 +43,47 @@ Allows you to inject services into other class instances (including custom eleme
   - [Hierarchical Injectors](#hierarchical-injectors)
   - [Custom Elements](#custom-elements)
     - [Context Elements](#context-elements)
+  - [Error Handling](#error-handling)
 
 ## Installation
 
 ```bash
 npm i @joist/di
+```
+
+## Quick Start
+
+Here's a simple example to get you started:
+
+```ts
+import { Injector, injectable, inject } from "@joist/di";
+
+// Define a service
+class Logger {
+  log(message: string) {
+    console.log(message);
+  }
+}
+
+// Create an injectable service that depends on Logger
+@injectable()
+class UserService {
+  #logger = inject(Logger);
+
+  createUser(name: string) {
+    const logger = this.#logger();
+
+    logger.log(`Creating user: ${name}`);
+    // ... user creation logic
+  }
+}
+
+// Set up the injector
+const app = new Injector();
+const userService = app.inject(UserService);
+
+// Use the service
+userService.createUser("John");
 ```
 
 ## Injectors
@@ -114,6 +157,47 @@ console.log(ctx1 === ctx2); // false
 
 // This throws — non-services cannot be cached as singletons
 app.inject(RequestContext); // Error: Token RequestContext is marked as non-service...
+```
+
+You can also use the `create` helper function within an `@injectable` class to inject fresh, non-singleton instances dynamically:
+
+```ts
+import { injectable, create } from "@joist/di";
+
+@injectable()
+class App {
+  // Injects a function that returns a new RequestContext instance on every call
+  #ctx = create(RequestContext);
+
+  handleRequest() {
+    const context = this.#ctx();
+    console.log(context.timestamp);
+  }
+}
+```
+
+### Injecting Multiple Providers with `injectAll()`
+
+When you have multiple providers defined for a single token (for example, multiple plugins or configurations registered under the same `StaticToken`), you can retrieve all of them using `injectAll()`.
+
+```ts
+import { injectable, injectAll, StaticToken } from "@joist/di";
+
+const PluginToken = new StaticToken<string>("plugin");
+
+@injectable({
+  providers: [
+    [PluginToken, { value: "Plugin A" }],
+    [PluginToken, { value: "Plugin B" }],
+  ],
+})
+class App {
+  #plugins = injectAll(PluginToken);
+
+  getPlugins() {
+    return this.#plugins(); // Returns ["Plugin A", "Plugin B"]
+  }
+}
 ```
 
 ## Defining Providers
@@ -195,22 +279,24 @@ class Logger {
   log(..._: any[]): void {}
 }
 
-const app = new Injector([
-  [
-    Logger,
-    {
-      factory() {
-        const params = new URLSearchParams(window.location.search);
+const app = new Injector({
+  providers: [
+    [
+      Logger,
+      {
+        factory() {
+          const params = new URLSearchParams(window.location.search);
 
-        if (params.has("debug")) {
-          return console;
-        }
+          if (params.has("debug")) {
+            return console;
+          }
 
-        return new Logger(); // noop logger
+          return new Logger(); // noop logger
+        },
       },
-    },
+    ],
   ],
-]);
+});
 ```
 
 ### Values
@@ -256,17 +342,19 @@ class Feature {
   }
 }
 
-const app = new Injector([
-  [
-    Feature,
-    {
-      factory(i) {
-        const logger = i.inject(Logger);
-        return new Feature(logger);
+const app = new Injector({
+  providers: [
+    [
+      Feature,
+      {
+        factory(i) {
+          const logger = i.inject(Logger);
+          return new Feature(logger);
+        },
       },
-    },
+    ],
   ],
-]);
+});
 ```
 
 ## StaticTokens
@@ -277,14 +365,16 @@ In most cases, a token is any constructable class. There are cases where you mig
 // Token that resolves to a string
 const URL_TOKEN = new StaticToken<string>("app_url");
 
-const app = new Injector([
-  [
-    URL_TOKEN,
-    {
-      factory: () => "/my-app-url/",
-    },
+const app = new Injector({
+  providers: [
+    [
+      URL_TOKEN,
+      {
+        factory: () => "/my-app-url/",
+      },
+    ],
   ],
-]);
+});
 ```
 
 ### Default Values
@@ -370,16 +460,16 @@ class MyService {
 
 ### Conditional Lifecycle Hooks
 
-You can control when lifecycle callbacks are executed by providing a condition function. The condition function receives the current injector:
+You can control when lifecycle callbacks are executed by providing a condition function. The condition function receives a context object containing the current `injector` and the service `instance`:
 
 ```ts
 class MyService {
-  @created((injector) => ({ enabled: true }))
+  @created(({ injector }) => ({ enabled: true }))
   onCreated() {
     // This will execute because enabled is true
   }
 
-  @injected((injector) => {
+  @injected(({ injector }) => {
     return {
       enabled: process.env.NODE_ENV === "development",
     };
@@ -400,7 +490,7 @@ You can use the injector to access other services or check the injector's config
 
 ```ts
 class MyService {
-  @created((injector) => {
+  @created(({ injector }) => {
     const config = injector.inject(ConfigService);
     return { enabled: config.featureEnabled };
   })
@@ -493,7 +583,7 @@ class ColorCtx {
   name: "color-ctx",
   provideSelfAs: [ColorCtx],
 })
-class ColorCtx extends HTMLElement implements ColorCtx {
+class ColorCtxElement extends HTMLElement implements ColorCtx {
   get primary() {
     return this.getAttribute("primary") ?? "red";
   }
@@ -514,7 +604,7 @@ class MyElement extends HTMLElement {
 }
 
 // Note: To use parent providers, the parent elements need to be defined first!
-customElements.define("color-ctx", ColorCtx);
+customElements.define("color-ctx", ColorCtxElement);
 customElements.define("my-element", MyElement);
 ```
 
@@ -526,4 +616,45 @@ customElements.define("my-element", MyElement);
 <color-ctx primary="orange" secondary="blue">
   <my-element></my-element>
 </color-ctx>
+```
+
+## Error Handling
+
+Common errors and how to handle them:
+
+1. **Constructor Injection Error**
+
+```ts
+// Incorrect: Do not inject or access dependencies inside constructors
+@injectable()
+class MyService {
+  #logger;
+
+  constructor() {
+    this.#logger = inject(Logger); // Will throw: service is being called in the constructor
+  }
+}
+
+// Correct: Define dependencies as lazy accessor properties
+@injectable()
+class MyService {
+  #logger = inject(Logger); // Returns () => Logger
+
+  someMethod() {
+    this.#logger().log("Called successfully");
+  }
+}
+```
+
+2. **Missing Token Provider Error**
+   If you are trying to inject a `StaticToken` that does not define a default factory, you must specify a provider for that token in your injector configuration:
+
+```ts
+// Incorrect: Will throw "Provider not found" if injected without a provider:
+const CONFIG_TOKEN = new StaticToken<string>("config");
+
+// Correct: Define a provider when creating your injector:
+const app = new Injector({
+  providers: [[CONFIG_TOKEN, { value: "my-config-value" }]],
+});
 ```

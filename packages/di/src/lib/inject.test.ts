@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-import { inject, injectAll } from "./inject.js";
+import { inject, injectAll, create } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
@@ -102,11 +102,14 @@ it("should use the calling injector as parent", () => {
   assert.strictEqual(parent.inject(BarService).foo().value, "100");
 });
 
-it("should allow you to inject all", () => {
-  const TOKEN = new StaticToken("test", () => "Hello World");
+it("should allow you to inject all defined providers", () => {
+  const defaultVal = { message: "Hello World" };
+  const overrideVal = { message: "Override World" };
+
+  const TOKEN = new StaticToken("test", () => defaultVal);
 
   @injectable({
-    providers: [[TOKEN, { factory: () => "Override World" }]],
+    providers: [[TOKEN, { factory: () => overrideVal }]],
   })
   class HelloWorld {
     hello = injectAll(TOKEN);
@@ -115,7 +118,9 @@ it("should allow you to inject all", () => {
   const injector = new Injector();
   const instance = injector.inject(HelloWorld);
 
-  assert.deepEqual(instance.hello(), ["Override World", "Hello World"]);
+  const res = instance.hello();
+  assert.equal(res.length, 1);
+  assert.strictEqual(res[0], overrideVal);
 });
 
 it("should create non-singleton instances", () => {
@@ -125,6 +130,21 @@ it("should create non-singleton instances", () => {
   @injectable()
   class HelloWorld {
     hello = inject(Hello, { singleton: false });
+  }
+
+  const injector = new Injector();
+  const instance = injector.inject(HelloWorld);
+
+  assert.notEqual(instance.hello(), instance.hello());
+});
+
+it("should create non-singleton instances using create helper", () => {
+  @injectable()
+  class Hello {}
+
+  @injectable()
+  class HelloWorld {
+    hello = create(Hello);
   }
 
   const injector = new Injector();
