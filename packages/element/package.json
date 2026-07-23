@@ -53,7 +53,8 @@
         "tsconfig.tsbuildinfo"
       ],
       "dependencies": [
-        "../observable:build"
+        "../observable:build",
+        "../di:build"
       ]
     },
     "test": {

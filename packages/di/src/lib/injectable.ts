@@ -5,10 +5,10 @@ import { type InjectableMetadata, isCreationContext } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
-  name?: string;
-  providers?: Iterable<Provider<any>>;
-  provideSelfAs?: InjectionToken<any>[];
-  service?: boolean;
+  name?: string | undefined;
+  providers?: Iterable<Provider<any>> | undefined;
+  provideSelfAs?: InjectionToken<any>[] | undefined;
+  service?: boolean | undefined;
 }
 
 export function injectable(opts?: InjectableOpts) {
@@ -23,59 +23,56 @@ export function injectable(opts?: InjectableOpts) {
       "HTMLElement" in globalThis &&
       Object.prototype.isPrototypeOf.call(HTMLElement.prototype, Base.prototype);
 
-    const def = {
-      [Base.name]: class extends Base {
-        [INJECTOR]: Injector;
+    class JoistInjectable extends Base {
+      static get name() {
+        return Base.name;
+      }
 
-        constructor(...args: any[]) {
-          const creationContext = args.at(-1);
-          const isFromInjector = isCreationContext(creationContext);
+      [INJECTOR]: Injector | undefined = undefined;
 
-          // injectable classes should not be instantiated directly.
-          // A creation context containing the sentinel is passed as the last argument when the injector creates an instance of this class.
-          // If the sentinel is not present, then we know this class is being instantiated directly and we can throw an error.
-          // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
-          if (!isFromInjector && !isHTMLELementBase) {
-            throw new Error(
-              `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
-            );
-          }
+      constructor(...args: any[]) {
+        const creationContext = args.at(-1);
+        const isFromInjector = isCreationContext(creationContext);
 
-          const finalArgs = isFromInjector ? args.slice(0, -1) : args;
-
-          super(...finalArgs);
-
-          const parentInjector = isFromInjector ? creationContext.injector : undefined;
-
-          // Allocate an injector ONLY if this service defines its own local overrides/providers or self provisions
-          if (opts?.providers || opts?.provideSelfAs) {
-            this[INJECTOR] = new Injector(opts);
-
-            if (opts.provideSelfAs) {
-              for (const token of opts.provideSelfAs) {
-                this[INJECTOR].providers.set(token, { value: this });
-              }
-            }
-          } else {
-            // Share the parent injector directly, or fallback to a new injector
-            this[INJECTOR] = parentInjector || new Injector(opts);
-          }
+        // injectable classes should not be instantiated directly.
+        // A creation context containing the sentinel is passed as the last argument when the injector creates an instance of this class.
+        // If the sentinel is not present, then we know this class is being instantiated directly and we can throw an error.
+        // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
+        if (!isFromInjector && !isHTMLELementBase) {
+          throw new Error(
+            `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
+          );
         }
-      },
-    };
 
-    const injectableBase = def[Base.name];
+        const finalArgs = isFromInjector ? args.slice(0, -1) : args;
 
-    if (!injectableBase) {
-      throw new Error(`Failed to create injectable class for ${Base.name}`);
+        super(...finalArgs);
+
+        const parentInjector = isFromInjector ? creationContext.injector : undefined;
+
+        // Allocate an injector ONLY if this service defines its own local overrides/providers or self provisions
+        if (opts?.providers || opts?.provideSelfAs) {
+          this[INJECTOR] = new Injector({
+            ...opts,
+            parent: parentInjector,
+          });
+
+          if (opts.provideSelfAs) {
+            for (const token of opts.provideSelfAs) {
+              this[INJECTOR].providers.set(token, { value: this });
+            }
+          }
+        } else {
+          // Share the parent injector directly
+          this[INJECTOR] = parentInjector;
+        }
+      }
     }
-
-    // Only apply custom element bootstrap logic if the decorated class is an HTMLElement
 
     if (isHTMLELementBase) {
-      return injectableEl(injectableBase, ctx);
+      return injectableEl(JoistInjectable, ctx);
     }
 
-    return injectableBase;
+    return JoistInjectable;
   };
 }
