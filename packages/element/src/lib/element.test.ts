@@ -1,4 +1,5 @@
 import { assert, expect } from "chai";
+import { inject } from "@joist/di";
 
 import { attr } from "./attr.js";
 import { element } from "./element.js";
@@ -129,7 +130,6 @@ it("should wait to register itself until all elements it depends on are also reg
     tagName: "element-6",
     dependsOn: ["element-7", "element-8"],
   })
-  // @ts-ignore
   class MyElement6 extends HTMLElement {}
 
   assert.isUndefined(customElements.get("element-6"));
@@ -156,7 +156,6 @@ it("should wait to register itself until the custom dependsOn function runs", as
       });
     },
   })
-  // @ts-ignore
   class MyElement extends HTMLElement {}
 
   assert.isUndefined(customElements.get("element-9"));
@@ -191,4 +190,66 @@ it("should call disconnectedCallback when element is removed from DOM", async ()
 
   // Verify disconnectedCallback was called
   expect(disconnectedCalled).to.be.true;
+});
+
+it("should confirm that each element is injectable and can have services injected", () => {
+  class ServiceA {}
+
+  @element({
+    tagName: "element-injectable-1",
+  })
+  class MyElement extends HTMLElement {
+    serviceA = inject(ServiceA);
+  }
+
+  const el = new MyElement();
+  expect(el.serviceA()).to.be.instanceOf(ServiceA);
+});
+
+it("should confirm that element decorator supports custom providers option", () => {
+  class ServiceA {}
+  class AltServiceA extends ServiceA {}
+
+  @element({
+    tagName: "element-injectable-2",
+    providers: [[ServiceA, { use: AltServiceA }]],
+  })
+  class MyElement extends HTMLElement {
+    serviceA = inject(ServiceA);
+  }
+
+  const el = new MyElement();
+  expect(el.serviceA()).to.be.instanceOf(AltServiceA);
+});
+
+it("should confirm that element decorator supports DOM-based DI hierarchy", async () => {
+  class ServiceA {}
+  class AltServiceA extends ServiceA {}
+
+  @element({
+    tagName: "element-parent-di",
+    providers: [[ServiceA, { use: AltServiceA }]],
+  })
+  class ParentElement extends HTMLElement {}
+
+  @element({
+    tagName: "element-child-di",
+  })
+  class ChildElement extends HTMLElement {
+    serviceA = inject(ServiceA);
+  }
+
+  const container = document.createElement("div");
+  container.innerHTML = /*html*/ `
+    <element-parent-di>
+      <element-child-di></element-child-di>
+    </element-parent-di>
+  `;
+
+  document.body.append(container);
+
+  const child = container.querySelector<ChildElement>("element-child-di");
+  expect(child?.serviceA()).to.be.instanceOf(AltServiceA);
+
+  container.remove();
 });

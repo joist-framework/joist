@@ -205,16 +205,6 @@ export class Injector {
       return instance;
     }
 
-    if (injector !== this) {
-      /**
-       * set the this injector instance as a parent.
-       * This should ONLY happen in the injector is not self. This would cause an infinite loop.
-       * this means that each calling injector will be the parent of what it creates.
-       * this allows the created service to navigate up it's chain to find a root
-       */
-      injector.parent = this;
-    }
-
     /**
      * The onInjected and onCreated lifecycle hooks should be called after the parent is defined.
      * This ensures that services are initialized when the chain is settled.

@@ -1,9 +1,8 @@
-import { inject, injectable } from "@joist/di";
+import { inject } from "@joist/di";
 import { element } from "@joist/element";
 
 import { TodoService } from "../services/todo.service.js";
 
-@injectable()
 @element({
   tagName: "todo-logger",
 })

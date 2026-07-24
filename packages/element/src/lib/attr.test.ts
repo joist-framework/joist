@@ -29,7 +29,9 @@ it("should read and parse the correct values", () => {
 
   document.body.append(container);
 
-  const el = document.querySelector("attr-test-1") as MyElement;
+  const el = document.querySelector<MyElement>("attr-test-1");
+
+  assert.isNotNull(el);
 
   expect(el.value1).to.equal(100);
   expect(el.value2).to.equal(2);

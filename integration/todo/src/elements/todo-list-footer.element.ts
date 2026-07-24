@@ -1,4 +1,4 @@
-import { inject, injectable } from "@joist/di";
+import { inject } from "@joist/di";
 import { css, element, html } from "@joist/element";
 import { bind } from "@joist/templating";
 
@@ -11,7 +11,8 @@ const sfxs = new Map([
 
 class PluralRules extends Intl.PluralRules {}
 
-@injectable({
+@element({
+  tagName: "todo-list-footer",
   providers: [
     [
       PluralRules,
@@ -22,9 +23,6 @@ class PluralRules extends Intl.PluralRules {}
       },
     ],
   ],
-})
-@element({
-  tagName: "todo-list-footer",
   shadowDom: [
     css`
       :host {

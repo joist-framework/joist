@@ -13,10 +13,8 @@ export interface HnItem {
   url?: string;
 }
 
-export const HN_API = new StaticToken(
-  "HN_API",
-  async () => "https://hacker-news.firebaseio.com",
-);
+export const HN_API = new StaticToken("HN_API", async () => "https://hacker-news.firebaseio.com");
+
 export const HTTP = new StaticToken("HTTP", async () =>
   import("./http.service.js").then((m) => new m.HttpService()),
 );

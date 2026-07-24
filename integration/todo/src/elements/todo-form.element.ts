@@ -1,9 +1,8 @@
-import { inject, injectable } from "@joist/di";
+import { inject } from "@joist/di";
 import { css, element, html, listen, query } from "@joist/element";
 
 import { Todo, TodoService } from "../services/todo.service.js";
 
-@injectable()
 @element({
   tagName: "todo-form",
   shadowDom: [
@@ -66,7 +65,6 @@ import { Todo, TodoService } from "../services/todo.service.js";
 })
 export class TodoFormElement extends HTMLElement {
   #input = query<HTMLInputElement>("#input");
-
   #todos = inject(TodoService);
 
   @listen("submit", "#todo-form")
