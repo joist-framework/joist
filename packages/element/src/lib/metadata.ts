@@ -1,9 +1,12 @@
 (Symbol as any).metadata ??= Symbol("Symbol.metadata");
 
+export type AttrType = StringConstructor | NumberConstructor | BooleanConstructor;
+
 export interface AttrDef {
   propName: string | symbol;
   observe: boolean;
   reflect: boolean;
+  type?: AttrType | undefined;
   access: {
     get: () => unknown;
     set: (value: unknown) => void;

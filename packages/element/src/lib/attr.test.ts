@@ -243,3 +243,58 @@ it("setters should be called when attributes change", async () => {
 
   el.remove();
 });
+
+it("should support explicit type option in AttrOpts", async () => {
+  @element({
+    tagName: "attr-test-explicit-type",
+  })
+  class MyElement extends HTMLElement {
+    @attr({ type: Number })
+    accessor count: number | undefined = undefined;
+
+    @attr({ type: Boolean })
+    accessor enabled: boolean | undefined = undefined;
+  }
+
+  const el = new MyElement();
+  document.body.append(el);
+
+  el.setAttribute("count", "100");
+  expect(el.count).to.equal(100);
+
+  el.setAttribute("enabled", "true");
+  expect(el.enabled).to.equal(true);
+
+  el.setAttribute("enabled", "false");
+  expect(el.enabled).to.equal(false);
+
+  el.remove();
+});
+
+it("should respect explicit type option during element initialization", async () => {
+  @element({
+    tagName: "attr-test-explicit-init",
+  })
+  class MyElement extends HTMLElement {
+    @attr({ type: Number })
+    accessor count: number | undefined = undefined;
+
+    @attr({ type: Boolean })
+    accessor enabled: boolean | undefined = undefined;
+  }
+
+  const container = document.createElement("div");
+  container.innerHTML = /*html*/ `
+    <attr-test-explicit-init count="42" enabled></attr-test-explicit-init>
+  `;
+
+  document.body.append(container);
+
+  const el = document.querySelector<MyElement>("attr-test-explicit-init");
+  assert.isNotNull(el);
+
+  expect(el.count).to.equal(42);
+  expect(el.enabled).to.equal(true);
+
+  container.remove();
+});

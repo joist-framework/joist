@@ -1,9 +1,10 @@
-import { metadataStore } from "./metadata.js";
+import { type AttrType, metadataStore } from "./metadata.js";
 
 export interface AttrOpts {
   name?: string;
   observed?: boolean;
   reflect?: boolean;
+  type?: AttrType;
 }
 
 export function attr<This extends HTMLElement>(opts?: AttrOpts) {
@@ -19,14 +20,13 @@ export function attr<This extends HTMLElement>(opts?: AttrOpts) {
       propName: ctx.name,
       observe: opts?.observed ?? true,
       reflect,
+      type: opts?.type,
       access: base,
     });
 
     return {
       init(value: unknown) {
-        if (typeof value === "boolean") {
-          return value;
-        }
+        const targetType = opts?.type ?? (typeof value === "boolean" ? Boolean : typeof value === "number" ? Number : String);
 
         const attrValue = this.getAttribute(attrName);
 
@@ -34,7 +34,11 @@ export function attr<This extends HTMLElement>(opts?: AttrOpts) {
           return value;
         }
 
-        if (typeof value === "number") {
+        if (targetType === Boolean) {
+          return attrValue !== "false";
+        }
+
+        if (targetType === Number) {
           return Number(attrValue);
         }
 

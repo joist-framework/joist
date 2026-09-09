@@ -59,12 +59,24 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         if (attr) {
           if (oldValue !== newValue) {
             const sourceValue = attr.access.get.call(this);
+            let targetType = attr.type;
+
+            if (!targetType) {
+              if (typeof sourceValue === "boolean") {
+                targetType = Boolean;
+              } else if (typeof sourceValue === "number") {
+                targetType = Number;
+              } else {
+                targetType = String;
+              }
+            }
+
             let value: string | number | boolean = newValue;
 
-            if (typeof sourceValue === "boolean") {
+            if (targetType === Boolean) {
               // treat as boolean
-              value = newValue !== null;
-            } else if (typeof sourceValue === "number") {
+              value = newValue !== null && newValue !== "false";
+            } else if (targetType === Number) {
               // treat as number
               value = Number(newValue);
             }
