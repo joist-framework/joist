@@ -177,4 +177,26 @@ describe("computed decorator", () => {
     const instance = new TestClass();
     assert.equal(instance.fullName, "John Doe");
   });
+
+  it("should preserve the initial oldValue when multiple synchronous changes are batched (BUG PROOF)", () => {
+    return new Promise<void>((resolve) => {
+      class Counter {
+        @observe() accessor value = 0;
+
+        @effect()
+        onChange(changes: Changes<this>) {
+          assert.deepEqual(changes.get("value"), {
+            oldValue: 0,
+            newValue: 2,
+          });
+
+          resolve();
+        }
+      }
+
+      const counter = new Counter();
+      counter.value = 1;
+      counter.value = 2;
+    });
+  });
 });

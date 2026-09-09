@@ -76,8 +76,12 @@ export function observe<This extends object, Value>(opts: ObserveOpts<This, Valu
             });
           }
 
-          instanceMeta.changes.set(ctx.name as keyof This, {
-            oldValue,
+          const name = ctx.name as keyof This;
+
+          const existing = instanceMeta.changes.get(name);
+
+          instanceMeta.changes.set(name, {
+            oldValue: existing ? existing.oldValue : oldValue,
             newValue,
           });
 
