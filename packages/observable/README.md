@@ -9,7 +9,7 @@ npm i @joist/observable
 ```
 
 ```TS
-import { observe, effect } from '@joist/observable';
+import { observe, effect, type Changes } from '@joist/observable';
 
 class AppState {
   @observe()

@@ -31,12 +31,15 @@ The decorator:
 - Supports computed properties
 
 ```typescript
+import { observe } from "@joist/observable";
+import { bind } from "@joist/templating";
+
 class MyElement extends HTMLElement {
   @observe()
-  assessor value = "Hello World";
+  accessor value = "Hello World";
 
   @bind({
-    compute: (i) => i.value.toUpperCase()
+    compute: (i) => i.value.toUpperCase(),
   })
   accessor formattedValue = "";
 }
@@ -141,7 +144,7 @@ The `j-if` element supports:
 
 ### Property Binding (`j-bind`)
 
-Binds values to element properties and attributes. By default it will bind values to the first child element of `j-bind`
+Binds values to element properties and attributes. By default, it will bind values to the first child element of `j-bind`
 
 - `props` Binds to element properties
 - `attrs` prefix: Binds to element attributes
@@ -275,3 +278,55 @@ The `j-async` element supports:
 - Promise handling with automatic state transitions
 - Loading, success, and error templates
 - State object with typed data and error fields
+
+### Scoped Binding (`j-scope`)
+
+Creates a localized template binding scope. By setting the `scope` property on a `<j-scope>` element, any child template elements (like `j-val`, `j-if`, etc.) can bind directly to keys of `scope` without needing a full `j-for` loop.
+
+```html
+<!-- Basic usage -->
+<j-scope>
+  <!-- Binds to the 'foo' key of the 'scope' property set on <j-scope> -->
+  <j-val bind="scope.foo"></j-val>
+</j-scope>
+```
+
+```typescript
+// In your component
+const scopeElement = this.shadowRoot.querySelector("j-scope");
+scopeElement.scope = { foo: "Hello from local scope!" };
+```
+
+## Complete Example
+
+Here is a complete, fully integrated example of a Web Component utilizing the Joist Templating System:
+
+```typescript
+import { element, html } from "@joist/element";
+import { bind } from "@joist/templating";
+
+@element({
+  tagName: "todo-item-card",
+  shadowDom: [
+    html`
+      <div class="card">
+        <j-if bind="!isCompleted">
+          <template>
+            <span class="active">Active Task: <j-val bind="text"></j-val></span>
+          </template>
+          <template else>
+            <span class="completed">Completed: <j-val bind="text"></j-val></span>
+          </template>
+        </j-if>
+      </div>
+    `,
+  ],
+})
+export class TodoItemCard extends HTMLElement {
+  @bind()
+  accessor text = "";
+
+  @bind()
+  accessor isCompleted = false;
+}
+```
