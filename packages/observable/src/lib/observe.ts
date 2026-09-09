@@ -23,6 +23,10 @@ export function observe<This extends object, Value>(opts: ObserveOpts<This, Valu
 
     return {
       init(value) {
+        if (compute) {
+          return value;
+        }
+
         let val: Value | typeof INIT_VALUE = INIT_VALUE;
 
         // START: Make upgradable custom elements work

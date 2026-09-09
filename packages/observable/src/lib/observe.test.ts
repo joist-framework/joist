@@ -159,4 +159,22 @@ describe("computed decorator", () => {
     assert.equal(instance.sum, 7);
     assert.equal(instance.product, 12);
   });
+
+  it("computed properties should be able to be defined before their dependencies", () => {
+    class TestClass {
+      @observe({
+        compute: (i) => `${i.firstName} ${i.lastName}`,
+      })
+      accessor fullName!: string;
+
+      @observe()
+      accessor firstName = "John";
+
+      @observe()
+      accessor lastName = "Doe";
+    }
+
+    const instance = new TestClass();
+    assert.equal(instance.fullName, "John Doe");
+  });
 });
