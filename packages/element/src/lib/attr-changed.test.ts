@@ -11,7 +11,6 @@ let tagName = `attr-changed-${counter}`;
 
 beforeEach(() => {
   tagName = `attr-changed-${counter++}`;
-  console.log(`tagName: ${tagName}`);
 });
 
 it("should call specific attrbute callback", async () => {
