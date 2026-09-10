@@ -33,7 +33,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
 
       #abortController: AbortController | null = null;
-      #injected = withProviders();
+      #injected = asyncWithProviders();
 
       constructor(...args: any[]) {
         super(...args);
@@ -131,7 +131,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
 
       disconnectedCallback(): void {
-        this.#injected = withProviders();
+        this.#injected = asyncWithProviders();
 
         if (this.#abortController) {
           this.#abortController.abort();
@@ -176,7 +176,7 @@ function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadat
   }
 }
 
-function withProviders<T = void>(): {
+function asyncWithProviders<T = void>(): {
   promise: Promise<T>;
   resolve: (...args: any[]) => void;
   reject: () => void;
