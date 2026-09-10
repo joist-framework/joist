@@ -22,9 +22,9 @@ export interface Listener<T> {
 }
 
 export type AttrChangedCallback = (name: string, oldValue: string, newValue: string) => void;
-
+export type AttrMatcher = string | RegExp;
 export class AttrMetadata extends Map<string, AttrDef> {}
-export class AttrChangeMetadata extends Map<string, Set<AttrChangedCallback>> {}
+export class AttrChangeMetadata extends Map<AttrMatcher, Set<AttrChangedCallback>> {}
 
 export class ElementMetadata<T> {
   attrs: AttrMetadata = new AttrMetadata();

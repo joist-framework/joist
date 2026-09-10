@@ -1,6 +1,6 @@
-import { type AttrChangedCallback, metadataStore } from "./metadata.js";
+import { type AttrChangedCallback, type AttrMatcher, metadataStore } from "./metadata.js";
 
-export function attrChanged(...names: string[]) {
+export function attrChanged(...names: AttrMatcher[]) {
   return function attrChangedDecorator<This extends HTMLElement>(
     cb: AttrChangedCallback,
     ctx: ClassMethodDecoratorContext<This>,

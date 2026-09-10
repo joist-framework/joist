@@ -55,7 +55,6 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
       async attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         const attr = meta.attrs.get(name);
-        const cbs = meta.attrChanges.get(name);
 
         if (attr) {
           if (oldValue !== newValue) {
@@ -93,9 +92,17 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
           await this.#injected.promise;
 
-          if (cbs) {
-            for (const cb of cbs) {
-              cb.call(this, name, oldValue, newValue);
+          for (const [matcher, callbacks] of meta.attrChanges) {
+            if (typeof matcher === "string") {
+              if (matcher === name) {
+                for (const cb of callbacks) {
+                  cb.call(this, name, oldValue, newValue);
+                }
+              }
+            } else if (matcher.test(name)) {
+              for (const cb of callbacks) {
+                cb.call(this, name, oldValue, newValue);
+              }
             }
           }
         }

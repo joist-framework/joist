@@ -6,11 +6,19 @@ import { attrChanged } from "./attr-changed.js";
 import { attr } from "./attr.js";
 import { element } from "./element.js";
 
+let counter = 0;
+let tagName = `attr-changed-${counter}`;
+
+beforeEach(() => {
+  tagName = `attr-changed-${counter++}`;
+  console.log(`tagName: ${tagName}`);
+});
+
 it("should call specific attrbute callback", async () => {
   let args: string[] = [];
 
   @element({
-    tagName: "attr-changed-1",
+    tagName,
   })
   class MyElement extends HTMLElement {
     @attr()
@@ -43,7 +51,7 @@ it("should call callback for multiple attributes", async () => {
   const args: string[][] = [];
 
   @element({
-    tagName: "attr-changed-2",
+    tagName,
   })
   class MyElement extends HTMLElement {
     @attr()
@@ -103,7 +111,7 @@ it("should not trigger callback until the element has been attached and given an
   }
 
   @element({
-    tagName: "attr-changed-3",
+    tagName,
   })
   class MyElement extends HTMLElement {
     #logger = inject(Logger);
@@ -124,11 +132,13 @@ it("should not trigger callback until the element has been attached and given an
 
   const testbed = fixtureSync<LoggerElement>(html`
     <app-logger>
-      <attr-changed-3></attr-changed-3>
+      <attr-changed-2></attr-changed-2>
     </app-logger>
   `);
 
-  const el = testbed.querySelector<MyElement>("attr-changed-3");
+  console.log(testbed);
+
+  const el = testbed.querySelector<MyElement>(tagName);
 
   assert.isNotNull(testbed);
   assert.isNotNull(el);
@@ -136,4 +146,37 @@ it("should not trigger callback until the element has been attached and given an
   await Promise.resolve();
 
   assert.deepEqual(testbed.logs, ["test1:null:hello", "test2:null:world"]);
+});
+
+it("should call specific attrbute callback that uses RegExp", async () => {
+  let args: string[][] = [];
+
+  @element({
+    tagName,
+  })
+  class MyElement extends HTMLElement {
+    @attr()
+    accessor test_1 = "hello";
+
+    @attr()
+    accessor test_2 = "world";
+
+    @attrChanged(/test_.*/)
+    onTestChanged(name: string, oldValue: string, newValue: string) {
+      args.push([name, oldValue, newValue]);
+    }
+  }
+
+  const el = new MyElement();
+
+  document.body.append(el);
+
+  await Promise.resolve();
+
+  assert.deepEqual(args, [
+    ["test_1", null, "hello"],
+    ["test_2", null, "world"],
+  ]);
+
+  el.remove();
 });
