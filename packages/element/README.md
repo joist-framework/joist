@@ -213,7 +213,10 @@ export class MyElement extends HTMLElement {
 
 ## AttrChanged Decorator
 
-The `@attrChanged` decorator allows you to easily register callback methods that are executed whenever specific observed attributes change. It is called during the custom element's standard `attributeChangedCallback`.
+The `@attrChanged` decorator allows you to easily register callback methods that are executed whenever specific observed attributes change.
+
+NOTE: method decorated with arrtChanged will not be called until after an element has been confirmed to be injected.
+This means this is the correct way to handle attribute changes if you are using an injected service.
 
 ```ts
 import { element, attr, attrChanged } from "@joist/element";
@@ -223,9 +226,28 @@ import { element, attr, attrChanged } from "@joist/element";
 })
 export class MyElement extends HTMLElement {
   @attr()
-  accessor greeting = "Hello World";
+  accessor name = "Danny Blue";
 
-  @attrChanged("greeting")
+  @attr()
+  accessor age = 37;
+
+  @attr()
+  accessor DOB = "1/1/1988";
+
+  // run when this one attribute changes
+  @attrChanged("name")
+  onGreetingChanged(name: string, oldValue: string, newValue: string) {
+    console.log(`Attribute ${name} changed from "${oldValue}" to "${newValue}"`);
+  }
+
+  // run when any of the following change
+  @attrChanged("name", "age")
+  onGreetingChanged(name: string, oldValue: string, newValue: string) {
+    console.log(`Attribute ${name} changed from "${oldValue}" to "${newValue}"`);
+  }
+
+  // run when an attribute change matches the RegExp
+  @attrChanged(/.*/)
   onGreetingChanged(name: string, oldValue: string, newValue: string) {
     console.log(`Attribute ${name} changed from "${oldValue}" to "${newValue}"`);
   }

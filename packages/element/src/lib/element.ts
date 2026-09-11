@@ -1,9 +1,11 @@
-import { injectable, type InjectableOpts } from "@joist/di";
+import { injectable, injected, type InjectableOpts } from "@joist/di";
 
 import { define } from "./define.js";
 import type { DefineOpts } from "./define.js";
 import { type AttrMetadata, metadataStore } from "./metadata.js";
 import type { ShadowResult } from "./result.js";
+
+const IsInjected: unique symbol = Symbol("isInjected");
 
 export interface ElementOpts extends Partial<DefineOpts>, InjectableOpts {
   shadowDom?: ShadowResult[];
@@ -33,6 +35,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
 
       #abortController: AbortController | null = null;
+      #injected = asyncWithProviders();
 
       constructor(...args: any[]) {
         super(...args);
@@ -52,9 +55,8 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
       }
 
-      attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+      async attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         const attr = meta.attrs.get(name);
-        const cbs = meta.attrChanges.get(name);
 
         if (attr) {
           if (oldValue !== newValue) {
@@ -84,18 +86,33 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             attr.access.set.call(this, value);
           }
 
-          if (cbs) {
-            for (const cb of cbs) {
-              cb.call(this, name, oldValue, newValue);
-            }
-          }
-
           if (attr.observe) {
             if (super.attributeChangedCallback) {
               super.attributeChangedCallback(name, oldValue, newValue);
             }
           }
+
+          await this.#injected.promise;
+
+          for (const [matcher, callbacks] of meta.attrChanges) {
+            if (typeof matcher === "string") {
+              if (matcher === name) {
+                for (const cb of callbacks) {
+                  cb.call(this, name, oldValue, newValue);
+                }
+              }
+            } else if (matcher.test(name)) {
+              for (const cb of callbacks) {
+                cb.call(this, name, oldValue, newValue);
+              }
+            }
+          }
         }
+      }
+
+      @injected()
+      [IsInjected]() {
+        this.#injected.resolve();
       }
 
       connectedCallback() {
@@ -123,6 +140,8 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
 
       disconnectedCallback(): void {
+        this.#injected = asyncWithProviders();
+
         if (this.#abortController) {
           this.#abortController.abort();
           this.#abortController = null;
@@ -164,4 +183,24 @@ function reflectAttributeValues<T extends HTMLElement>(el: T, attrs: AttrMetadat
       }
     }
   }
+}
+
+function asyncWithProviders<T = void>(): {
+  promise: Promise<T>;
+  resolve: (...args: any[]) => void;
+  reject: () => void;
+} {
+  let providerResolve: ((...args: any[]) => void) | null = null;
+  let providerReject: (() => void) | null = null;
+
+  const promise = new Promise<T>((resolve, reject) => {
+    providerResolve = resolve;
+    providerReject = reject;
+  });
+
+  if (providerReject === null || providerResolve === null) {
+    throw new Error(`Something has gone wrong when constructing the promise`);
+  }
+
+  return { promise, resolve: providerResolve, reject: providerReject };
 }
