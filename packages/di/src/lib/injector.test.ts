@@ -4,6 +4,7 @@ import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
 import { StaticToken } from "./provider.js";
+import { creationContextMap } from "./metadata.js";
 
 it("should create a new instance of a single provider", () => {
   class A {}
@@ -586,4 +587,15 @@ it("should safely return an empty array when calling injectAll on a StaticToken 
 
   const res = child.injectAll(TOKEN);
   assert.deepEqual(res, []);
+});
+
+it("should clear CreationContext after construction is complete", () => {
+  @injectable()
+  class Service {}
+
+  const svc = new Injector().inject(Service);
+
+  assert.ok(svc);
+
+  assert.equal(creationContextMap.get(), null);
 });

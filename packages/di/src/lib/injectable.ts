@@ -1,7 +1,7 @@
 import { INJECTOR } from "./symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
-import { type InjectableMetadata, isCreationContext } from "./metadata.js";
+import { creationContextMap, type InjectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
@@ -31,24 +31,21 @@ export function injectable(opts?: InjectableOpts) {
       [INJECTOR]: Injector | undefined = undefined;
 
       constructor(...args: any[]) {
-        const creationContext = args.at(-1);
-        const isFromInjector = isCreationContext(creationContext);
+        const creationContext = creationContextMap.get();
 
         // injectable classes should not be instantiated directly.
         // A creation context containing the sentinel is passed as the last argument when the injector creates an instance of this class.
         // If the sentinel is not present, then we know this class is being instantiated directly and we can throw an error.
         // HTMLElements MUST be instantiated by the browser and are allowed to be instantiated directly.
-        if (!isFromInjector && !isHTMLELementBase) {
+        if (!isHTMLELementBase && creationContext === null) {
           throw new Error(
             `Cannot construct an instance of ${Base.name} directly. Use the injector instead.`,
           );
         }
 
-        const finalArgs = isFromInjector ? args.slice(0, -1) : args;
+        super(...args);
 
-        super(...finalArgs);
-
-        const parentInjector = isFromInjector ? creationContext.injector : undefined;
+        const parentInjector = creationContext?.injector ?? undefined;
 
         // Allocate an injector ONLY if this service defines its own local overrides/providers or self provisions
         if (opts?.providers || opts?.provideSelfAs) {

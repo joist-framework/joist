@@ -4,8 +4,31 @@ import { INJECTOR, SENTINAL } from "./symbols.js";
 import { type Injector } from "./injector.js";
 import type { InjectionToken } from "./provider.js";
 
+export class CreationContextMap {
+  static readonly instance = new CreationContextMap();
+
+  #value: CreationContext | null = null;
+
+  get() {
+    return this.#value;
+  }
+
+  set(injector: Injector) {
+    this.#value = {
+      sentinal: SENTINAL,
+      injector,
+    };
+  }
+
+  clear() {
+    this.#value = null;
+  }
+}
+
+export const creationContextMap = new CreationContextMap();
+
 export interface CreationContext {
-  sentinel: typeof SENTINAL;
+  sentinal: typeof SENTINAL;
   injector: Injector;
 }
 

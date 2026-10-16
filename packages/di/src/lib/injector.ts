@@ -1,6 +1,6 @@
 import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
-import { readInjector, readMetadata } from "./metadata.js";
+import { creationContextMap, readInjector, readMetadata } from "./metadata.js";
 import {
   type ConstructableToken,
   type InjectionToken,
@@ -8,9 +8,9 @@ import {
   type Provider,
   type ProviderDef,
   type ProviderFactory,
-  StaticToken,
 } from "./provider.js";
 import { ProviderStore } from "./provider-store.js";
+import { createContext } from "./context/protocol.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
@@ -239,6 +239,18 @@ export class Injector {
     ctor: ConstructableToken<T>,
     metadata: ReturnType<typeof readMetadata<T>>,
   ): ProviderFactory<T> {
-    return (injector) => (metadata ? new ctor({ sentinel: SENTINAL, injector }) : new ctor());
+    return (injector) => {
+      if (metadata) {
+        creationContextMap.set(injector);
+
+        const svc = new ctor();
+
+        creationContextMap.clear();
+
+        return svc;
+      }
+
+      return new ctor();
+    };
   }
 }
