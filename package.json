@@ -55,10 +55,10 @@
     "typescript": "7.0.2",
     "wireit": "^0.14.0"
   },
-  "overrides": {
-    "immutable": "^5.1.8"
-  },
   "lint-staged": {
     "*.{js,css,md,html}": "prettier --write"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
