@@ -13,11 +13,8 @@ export class CreationContextMap {
     return this.#value;
   }
 
-  set(injector: Injector) {
-    this.#value = {
-      sentinal: SENTINAL,
-      injector,
-    };
+  set(ctx: CreationContext) {
+    this.#value = ctx;
   }
 
   clear() {
@@ -30,15 +27,6 @@ export const creationContextMap = new CreationContextMap();
 export interface CreationContext {
   sentinal: typeof SENTINAL;
   injector: Injector;
-}
-
-export function isCreationContext(value: unknown): value is CreationContext {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "sentinel" in value &&
-    value.sentinel === SENTINAL
-  );
 }
 
 export type LifecycleCallback = (i: Injector) => void;

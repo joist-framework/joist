@@ -241,13 +241,13 @@ export class Injector {
   ): ProviderFactory<T> {
     return (injector) => {
       if (metadata) {
-        creationContextMap.set(injector);
+        creationContextMap.set({ injector, sentinal: SENTINAL} );
 
-        const svc = new ctor();
-
-        creationContextMap.clear();
-
-        return svc;
+        try {
+          return new ctor()
+        } finally {
+          creationContextMap.clear();
+        }
       }
 
       return new ctor();
