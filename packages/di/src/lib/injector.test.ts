@@ -599,3 +599,18 @@ it("should clear CreationContext after construction is complete", () => {
 
   assert.equal(creationContextMap.get(), null);
 });
+
+it("should clear CreationContext after construction is complete if constructing fails", () => {
+  @injectable()
+  class Service {
+    constructor() {
+      throw new Error('THERE WAS A PROBLEM')
+    }
+  }
+
+  assert.throws(() => {
+    new Injector().inject(Service);
+  });
+
+  assert.equal(creationContextMap.get(), null);
+});

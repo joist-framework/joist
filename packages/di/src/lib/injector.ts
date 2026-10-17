@@ -1,6 +1,6 @@
 import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
-import { creationContextMap, readInjector, readMetadata } from "./metadata.js";
+import { creationContextMap, readInjector, readMetadata, type InjectableMetadata } from "./metadata.js";
 import {
   type ConstructableToken,
   type InjectionToken,
@@ -10,7 +10,6 @@ import {
   type ProviderFactory,
 } from "./provider.js";
 import { ProviderStore } from "./provider-store.js";
-import { createContext } from "./context/protocol.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
@@ -237,15 +236,17 @@ export class Injector {
 
   #construct<T>(
     ctor: ConstructableToken<T>,
-    metadata: ReturnType<typeof readMetadata<T>>,
+    metadata: InjectableMetadata<T> | null,
   ): ProviderFactory<T> {
     return (injector) => {
       if (metadata) {
+        // if there is metadata we set the current context so that all class and subclasses that are marked @injectable are able to be created
         creationContextMap.set({ injector, sentinal: SENTINAL} );
 
         try {
           return new ctor()
         } finally {
+          // Regardless of the status of the constructor we need to make sure we clear the context
           creationContextMap.clear();
         }
       }
