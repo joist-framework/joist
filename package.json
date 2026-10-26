@@ -53,7 +53,7 @@
     "prettier": "^3.5.3",
     "tslib": "2.8.1",
     "typescript": "7.0.2",
-    "wireit": "^0.14.0"
+    "wireit": "^0.15.0"
   },
   "lint-staged": {
     "*.{js,css,md,html}": "prettier --write"
