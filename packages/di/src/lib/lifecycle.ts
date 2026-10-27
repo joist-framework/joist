@@ -1,4 +1,5 @@
 import type { Injector } from "./injector.js";
+import { MetadataMap } from "./util/metadata-map.js";
 
 export type LifecycleCallback = (i: Injector) => void;
 
@@ -11,17 +12,12 @@ export interface LifecycleMethod<T> {
   condition?: LifecycleCondition<T> | undefined;
 }
 
-const injectedHooks = new WeakMap<object, LifecycleMethod<any>[]>();
-const createdHooks = new WeakMap<object, LifecycleMethod<any>[]>();
+export const injectedHooks = new MetadataMap<LifecycleMethod<any>[]>(() => []);
+export const createdHooks = new MetadataMap<LifecycleMethod<any>[]>(() => []);
 
 export function injected<T>(condition?: LifecycleCondition<T>) {
   return function (val: LifecycleCallback, ctx: ClassMethodDecoratorContext<T>): void {
-    let hooks = injectedHooks.get(ctx.metadata);
-
-    if (!hooks) {
-      hooks = [];
-      injectedHooks.set(ctx.metadata, hooks);
-    }
+    let hooks = injectedHooks.read(ctx.metadata);
 
     hooks.push({ callback: val, condition });
   };
@@ -29,19 +25,14 @@ export function injected<T>(condition?: LifecycleCondition<T>) {
 
 export function created<T>(condition?: LifecycleCondition<T>) {
   return function (val: LifecycleCallback, ctx: ClassMethodDecoratorContext<T>): void {
-    let hooks = createdHooks.get(ctx.metadata);
-
-    if (!hooks) {
-      hooks = [];
-      createdHooks.set(ctx.metadata, hooks);
-    }
+    let hooks = createdHooks.read(ctx.metadata);
 
     hooks.push({ callback: val, condition });
   };
 }
 
 export function collectHooks(
-  metadata: object,
+  metadata: DecoratorMetadataObject | null,
   map: WeakMap<object, LifecycleMethod<any>[]>,
 ): LifecycleMethod<any>[] {
   const allHooks: LifecycleMethod<any>[] = [];

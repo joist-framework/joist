@@ -42,7 +42,7 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
         }),
       );
 
-      callLifecycle(this, this[INJECTOR], ctx.metadata, "created");
+      callLifecycle(this, this[INJECTOR], ctx.metadata, "injected");
 
       if (super.connectedCallback) {
         super.connectedCallback();

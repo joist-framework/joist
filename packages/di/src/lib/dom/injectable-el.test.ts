@@ -2,6 +2,7 @@ import { assert } from "chai";
 
 import { inject } from "../inject.js";
 import { injectable } from "../injectable.js";
+import { created, injected } from "../lifecycle.js";
 import { DOMInjector } from "./dom-injector.js";
 
 it("should allow services to be injected into custom element", () => {
@@ -248,4 +249,33 @@ it("should call connected and disconnected callbacks when element is replaced", 
   el1.replaceWith(el2);
 
   assert.deepEqual(calls, ["1-connected", "1-disconnected", "2-connected"]);
+});
+
+it("should call created and injected lifecycle hooks on custom elements", () => {
+  const calls: string[] = [];
+
+  @injectable()
+  class LifecycleElement extends HTMLElement {
+    @created()
+    onCreated() {
+      calls.push("created");
+    }
+
+    @injected()
+    onInjected() {
+      calls.push("injected");
+    }
+  }
+
+  customElements.define("test-lifecycle-el", LifecycleElement);
+
+  const el = new LifecycleElement();
+
+  assert.deepEqual(calls, ["created"]);
+
+  document.body.append(el);
+
+  assert.deepEqual(calls, ["created", "injected"]);
+
+  el.remove();
 });

@@ -2,6 +2,12 @@
 
 import { INJECTOR, SENTINAL } from "./symbols.js";
 import { type Injector } from "./injector.js";
+import { MetadataMap } from "./util/metadata-map.js";
+
+export interface CreationContext {
+  sentinal: typeof SENTINAL;
+  injector: Injector;
+}
 
 export class CreationContextMap {
   static readonly instance = new CreationContextMap();
@@ -21,35 +27,11 @@ export class CreationContextMap {
   }
 }
 
-export class MetadataStore extends WeakMap<DecoratorMetadataObject, InjectableMetadata> {
-  read(key: DecoratorMetadataObject | null) {
-    if (!key) {
-      return null;
-    }
-
-    const metadata = this.get(key);
-
-    if (metadata) {
-      return metadata;
-    }
-
-    const newMetadata: InjectableMetadata = {
-      service: true,
-    };
-
-    this.set(key, newMetadata);
-
-    return newMetadata;
-  }
-}
-
 export const creationContextMap = new CreationContextMap();
-export const injectableMetadata = new MetadataStore();
 
-export interface CreationContext {
-  sentinal: typeof SENTINAL;
-  injector: Injector;
-}
+export const injectableMetadata = new MetadataMap<InjectableMetadata>(() => ({
+  service: undefined,
+}));
 
 export interface InjectableMetadata {
   service?: boolean | undefined;

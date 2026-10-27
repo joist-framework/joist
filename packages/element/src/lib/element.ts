@@ -7,7 +7,7 @@ import type { ShadowResult } from "./result.js";
 
 const IsInjected: unique symbol = Symbol("isInjected");
 
-export interface ElementOpts extends Partial<DefineOpts>, InjectableOpts {
+export interface ElementOpts extends Partial<DefineOpts>, Omit<InjectableOpts, "name"> {
   shadowDom?: ShadowResult[];
   shadowDomOpts?: ShadowRootInit;
 }
@@ -26,7 +26,6 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
     });
 
-    @injectable(opts)
     class JoistHTMLElement extends Base {
       static observedAttributes: string[] = Array.from(meta.attrs.keys());
 
@@ -110,13 +109,9 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
       }
 
-      @injected()
-      [IsInjected]() {
-        console.log("##### TEST");
-        this.#injected.resolve();
-      }
-
       connectedCallback() {
+        this.#injected.resolve();
+
         if (!this.#abortController) {
           this.#abortController = new AbortController();
 
@@ -154,7 +149,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
       }
     }
 
-    return JoistHTMLElement;
+    return injectable(opts)(JoistHTMLElement, ctx);
   };
 }
 
