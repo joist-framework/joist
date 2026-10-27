@@ -36,6 +36,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
       #abortController: AbortController | null = null;
       #injected = asyncWithProviders();
+      #isInjected = false;
 
       constructor(...args: any[]) {
         super(...args);
@@ -92,7 +93,9 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
             }
           }
 
-          await this.#injected.promise;
+          if (!this.#isInjected) {
+            await this.#injected.promise;
+          }
 
           for (const [matcher, callbacks] of meta.attrChanges) {
             if (typeof matcher === "string") {
@@ -110,11 +113,14 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
       }
 
+<<<<<<< Updated upstream
       @injected()
       [IsInjected]() {
         this.#injected.resolve();
       }
 
+=======
+>>>>>>> Stashed changes
       connectedCallback() {
         if (!this.#abortController) {
           this.#abortController = new AbortController();
@@ -137,9 +143,13 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         if (super.connectedCallback) {
           super.connectedCallback();
         }
+
+        this.#isInjected = true;
+        this.#injected.resolve();
       }
 
       disconnectedCallback(): void {
+        this.#isInjected = false;
         this.#injected = asyncWithProviders();
 
         if (this.#abortController) {
