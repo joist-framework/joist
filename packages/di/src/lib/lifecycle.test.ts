@@ -3,9 +3,8 @@ import { assert } from "chai";
 import { inject } from "./inject.js";
 import { injectable } from "./injectable.js";
 import { Injector } from "./injector.js";
-import { created, injected } from "./lifecycle.js";
+import { created, injected, type LifecycleCallback } from "./lifecycle.js";
 import { readInjector } from "./metadata.js";
-import type { LifecycleCallback } from "./metadata.js";
 import { StaticToken } from "./provider.js";
 
 it("should call onInit and onInject when a service is first created", () => {
@@ -311,4 +310,60 @@ it("should pass the instance to the condition", () => {
 
   const service = i.inject(MyService);
   assert.equal(service.count, 0); // not called because instance.enabled is false
+});
+
+it("should call the created lifecycle hooks set on subclasses", () => {
+  const called: string[] = [];
+
+  @injectable()
+  class MyService1 {
+    @created()
+    onCreated1() {
+      called.push("onCreated1");
+    }
+  }
+
+  @injectable()
+  class MyService2 extends MyService1 {
+    @created()
+    onCreated2() {
+      called.push("onCreated2");
+    }
+  }
+
+  const testbed = new Injector();
+  const service = testbed.inject(MyService2);
+
+  assert.instanceOf(service, MyService2);
+  assert.instanceOf(service, MyService1);
+
+  assert.deepEqual(called, ["onCreated1", "onCreated2"]);
+});
+
+it("should call the injected lifecycle hooks set on subclasses", () => {
+  const called: string[] = [];
+
+  @injectable()
+  class MyService1 {
+    @injected()
+    onInjected1() {
+      called.push("onInjected1");
+    }
+  }
+
+  @injectable()
+  class MyService2 extends MyService1 {
+    @injected()
+    onInjected2() {
+      called.push("onInjected2");
+    }
+  }
+
+  const testbed = new Injector();
+  const service = testbed.inject(MyService2);
+
+  assert.instanceOf(service, MyService2);
+  assert.instanceOf(service, MyService1);
+
+  assert.deepEqual(called, ["onInjected1", "onInjected2"]);
 });

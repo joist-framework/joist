@@ -1,5 +1,5 @@
 import { assert, expect } from "chai";
-import { inject } from "@joist/di";
+import { created, inject, injected } from "@joist/di";
 
 import { attr } from "./attr.js";
 import { element } from "./element.js";
@@ -252,4 +252,33 @@ it("should confirm that element decorator supports DOM-based DI hierarchy", asyn
   expect(child?.serviceA()).to.be.instanceOf(AltServiceA);
 
   container.remove();
+});
+
+it("should run all lifecycles when we are extending injectable", async () => {
+  const called: string[] = [];
+
+  @element({
+    tagName: "element-is-injectable",
+  })
+  class MyElement extends HTMLElement {
+    @created()
+    onCreated() {
+      called.push("created");
+    }
+
+    @injected()
+    onInjected() {
+      called.push("injected");
+    }
+  }
+
+  const testbed = new MyElement();
+
+  assert.deepEqual(called, ["created"]);
+
+  document.body.append(testbed);
+
+  assert.deepEqual(called, ["created", "injected"]);
+
+  testbed.remove();
 });

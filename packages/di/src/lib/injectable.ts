@@ -1,7 +1,7 @@
 import { INJECTOR } from "./symbols.js";
 import { injectableEl } from "./dom/injectable-el.js";
 import { Injector } from "./injector.js";
-import { creationContextMap, type InjectableMetadata } from "./metadata.js";
+import { creationContextMap, injectableMetadata } from "./metadata.js";
 import type { ConstructableToken, InjectionToken, Provider } from "./provider.js";
 
 export interface InjectableOpts {
@@ -16,8 +16,11 @@ export function injectable(opts?: InjectableOpts) {
     Base: T,
     ctx: ClassDecoratorContext,
   ): T {
-    const metadata: InjectableMetadata<T> = ctx.metadata;
-    metadata.service = opts?.service;
+    const metadata = injectableMetadata.read(ctx.metadata);
+
+    if (metadata) {
+      metadata.service = opts?.service;
+    }
 
     const isHTMLELementBase =
       "HTMLElement" in globalThis &&

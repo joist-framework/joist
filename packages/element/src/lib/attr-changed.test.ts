@@ -135,8 +135,6 @@ it("should not trigger callback until the element has been attached and given an
     </app-logger>
   `);
 
-  console.log(testbed);
-
   const el = testbed.querySelector<MyElement>(tagName);
 
   assert.isNotNull(testbed);
