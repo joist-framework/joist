@@ -113,14 +113,6 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
         }
       }
 
-<<<<<<< Updated upstream
-      @injected()
-      [IsInjected]() {
-        this.#injected.resolve();
-      }
-
-=======
->>>>>>> Stashed changes
       connectedCallback() {
         if (!this.#abortController) {
           this.#abortController = new AbortController();
