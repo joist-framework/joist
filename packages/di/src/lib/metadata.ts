@@ -2,7 +2,6 @@
 
 import { INJECTOR, SENTINAL } from "./symbols.js";
 import { type Injector } from "./injector.js";
-import type { InjectionToken } from "./provider.js";
 
 export class CreationContextMap {
   static readonly instance = new CreationContextMap();
@@ -22,34 +21,38 @@ export class CreationContextMap {
   }
 }
 
+export class MetadataStore extends WeakMap<DecoratorMetadataObject, InjectableMetadata> {
+  read(key: DecoratorMetadataObject | null) {
+    if (!key) {
+      return null;
+    }
+
+    const metadata = this.get(key);
+
+    if (metadata) {
+      return metadata;
+    }
+
+    const newMetadata: InjectableMetadata = {
+      service: true,
+    };
+
+    this.set(key, newMetadata);
+
+    return newMetadata;
+  }
+}
+
 export const creationContextMap = new CreationContextMap();
+export const injectableMetadata = new MetadataStore();
 
 export interface CreationContext {
   sentinal: typeof SENTINAL;
   injector: Injector;
 }
 
-export type LifecycleCallback = (i: Injector) => void;
-
-export type LifecycleCondition<T> = (ctx: { injector: Injector; instance: T }) => {
-  enabled?: boolean | undefined;
-};
-
-export interface LifecycleMethod<T> {
-  callback?: LifecycleCallback | undefined;
-  condition?: LifecycleCondition<T> | undefined;
-}
-
-export interface InjectableMetadata<T> {
+export interface InjectableMetadata {
   service?: boolean | undefined;
-  onCreated?: LifecycleMethod<T>[] | undefined;
-  onInjected?: LifecycleMethod<T>[] | undefined;
-}
-
-export function readMetadata<T>(target: InjectionToken<T>): InjectableMetadata<T> | null {
-  const metadata: InjectableMetadata<T> | null = target[Symbol.metadata];
-
-  return metadata;
 }
 
 function isInjectable(target: unknown): target is { [INJECTOR]: Injector } {

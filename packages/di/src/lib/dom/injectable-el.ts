@@ -3,7 +3,6 @@ import { INJECTOR_CTX } from "../context/injector.js";
 import { ContextRequestEvent } from "../context/protocol.js";
 import { Injector } from "../injector.js";
 import { callLifecycle } from "../lifecycle.js";
-import type { InjectableMetadata } from "../metadata.js";
 import type { ConstructableToken } from "../provider.js";
 
 export type InjectableEl = HTMLElement & { [INJECTOR]: Injector };
@@ -12,8 +11,6 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
   Base: T,
   ctx: ClassDecoratorContext,
 ): T {
-  const metadata: InjectableMetadata<InjectableEl> = ctx.metadata;
-
   return class extends Base {
     static get name() {
       return Base.name;
@@ -28,7 +25,7 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
         this[INJECTOR] = new Injector();
       }
 
-      callLifecycle(this, injector, metadata?.onCreated);
+      callLifecycle(this, injector, ctx.metadata, "created");
 
       this.addEventListener("context-request", (e) => {
         if (e.target !== this && e.context === INJECTOR_CTX) {
@@ -45,7 +42,7 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
         }),
       );
 
-      callLifecycle(this, this[INJECTOR], metadata?.onInjected);
+      callLifecycle(this, this[INJECTOR], ctx.metadata, "created");
 
       if (super.connectedCallback) {
         super.connectedCallback();

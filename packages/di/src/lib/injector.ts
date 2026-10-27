@@ -1,6 +1,6 @@
 import { SENTINAL } from "./symbols.js";
 import { callLifecycle } from "./lifecycle.js";
-import { creationContextMap, readInjector, readMetadata, type InjectableMetadata } from "./metadata.js";
+import { creationContextMap, injectableMetadata, readInjector } from "./metadata.js";
 import {
   type ConstructableToken,
   type InjectionToken,
@@ -10,6 +10,7 @@ import {
   type ProviderFactory,
 } from "./provider.js";
 import { ProviderStore } from "./provider-store.js";
+import { injectableEl } from "./dom/injectable-el.js";
 
 export interface InjectorOpts {
   name?: string | undefined;
@@ -85,11 +86,13 @@ export class Injector {
       optional?: boolean | undefined;
     },
   ): T | null {
-    const metadata = readMetadata<T>(token);
+    const metadataKey = token[Symbol.metadata];
 
     if (opts?.singleton !== false && this.#instances.has(token)) {
-      return this.#getCachedInstance<T>(token, metadata);
+      return this.#getCachedInstance<T>(token, metadataKey);
     }
+
+    const metadata = injectableMetadata.read(metadataKey);
 
     if (metadata?.service === false && opts?.singleton !== false) {
       throw new Error(
@@ -121,7 +124,12 @@ export class Injector {
       return this.#createAndCache(token, token.factory, createOpts, token);
     }
 
-    return this.#createAndCache(token, this.#construct(token, metadata), createOpts, token);
+    return this.#createAndCache(
+      token,
+      this.#construct(token, token[Symbol.metadata]),
+      createOpts,
+      token,
+    );
   }
 
   clear(): void {
@@ -151,7 +159,7 @@ export class Injector {
     provider: ProviderDef<T>,
     opts?: { singleton?: boolean | undefined },
   ): T {
-    const metadata = readMetadata<T>(token);
+    const metadata = token[Symbol.metadata];
 
     if (opts?.singleton !== false && this.#instances.has(provider)) {
       return this.#getCachedInstance<T>(provider, metadata);
@@ -160,7 +168,7 @@ export class Injector {
     const createOpts = { singleton: opts?.singleton !== false };
 
     if ("use" in provider) {
-      const useMetadata = readMetadata<T>(provider.use);
+      const useMetadata = provider.use[Symbol.metadata];
 
       return this.#createAndCache<T>(
         provider,
@@ -209,11 +217,11 @@ export class Injector {
      * This ensures that services are initialized when the chain is settled.
      * This is required since the parent is set after the instance is constructed.
      */
-    const metadata = readMetadata<T>(token);
+    const metadata = token[Symbol.metadata];
 
     if (metadata && typeof instance === "object" && instance !== null) {
-      callLifecycle(instance, injector, metadata.onCreated);
-      callLifecycle(instance, injector, metadata.onInjected);
+      callLifecycle(instance, injector, metadata, "created");
+      callLifecycle(instance, injector, metadata, "injected");
     }
 
     return instance;
@@ -221,14 +229,14 @@ export class Injector {
 
   #getCachedInstance<T>(
     cacheKey: InjectionToken<T> | ProviderDef<T>,
-    metadata: ReturnType<typeof readMetadata<T>>,
+    metadata: DecoratorMetadataObject | null,
   ): T {
     const instance = this.#instances.get(cacheKey);
 
     const injector = readInjector(instance);
 
     if (metadata) {
-      callLifecycle(instance, injector ?? this, metadata.onInjected);
+      callLifecycle(instance, injector ?? this, metadata, "injected");
     }
 
     return instance;
@@ -236,15 +244,15 @@ export class Injector {
 
   #construct<T>(
     ctor: ConstructableToken<T>,
-    metadata: InjectableMetadata<T> | null,
+    metadata: DecoratorMetadataObject | null,
   ): ProviderFactory<T> {
     return (injector) => {
       if (metadata) {
         // if there is metadata we set the current context so that all class and subclasses that are marked @injectable are able to be created
-        creationContextMap.set({ injector, sentinal: SENTINAL} );
+        creationContextMap.set({ injector, sentinal: SENTINAL });
 
         try {
-          return new ctor()
+          return new ctor();
         } finally {
           // Regardless of the status of the constructor we need to make sure we clear the context
           creationContextMap.clear();

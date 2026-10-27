@@ -112,6 +112,7 @@ export function element<T extends ElementConstructor>(opts?: ElementOpts) {
 
       @injected()
       [IsInjected]() {
+        console.log("##### TEST");
         this.#injected.resolve();
       }
 
