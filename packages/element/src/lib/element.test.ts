@@ -282,3 +282,43 @@ it("should run all lifecycles when we are extending injectable", async () => {
 
   testbed.remove();
 });
+
+it("should propagate injector through intermediate @element components without local providers", async () => {
+  class ServiceA {
+    msg = "from-root";
+  }
+
+  @element({
+    tagName: "element-root-tree",
+    providers: [[ServiceA, { use: ServiceA }]],
+  })
+  class RootEl extends HTMLElement {}
+
+  @element({
+    tagName: "element-intermediate-tree",
+  })
+  class IntermediateEl extends HTMLElement {}
+
+  @element({
+    tagName: "element-child-tree",
+  })
+  class ChildEl extends HTMLElement {
+    serviceA = inject(ServiceA);
+  }
+
+  const container = document.createElement("div");
+  container.innerHTML = /*html*/ `
+    <element-root-tree>
+      <element-intermediate-tree>
+        <element-child-tree></element-child-tree>
+      </element-intermediate-tree>
+    </element-root-tree>
+  `;
+
+  document.body.append(container);
+
+  const child = container.querySelector<ChildEl>("element-child-tree");
+  expect(child?.serviceA().msg).to.equal("from-root");
+
+  container.remove();
+});

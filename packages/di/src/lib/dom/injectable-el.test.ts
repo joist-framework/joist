@@ -2,6 +2,7 @@ import { assert } from "chai";
 
 import { inject } from "../inject.js";
 import { injectable } from "../injectable.js";
+import { Injector } from "../injector.js";
 import { created, injected } from "../lifecycle.js";
 import { DOMInjector } from "./dom-injector.js";
 
@@ -253,12 +254,14 @@ it("should call connected and disconnected callbacks when element is replaced", 
 
 it("should call created and injected lifecycle hooks on custom elements", () => {
   const calls: string[] = [];
+  let createdInjector: Injector | null = null;
 
   @injectable()
   class LifecycleElement extends HTMLElement {
     @created()
-    onCreated() {
+    onCreated(injector: Injector) {
       calls.push("created");
+      createdInjector = injector;
     }
 
     @injected()
@@ -272,10 +275,51 @@ it("should call created and injected lifecycle hooks on custom elements", () => 
   const el = new LifecycleElement();
 
   assert.deepEqual(calls, ["created"]);
+  assert.instanceOf(createdInjector, Injector);
 
   document.body.append(el);
 
   assert.deepEqual(calls, ["created", "injected"]);
 
   el.remove();
+});
+
+it("should propagate injector through intermediate parent custom elements without local providers", () => {
+  class ServiceA {
+    value = "hello";
+  }
+
+  @injectable({
+    providers: [[ServiceA, { use: ServiceA }]],
+  })
+  class RootParent extends HTMLElement {}
+
+  @injectable()
+  class IntermediateParent extends HTMLElement {}
+
+  @injectable()
+  class NestedChild extends HTMLElement {
+    serviceA = inject(ServiceA);
+  }
+
+  customElements.define("test-root-parent", RootParent);
+  customElements.define("test-intermediate-parent", IntermediateParent);
+  customElements.define("test-nested-child", NestedChild);
+
+  const container = document.createElement("div");
+  container.innerHTML = /*html*/ `
+    <test-root-parent>
+      <test-intermediate-parent>
+        <test-nested-child></test-nested-child>
+      </test-intermediate-parent>
+    </test-root-parent>
+  `;
+
+  document.body.append(container);
+
+  const child = container.querySelector<NestedChild>("test-nested-child");
+  assert.isNotNull(child);
+  assert.equal(child?.serviceA().value, "hello");
+
+  container.remove();
 });
