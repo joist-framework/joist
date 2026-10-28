@@ -19,18 +19,16 @@ export function injectableEl<T extends ConstructableToken<InjectableEl>>(
     constructor(..._: any[]) {
       super();
 
-      const injector = this[INJECTOR];
-
-      if (!injector) {
+      if (!this[INJECTOR]) {
         this[INJECTOR] = new Injector();
       }
 
-      callLifecycle(this, injector, ctx.metadata, "created");
+      callLifecycle(this, this[INJECTOR], ctx.metadata, "created");
 
       this.addEventListener("context-request", (e) => {
         if (e.target !== this && e.context === INJECTOR_CTX) {
           e.stopPropagation();
-          e.callback(injector);
+          e.callback(this[INJECTOR]);
         }
       });
     }
